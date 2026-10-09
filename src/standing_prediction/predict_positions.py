@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from html import escape
 import json
 import logging
@@ -24,12 +24,15 @@ from standing_prediction.odds import (
     fetch_the_odds_api_h2h_probs,
     match_odds,
 )
+from standing_prediction.h2h import encounter_residuals, h2h_shifts, pair_effects
 from standing_prediction.simulate import FixtureSimulationSpec, simulate_season_scores
+from standing_prediction.xg import XG_COLUMNS, blend_xg_strengths, fit_xg_strengths, load_season_xg
 from standing_prediction.utils import normalize_team
 
 
 LOG = logging.getLogger(__name__)
 DEFAULT_WEIGHTS = {"main": 0.35, "odds": 0.55, "elo": 0.10}
+DEFAULT_H2H = {"seasons": 6, "half_life_days": 730, "shrinkage": 4.0}
 COMPETITION_TO_THE_ODDS_API_SPORT = {
     "PD": "soccer_spain_la_liga", "PL": "soccer_epl", "BL1": "soccer_germany_bundesliga",
     "SA": "soccer_italy_serie_a", "FL1": "soccer_france_ligue_one",
@@ -63,6 +66,9 @@ def main(argv=None):
     parser.add_argument("--calibrate", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--calibration-seasons", nargs="+", type=int)
     parser.add_argument("--calibration-cutoffs", "--calibration-cutoff-matchday", nargs="+", type=int, default=[5, 10, 20, 30])
+    parser.add_argument("--xg-weight", type=float, default=0.0, help="Weight of Understat xG strengths in log goal rates (0 disables)")
+    parser.add_argument("--h2h-weight", type=float, default=0.0, help="Log-rate shift per goal of shrunk head-to-head residual (0 disables)")
+    parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -75,38 +81,59 @@ def main(argv=None):
     return 0
 
 
-def load_season_results(client, competition, season, *, cache=True):
+def load_season_results(client, competition, season, *, cache=True, xg=False):
     league = COMPETITION_TO_FOOTBALL_DATA_UK_LEAGUE.get(competition)
+    matches = None
     if league:
         try:
-            return fetch_football_data_uk_matches(league_code=league, season_start_year=season, use_cache=cache)
+            matches = fetch_football_data_uk_matches(league_code=league, season_start_year=season, use_cache=cache)
         except (ValueError, OSError, RuntimeError) as exc:
             LOG.warning("Historical CSV unavailable for season %s (%s).", season, type(exc).__name__)
-    if client is None:
-        raise ValueError(f"Cannot load season {season}; no football-data.org client is configured.")
-    return fetch_matches(client, competition=competition, season=season, status="FINISHED")
+    if matches is None:
+        if client is None:
+            raise ValueError(f"Cannot load season {season}; no football-data.org client is configured.")
+        matches = fetch_matches(client, competition=competition, season=season, status="FINISHED")
+    return load_season_xg(matches, competition=competition, season=season, cache=cache) if xg else matches
 
 
-def load_history(client, competition, season, teams, *, prior_seasons=2, cache=True):
+def load_history(client, competition, season, teams, *, prior_seasons=2, cache=True, xg=False):
     frames = []
     loaded = []
+    coverage = {}
     names = {normalize_team(team): team for team in teams}
     for year in range(season - prior_seasons, season):
         try:
-            matches = load_season_results(client, competition, year, cache=cache).copy()
+            matches = load_season_results(client, competition, year, cache=cache, xg=xg).copy()
         except (ValueError, OSError, RuntimeError) as exc:
             LOG.warning("Prior season %s unavailable (%s); continuing with available history.", year, type(exc).__name__)
             continue
+        if "xg_coverage" in matches.attrs:
+            coverage[year] = matches.attrs["xg_coverage"]
         for column in ["homeTeam", "awayTeam"]:
             matches[column] = matches[column].map(lambda team: names.get(normalize_team(team), team))
         frames.append(matches)
         loaded.append(year)
     history = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
     history.attrs["seasons"] = loaded
+    history.attrs["xg_coverage"] = coverage
     return history
 
 
-def fit_prediction_models(finished, *, teams, history=None, reference_date=None, xi=0.003, lambda_reg=0.1):
+def load_h2h_results(client, competition, season, *, seasons=DEFAULT_H2H["seasons"], warmup_seasons=2, cache=True):
+    """Results for head-to-head residuals: `seasons` of meetings plus warm-up seasons for prior-only baselines."""
+    frames = []
+    for year in range(season - seasons - warmup_seasons, season):
+        try:
+            frames.append(load_season_results(client, competition, year, cache=cache))
+        except (ValueError, OSError, RuntimeError) as exc:
+            LOG.warning("Head-to-head season %s unavailable (%s).", year, type(exc).__name__)
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def fit_model_components(finished, *, teams, history=None, reference_date=None, xi=0.003, lambda_reg=0.1,
+                         xg=False, h2h_residuals=None, h2h_half_life=DEFAULT_H2H["half_life_days"],
+                         h2h_shrinkage=DEFAULT_H2H["shrinkage"]):
+    """Fit goal, Elo and optional xG/head-to-head inputs once; weights are applied separately."""
     frames = [frame for frame in [history, finished] if frame is not None and not frame.empty]
     if not frames:
         raise ValueError("No results available: load prior seasons before forecasting an unplayed season.")
@@ -116,22 +143,54 @@ def fit_prediction_models(finished, *, teams, history=None, reference_date=None,
         matches = matches[matches["utcDate"] < pd.to_datetime(reference_date, utc=True)]
     matches = matches.drop_duplicates(["utcDate", "homeTeam", "awayTeam"])
     dc = fit_dixon_coles(matches, teams=teams, reference_date=reference_date, xi=xi, lambda_reg=lambda_reg)
-    return dc, fit_elo(matches, teams=teams, reference_date=reference_date)
+    elo = fit_elo(matches, teams=teams, reference_date=reference_date)
+    xg_strengths = fit_xg_strengths(matches, reference_date=reference_date, xi=xi, lambda_reg=lambda_reg) if xg else None
+    effects = None
+    if h2h_residuals is not None:
+        as_of = reference_date if reference_date is not None else matches["utcDate"].max() + pd.Timedelta(seconds=1)
+        effects = pair_effects(h2h_residuals, as_of, half_life_days=h2h_half_life, shrinkage=h2h_shrinkage)
+    return dc, elo, xg_strengths, effects
+
+
+def adjust_goal_model(dc, *, teams, xg_strengths=None, xg_weight=0.0, h2h_effects=None, h2h_weight=0.0):
+    dc = blend_xg_strengths(dc, xg_strengths, xg_weight)
+    shifts = h2h_shifts(teams, h2h_effects, h2h_weight)
+    return replace(dc, pair_shift=shifts) if shifts else dc
+
+
+def fit_prediction_models(finished, *, teams, history=None, reference_date=None, xi=0.003, lambda_reg=0.1,
+                          xg_weight=0.0, h2h_weight=0.0, h2h_residuals=None,
+                          h2h_half_life=DEFAULT_H2H["half_life_days"], h2h_shrinkage=DEFAULT_H2H["shrinkage"]):
+    dc, elo, xg_strengths, effects = fit_model_components(
+        finished, teams=teams, history=history, reference_date=reference_date, xi=xi, lambda_reg=lambda_reg,
+        xg=xg_weight > 0, h2h_residuals=h2h_residuals if h2h_weight else None,
+        h2h_half_life=h2h_half_life, h2h_shrinkage=h2h_shrinkage)
+    dc = adjust_goal_model(dc, teams=teams, xg_strengths=xg_strengths, xg_weight=xg_weight,
+                           h2h_effects=effects, h2h_weight=h2h_weight)
+    return dc, elo
 
 
 def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_goals=10,
                    xi=0.003, lambda_reg=0.1, prior_seasons=2, use_odds=True,
                    odds_provider="the_odds_api", odds_days=180, odds_snapshot=None,
                    out_dir=Path("out"), weights=None, calibrate=False, calibration_seasons=None,
-                   calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None):
+                   calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None,
+                   xg_weight=0.0, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
     if n_sim < 1 or max_goals < 1 or prior_seasons < 0:
         raise ValueError("n_sim/max_goals must be positive; prior_seasons cannot be negative.")
+    if not 0 <= xg_weight <= 1 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
+        raise ValueError("xg_weight must be in [0, 1], h2h_weight finite, and h2h_seasons positive.")
     season = _guess_season_start_year() if season is None else season
     client = client or FootballDataClient(use_cache=cache)
     standings = fetch_standings(client, competition=competition, season=season).sort_values("position").reset_index(drop=True)
     matches = fetch_matches(client, competition=competition, season=season, status=None)
     remaining = validate_schedule(matches, standings)
     finished = matches[matches["status"] == "FINISHED"].copy()
+    # Retain current-season xG with every forecast for later prospective evaluation.
+    finished = load_season_xg(finished, competition=competition, season=season, cache=cache)
+    xg_coverage = {season: finished.attrs.get("xg_coverage")}
+    matches[XG_COLUMNS] = finished[XG_COLUMNS]
+    h2h_pairs = 0
     cutoff = pd.Timestamp.now(tz="UTC")
     teams = standings["team"].tolist()
     history = pd.DataFrame()
@@ -143,7 +202,13 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         points = np.broadcast_to(standings["points"].to_numpy(), (n_sim, len(teams))).copy()
         LOG.info("Season is complete; using the official final standings.")
     else:
-        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache)
+        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
+        xg_coverage.update(history.attrs.get("xg_coverage", {}))
+        residuals = None
+        if h2h_weight:
+            h2h_results = pd.concat([load_h2h_results(client, competition, season, seasons=h2h_seasons, cache=cache), finished],
+                                    ignore_index=True)
+            residuals = encounter_residuals(h2h_results, xi=xi, lambda_reg=lambda_reg)
         odds = None
         if use_odds and not remaining.empty:
             if odds_snapshot is not None:
@@ -151,7 +216,10 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
             elif odds_provider != "none":
                 odds = _load_odds(competition=competition, season=season, provider=odds_provider, days=odds_days)
         cutoff = pd.Timestamp.now(tz="UTC")
-        dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg)
+        dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi,
+                                        lambda_reg=lambda_reg, xg_weight=xg_weight, h2h_weight=h2h_weight,
+                                        h2h_residuals=residuals)
+        h2h_pairs = len(dc.pair_shift)
         lookup = match_odds(remaining, odds, as_of=cutoff) if odds is not None else {}
         LOG.info("Odds coverage: %s/%s remaining fixtures.", len(lookup), len(remaining))
 
@@ -180,6 +248,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         "weights": weights or DEFAULT_WEIGHTS, "calibrated": calibrator is not None,
         "calibration_seasons": years if calibrate else [],
         "calibration_cutoffs": list(calibration_cutoffs) if calibrate else [],
+        "xg_weight": xg_weight, "xg_provider": "understat", "xg_coverage": xg_coverage,
+        "h2h_weight": h2h_weight, "h2h": {**DEFAULT_H2H, "seasons": h2h_seasons, "adjusted_fixtures": h2h_pairs} if h2h_weight else None,
         "tiebreak_fallback": "Random ordering only after modeled sporting criteria; fair-play and playoff matches are not modeled.",
         "uncertainty": "Point intervals reflect simulated match results, conditional on fitted team strengths.",
     }
