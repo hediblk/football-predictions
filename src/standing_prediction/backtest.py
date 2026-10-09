@@ -15,9 +15,10 @@ from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.data import FootballDataClient, standings_from_matches, validate_schedule
 from standing_prediction.ensemble import blend_probabilities
 from standing_prediction.odds import match_odds
+from standing_prediction.h2h import encounter_residuals
 from standing_prediction.predict_positions import (
-    DEFAULT_WEIGHTS, _parse_weights, build_fixture_specs, fit_prediction_models,
-    load_history, load_season_results,
+    DEFAULT_H2H, DEFAULT_WEIGHTS, _parse_weights, build_fixture_specs, fit_prediction_models,
+    load_h2h_results, load_history, load_season_results,
     predict_outcome_probs,
 )
 from standing_prediction.simulate import rank_table, simulate_season_scores
@@ -26,8 +27,8 @@ from standing_prediction.simulate import rank_table, simulate_season_scores
 LOG = logging.getLogger(__name__)
 
 
-def snapshot_features(matches, *, season, competition="PD", cutoff_matchday=10,
-                      history=None, xi=0.003, lambda_reg=0.1, weights=None, odds=None):
+def snapshot_split(matches, cutoff_matchday):
+    """Teams, forecast origin, and played/future matches for a historical cutoff round, or None."""
     matches = matches.copy()
     matches["utcDate"] = pd.to_datetime(matches["utcDate"], utc=True)
     if matches["utcDate"].isna().any() or matches[["homeGoals", "awayGoals"]].isna().any().any():
@@ -38,15 +39,26 @@ def snapshot_features(matches, *, season, competition="PD", cutoff_matchday=10,
     if target_count < 1:
         raise ValueError("Cutoff rounds must be positive.")
     if target_count >= len(matches):
-        return pd.DataFrame(), None, None, None
+        return None
     # The end of this UTC day is a real forecast origin, including rescheduled games by date.
     cutoff = matches.iloc[target_count - 1]["utcDate"].normalize() + pd.Timedelta(days=1)
     train = matches[matches["utcDate"] < cutoff].copy()
     future = matches[matches["utcDate"] >= cutoff].copy()
     if future.empty:
+        return None
+    return teams, cutoff, train, future
+
+
+def snapshot_features(matches, *, season, competition="PD", cutoff_matchday=10,
+                      history=None, xi=0.003, lambda_reg=0.1, weights=None, odds=None,
+                      xg_weight=0.0, h2h_weight=0.0, h2h_residuals=None):
+    split = snapshot_split(matches, cutoff_matchday)
+    if split is None:
         return pd.DataFrame(), None, None, None
+    teams, cutoff, train, future = split
     standings = standings_from_matches(train, teams=teams, competition=competition)
-    dc, elo = fit_prediction_models(train, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg)
+    dc, elo = fit_prediction_models(train, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg,
+                                    xg_weight=xg_weight, h2h_weight=h2h_weight, h2h_residuals=h2h_residuals)
     lookup = match_odds(future, odds, as_of=cutoff) if odds is not None else {}
     rows = []
     for match in future.itertuples():
@@ -107,7 +119,8 @@ def position_metrics(probabilities, points, actual_order, actual_standings):
 
 def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=2000,
                  seed=7, prior_seasons=2, xi=0.003, lambda_reg=0.1,
-                 weights=None, odds_snapshot=None, use_odds=False, out_dir=Path("out/backtests"), cache=True):
+                 weights=None, odds_snapshot=None, use_odds=False, out_dir=Path("out/backtests"), cache=True,
+                 xg_weight=0.0, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
     if n_sim < 1 or prior_seasons < 0:
         raise ValueError("n_sim must be positive; prior_seasons cannot be negative.")
     client = FootballDataClient(use_cache=cache) if os.getenv("FOOTBALL_DATA_API_KEY") else None
@@ -116,14 +129,19 @@ def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=20
         LOG.warning("No timestamped odds snapshot supplied; excluding historical CSV odds from dated forecasts.")
     prior_frames, forecast_frames, reports = [], [], []
     position_frames = []
+    residuals = None
+    if h2h_weight:
+        residuals = encounter_residuals(load_h2h_results(client, competition, max(seasons) + 1, cache=cache,
+                                                         seasons=h2h_seasons + max(seasons) - min(seasons)),
+                                        xi=xi, lambda_reg=lambda_reg)
     for season in sorted(set(seasons)):
-        matches = load_season_results(client, competition, season, cache=cache)
+        matches = load_season_results(client, competition, season, cache=cache, xg=xg_weight > 0)
         teams = sorted(set(matches["homeTeam"]) | set(matches["awayTeam"]))
         actual_standings = standings_from_matches(matches, teams=teams, competition=competition)
         complete = matches.assign(status="FINISHED")
         validate_schedule(complete, actual_standings)
         actual_order = rank_table(actual_standings, matches, competition=competition)
-        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache)
+        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
         calibrator = None
         if prior_frames:
             calibrator = train_outcome_calibrator(pd.concat(prior_frames, ignore_index=True), use_odds_features=use_odds)
@@ -131,7 +149,8 @@ def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=20
         for cutoff_round in cutoffs:
             frame, standings, future, models = snapshot_features(
                 matches, season=season, competition=competition, cutoff_matchday=cutoff_round,
-                history=history, xi=xi, lambda_reg=lambda_reg, weights=weights, odds=odds)
+                history=history, xi=xi, lambda_reg=lambda_reg, weights=weights, odds=odds,
+                xg_weight=xg_weight, h2h_weight=h2h_weight, h2h_residuals=residuals)
             if frame.empty:
                 continue
             dc, elo, cutoff = models
@@ -177,6 +196,7 @@ def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=20
     metadata = {"competition": competition, "seasons": sorted(set(seasons)), "cutoff_rounds": list(cutoffs),
                 "n_sim": n_sim, "seed": seed, "prior_seasons": prior_seasons, "xi": xi, "lambda_reg": lambda_reg,
                 "weights": weights or DEFAULT_WEIGHTS, "odds_snapshot": str(odds_snapshot) if odds_snapshot else None,
+                "xg_weight": xg_weight, "h2h_weight": h2h_weight, "h2h_seasons": h2h_seasons if h2h_weight else None,
                 "validation": "Expanding chronological seasons; first season has no calibrated evaluation.",
                 "cutoff": "End of UTC day containing the Nth completed game (N = cutoff round × teams/2).",
                 "position_log_loss": "Finite Monte Carlo zeros clipped at 1e-12; prefer RPS and event Brier scores.",
@@ -200,6 +220,9 @@ def main(argv=None):
     parser.add_argument("--use-odds", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--odds-snapshot", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("out/backtests"))
+    parser.add_argument("--xg-weight", type=float, default=0.0)
+    parser.add_argument("--h2h-weight", type=float, default=0.0)
+    parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args(argv)
     load_dotenv()
