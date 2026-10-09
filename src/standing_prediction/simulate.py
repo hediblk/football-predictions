@@ -242,21 +242,3 @@ def simulate_season_scores(
         counts[order, positions] += 1
     counts = pd.DataFrame(counts, index=teams, columns=np.arange(1, len(teams) + 1))
     return (counts, points) if return_details else counts
-
-
-def simulate_season(fixtures, standings, n_sim=5000, seed=None):
-    # Compatibility path: probabilities alone imply minimal 1-0, 0-0, 0-1 scores.
-    scores = np.array([[1, 0], [0, 0], [0, 1]])
-    conditional = tuple(np.eye(3))
-    specs = [
-        FixtureSimulationSpec(
-            row["homeTeam"], row["awayTeam"], row["p_home_win"], row["p_draw"],
-            row["p_away_win"], scores, conditional,
-        )
-        for _, row in fixtures.iterrows()
-    ]
-    if not {"goals_for", "goals_against"}.issubset(standings.columns):
-        standings = standings.copy()
-        standings["goals_for"] = standings["goal_diff"].clip(lower=0)
-        standings["goals_against"] = -standings["goal_diff"].clip(upper=0)
-    return simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed, competition="PL")

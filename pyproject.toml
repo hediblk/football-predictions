@@ -27,4 +27,5 @@ football-predict = "standing_prediction.predict_positions:main"
 football-backtest = "standing_prediction.backtest:main"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["standing_prediction*"]
