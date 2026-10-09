@@ -54,7 +54,7 @@ def train_outcome_calibrator(
         available = np.isfinite(rows[book_columns].to_numpy(dtype=float)).all(axis=1)
         if available.sum() >= 30 and rows.loc[available, "y"].nunique() >= 2:
             odds_model = LogisticRegression(max_iter=max_iter, solver="lbfgs")
-            odds_model.fit(rows.loc[available, feature_order + book_columns], y[available])
+            odds_model.fit(rows.loc[available, feature_order + book_columns].to_numpy(dtype=float), y[available])
     return OutcomeCalibrator(model=model, feature_order=tuple(feature_order), odds_model=odds_model)
 
 
