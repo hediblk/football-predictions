@@ -182,6 +182,8 @@ def normalize_team(name):
         "clermont foot": "clermont", "estac troyes": "troyes",
         "es troyes": "troyes", "dijon fco": "dijon",
         "nimes olympique": "nimes", "girondins bordeaux": "bordeaux",
-        "sp gijon": "sporting gijon",
+        "sp gijon": "sporting gijon", "santander": "racing santander",
+        # Understat variants.
+        "borussia m gladbach": "borussia monchengladbach", "rasenballsport leipzig": "rb leipzig",
     }
     return aliases.get(normalized, normalized)
