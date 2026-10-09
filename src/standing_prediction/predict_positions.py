@@ -144,14 +144,14 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         LOG.info("Season is complete; using the official final standings.")
     else:
         history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache)
-        dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg)
-
         odds = None
         if use_odds and not remaining.empty:
             if odds_snapshot is not None:
                 odds = pd.read_csv(odds_snapshot)
             elif odds_provider != "none":
                 odds = _load_odds(competition=competition, season=season, provider=odds_provider, days=odds_days)
+        cutoff = pd.Timestamp.now(tz="UTC")
+        dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg)
         lookup = match_odds(remaining, odds, as_of=cutoff) if odds is not None else {}
         LOG.info("Odds coverage: %s/%s remaining fixtures.", len(lookup), len(remaining))
 
@@ -211,6 +211,7 @@ def forecast_summary(probabilities, points):
     events = {"title_pct": p.iloc[:, 0], "top_four_pct": p.iloc[:, :min(4, n_teams)].sum(axis=1),
               "bottom_three_pct": p.iloc[:, max(0, n_teams - 3):].sum(axis=1)}
     for name, event in events.items():
+        event = event.clip(0, 1)
         summary[name] = 100 * event
         summary[name.replace("_pct", "_mc_se_pp")] = 100 * np.sqrt(event * (1 - event) / len(points))
     return summary.round(4)
