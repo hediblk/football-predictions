@@ -317,13 +317,25 @@ def _write_html(probs, *, standings, path, summary=None, metadata=None):
     if "points_p10" in summary:
         shown["Points: 80% range"] = [f"{low:.0f}–{high:.0f}" for low, high in zip(summary["points_p10"], summary["points_p90"])]
     summary_html = shown.to_html(float_format=lambda value: f"{value:.2f}")
-    heatmap = (probs.style.format("{:.1f}%").background_gradient(cmap="YlGn", vmin=0, vmax=100).to_html())
+    heatmap = style_probabilities(probs).to_html()
+    levels = pd.DataFrame([[0, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100]])
+    legend = style_probabilities(levels).hide(axis="index").hide(axis="columns").to_html()
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{escape(title)}</title>
 <style>body{{font:15px system-ui,sans-serif;margin:32px;color:#18332a;background:#f8faf8}}h1{{font-size:26px}}table{{border-collapse:collapse;background:white}}th,td{{padding:8px;border-bottom:1px solid #ddd;text-align:right;white-space:nowrap}}th:first-child{{text-align:left}}.scroll{{overflow:auto;margin:20px 0}}p{{max-width:1000px;line-height:1.5}}</style></head><body>
-<h1>{escape(title)}</h1><p>{escape(details)}</p><p>{escape(coverage)}</p><div class="scroll">{summary_html}</div>
+<h1>{escape(title)}</h1><div class="scroll">{heatmap}</div>
+<p>Probability color scale: continuous, with more detail at low probabilities. Exact zeros are white.</p><div class="scroll">{legend}</div>
+<p>{escape(details)}</p><p>{escape(coverage)}</p><div class="scroll">{summary_html}</div>
 <p>Point intervals cover the 10th–90th simulated percentiles. The summary CSV includes Monte Carlo standard errors in percentage points; they measure simulation sampling error, not model error.</p>
-<div class="scroll">{heatmap}</div><p>{escape(meta.get('uncertainty', ''))}</p><p>{escape(meta.get('tiebreak_fallback', ''))}</p></body></html>'''
+<p>{escape(meta.get('uncertainty', ''))}</p><p>{escape(meta.get('tiebreak_fallback', ''))}</p></body></html>'''
     Path(path).write_text(html, encoding="utf-8")
+
+
+def style_probabilities(probabilities):
+    return (
+        probabilities.style.format("{:.2f}%")
+        .background_gradient(cmap="YlGnBu", gmap=np.power(probabilities / 100, 0.4), axis=None, vmin=0, vmax=1)
+        .map(lambda value: "background-color: #fff; color: #64748b" if value == 0 else "")
+    )
 
 
 def _train_calibrator(client, *, competition, seasons, cutoffs, prior_seasons, xi, lambda_reg, cache=True, weights=None):

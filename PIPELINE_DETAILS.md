@@ -67,6 +67,8 @@ The old `simulate_season` probability-only helper remains for compatibility. It 
 
 ## Outputs and uncertainty
 
+The position heatmap appears first in the HTML report and notebooks. A continuous blue–green scale uses a power of 0.4 to make low probabilities easier to distinguish; exact zeros are white. Percentages display two decimal places, with a color legend in the HTML report. Colors use the same absolute scale for every team.
+
 Latest files live under `out/` by default. For La Liga:
 
 - `pd_position_probs.csv` and `pd_position_probs.html`: position percentages and a readable report.
