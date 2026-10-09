@@ -25,6 +25,7 @@ notebook = ["jupyterlab>=4", "ipykernel>=6"]
 [project.scripts]
 football-predict = "standing_prediction.predict_positions:main"
 football-backtest = "standing_prediction.backtest:main"
+football-ablation = "standing_prediction.ablation:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
