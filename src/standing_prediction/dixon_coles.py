@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, Tuple
+from typing import Dict, Mapping, Tuple
 
 import numpy as np
 import pandas as pd
@@ -21,6 +21,8 @@ class DixonColesModel:
     rho: float
     xi: float
     fitted_at: datetime
+    # Optional per-fixture log-rate shifts, e.g. a head-to-head effect: +shift home, -shift away.
+    pair_shift: Mapping[Tuple[str, str], float] = field(default_factory=dict)
 
     def expected_goals(self, home, away):
         home_idx = self.team_index.get(home)
@@ -32,6 +34,9 @@ class DixonColesModel:
 
         log_lambda = self.intercept + self.home_advantage + home_attack + away_defense
         log_mu = self.intercept + away_attack + home_defense
+        shift = self.pair_shift.get((home, away), 0.0)
+        log_lambda += shift
+        log_mu -= shift
 
         lambda_ = float(np.exp(np.clip(log_lambda, -15.0, 15.0)))
         mu_ = float(np.exp(np.clip(log_mu, -15.0, 15.0)))
