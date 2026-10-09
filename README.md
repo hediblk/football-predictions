@@ -1,5 +1,37 @@
 # Football standings prediction
 
+<!-- laliga-forecast:start -->
+## La Liga 2026/27 predictions
+
+Updated **2026-10-09 17:37 UTC** from 10,000 simulations. Results through **2026-09-20 19:00 UTC**; 69 matches completed. Odds cover **20/311** remaining fixtures.
+
+| Team | Avg. position | Avg. points | Title | Top four | Bottom three |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| FC Barcelona | 1.08 | 92.99 | 92.81% | 100.00% | 0.00% |
+| Real Madrid CF | 2.35 | 78.74 | 5.97% | 98.38% | 0.00% |
+| Club Atlético de Madrid | 3.28 | 72.11 | 1.02% | 89.15% | 0.00% |
+| Real Betis Balompié | 4.26 | 66.90 | 0.19% | 68.85% | 0.00% |
+| Villarreal CF | 6.43 | 59.16 | 0.01% | 20.81% | 0.20% |
+| Sevilla FC | 9.29 | 52.56 | 0.00% | 4.37% | 1.88% |
+| RC Deportivo La Coruña | 9.76 | 51.59 | 0.00% | 3.56% | 2.65% |
+| Real Sociedad de Fútbol | 9.79 | 51.61 | 0.00% | 3.37% | 2.65% |
+| Athletic Club | 9.90 | 51.38 | 0.00% | 3.83% | 2.99% |
+| Deportivo Alavés | 10.39 | 50.29 | 0.00% | 2.56% | 3.30% |
+| RC Celta de Vigo | 10.95 | 49.23 | 0.00% | 2.10% | 4.98% |
+| Rayo Vallecano de Madrid | 11.05 | 49.14 | 0.00% | 1.78% | 5.36% |
+| Levante UD | 13.48 | 44.60 | 0.00% | 0.35% | 16.56% |
+| Elche CF | 13.95 | 43.64 | 0.00% | 0.25% | 20.29% |
+| CA Osasuna | 14.11 | 43.44 | 0.00% | 0.14% | 20.74% |
+| Getafe CF | 14.18 | 43.30 | 0.00% | 0.13% | 19.87% |
+| RCD Espanyol de Barcelona | 14.19 | 43.19 | 0.00% | 0.26% | 20.86% |
+| Valencia CF | 15.40 | 40.75 | 0.00% | 0.03% | 33.31% |
+| Real Racing Club de Santander | 16.46 | 38.44 | 0.00% | 0.08% | 47.46% |
+| Málaga CF | 19.68 | 26.00 | 0.00% | 0.00% | 96.90% |
+
+Teams are ordered by expected final position. Percentages describe simulated table finishes; point estimates are conditional on fitted team strengths. This is a saved forecast snapshot, with the source-data cutoff shown above.
+
+<!-- laliga-forecast:end -->
+
 A Python package for forecasting final league positions from played matches, current standings, and optional bookmaker odds. The source lives in `src/standing_prediction`; the CLI and notebook use the same pipeline.
 
 The model combines time-decayed Dixon–Coles goal probabilities with Elo, then simulates the remaining scorelines. Supported leagues are La Liga (`PD`), Premier League (`PL`), Bundesliga (`BL1`), Serie A (`SA`), and Ligue 1 (`FL1`).
