@@ -78,6 +78,14 @@ football-backtest --competition PD --seasons 2024 --use-odds --odds-snapshot odd
 
 See [pipeline details](PIPELINE_DETAILS.md) for the snapshot format, ranking rules, and modeling limits, and [the notebook guide](notebooks/PREDICTION_METHOD.md) for the Python API.
 
+## Validation snapshot
+
+The saved [example forecast](examples/laliga_position_probs.html) includes its [metadata](examples/laliga_metadata.json). Generated files under `out/` are ignored by Git.
+
+A La Liga comparison across 2022/23–2024/25, at cutoff rounds 5, 10, 20, and 30, gave a match-weighted blend log loss of **0.9838 with two prior seasons**, compared with **1.0320 without priors**. Mean final-position RPS was **0.0715 vs 0.0798** (lower is better). Both variants used the same dated fixtures, no odds, seed 7, and 2,000 simulations per snapshot. These horizons overlap within seasons. Calibration did not consistently improve scores and remains optional.
+
+Saved reports: [with priors](examples/backtest_metrics.csv), [without priors](examples/backtest_no_priors_metrics.csv), and [settings](examples/backtest_metadata.json). Both La Liga notebooks and a 10,000-simulation live forecast were executed successfully.
+
 ## Next steps
 
 Use the historical reports to decide which changes help before adding model complexity. Useful candidates are xG, lineups/injuries, and calibrated uncertainty in team strengths. Cups and knockout phases need a separate tournament simulator.

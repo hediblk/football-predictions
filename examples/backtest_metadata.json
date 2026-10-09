@@ -1,0 +1,30 @@
+{
+  "competition": "PD",
+  "seasons": [
+    2022,
+    2023,
+    2024
+  ],
+  "cutoff_rounds": [
+    5,
+    10,
+    20,
+    30
+  ],
+  "n_sim": 2000,
+  "seed": 7,
+  "prior_seasons": 2,
+  "xi": 0.003,
+  "lambda_reg": 0.1,
+  "weights": {
+    "main": 0.35,
+    "odds": 0.55,
+    "elo": 0.1
+  },
+  "odds_snapshot": null,
+  "validation": "Expanding chronological seasons; first season has no calibrated evaluation.",
+  "cutoff": "End of UTC day containing the Nth completed game (N = cutoff round \u00d7 teams/2).",
+  "position_log_loss": "Finite Monte Carlo zeros clipped at 1e-12; prefer RPS and event Brier scores.",
+  "calibration": "Overlapping forecast horizons within each training season; held-out seasons stay strictly later.",
+  "historical_tables": "Reconstructed from match scores; disciplinary point deductions, appeals, fair-play rulings and playoff results are excluded."
+}
