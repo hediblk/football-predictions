@@ -332,6 +332,13 @@ def _write_html(probs, *, standings, path, summary=None, metadata=None):
 
 
 def style_probabilities(probabilities):
+    if len(probabilities) > 1:
+        positions = probabilities.columns.to_numpy(dtype=float)
+        order = pd.DataFrame({
+            "most_likely": probabilities.idxmax(axis=1).astype(float),
+            "expected": probabilities.mul(positions, axis=1).sum(axis=1) / 100,
+        }).sort_values(["most_likely", "expected"], kind="stable").index
+        probabilities = probabilities.loc[order]
     return (
         probabilities.style.format("{:.2f}%")
         .background_gradient(cmap="YlGnBu", gmap=np.power(probabilities / 100, 0.4), axis=None, vmin=0, vmax=1)
