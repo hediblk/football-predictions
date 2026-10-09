@@ -12,70 +12,43 @@ Keep `src/standing_prediction` as the main product, with one current notebook in
 - Vectorized simulations, expected points/positions, point percentiles, event probabilities, and Monte Carlo standard errors.
 - Chart-first HTML/notebook output with continuous nonlinear colors, two-decimal percentages, saved provenance, input snapshots, and timestamped forecast archives.
 - Chronological historical snapshots and expanding-season calibration evaluation, with match, position, and event metrics. Official completed-season prediction exports bypass fitting.
+- Optional xG and predictive head-to-head (H2H) goal-rate adjustments (`xg_weight`, `h2h_weight`, both 0 by default), a `football-ablation` command that tunes them on earlier seasons and compares variants on later ones, and tests for prior-only features.
 
-## Proposed next work
+## xG and H2H: sources and design
 
-Draft only: add optional xG and predictive head-to-head (H2H) adjustments to the existing goal model. Keep both disabled until chronological comparisons support them. Reuse existing sources first; a new provider is not required to start inspecting and collecting the current CSV fields.
+Checked on **2026-10-09**:
 
-The model's `expected_goals()` returns predicted scoring rates from historical goals. Observed shot-based xG measures the chances created during a completed match; these are separate inputs. H2H here means a possible predictive matchup effect. La Liga's H2H ranking rules are already implemented and remain independent of this experiment.
-
-## 1. Verify and retain existing source data
-
-Checked on **2026-10-09** against official documentation and live CSV contents:
-
-| Existing source | Verified capability | Planned use |
+| Source | Finding | Use |
 | :--- | :--- | :--- |
-| [football-data.org v4](https://docs.football-data.org/general/v4/match.html) | Dated scores, match/team IDs, and a documented `/matches/{id}/head2head` resource. The documented match schema has no xG field. Its [January 2026 announcement](https://www.football-data.org/blog) mentions forthcoming xG, without establishing our account's current access or schema. | Keep it as the live schedule/standings/results source. Inspect actual responses for documented or confirmed xG support; prefer already loaded results for H2H rather than extra requests. |
-| [football-data.co.uk La Liga CSVs](https://www.football-data.co.uk/spainm.php) | The [2026/27 CSV](https://www.football-data.co.uk/mmz4281/2627/SP1.csv) has `HxG`/`AxG`, populated for **69/69** completed matches, dated **Aug 15–Sep 20, 2026**. The [2024/25](https://www.football-data.co.uk/mmz4281/2425/SP1.csv) and [2025/26](https://www.football-data.co.uk/mmz4281/2526/SP1.csv) files each have 380 results and no xG columns. | Preserve the current optional fields. Existing result histories already supply H2H encounters. The CSV currently extends no later than the API's September 20 result cutoff. |
-| [CSV field notes](https://www.football-data.co.uk/notes.txt) | Define results and shots (`HS`, `AS`, `HST`, `AST`), but do not define `HxG`/`AxG` or their underlying provider. | Confirm xG provenance and meaning before enabling it. If absent, shots may support a separately labeled shot-form experiment; they are not shot-based xG. |
-| [The Odds API soccer feed](https://the-odds-api.com/sports-odds-data/epl-odds.html) | `h2h` is the home/draw/away **1X2 betting market**, not previous encounters. Its current odds endpoint does not supply observed xG. | Continue timestamped bookmaker blending. Do not treat odds market names as H2H history or infer observed xG from 1X2 prices. |
+| [Understat](https://understat.com/league/La_liga) `getLeagueData/<league>/<season>` | One provider for PL, La Liga, Bundesliga, Serie A and Ligue 1 from 2014/15. La Liga has 380/380 matches with xG in every season 2014/15–2025/26, and 69/69 so far in 2026/27. Kickoffs are UTC and match football-data.org exactly for 2026/27. Unofficial JSON endpoint without documented terms or versioning. | Sole xG source for every season, cached permanently for past seasons. |
+| [football-data.co.uk](https://www.football-data.co.uk/spainm.php) `HxG`/`AxG` | Only in 2026/27, provider undocumented. Differs from Understat by a median of 0.25 xG per team per match (maximum 2.4), so it is a different model. | Not used; mixing providers would change the feature between seasons. |
+| [FBref](https://fbref.com/) | Opta advanced data removed on 2026-01-20. | Not available. |
+| [football-data.org](https://docs.football-data.org/general/v4/match.html) | No xG in the documented schema. `/head2head` returns aggregates for a single fixture. | H2H meetings come from dated result CSVs already used for history; no extra requests. |
 
-Before model use, establish whether `HxG`/`AxG` are post-match pre-shot xG, their provider/model version, penalty treatment, match duration, publication timing, and revision policy. A field name and plausible numeric values do not establish these properties. Keep unknown provenance explicit and inspect season/league coverage rather than assuming historical backfill.
+**Joins:** home/away pairings are unique within a league season. A join also requires kickoff within two days (Understat's 2016/17 times are off by up to about a day) and an identical final score. For example, Union Berlin–Bochum 2024/25 was played 1–1 but awarded 2–0, so its xG is rejected. Unmatched rows keep missing xG, and coverage is written to metadata.
 
-Minimum retained match record: competition/season, source match ID where available, kickoff UTC, canonical home/away teams, integer goals, separate nullable **float** `home_xg`/`away_xg`, provider/metric scope, first-seen or published timestamp, retrieval timestamp, and raw snapshot reference. Missing xG stays missing; do not substitute zero or scored goals. Preserve source versions when values change.
+**xG model:** a time-decayed quasi-Poisson attack/defense fit to xG, centered and ridge-regularized. Its strengths blend with Dixon–Coles strengths, which equals the log-rate blend while keeping the goal model's intercept and home advantage. Teams without xG keep their goal strengths. Score matrices, outcome probabilities and scoreline sampling all use the adjusted rates.
 
-The existing `fetch_football_data_uk_matches()` in `odds.py` drops xG columns. Retaining them is only the first step: current forecasts obtain completed matches from football-data.org, while `load_season_results()` currently supplies historical/calibration results. Explicitly load the current-season CSV and join its optional xG into API completed matches. Match competition/season, normalized team pairs, and kickoff date in a consistent timezone; check both final scores. Prefer IDs/exact kickoff where available. Reject ambiguous joins and report mismatches/coverage rather than silently assigning values.
+**H2H model:** each meeting's goal difference minus a Dixon–Coles expectation fitted on the previous 730 days, with the model refitted every 28 days, so the baseline never sees that match or later ones. Pair effects pool venues, use a two-year half-life and shrinkage 4, and are filtered at the forecast origin. A fixture's log rates move by ±`h2h_weight × effect`. Simulated future meetings never feed back into the effect.
 
-## 2. Add a small xG rate adjustment
+**Timing:** backtests assume Understat xG is published by the end of each match's UTC day. Historical publication times are not reconstructed, so xG comparisons are retrospective. Live forecasts save the joined xG with each matches snapshot for prospective checks.
 
-Fit an optional, time-decayed attack/defense model to validated historical xG totals, accounting for opponent and home advantage. Use centered strengths and regularization toward league average, especially with only 69 observed matches. A continuous-response log-link/quasi-Poisson objective can estimate these means without treating fractional xG as integer goals.
+## Ablation results (2026-10-09)
 
-Retain the existing Dixon–Coles likelihood on integer `homeGoals`/`awayGoals`. For each fixture, combine its goal-based rate with the xG-based rate through one shared, regularized weight:
+`football-ablation` was run with tuning seasons 2016/17–2019/20 and evaluation seasons 2020/21–2025/26. Each season was forecast at cutoffs after rounds 5, 10, 20 and 30 (24 snapshots per league), using 2,000 simulations, seed 7, team models only (no odds) and weights frozen after tuning.
 
-```text
-log(new_rate) = (1 - w_xg) * log(goal_based_rate) + w_xg * log(xg_based_rate)
-```
+| League | Variant | Weights (xG, H2H) | Match log loss | Position RPS | Exp. points MAE | Title / top-4 / bottom-3 Brier |
+| :--- | :--- | :--- | ---: | ---: | ---: | :--- |
+| La Liga | baseline | 0, 0 | 0.9917 | 0.0750 | 4.98 | 0.0197 / 0.0197 / 0.0740 |
+| La Liga | xG | 0.5, 0 | **0.9859** | **0.0701** | **4.78** | 0.0184 / 0.0188 / 0.0711 |
+| Premier League | baseline | 0, 0 | 0.9866 | 0.0727 | 6.02 | 0.0162 / 0.0656 / 0.0481 |
+| Premier League | xG | 0.75, 0 | **0.9820** | **0.0710** | **5.87** | 0.0152 / 0.0620 / 0.0445 |
 
-Start at `w_xg = 0`; select it on earlier validation data. Check systematic provider/penalty-scope differences before interpreting xG rates as total goal rates. Missing or insufficient xG history falls back to the goal baseline, with coverage recorded.
+- **xG helps consistently.** In La Liga it improves match log loss in 21/24 snapshots and RPS in 23/24, and every evaluation season improves on average. In the Premier League it improves log loss in 18/24 and RPS in 16/24. Only 2021/22 is worse on average.
+- **H2H adds nothing.** In both leagues, every positive weight raised tuning log loss, monotonically: La Liga 0.9706 → 0.9741 and Premier League 0.9484 → 0.9556 from weight 0 to 0.3. Tuning therefore selected 0, so the H2H-only and combined variants equal baseline and xG. H2H stays available but off.
+- **Caveats:** snapshots within a season overlap; xG availability is assumed rather than reconstructed; odds were excluded. Live forecasts give odds 0.55 of the blend, and the market may already price in the xG information. No dated historical odds exist to test that.
 
-Use the adjusted rates consistently for the Dixon–Coles score matrix, outcome probabilities, and conditional score sampling. Then apply the existing Elo/odds blend. This allows the added information to affect both points and goal-based tiebreaks. Keep one shared feature path for prediction and backtesting; avoid separate notebook logic or a large new model family.
-
-## 3. Evaluate a strongly shrunk H2H residual
-
-Build past encounters from current and prior-season score rows in both home/away directions. Fetch `/head2head` only if needed to fill a verified gap; use dated individual matches and filter them at the forecast origin, rather than trusting a current aggregate in a historical backtest.
-
-Measure what previous meetings showed **beyond ordinary team strength**. For teams A and B, orient each past encounter as A minus B:
-
-```text
-residual_j = actual_goal_difference_j - baseline_expected_goal_difference_j
-pair_effect = sum(recency_weight_j * residual_j) / (shrinkage + sum(recency_weight_j))
-```
-
-Historical baseline predictions must come from rolling, prior-only fits available before each encounter. Otherwise the residual can absorb future information or reflect a model already fitted to that result. Begin with one shared coefficient adjusting the two log goal rates in opposite directions; regularize it toward zero. No prior encounters means zero adjustment.
-
-Pool venues initially while the historical baseline accounts for home advantage. Compare a same-venue weighting variant only if supported by validation. Downweight old meetings, report effective sample size, and shrink heavily: two league meetings per year leave very little evidence, while squads/coaches change. Raw win-count boosts would largely repeat the strength information already in Dixon–Coles/Elo.
-
-For a whole-season forecast, construct this feature from information available at its origin and keep it fixed within that forecast. Simulated future meetings are not observed evidence. The separate simulated H2H statistics used for ranking still update normally.
-
-## 4. Preserve timing and validate before changing defaults
-
-- Build each feature only from completed matches whose relevant data was available by that forecast origin. Record publication/first-seen and retrieval times separately. A live forecast origin must follow input collection; later retrieval does not prove availability at a past cutoff.
-- For old backfilled xG without publication history, label comparisons as retrospective with an explicit availability assumption. Do not describe them as fully reconstructed historical snapshots. Keep saving raw observations now for prospective evaluation.
-- Compare **baseline**, **xG only**, **H2H only**, and **both**, using identical chronological origins, simulations/seeds, and source coverage. Tune decay, shrinkage, and coefficients on earlier data; freeze them before evaluating later seasons.
-- Report match log loss/Brier, final-position RPS, expected-points error, and title/top-four/bottom-three Brier. Compare the same matches with and without odds and on their common covered subset: market probabilities may already reflect the added information. Overlapping horizons are not independent observations.
-- Current CSV coverage supports ingestion and a prospective experiment, but not a multi-season xG comparison. Seek confirmed same-source backfill; otherwise collect later data and keep xG experimental. Promote neither feature on one partial season or an in-sample gain. H2H may reasonably remain disabled if its residual adds no consistent value.
-
-Deliverables for a later implementation: optional retained/joined xG data and coverage metadata; a small shared rate-adjustment layer; optional xG/H2H flags; and an ablation report. No feature implementation, provider subscription, or default change is part of this draft.
+**Next:** decide whether to make `xg_weight=0.5` the default for team-model rates; start collecting dated odds alongside the saved xG to test the odds interaction prospectively; optionally run the remaining three leagues.
 
 ## Other existing priorities
 
