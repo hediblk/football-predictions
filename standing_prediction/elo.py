@@ -35,12 +35,18 @@ class EloModel:
 def fit_elo(
     matches,
     *,
+    teams=None,
+    season_regression=0.75,
     k_factor=30.0,
     home_advantage=55.0,
     draw_base=None,
     draw_scale=300.0,
     initial_rating=1500.0,
 ):
+    if not 0 <= season_regression <= 1:
+        raise ValueError("season_regression must be between 0 and 1.")
+    if not np.isfinite(draw_scale) or draw_scale <= 0:
+        raise ValueError("draw_scale must be positive and finite.")
     required = {"homeTeam", "awayTeam", "homeGoals", "awayGoals"}
     missing = required - set(matches.columns)
     if missing:
@@ -51,14 +57,22 @@ def fit_elo(
         raise ValueError("No finished matches available to fit Elo ratings.")
 
     if "utcDate" in finished.columns:
+        finished["utcDate"] = pd.to_datetime(finished["utcDate"], utc=True)
         finished = finished.sort_values("utcDate")
 
-    if draw_base is None:
+    calibrate_draws = draw_base is None
+    if calibrate_draws:
         draws = (finished["homeGoals"] == finished["awayGoals"]).mean()
-        draw_base = float(np.clip(draws, 0.15, 0.35))
+        draw_target = float(np.clip(draws, 0.05, 0.35))
+        draw_base = draw_target / max(np.exp(-abs(home_advantage) / draw_scale), 1e-12)
 
-    teams = pd.unique(finished[["homeTeam", "awayTeam"]].values.ravel("K"))
-    ratings = {t: float(initial_rating) for t in teams}
+    observed_teams = pd.unique(finished[["homeTeam", "awayTeam"]].values.ravel("K"))
+    ratings = {
+        team: float(initial_rating)
+        for team in [*observed_teams, *(teams if teams is not None else ())]
+    }
+    draw_decay = []
+    previous_season = None
 
     def expected_home_score(p_home, p_draw):
         return p_home + 0.5 * p_draw
@@ -69,6 +83,19 @@ def fit_elo(
         hg = int(row["homeGoals"])
         ag = int(row["awayGoals"])
 
+        if "utcDate" in finished.columns:
+            date = row["utcDate"]
+            season = date.year - (date.month < 7)
+            if previous_season is not None and season > previous_season:
+                retained = season_regression ** (season - previous_season)
+                ratings = {
+                    team: float(initial_rating + retained * (rating - initial_rating))
+                    for team, rating in ratings.items()
+                }
+            previous_season = season
+
+        diff = ratings[home] + home_advantage - ratings[away]
+        draw_decay.append(np.exp(-abs(diff) / draw_scale))
         model = EloModel(
             ratings=ratings,
             k_factor=k_factor,
@@ -89,6 +116,19 @@ def fit_elo(
         delta = k_factor * (act_h - exp_h)
         ratings[home] = float(ratings.get(home, initial_rating) + delta)
         ratings[away] = float(ratings.get(away, initial_rating) - delta)
+
+    if calibrate_draws:
+        decay = np.array(draw_decay)
+        lower, upper = 0.0, 1.0
+        while np.clip(upper * decay, 0.05, 0.35).mean() < draw_target and upper < 1e6:
+            upper *= 2
+        for _ in range(50):
+            baseline = (lower + upper) / 2
+            if np.clip(baseline * decay, 0.05, 0.35).mean() < draw_target:
+                lower = baseline
+            else:
+                upper = baseline
+        draw_base = (lower + upper) / 2
 
     return EloModel(
         ratings=ratings,
