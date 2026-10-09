@@ -36,6 +36,7 @@ def fit_elo(
     matches,
     *,
     teams=None,
+    reference_date=None,
     season_regression=0.75,
     k_factor=30.0,
     home_advantage=55.0,
@@ -58,7 +59,14 @@ def fit_elo(
 
     if "utcDate" in finished.columns:
         finished["utcDate"] = pd.to_datetime(finished["utcDate"], utc=True)
+        if reference_date is not None:
+            reference_date = pd.to_datetime(reference_date, utc=True)
+            finished = finished[finished["utcDate"] <= reference_date]
         finished = finished.sort_values("utcDate")
+    elif reference_date is not None:
+        raise ValueError("reference_date requires dated matches (utcDate).")
+    if finished.empty:
+        raise ValueError("No finished matches available before reference_date.")
 
     calibrate_draws = draw_base is None
     if calibrate_draws:
@@ -116,6 +124,15 @@ def fit_elo(
         delta = k_factor * (act_h - exp_h)
         ratings[home] = float(ratings.get(home, initial_rating) + delta)
         ratings[away] = float(ratings.get(away, initial_rating) - delta)
+
+    if reference_date is not None and previous_season is not None:
+        season = reference_date.year - (reference_date.month < 7)
+        if season > previous_season:
+            retained = season_regression ** (season - previous_season)
+            ratings = {
+                team: float(initial_rating + retained * (rating - initial_rating))
+                for team, rating in ratings.items()
+            }
 
     if calibrate_draws:
         decay = np.array(draw_decay)
