@@ -10,6 +10,7 @@ A Python package for estimating every team's final league-position probabilities
 
 - **Current season:** standings, completed scores, and the full fixture schedule from [football-data.org](https://www.football-data.org/).
 - **Team history:** two prior seasons by default, primarily from [football-data.co.uk](https://www.football-data.co.uk/), with football-data.org as a fallback. Teams without observed history start at neutral strength.
+- **xG:** match-level expected goals from [Understat](https://understat.com/) (top five leagues from 2014/15), joined to results by team pairing, kickoff (±2 days) and final score. Unmatched matches keep missing xG. Current-season xG is saved with every forecast; it changes the model only when `xg_weight > 0`.
 - **Optional odds:** The Odds API or a saved odds CSV. Each observation must be timestamped before kickoff and available by the forecast origin. Undated historical odds are excluded.
 
 ## Methods
@@ -19,7 +20,10 @@ A Python package for estimating every team's final league-position probabilities
 3. Blend available model/market probabilities in **log space**, with configurable weights. Optional calibration learns from earlier seasons.
 4. Simulate remaining **scorelines**, update points and goals, and rank teams using league sporting rules. La Liga uses head-to-head criteria and reapplies rules to remaining tied subsets.
 
-Head-to-head records currently serve table ranking rather than separate predictive features. xG and additional predictive head-to-head features are future work.
+Two optional adjustments to the goal rates are disabled by default:
+
+- **xG** (`xg_weight`): fits time-decayed attack/defense strengths to xG and blends them with the goal-based strengths: `log(rate) = (1 − w)·log(goal rate) + w·log(xG rate)`. The goal model's intercept and home advantage are kept, so league scoring stays on the goal scale.
+- **Head-to-head** (`h2h_weight`): for each pair, the recency-weighted mean of past results relative to a model fitted only on earlier matches, shrunk toward zero. The home rate is shifted up and the away rate down by `h2h_weight ×` that effect. This is separate from La Liga's head-to-head ranking rules, which always apply.
 
 ## Outputs
 
@@ -40,6 +44,8 @@ Use keyword arguments with `run_prediction`, or the corresponding CLI flags (`pr
 | `weights` | Main `0.35`, odds `0.55`, Elo `0.10` | Log-space blend; renormalized across available components |
 | `use_odds`, `calibrate` | `True`, `False` | Optional market data and historical calibration |
 | `max_goals`, `lambda_reg` | `10`, `0.1` | Score-grid limit and model regularization |
+| `xg_weight` | `0` | Weight of xG strengths in log goal rates (0–1) |
+| `h2h_weight`, `h2h_seasons` | `0`, `6` | Log-rate shift per goal of head-to-head residual; seasons of past meetings |
 | `out_dir` | `"out"` | Output directory |
 
 ```python
@@ -68,6 +74,10 @@ football-predict --competition PD
 For the notebook: `pip install -e '.[notebook]'`, then `jupyter lab notebooks/laliga_prediction.ipynb`.
 
 For historical evaluation: `football-backtest --competition PD --seasons 2022 2023 2024 --cutoffs 5 10 20 30`. Cutoffs count matches chronologically to approximate rounds; calibration uses only earlier evaluated seasons. Use `--help` for all options.
+
+To compare the xG and head-to-head adjustments, run `football-ablation --competition PD --tune-seasons 2016 2017 2018 2019 --eval-seasons 2020 2021 2022 2023 2024 2025`. It picks weights by match log loss on the tuning seasons, freezes them, and then scores baseline, xG only, H2H only, and both on the evaluation seasons with identical origins and seeds.
+
+Tests: `pip install -e '.[test]'`, then `pytest`.
 
 ## Limits
 
