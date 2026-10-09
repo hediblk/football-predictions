@@ -297,15 +297,31 @@ def _write_html(probs, *, standings, path, summary=None, metadata=None):
     probs = probs.reindex(standings["team"])
     summary = summary if summary is not None else pd.DataFrame(index=probs.index)
     meta = metadata or {}
-    title = f"{meta.get('competition', 'League')} {meta.get('season', '')} — final-position forecast"
-    details = f"Generated {meta.get('generated_at', 'unknown')} · Data through {meta.get('data_cutoff', 'unknown')} · {meta.get('n_sim', '?'):,} simulations" if meta else ""
+    names = {"PD": "La Liga", "PL": "Premier League", "BL1": "Bundesliga", "SA": "Serie A", "FL1": "Ligue 1"}
+    season = meta.get("season")
+    season_label = f"{season}/{str(season + 1)[-2:]}" if season is not None else ""
+    title = f"{names.get(meta.get('competition'), 'League')} {season_label} — final-position forecast"
+
+    def date_label(value):
+        return pd.to_datetime(value, utc=True).strftime("%Y-%m-%d %H:%M UTC") if value else "no completed matches"
+
+    details = f"Generated {date_label(meta.get('generated_at'))} · Results through {date_label(meta.get('data_cutoff'))} · {meta.get('n_sim', 0):,} simulations" if meta else ""
     coverage = f"Odds: {meta.get('odds_matched', 0)}/{meta.get('remaining_fixtures', 0)} remaining fixtures. Top four and bottom three describe table positions; qualification/playoff rules can differ."
-    summary_html = summary.rename(columns={"bottom_three_pct": "bottom three (%)", "top_four_pct": "top four (%)", "title_pct": "title (%)"}).to_html(float_format=lambda value: f"{value:.2f}")
+    shown = pd.DataFrame(index=summary.index)
+    for column, label in [("title_pct", "Title"), ("top_four_pct", "Top four"), ("bottom_three_pct", "Bottom three")]:
+        if column in summary:
+            shown[label] = summary[column].map(lambda value: f"{value:.1f}%")
+    for column, label in [("expected_position", "Avg. position"), ("expected_points", "Avg. points")]:
+        if column in summary:
+            shown[label] = summary[column]
+    if "points_p10" in summary:
+        shown["Points: 80% range"] = [f"{low:.0f}–{high:.0f}" for low, high in zip(summary["points_p10"], summary["points_p90"])]
+    summary_html = shown.to_html(float_format=lambda value: f"{value:.2f}")
     heatmap = (probs.style.format("{:.1f}%").background_gradient(cmap="YlGn", vmin=0, vmax=100).to_html())
     html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{escape(title)}</title>
 <style>body{{font:15px system-ui,sans-serif;margin:32px;color:#18332a;background:#f8faf8}}h1{{font-size:26px}}table{{border-collapse:collapse;background:white}}th,td{{padding:8px;border-bottom:1px solid #ddd;text-align:right;white-space:nowrap}}th:first-child{{text-align:left}}.scroll{{overflow:auto;margin:20px 0}}p{{max-width:1000px;line-height:1.5}}</style></head><body>
 <h1>{escape(title)}</h1><p>{escape(details)}</p><p>{escape(coverage)}</p><div class="scroll">{summary_html}</div>
-<p>Point intervals cover the 10th–90th simulated percentiles. MC SE columns show simulation sampling error in percentage points, not model error.</p>
+<p>Point intervals cover the 10th–90th simulated percentiles. The summary CSV includes Monte Carlo standard errors in percentage points; they measure simulation sampling error, not model error.</p>
 <div class="scroll">{heatmap}</div><p>{escape(meta.get('uncertainty', ''))}</p><p>{escape(meta.get('tiebreak_fallback', ''))}</p></body></html>'''
     Path(path).write_text(html, encoding="utf-8")
 
