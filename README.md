@@ -1,91 +1,84 @@
 # Football standings prediction
 
-I built this pipeline to estimate where each team will finish in the league. It fits a time-decayed Dixon–Coles goal model and Elo ratings, optionally blends bookmaker odds, then simulates the remaining fixtures.
+A Python package for forecasting final league positions from played matches, current standings, and optional bookmaker odds. The source lives in `src/standing_prediction`; the CLI and notebook use the same pipeline.
 
-La Liga is the main use case. The same pipeline supports the Premier League (`PL`), Bundesliga (`BL1`), Serie A (`SA`), and Ligue 1 (`FL1`).
+The model combines time-decayed Dixon–Coles goal probabilities with Elo, then simulates the remaining scorelines. Supported leagues are La Liga (`PD`), Premier League (`PL`), Bundesliga (`BL1`), Serie A (`SA`), and Ligue 1 (`FL1`).
 
-![Example prediction output](pred.jpg)
-
-## Run it
+## Install
 
 Requires Python 3.11 or newer. From the repository root:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e '.[notebook]'
+pip install -e .
 cp .env.example .env
 ```
 
-Set `FOOTBALL_DATA_API_KEY` in `.env` using a key from [football-data.org](https://www.football-data.org/). `ODDS_API_KEY` is optional. For CLI use alone, install with `pip install -e .` instead.
+Set `FOOTBALL_DATA_API_KEY` in `.env` using a key from [football-data.org](https://www.football-data.org/). Set `ODDS_API_KEY` to enable The Odds API; otherwise the forecast uses team models. Historical results come primarily from [football-data.co.uk](https://www.football-data.co.uk/).
 
-For the exact core dependency versions used in validation, use Python 3.12, then run `pip install -r requirements-lock.txt` followed by `pip install -e .`. Notebook extras can be installed afterward.
+For the pinned core dependencies used in validation, use Python 3.12 and run `pip install -r requirements-lock.txt` before `pip install -e .`.
+
+## Python API
+
+```python
+from dotenv import load_dotenv
+from standing_prediction.predict_positions import run_prediction
+
+load_dotenv()
+forecast = run_prediction(
+    competition="PD",
+    season=None,
+    n_sim=10000,
+    seed=7,
+    out_dir="out",
+)
+
+forecast.probabilities  # Team × final-position percentages
+forecast.summary        # Expected position/points, point intervals, event probabilities
+forecast.metadata       # Data cutoff, odds coverage, settings, and provenance
+```
+
+`season=None` infers the current European season using July as the boundary; `season=2026` selects 2026/27. Two prior seasons are used by default, with time decay and Elo regression toward average strength. Teams without observed history start at neutral strength. Set `use_odds=False` to disable odds or `calibrate=True` to fit calibration using earlier seasons. Calibration is optional and does not consistently improve held-out scores.
+
+## CLI
 
 ```bash
 football-predict --competition PD
-```
-
-The default is 10,000 simulations with seed 7. The season is inferred from the current date, using July as the European-season boundary. To select a season or disable odds:
-
-```bash
-football-predict --competition PD --season 2026 --n-sim 10000 --no-use-odds
-```
-
-The module command also works: `python -m standing_prediction.predict_positions`.
-
-## Read the forecast
-
-Open `out/pd_position_probs.html` for the summary and position-probability heatmap. The latest run also writes:
-
-- `pd_position_probs.csv`: percentage probability of every finishing position.
-- `pd_summary.csv`: expected position, expected points, 10th–90th point percentiles, and title/top-four/bottom-three probabilities.
-- `pd_metadata.json`: generation time, data cutoff, odds coverage, model settings, seed, and limitations.
-- `pd_matches_snapshot.csv`, `pd_standings_snapshot.csv`, and, when available, `pd_odds_snapshot.csv`.
-
-Each run is also archived under `out/snapshots/pd/<season>/<timestamp>/`. Use `--out-dir` to change the output root. The example image above is illustrative; saved metadata identifies when a forecast was generated.
-
-Point intervals describe simulated match results **conditional on fitted team strengths**. They do not include uncertainty in those strengths or future injuries and transfers. `*_mc_se_pp` columns measure Monte Carlo sampling error in percentage points; increasing the simulation count reduces that error, not model error.
-
-Top four and bottom three refer to table positions. They do not determine European qualification or direct relegation for every league.
-
-## Notebooks
-
-```bash
-jupyter lab
-```
-
-Open `laliga_prediction.ipynb` or `laliga_prediction_upgraded.ipynb` from the repository root and run the cells in order. Both call the same `run_prediction` function as the CLI, display the summary and heatmap, and export the forecast. The original simple notebook now uses the shared pipeline.
-
-The credited Premier League notebook in `notebooks/202601 - 7 - Predicting Premier League Final Positions Using Betting Odds, Probabilistic Modelling & Simulation.ipynb` is an external reference by Victoria Friss de Kereki. It is not a supported entry point for this pipeline.
-
-## Backtest it
-
-```bash
+football-predict --competition PD --season 2026 --no-use-odds
 football-backtest --competition PD --seasons 2022 2023 2024 --cutoffs 5 10 20 30
 ```
 
-This evaluates dated forecasts across completed seasons, using 2,000 simulations per snapshot by default. Cutoffs approximate completed rounds by counting matches chronologically, then including the whole UTC day. They are not provider matchday labels.
+Prediction defaults to 10,000 simulations and seed 7; backtesting defaults to 2,000 simulations per snapshot. Use `--help` for options. Module entry points are also available: `python -m standing_prediction.predict_positions` and `python -m standing_prediction.backtest`.
 
-Calibration is evaluated on expanding historical seasons: a season can use calibration rows only from earlier evaluated seasons. The first season provides the uncalibrated baseline. Reports under `out/backtests/` include match log loss/Brier scores, final-position ranked probability score, expected points/position errors, and event Brier scores.
+Backtest cutoffs approximate rounds by counting completed matches chronologically and including the whole UTC day. Calibration uses expanding earlier evaluated seasons; the first evaluated season is uncalibrated. Reports in `out/backtests/` include match log loss/Brier scores, final-position ranked probability score, expected position/points errors, and event Brier scores.
 
-Historical tables are reconstructed from scores and modeled ranking rules. They exclude disciplinary deductions, appeals, and deciding playoffs, so they can differ from official tables, particularly in the Premier League and Serie A.
-
-Historical CSV odds have no observation timestamps, so they are excluded from dated forecasts. To evaluate odds, supply a timestamped archive:
+## Optional notebook
 
 ```bash
-football-backtest --competition PD --seasons 2024 --use-odds --odds-snapshot odds_history.csv
+pip install -e '.[notebook]'
+jupyter lab notebooks/laliga_prediction.ipynb
 ```
 
-See [pipeline details](PIPELINE_DETAILS.md) for the snapshot format, ranking rules, and modeling limits, and [the notebook guide](notebooks/PREDICTION_METHOD.md) for the Python API.
+Run the cells in order. The notebook calls `run_prediction` and shows the colored probability chart first, followed by run details and the summary. Continuous nonlinear colors distinguish small probabilities; labels show two decimal places.
 
-## Validation snapshot
+## Outputs and odds snapshots
 
-The saved [example forecast](examples/laliga_position_probs.html) includes its [metadata](examples/laliga_metadata.json). Generated files under `out/` are ignored by Git.
+For La Liga, the latest forecast is `out/pd_position_probs.html`, with probabilities, summary, metadata, standings/matches snapshots, and available odds also saved as CSV/JSON. Every run is archived under `out/snapshots/pd/<season>/<timestamp>/`. Change the root with `out_dir` or `--out-dir`.
 
-A La Liga comparison across 2022/23–2024/25, at cutoff rounds 5, 10, 20, and 30, gave a match-weighted blend log loss of **0.9838 with two prior seasons**, compared with **1.0320 without priors**. Mean final-position RPS was **0.0715 vs 0.0798** (lower is better). Both variants used the same dated fixtures, no odds, seed 7, and 2,000 simulations per snapshot. These horizons overlap within seasons. Calibration did not consistently improve scores and remains optional.
+Odds must have been observed by the forecast origin and before kickoff. Historical CSV odds without observation timestamps are excluded. To use a dated archive, pass `--odds-snapshot odds.csv`; for backtesting, also pass `--use-odds`. Its columns are:
 
-Saved reports: [with priors](examples/backtest_metrics.csv), [without priors](examples/backtest_no_priors_metrics.csv), and [settings](examples/backtest_metadata.json). Both La Liga notebooks and a 10,000-simulation live forecast were executed successfully.
+```csv
+observed_at,commence_time,home_team,away_team,p_home_book,p_draw_book,p_away_book
+```
 
-## Next steps
+Use UTC timestamps, or `date` instead of `commence_time`. Normalized `home_norm`/`away_norm` names can replace the team-name columns. Probabilities must be finite, nonnegative, and have a positive total. The latest eligible observation is matched to each fixture by team names and kickoff date.
 
-Use the historical reports to decide which changes help before adding model complexity. Useful candidates are xG, lineups/injuries, and calibrated uncertainty in team strengths. Cups and knockout phases need a separate tournament simulator.
+## Limits
+
+- Point percentiles (`points_p10`, `points_p90`) reflect match uncertainty conditional on fitted team strengths. They exclude strength-estimation error and future squad changes. Event `*_mc_se_pp` columns measure simulation sampling error in percentage points, not model error.
+- Ranking models league sporting criteria, including La Liga head-to-head and tied-subset rules. Fair-play criteria and deciding playoffs are not simulated; Serie A title/relegation playoff exceptions use the modeled classification instead. Remaining exact ties use seeded randomness.
+- Historical backtest tables are reconstructed from scores and modeled rules, excluding disciplinary deductions, appeals, and playoffs. They can differ from official tables, particularly in the Premier League and Serie A. Completed-season prediction exports use official positions directly.
+- Top four and bottom three describe table positions, not automatic qualification or direct relegation in every league. In-progress fixtures are simulated from kickoff, with a warning.
+
+See [PLAN.md](PLAN.md) for completed work and the next priorities.
