@@ -1,222 +1,216 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import dataclass
-from typing import List, Optional, Tuple
+import json
+import logging
+import os
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
-from sklearn.model_selection import GroupKFold
 
-from standing_prediction.data import FootballDataClient, fetch_matches
-from standing_prediction.dixon_coles import fit_dixon_coles
-from standing_prediction.elo import fit_elo
-from standing_prediction.odds import (
-    COMPETITION_TO_FOOTBALL_DATA_UK_LEAGUE,
-    fetch_football_data_uk_matches,
-    fetch_football_data_uk_probs,
+from standing_prediction.calibration import train_outcome_calibrator
+from standing_prediction.data import FootballDataClient, standings_from_matches, validate_schedule
+from standing_prediction.ensemble import blend_probabilities
+from standing_prediction.odds import match_odds
+from standing_prediction.predict_positions import (
+    DEFAULT_WEIGHTS, _parse_weights, build_fixture_specs, fit_prediction_models,
+    load_history, load_season_results,
+    predict_outcome_probs,
 )
-from standing_prediction.utils import normalize_team
+from standing_prediction.simulate import rank_table, simulate_season_scores
 
 
-@dataclass(frozen=True)
-class BacktestRow:
-    season: int
-    p_dc: Tuple[float, float, float]
-    p_elo: Tuple[float, float, float]
-    p_book: Optional[Tuple[float, float, float]]
-    y: int  # 0 home, 1 draw, 2 away
+LOG = logging.getLogger(__name__)
+
+
+def snapshot_features(matches, *, season, competition="PD", cutoff_matchday=10,
+                      history=None, xi=0.003, lambda_reg=0.1, weights=None, odds=None):
+    matches = matches.copy()
+    matches["utcDate"] = pd.to_datetime(matches["utcDate"], utc=True)
+    if matches["utcDate"].isna().any() or matches[["homeGoals", "awayGoals"]].isna().any().any():
+        raise ValueError("Historical snapshots require dated, completed matches.")
+    matches = matches.sort_values("utcDate").reset_index(drop=True)
+    teams = sorted(set(matches["homeTeam"]) | set(matches["awayTeam"]))
+    target_count = cutoff_matchday * (len(teams) // 2)
+    if target_count < 1:
+        raise ValueError("Cutoff rounds must be positive.")
+    if target_count >= len(matches):
+        return pd.DataFrame(), None, None, None
+    # The end of this UTC day is a real forecast origin, including rescheduled games by date.
+    cutoff = matches.iloc[target_count - 1]["utcDate"].normalize() + pd.Timedelta(days=1)
+    train = matches[matches["utcDate"] < cutoff].copy()
+    future = matches[matches["utcDate"] >= cutoff].copy()
+    if future.empty:
+        return pd.DataFrame(), None, None, None
+    standings = standings_from_matches(train, teams=teams, competition=competition)
+    dc, elo = fit_prediction_models(train, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg)
+    lookup = match_odds(future, odds, as_of=cutoff) if odds is not None else {}
+    rows = []
+    for match in future.itertuples():
+        p_dc = dc.match_outcome_probs(match.homeTeam, match.awayTeam)
+        p_elo = elo.predict_probs(match.homeTeam, match.awayTeam)
+        p_book = lookup.get((match.homeTeam, match.awayTeam))
+        p_blend = blend_probabilities(p_dc, p_odds=p_book, p_elo=p_elo, weights=weights or DEFAULT_WEIGHTS)
+        row = {"season": season, "cutoff_round": cutoff_matchday, "forecast_at": cutoff.isoformat(),
+               "utcDate": match.utcDate.isoformat(), "homeTeam": match.homeTeam, "awayTeam": match.awayTeam,
+               "y": 0 if match.homeGoals > match.awayGoals else 1 if match.homeGoals == match.awayGoals else 2}
+        for name, probabilities in [("dc", p_dc), ("elo", p_elo), ("book", p_book or (np.nan,) * 3), ("blend", p_blend)]:
+            row.update({f"{name}_{outcome}": value for outcome, value in zip("hda", probabilities)})
+        rows.append(row)
+    return pd.DataFrame(rows), standings, future, (dc, elo, cutoff)
+
+
+def match_metrics(frame):
+    results = {}
+    y = frame["y"].to_numpy(dtype=int)
+    actual = np.eye(3)[y]
+    for name in ["dc", "elo", "blend", "calibrated"]:
+        columns = [f"{name}_{outcome}" for outcome in "hda"]
+        if not set(columns).issubset(frame.columns):
+            continue
+        p = frame[columns].to_numpy(dtype=float)
+        results[f"{name}_log_loss"] = float(log_loss(y, p, labels=[0, 1, 2]))
+        results[f"{name}_brier"] = float(np.mean(np.square(p - actual).sum(axis=1)))
+    available = np.isfinite(frame[[f"book_{outcome}" for outcome in "hda"]]).all(axis=1)
+    results["odds_matched"] = int(available.sum())
+    if available.any():
+        for name in ["dc", "elo", "blend", "book"]:
+            p = frame.loc[available, [f"{name}_{outcome}" for outcome in "hda"]].to_numpy(dtype=float)
+            results[f"{name}_log_loss_odds_subset"] = float(log_loss(y[available], p, labels=[0, 1, 2]))
+    return results
+
+
+def position_metrics(probabilities, points, actual_order, actual_standings):
+    n_teams = len(probabilities)
+    rank = np.array([actual_order.index(team) + 1 for team in probabilities.index])
+    p = probabilities.to_numpy(dtype=float)
+    cumulative_actual = np.arange(1, n_teams + 1)[None, :] >= rank[:, None]
+    cdf = p.cumsum(axis=1)
+    actual_points = actual_standings.set_index("team").loc[probabilities.index, "points"].to_numpy()
+    results = {
+        "position_rps": float(np.square(cdf[:, :-1] - cumulative_actual[:, :-1]).sum(axis=1).mean() / (n_teams - 1)),
+        "position_log_loss": float(-np.log(np.clip(p[np.arange(n_teams), rank - 1], 1e-12, 1)).mean()),
+        "expected_position_mae": float(np.abs(p @ np.arange(1, n_teams + 1) - rank).mean()),
+        "expected_points_mae": float(np.abs(points.mean(axis=0) - actual_points).mean()),
+    }
+    for name, predicted, actual in [
+        ("title", p[:, 0], rank == 1),
+        ("top_four", p[:, :min(4, n_teams)].sum(axis=1), rank <= min(4, n_teams)),
+        ("bottom_three", p[:, max(0, n_teams - 3):].sum(axis=1), rank > max(0, n_teams - 3)),
+    ]:
+        results[f"{name}_brier"] = float(np.square(predicted - actual).mean())
+    return results
+
+
+def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=2000,
+                 seed=7, prior_seasons=2, xi=0.003, lambda_reg=0.1,
+                 weights=None, odds_snapshot=None, use_odds=False, out_dir=Path("out/backtests"), cache=True):
+    if n_sim < 1 or prior_seasons < 0:
+        raise ValueError("n_sim must be positive; prior_seasons cannot be negative.")
+    client = FootballDataClient(use_cache=cache) if os.getenv("FOOTBALL_DATA_API_KEY") else None
+    odds = pd.read_csv(odds_snapshot) if use_odds and odds_snapshot else None
+    if use_odds and odds is None:
+        LOG.warning("No timestamped odds snapshot supplied; excluding historical CSV odds from dated forecasts.")
+    prior_frames, forecast_frames, reports = [], [], []
+    position_frames = []
+    for season in sorted(set(seasons)):
+        matches = load_season_results(client, competition, season, cache=cache)
+        teams = sorted(set(matches["homeTeam"]) | set(matches["awayTeam"]))
+        actual_standings = standings_from_matches(matches, teams=teams, competition=competition)
+        complete = matches.assign(status="FINISHED")
+        validate_schedule(complete, actual_standings)
+        actual_order = rank_table(actual_standings, matches, competition=competition)
+        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache)
+        calibrator = None
+        if prior_frames:
+            calibrator = train_outcome_calibrator(pd.concat(prior_frames, ignore_index=True), use_odds_features=use_odds)
+        season_frames = []
+        for cutoff_round in cutoffs:
+            frame, standings, future, models = snapshot_features(
+                matches, season=season, competition=competition, cutoff_matchday=cutoff_round,
+                history=history, xi=xi, lambda_reg=lambda_reg, weights=weights, odds=odds)
+            if frame.empty:
+                continue
+            dc, elo, cutoff = models
+            played = matches[pd.to_datetime(matches["utcDate"], utc=True) < cutoff]
+            variants = [("blend", None)]
+            if calibrator is not None:
+                calibrated = [predict_outcome_probs(tuple(row[f"dc_{c}"] for c in "hda"),
+                                                    tuple(row[f"elo_{c}"] for c in "hda"),
+                                                    tuple(row[f"book_{c}"] for c in "hda") if np.isfinite(row["book_h"]) else None,
+                                                    weights=weights, calibrator=calibrator)
+                              for _, row in frame.iterrows()]
+                frame[[f"calibrated_{c}" for c in "hda"]] = calibrated
+                variants.append(("calibrated", calibrator))
+            metrics = match_metrics(frame)
+            for name, model in variants:
+                specs = build_fixture_specs(future, dc=dc, elo=elo, odds=odds, as_of=cutoff,
+                                             max_goals=10, weights=weights or DEFAULT_WEIGHTS, calibrator=model)
+                counts, points = simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed,
+                                                        competition=competition, played_matches=played, return_details=True)
+                p = counts / n_sim
+                reports.append({"season": season, "cutoff_round": cutoff_round, "forecast_at": cutoff.isoformat(),
+                                "model": name, "matches": len(frame), "n_sim": n_sim,
+                                "match_log_loss": metrics[f"{name}_log_loss"], "match_brier": metrics[f"{name}_brier"],
+                                **metrics, **position_metrics(p, points, actual_order, actual_standings)})
+                saved = p.copy()
+                saved.insert(0, "team", saved.index)
+                saved.insert(0, "model", name)
+                saved.insert(0, "forecast_at", cutoff.isoformat())
+                saved.insert(0, "season", season)
+                position_frames.append(saved.reset_index(drop=True))
+            LOG.info("Season %s, cutoff %s: %s matches; blend log loss %.4f.", season, cutoff_round, len(frame), metrics["blend_log_loss"])
+            season_frames.append(frame)
+            forecast_frames.append(frame)
+        prior_frames.extend(season_frames)
+    if not reports:
+        raise ValueError("No snapshots produced; use cutoffs within a completed season.")
+    output = Path(out_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    report = pd.DataFrame(reports)
+    report.to_csv(output / "metrics.csv", index=False)
+    pd.concat(forecast_frames, ignore_index=True).to_csv(output / "match_forecasts.csv", index=False)
+    pd.concat(position_frames, ignore_index=True).to_csv(output / "position_forecasts.csv", index=False)
+    metadata = {"competition": competition, "seasons": sorted(set(seasons)), "cutoff_rounds": list(cutoffs),
+                "n_sim": n_sim, "seed": seed, "prior_seasons": prior_seasons, "xi": xi, "lambda_reg": lambda_reg,
+                "weights": weights or DEFAULT_WEIGHTS, "odds_snapshot": str(odds_snapshot) if odds_snapshot else None,
+                "validation": "Expanding chronological seasons; first season has no calibrated evaluation.",
+                "cutoff": "End of UTC day containing the Nth completed game (N = cutoff round × teams/2).",
+                "position_log_loss": "Finite Monte Carlo zeros clipped at 1e-12; prefer RPS and event Brier scores.",
+                "calibration": "Overlapping forecast horizons within each training season; held-out seasons stay strictly later."}
+    metadata["historical_tables"] = "Reconstructed from match scores; disciplinary point deductions, appeals, fair-play rulings and playoff results are excluded."
+    (output / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
+    return report
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Backtest match-probability models on past seasons.")
-    parser.add_argument("--competition", default="PD", help="football-data.org competition code (default: PD)")
-    parser.add_argument(
-        "--seasons",
-        nargs="+",
-        type=int,
-        required=True,
-        help="Season start years to backtest, e.g. 2022 2023 2024",
-    )
-    parser.add_argument("--cutoff-matchday", type=int, default=10, help="Train on <= cutoff matchday")
-    parser.add_argument("--xi", type=float, default=0.003, help="Dixon–Coles time decay")
-    parser.add_argument("--lambda-reg", type=float, default=0.1, help="Dixon–Coles L2 regularization")
-    parser.add_argument(
-        "--use-odds",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Include football-data.co.uk odds when available (default: true)",
-    )
+    parser = argparse.ArgumentParser(description="Evaluate dated match and final-position forecasts on completed seasons.")
+    parser.add_argument("--competition", default="PD", choices=["PD", "PL", "BL1", "SA", "FL1"])
+    parser.add_argument("--seasons", nargs="+", type=int, required=True)
+    parser.add_argument("--cutoffs", "--cutoff-matchday", nargs="+", type=int, default=[5, 10, 20, 30])
+    parser.add_argument("--n-sim", type=int, default=2000)
+    parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--prior-seasons", type=int, default=2)
+    parser.add_argument("--xi", type=float, default=0.003)
+    parser.add_argument("--lambda-reg", type=float, default=0.1)
+    parser.add_argument("--weights", default="main=0.35,odds=0.55,elo=0.10")
+    parser.add_argument("--use-odds", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--odds-snapshot", type=Path)
+    parser.add_argument("--out-dir", type=Path, default=Path("out/backtests"))
+    parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args(argv)
-
-    load_dotenv(".env")
-    client = FootballDataClient()
-
-    rows: List[BacktestRow] = []
-    for season in args.seasons:
-        season_rows = backtest_season(
-            client,
-            competition=args.competition,
-            season=season,
-            cutoff_matchday=int(args.cutoff_matchday),
-            xi=float(args.xi),
-            lambda_reg=float(args.lambda_reg),
-            use_odds=bool(args.use_odds),
-        )
-        rows.extend(season_rows)
-        print(f"Season {season}: {len(season_rows)} matches evaluated")
-
-    if not rows:
-        raise SystemExit("No backtest rows produced.")
-
-    df = _rows_to_frame(rows)
-    print()
-    _print_baselines(df)
-    print()
-    _print_calibrated_ensemble(df)
+    load_dotenv()
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    options = vars(args)
+    options["weights"] = _parse_weights(options["weights"])
+    report = run_backtest(**options)
+    columns = ["season", "cutoff_round", "model", "match_log_loss", "position_rps", "expected_points_mae", "title_brier", "top_four_brier", "bottom_three_brier"]
+    print(report[columns].to_string(index=False, float_format=lambda value: f"{value:.4f}"))
+    print(f"Wrote historical forecasts and metrics to {args.out_dir}")
     return 0
-
-
-def backtest_season(
-    client,
-    *,
-    competition,
-    season,
-    cutoff_matchday,
-    xi,
-    lambda_reg,
-    use_odds,
-):
-    league = COMPETITION_TO_FOOTBALL_DATA_UK_LEAGUE.get(competition)
-    try:
-        matches = fetch_matches(client, competition=competition, season=season, status="FINISHED")
-    except Exception:
-        if not league:
-            return []
-        matches = fetch_football_data_uk_matches(league_code=league, season_start_year=season)
-    if matches.empty:
-        return []
-
-    train = matches[matches["matchday"].fillna(0).astype(int) <= cutoff_matchday].copy()
-    test = matches[matches["matchday"].fillna(0).astype(int) > cutoff_matchday].copy()
-    if train.empty or test.empty:
-        return []
-
-    dc = fit_dixon_coles(train, xi=xi, lambda_reg=lambda_reg)
-    elo = fit_elo(train)
-
-    odds_lookup: Optional[pd.DataFrame] = None
-    if use_odds and league:
-        try:
-            odds = fetch_football_data_uk_probs(league_code=league, season_start_year=season)
-            odds_lookup = odds.set_index(["home_norm", "away_norm"])[
-                ["p_home_book", "p_draw_book", "p_away_book"]
-            ]
-        except Exception:
-            odds_lookup = None
-
-    rows: List[BacktestRow] = []
-    for _, row in test.iterrows():
-        home = str(row["homeTeam"])
-        away = str(row["awayTeam"])
-        hg = int(row["homeGoals"])
-        ag = int(row["awayGoals"])
-
-        p_dc = dc.match_outcome_probs(home, away, max_goals=10)
-        p_elo = elo.predict_probs(home, away)
-
-        p_book = None
-        if odds_lookup is not None:
-            hn = normalize_team(home)
-            an = normalize_team(away)
-            if (hn, an) in odds_lookup.index:
-                r = odds_lookup.loc[(hn, an)]
-                p_book = (float(r["p_home_book"]), float(r["p_draw_book"]), float(r["p_away_book"])) # type: ignore
-
-        if hg > ag:
-            y = 0
-        elif hg == ag:
-            y = 1
-        else:
-            y = 2
-
-        rows.append(BacktestRow(season=season, p_dc=p_dc, p_elo=p_elo, p_book=p_book, y=y))
-
-    return rows
-
-
-def _rows_to_frame(rows):
-    data = []
-    for r in rows:
-        p_book = r.p_book or (np.nan, np.nan, np.nan)
-        data.append(
-            {
-                "season": r.season,
-                "y": r.y,
-                "dc_h": r.p_dc[0],
-                "dc_d": r.p_dc[1],
-                "dc_a": r.p_dc[2],
-                "elo_h": r.p_elo[0],
-                "elo_d": r.p_elo[1],
-                "elo_a": r.p_elo[2],
-                "book_h": p_book[0],
-                "book_d": p_book[1],
-                "book_a": p_book[2],
-            }
-        )
-    return pd.DataFrame(data)
-
-
-def _print_baselines(df):
-    y = df["y"].to_numpy(dtype=int)
-
-    p_dc = df[["dc_h", "dc_d", "dc_a"]].to_numpy(dtype=float)
-    p_elo = df[["elo_h", "elo_d", "elo_a"]].to_numpy(dtype=float)
-    print(f"Log loss (DC):  {log_loss(y, p_dc, labels=[0, 1, 2]):.4f}")
-    print(f"Log loss (Elo): {log_loss(y, p_elo, labels=[0, 1, 2]):.4f}")
-
-    has_book = df[["book_h", "book_d", "book_a"]].notna().all(axis=1)
-    if has_book.any():
-        p_book = df.loc[has_book, ["book_h", "book_d", "book_a"]].to_numpy(dtype=float)
-        y_book = df.loc[has_book, "y"].to_numpy(dtype=int)
-        print(f"Log loss (Odds): {log_loss(y_book, p_book, labels=[0, 1, 2]):.4f} (n={len(y_book)})")
-    else:
-        print("Log loss (Odds): n/a (no odds matched)")
-
-
-def _print_calibrated_ensemble(df):
-    y = df["y"].to_numpy(dtype=int)
-    groups = df["season"].to_numpy(dtype=int)
-
-    # Feature set that works without odds (always present).
-    x_basic = df[["dc_h", "dc_d", "dc_a", "elo_h", "elo_d", "elo_a"]].to_numpy(dtype=float)
-
-    # Odds features if available; fill missing with 1/3.
-    x_odds = df[["book_h", "book_d", "book_a"]].to_numpy(dtype=float)
-    x_odds = np.where(np.isfinite(x_odds), x_odds, 1.0 / 3.0)
-
-    X = np.concatenate([x_basic, x_odds], axis=1)
-
-    n_groups = len(np.unique(groups))
-    if n_groups < 2:
-        model = LogisticRegression(max_iter=2000, solver="lbfgs")
-        model.fit(X, y)
-        p = model.predict_proba(X)
-        print(f"Log loss (Calibrated ensemble, no-CV): {log_loss(y, p, labels=[0, 1, 2]):.4f}")
-        return
-
-    cv = GroupKFold(n_splits=min(5, n_groups))
-    losses = []
-    for train_idx, test_idx in cv.split(X, y, groups=groups):
-        model = LogisticRegression(max_iter=2000, solver="lbfgs")
-        model.fit(X[train_idx], y[train_idx])
-        p = model.predict_proba(X[test_idx])
-        losses.append(log_loss(y[test_idx], p, labels=[0, 1, 2]))
-
-    print(f"Log loss (Calibrated ensemble, CV by season): {float(np.mean(losses)):.4f}")
 
 
 if __name__ == "__main__":
