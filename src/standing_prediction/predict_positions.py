@@ -13,7 +13,8 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from standing_prediction.calibration import train_outcome_calibrator
-from standing_prediction.data import FootballDataClient, fetch_matches, fetch_standings, validate_schedule
+from standing_prediction.data import (FootballDataClient, fetch_matches, fetch_standings, load_fixture_overrides,
+                                      resolve_fixture_statuses, validate_schedule)
 from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_WEIGHT
 from standing_prediction.dixon_coles import fit_dixon_coles
 from standing_prediction.elo import fit_elo
@@ -32,6 +33,7 @@ from standing_prediction.utils import normalize_team
 
 
 LOG = logging.getLogger(__name__)
+DEFAULT_FIXTURE_OVERRIDES = "fixture_overrides.csv"
 DEFAULT_H2H = {"seasons": 6, "half_life_days": 730, "shrinkage": 4.0}
 COMPETITION_TO_THE_ODDS_API_SPORT = {
     "PD": "soccer_spain_la_liga", "PL": "soccer_epl", "BL1": "soccer_germany_bundesliga",
@@ -70,6 +72,10 @@ def main(argv=None):
     parser.add_argument("--h2h-weight", type=float, default=0.0, help="Log-rate shift per goal of shrunk head-to-head residual (0 disables)")
     parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--fixture-overrides", type=Path, default=Path(DEFAULT_FIXTURE_OVERRIDES),
+                        help="CSV of official decisions for cancelled or awarded fixtures (skipped if absent)")
+    parser.add_argument("--strict-fixtures", action="store_true",
+                        help="Fail on cancelled fixtures without an override instead of simulating them")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     load_dotenv()
@@ -175,7 +181,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                    odds_provider="the_odds_api", odds_days=180, odds_snapshot=None,
                    out_dir=Path("out"), weights=None, calibrate=False, calibration_seasons=None,
                    calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None,
-                   xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
+                   xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"],
+                   fixture_overrides=DEFAULT_FIXTURE_OVERRIDES, strict_fixtures=False):
     if n_sim < 1 or max_goals < 1 or prior_seasons < 0:
         raise ValueError("n_sim/max_goals must be positive; prior_seasons cannot be negative.")
     if not 0 <= xg_weight <= 1 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
@@ -184,6 +191,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     client = client or FootballDataClient(use_cache=cache)
     standings = fetch_standings(client, competition=competition, season=season).sort_values("position").reset_index(drop=True)
     matches = fetch_matches(client, competition=competition, season=season, status=None)
+    overrides = load_fixture_overrides(fixture_overrides, competition, season)
+    matches, fixture_adjustments = resolve_fixture_statuses(matches, overrides, strict=strict_fixtures)
     remaining = validate_schedule(matches, standings)
     finished = matches[matches["status"] == "FINISHED"].copy()
     # Retain current-season xG with every forecast for later prospective evaluation.
@@ -241,6 +250,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         "competition": competition, "season": season, "generated_at": cutoff.isoformat(),
         "data_cutoff": finished["utcDate"].max().isoformat() if not finished.empty else None,
         "finished_fixtures": len(finished), "remaining_fixtures": len(remaining), "completed": remaining.empty,
+        "fixture_adjustments": fixture_adjustments,
         "odds_matched": len(lookup), "odds_requested": bool(use_odds),
         "odds_provider": "snapshot" if odds_snapshot else odds_provider if use_odds else "none",
         "prior_seasons": history.attrs.get("seasons", []), "n_sim": n_sim, "seed": seed,

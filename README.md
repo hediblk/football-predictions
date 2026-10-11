@@ -4,15 +4,17 @@
 
 *La Liga 2026/27 snapshot, generated October 11, 2026 at 00:24 UTC. Results through October 10, 2026 at 19:00 UTC; 73 completed fixtures, 10,000 simulations, fixed calibrated weights and no odds.*
 
-*The [suspended Rayo–Athletic fixture](https://www.athletic-club.eus/en/news/2026/10/10/the-athletic-club-squad-returns-to-bilbao/) remains unresolved and is simulated from kickoff.*
+*The [suspended Rayo–Athletic fixture](https://www.athletic-club.eus/en/news/2026/10/10/the-athletic-club-squad-returns-to-bilbao/), since reported as cancelled, is simulated as if it will be replayed (see [Cancelled and awarded fixtures](#cancelled-and-awarded-fixtures)).*
 
 A Python package for estimating every team's final league-position probabilities. The implementation lives in `src/standing_prediction`; the CLI and notebook call the same pipeline.
 
 ## Website
 
-`site/` is a static, dependency-free page (dark "scoreboard" design; see [DESIGN.md](DESIGN.md)) showing the latest standings forecast for the top five leagues and the Champions League, including the projected knockout bracket. It reads the JSON in `site/data/`, and GitHub Actions deploys it to GitHub Pages on every push to `main` that touches `site/`.
+`site/` is a static, dependency-free page (dark "scoreboard" design; see [DESIGN.md](DESIGN.md)) showing the latest standings forecast for the top five leagues and the Champions League, including the projected knockout bracket. It reads the JSON in `site/data/`.
 
-To refresh the published numbers, rerun all six forecasts and rebuild the data, then commit `site/data`:
+`.github/workflows/site.yml` refreshes and deploys it: daily at 05:30 UTC (or on demand from the Actions tab via **Run workflow**) it reruns all six forecasts, commits `site/data` and redeploys GitHub Pages; pushes to `main` that touch `site/` redeploy without refreshing. It needs the `FOOTBALL_DATA_API_KEY` repository secret.
+
+To refresh by hand instead, rerun all six forecasts and rebuild the data, then commit `site/data`:
 
 ```bash
 pip install -e . -e packages/champions-league
@@ -20,6 +22,16 @@ scripts/refresh_site.sh
 ```
 
 A competition whose run fails keeps its previous outputs in `out/site`, so the site shows its last good forecast. Preview locally with `python3 -m http.server -d site 8000`.
+
+## Cancelled and awarded fixtures
+
+football-data.org sometimes reports a suspended league match as `CANCELLED` before it is rescheduled, or an official decision as `AWARDED`. Domestic forecasts resolve these in memory, after fetching and before validation, without editing the fetched data:
+
+1. **Overrides first.** `fixture_overrides.csv` (committed, empty by default) records official decisions: `competition,season,home_team,away_team,status,home_goals,away_goals,note`, with `status` either `FINISHED` (with the score) or `SCHEDULED`. Team names are football-data.org names.
+2. **Awarded results** with a reported score count as played; without a score the run stops and asks for an override.
+3. **Cancelled fixtures** are simulated as if they will be replayed, since a league fixture must be either replayed or awarded. `--strict-fixtures` makes them an error instead.
+
+Every adjustment is logged as a warning, listed under `fixture_adjustments` in the forecast metadata and shown under the site's table. The matches snapshot keeps the provider's value in `reported_status` beside the `status` used. Postponed and suspended fixtures were already simulated as unplayed.
 
 ## Champions League
 
