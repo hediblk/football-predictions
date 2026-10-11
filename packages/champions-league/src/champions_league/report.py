@@ -7,7 +7,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.colors import PowerNorm
-from matplotlib.patches import FancyBboxPatch
 import numpy as np
 
 
@@ -67,51 +66,54 @@ def plot_bracket(result, names, path):
               "ROUND_OF_16": "Round of 16", "QUARTER_FINALS": "Quarter-finals",
               "SEMI_FINALS": "Semi-finals", "FINAL": "Final", "playoffs": "Knockout playoffs",
               "round16": "Round of 16", "quarterfinal": "Quarter-finals", "semifinal": "Semi-finals", "final": "Final"}
-    fig, ax = plt.subplots(figsize=(25, 13))
-    fig.patch.set_facecolor("#f5f8fc")
-    ax.set_xlim(-0.25, 5.88)
-    ax.set_ylim(-0.8, 8.6)
+    fig, ax = plt.subplots(figsize=(16.54, 8.27))
+    fig.patch.set_facecolor("white")
+    ax.set_xlim(0, 6)
+    ax.set_ylim(-0.2, 8.2)
     ax.axis("off")
-    x_step, card_w, card_h = 1.16, 1.01, 0.66
     previous_ys = None
     for stage_index, (stage, ties) in enumerate(stages):
-        x = stage_index * x_step
-        count = len(ties)
-        ys = np.linspace(7.5, 0.5, 8) if count == 8 else np.array([7.0, 5.0, 3.0, 1.0]) if count == 4 else np.array([6.0, 2.0]) if count == 2 else np.array([4.0])
-        ax.text(x, 8.25, titles.get(stage, stage.replace("_", " ").title()), color="#526579", fontsize=13, fontweight="bold")
-        if previous_ys is not None:
-            for index, prev_y in enumerate(previous_ys):
-                next_y = ys[index if len(previous_ys) == len(ys) else index // 2]
-                mid = x - 0.075
-                ax.plot([x - x_step + card_w, mid, mid, x], [prev_y, prev_y, next_y, next_y], color="#b8c8da", lw=1.3, zorder=1)
-        for tie, y in zip(ties, ys):
-            winner = tie["winner"]
-            box = FancyBboxPatch((x, y - card_h / 2), card_w, card_h, boxstyle="round,pad=0.012,rounding_size=0.035",
-                                 facecolor="white", edgecolor="#d8e3ef", linewidth=1, zorder=2)
-            ax.add_patch(box)
-            for team, offset in ((tie["team1"], 0.16), (tie["team2"], -0.015)):
-                name = display_name(team, names)
-                if len(name) > 27:
-                    name = name[:26] + "…"
-                ax.text(x + 0.045, y + offset, name, fontsize=10.6,
-                        fontweight="bold" if team == winner else "normal", color="#0a664c" if team == winner else "#526579", zorder=3)
-            pct = tie.get("advance_probability")
-            detail = f"Winner advances: {pct:.2f}%" if pct is not None else "Observed winner"
-            ax.text(x + 0.045, y - 0.23, detail, fontsize=8.1, color="#718297", zorder=3)
+        x = stage_index
+        if previous_ys is None:
+            ys = np.linspace(7.5, 0.5, len(ties))
+            rows = [(y + 0.14, y - 0.14) for y in ys]
+        elif len(ties) == len(previous_ys):
+            rows = [(y + 0.28, y) for y in previous_ys]
+        else:
+            rows = list(zip(previous_ys[::2], previous_ys[1::2]))
+        ys = [np.mean(pair) for pair in rows]
+        ax.text(x + 0.02, 8.05, titles.get(stage, stage.replace("_", " ").title()), fontsize=10)
+        for tie, (top, bottom), y in zip(ties, rows, ys):
+            for team, row in ((tie["team1"], top), (tie["team2"], bottom)):
+                ax.text(x + 0.02, row + 0.035, display_name(team, names), fontsize=9,
+                        fontweight="bold" if team == tie["winner"] else "normal", va="bottom")
+                if tie.get("observed"):
+                    chance = "W" if team == tie["winner"] else ""
+                else:
+                    pct = tie["advance_probability"]
+                    chance = f"{pct if team == tie['winner'] else 100 - pct:.2f}%"
+                ax.text(x + 0.94, row + 0.035, chance, fontsize=8, ha="right", va="bottom")
+                ax.plot([x, x + 0.98], [row, row], color="black", lw=0.6)
+            ax.plot([x + 0.98, x + 0.98], [top, bottom], color="black", lw=0.6)
+            ax.plot([x + 0.98, x + 1], [y, y], color="black", lw=0.6)
         previous_ys = ys
-    favorite = result.summary["title_pct"].idxmax()
-    favorite_pct = result.summary.loc[favorite, "title_pct"]
-    champion = bracket["champion"]
-    ax.text(4.64, 2.9, "PROJECTED BRACKET WINNER", color="#526579", fontsize=10, fontweight="bold")
-    ax.text(4.64, 2.57, display_name(champion, names), color="#0a664c", fontsize=17, fontweight="bold")
-    ax.text(0, -0.35, "Bold teams advance in this illustrative path. Matchup percentages condition on that pairing; title odds average all simulated paths.",
-            fontsize=11, color="#526579")
-    fig.suptitle("Champions League · projected knockout path", x=0.035, y=0.98, ha="left", fontsize=24,
-                 fontweight="bold", color="#10263e")
-    fig.text(0.035, 0.925, f"Overall title favorite: {display_name(favorite, names)} · {favorite_pct:.2f}% to win the tournament", fontsize=15, color="#0a664c")
-    fig.text(0.035, 0.89, bracket.get("draw_label", "Illustrative permitted draw from projected league-phase ranks; the real draw is not yet known."), fontsize=11, color="#526579")
-    fig.subplots_adjust(left=0.035, right=0.985, top=0.86, bottom=0.045)
-    fig.savefig(path, dpi=160, facecolor=fig.get_facecolor())
+    x = len(stages)
+    ax.text(x + 0.02, 8.05, "Winner", fontsize=10)
+    ax.text(x + 0.02, previous_ys[0] + 0.035, display_name(bracket["champion"], names),
+            fontsize=9, fontweight="bold", va="bottom")
+    ax.plot([x, x + 0.98], [previous_ys[0]] * 2, color="black", lw=0.6)
+    season = result.metadata["season"]
+    fig.text(0.035, 0.96, f"Champions League {season}/{str(season + 1)[-2:]} - Projected knockout draw", fontsize=13, fontweight="bold")
+    origin = result.metadata["as_of"][:16].replace("T", " ")
+    fig.text(0.975, 0.96, f"As of {origin} UTC", fontsize=9, ha="right")
+    note = "Hypothetical pairings. Bold: projected winner. %: chance to advance in this pairing."
+    if any(tie.get("observed") for _, ties in stages for tie in ties):
+        note += " W: observed winner."
+    fig.text(0.035, 0.035, note, fontsize=8)
+    fig.subplots_adjust(left=0.035, right=0.975, top=0.9, bottom=0.08)
+    path = Path(path)
+    fig.savefig(path, dpi=160, facecolor="white")
+    fig.savefig(path.with_suffix(".pdf"), facecolor="white", metadata={"CreationDate": None, "ModDate": None})
     plt.close(fig)
 
 
@@ -153,6 +155,7 @@ body{{margin:0;background:#f5f8fc;color:#10263e;font:16px/1.55 system-ui,sans-se
 <h2>League-phase standings</h2><p>Expected final points and probability of each position. The top eight bypass playoffs; positions 9–24 enter playoffs.</p>
 <a href="cl_position_probs.csv">Download position probabilities</a><img src="{embedded('cl_position_probs.png')}" alt="36-team league-phase position probability heatmap">
 <h2>Projected knockout bracket</h2><p>{escape(result.bracket.get('draw_label', 'Illustrative draw; future pairings are unknown.'))}</p>
+<a href="cl_bracket.pdf">Download bracket (PDF)</a>
 <img src="{embedded('cl_bracket.png')}" alt="Projected playoff and knockout bracket through the final">
 <h2>Qualification and title probabilities</h2><p>Entering the playoffs and reaching the round of 16 are separate events. Percentages describe all simulated paths; bracket matchup percentages condition on one pairing. Prior checks vary league-strength shrinkage (1, 4 and 16), including Monte Carlo noise; their range is a sensitivity check, not a confidence interval.</p>
 <a href="cl_summary.csv">Download summary</a><div class="scroll">{table}</div>
