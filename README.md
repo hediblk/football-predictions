@@ -8,6 +8,29 @@
 
 A Python package for estimating every team's final league-position probabilities. The implementation lives in `src/standing_prediction`; the CLI and notebook call the same pipeline.
 
+## Champions League
+
+![Champions League league-phase position probabilities](docs/champions-league-forecast.png)
+
+*2026/27 forecast as of October 10, 2026 at 21:30 Toronto time (October 11 at 01:30 UTC): 18 played UCL fixtures, 11,165 domestic and European results, 10,000 simulations, fixed global weights and no odds. All 36 clubs have domestic history.*
+
+![Projected Champions League knockout bracket](docs/champions-league-bracket.png)
+
+**Bayern München is the title favorite at 18.99%.** The bracket shows one permitted draw from projected league standings, advancing each matchup's favorite. Its pairings are illustrative until the real draw; title probabilities average all simulated draws and results.
+
+Install and run the separate [Champions League package](packages/champions-league/README.md):
+
+```bash
+pip install -e . -e packages/champions-league
+football-ucl --season 2026 --n-sim 10000
+```
+
+Open `out/cl_forecast.html` for the standings, bracket, stage probabilities and coverage report. Saved snapshot: [positions](docs/champions-league-positions.csv), [qualification/title probabilities](docs/champions-league-summary.csv), [club coverage](docs/champions-league-coverage.csv), and [provenance](docs/champions-league-metadata.json).
+
+Some secondary domestic sources stop on September 19–20, and Czech 2025/26 history is missing. Sparse-country estimates are sensitive to league-strength priors; the summary includes title-probability sensitivity ranges. The official coefficients feed returned HTTP 403; unresolved simulated disciplinary ties use a seeded random fallback, and completed league phases use official ranks. Probabilities condition on fitted strengths and are not calibrated tournament confidence levels.
+
+[Historical checks](docs/champions-league-evaluation.json) cover 18 forecast origins in 2024/25–2025/26 and 306 subsequent matches. Country offsets improve aggregate match log loss over the no-offset and Elo comparisons; a goals-only fit beats the fixed xG blend in this replay. The saved global weights remain unchanged. See [per-origin metrics](docs/champions-league-evaluation-snapshots.json) and [PLAN.md](PLAN.md) for the comparisons and limits.
+
 ## Inputs
 
 - **Current season:** standings, completed scores, and the full fixture schedule from [football-data.org](https://www.football-data.org/).

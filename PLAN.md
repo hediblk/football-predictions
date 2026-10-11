@@ -85,7 +85,7 @@ All 16 leave-out folds selected xG weight 0.75 and improved no-odds loss over th
 
 ## Plan B: Champions League forecasts (league phase and knockout bracket)
 
-**Planning only; researched 2026-10-10.** Keep the calibrated model and saved weights unchanged. UCL forecasts should run **without odds by default**. A quote remains an optional adjustment for that particular fixture, not a requirement for forecasting the tournament. The existing league predictor's defaults are unchanged by this plan.
+**First version implemented; researched 2026-10-10.** The separate [Champions League package](packages/champions-league/README.md) exports the league-phase heatmap, qualification/title probabilities and a projected knockout bracket, now shown in the README. The design below is retained as the implementation record; current coverage and verification results follow it. The calibrated model weights remain unchanged. UCL forecasts run **without odds by default**. A quote remains an optional adjustment for that particular fixture, not a requirement for forecasting the tournament. The existing league predictor's defaults are unchanged.
 
 ### Competition rules
 
@@ -118,7 +118,7 @@ The same API returned all **125 finished matches in 2023/24**, **189 in 2024/25*
 | Ukraine | Shakhtar | [Official UPL calendar](https://upl.ua/en/tournaments/championship/432/calendar): dated current results; selectors include 2025/26 and 2024/25. Needs an HTML adapter, limited to the senior league. |
 | Azerbaijan | Sabah | [Official PFL seasons API](https://pfl.az/api/v1/seasons?project_id=1) lists current and prior seasons. Its [current games API](https://pfl.az/api/v1/tours/get-games?league_id=52&withGames=true) returns dated scores and statuses: 38 finished fixtures, six for Sabah. Needs a small adapter; discover league IDs from seasons rather than hardcoding them. |
 
-The seven extra-league CSVs and Czech file above currently stop at **20 September**, despite fetching them on 10 October. Show each source's latest result and every club's match count; source availability does not establish freshness or completeness. Norway's calendar-season history must be selected by dates. The four new country adapters are planned, not implemented, and their historical coverage still needs reconciliation with official tables. Current official sources mean these clubs need not be classified as having no domestic data.
+The seven extra-league CSVs and Czech file above stopped at **20 September** when audited on 10 October. Show each source's latest result and every club's match count; source availability does not establish freshness or completeness. Norway's calendar-season history must be selected by dates. The four country adapters are now implemented, with historical reconciliation and remaining gaps reported in the implementation snapshot below. Current official sources mean these clubs need not be classified as having no domestic data.
 
 For cross-league links beyond UCL, [openfootball's European competitions repository](https://github.com/openfootball/champions-league/tree/abfaeddc2ee3d14f99ecc163c9ddb46cb4d67cef) contains scored 2024/25 Europa League and Conference League files, plus some later qualifying files. This is useful supplementary history, not verified complete 2025/26–2026/27 coverage. Ingest only audited files, preserve the commit SHA and correctly parse extra-time notation. Do not make a paid provider, ClubElo or bookmaker coverage a dependency.
 
@@ -152,6 +152,31 @@ Deliver a 36-position heatmap and a table with expected league points, P(top 8),
 5. **Historical checks:** replay 2024/25 and 2025/26 after matchdays 2, 4, 6 and 8 and before knockout rounds, with strictly earlier data. Use each season's actual rules, draws and final venue; do not apply the newer home-priority rule retroactively. Report match log loss, position RPS and stage-reach Brier scores, including results split by xG coverage. Check probability conservation (eight direct qualifiers, eight playoff winners, 16 round-of-16 entrants, eight quarter-finalists, four semi-finalists, two finalists, one champion). Two seasons provide limited tournament-level evidence, so avoid tuning repeatedly against their winners.
 
 First-version scope: a dated forecast from the current league phase through the final, using the fixed weights and available observed matches. No live in-play model, transfer/injury model, new weight search or paid-data integration.
+
+### Implementation snapshot (2026-10-10)
+
+`football-ucl --season 2026 --as-of 2026-10-11T01:30:00Z --n-sim 10000` generated the committed README charts and CSV/JSON snapshots. It conditions on **18 completed league-phase fixtures**, fits **11,165 domestic/European results** across 40 explicitly identified leagues, and uses **3,777 matched xG observations**. Every current UCL club has domestic history. The European link graph is connected, but six current leagues have sparse effective links; the forecast repeats offset shrinkage at 1, 4 and 16 and exports the resulting title-probability ranges.
+
+The current title favorite is **Bayern München, 18.99%** (Monte Carlo standard error **0.39 percentage points**, conditional on fitted strengths). Its illustrative bracket also ends with Bayern winning; the bracket follows one permitted draw and matchup favorites rather than representing the most probable complete tournament outcome.
+
+The four domestic adapters are implemented. Official Slovak and Ukrainian tables reconcile across the loaded seasons; Azerbaijani checks retain a 2025/26 fixture/table score discrepancy. The pinned Czech source lacks 2025/26. Current top-five, Portuguese and Dutch API results refresh stale CSVs, while several other current domestic sources still stop on September 19–20. Raw responses, identities, normalized inputs, per-club counts, freshness, source pins and these discrepancies are preserved. The official UEFA coefficient feed returned HTTP 403; no coefficients are invented. Simulated discipline ties use the documented random fallback before coefficients, with **0.00%** of current simulations requiring it; complete league phases use official final ranks.
+
+The inherited quarter-/semi-final second-leg priority was introduced in **2025/26**, already before the current season, as confirmed by [UEFA's 2025/26 format explainer](https://www.uefa.com/uefachampionsleague/news/0296-1d21e9bdf7e4-808a7511165c-1000--2025-26-champions-league-format-dates-draws-final/). Historical 2024/25 simulations use the earlier venue-order rule. Relocated Shakhtar, Dynamo Kyiv and Maccabi Tel-Aviv European homes, plus Beşiktaş–Maccabi in Debrecen, use flagged neutral rates. Future knockout participants are hidden until earlier rounds resolve and draw dates permit them; result/xG availability is filtered strictly at each origin. These are retrospective availability approximations.
+
+**Historical replay:** all **18 origins** in 2024/25 and 2025/26 completed with 2,000 simulations and seed 7: after MD2/4/6/8 and before playoffs, round of 16, quarter-finals, semi-finals and final. Every origin conserved stage probability mass. The subsequent non-overlapping windows contain **306 unique international matches**, scored using only earlier available results:
+
+| Match forecast | Log loss |
+| :--- | ---: |
+| Joint country scale + fixed xG/ensemble | **0.94975** |
+| Same fit without country offsets | 0.99690 |
+| Joint country scale, goals only | **0.93960** |
+| Joint Elo | 0.99016 |
+
+Country offsets improve aggregate international loss, while **goals only beats the fixed xG blend** in this small replay. For fixtures where both clubs have xG, offsets also trail the no-offset comparison slightly (0.98010 vs 0.96370); the aggregate improvement comes from mixed/no-xG fixtures. The global weights remain frozen as specified. This is a transfer diagnostic, not evidence for universal xG benefit or a reason to retune on these two tournaments.
+
+Mean position RPS after MD2/4/6 is **0.09170**; later league positions are already known. Across all 18 origins, stage Brier means are **0.08199 / 0.06974 / 0.04767 / 0.03891 / 0.02415** for reaching R16 / QF / SF / final / winning. These averages include stages already resolved at later origins; [per-origin metrics](docs/champions-league-evaluation-snapshots.json) retain the horizon and xG splits, alongside the [comparison report](docs/champions-league-evaluation.json). Global calibration used these domestic seasons, so the replay is retrospective rather than an independent weight-calibration holdout.
+
+Verification also covered score-period extraction, strict origin/xG timing, legal draw slots, inherited home priority, a fixed first leg, completed shootout ties, neutral venues, normalized score distributions and numerical fit gradients. Existing package tests pass (**5 passed**); no new test files were added.
 
 ## Other existing priorities
 
