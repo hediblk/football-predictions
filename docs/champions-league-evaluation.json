@@ -1,0 +1,57 @@
+{
+  "seasons": [
+    2024,
+    2025
+  ],
+  "n_sim": 2000,
+  "seed": 7,
+  "weight_calibration_version": "global-8c8185b60bc9",
+  "snapshots": 18,
+  "matches": 306,
+  "match_log_loss": {
+    "joint": 0.9497489844111086,
+    "without_offsets": 0.996899629258613,
+    "goals_only": 0.9395965715927079,
+    "elo": 0.9901635220487109
+  },
+  "match_log_loss_by_xg": {
+    "False": {
+      "joint": 0.9282119511144873,
+      "without_offsets": 1.0204561414135918,
+      "goals_only": 0.9108724523116942,
+      "elo": 0.9913573363033131
+    },
+    "True": {
+      "joint": 0.9801043305535906,
+      "without_offsets": 0.9636979310244305,
+      "goals_only": 0.9800817475872079,
+      "elo": 0.988480901957579
+    }
+  },
+  "tournament_metrics": {
+    "position_rps": 0.030566509986772492,
+    "playoffs_brier": 0.06666167978395061,
+    "round16_brier": 0.08198557638888888,
+    "quarterfinal_brier": 0.06973926543209877,
+    "semifinal_brier": 0.04766760570987654,
+    "final_brier": 0.03890691512345679,
+    "title_brier": 0.024154185185185185,
+    "position_rps_xg_True": 0.0322869441017316,
+    "playoffs_brier_xg_True": 0.07295794507575758,
+    "round16_brier_xg_True": 0.08542852272727273,
+    "quarterfinal_brier_xg_True": 0.09871926325757574,
+    "semifinal_brier_xg_True": 0.07459215025252525,
+    "final_brier_xg_True": 0.06276237373737374,
+    "title_brier_xg_True": 0.03928759848484848,
+    "position_rps_xg_False": 0.027862970663265305,
+    "playoffs_brier_xg_False": 0.05676754861111111,
+    "round16_brier_xg_False": 0.07657523214285714,
+    "quarterfinal_brier_xg_False": 0.02419926884920635,
+    "semifinal_brier_xg_False": 0.005357607142857144,
+    "final_brier_xg_False": 0.0014197658730158733,
+    "title_brier_xg_False": 0.0003731071428571429
+  },
+  "limitations": "Retrospective replay with the fixed globally calibrated artifact, which includes these domestic seasons. Publication times and historical draw availability are approximated. Two tournament seasons do not establish calibrated title probabilities.",
+  "position_rps_after_MD2_MD4_MD6": 0.09169952996031745,
+  "tournament_averaging": "All replay origins, including completed league phases with known positions and already-resolved knockout stages; see per-snapshot metrics for comparisons at equal horizons."
+}
