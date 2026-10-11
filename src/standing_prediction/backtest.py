@@ -13,6 +13,7 @@ from sklearn.metrics import log_loss
 
 from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.data import FootballDataClient, standings_from_matches, validate_schedule
+from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_XG_WEIGHT
 from standing_prediction.ensemble import blend_probabilities
 from standing_prediction.odds import match_odds
 from standing_prediction.h2h import encounter_residuals
@@ -51,7 +52,7 @@ def snapshot_split(matches, cutoff_matchday):
 
 def snapshot_features(matches, *, season, competition="PD", cutoff_matchday=10,
                       history=None, xi=0.003, lambda_reg=0.1, weights=None, odds=None,
-                      xg_weight=0.0, h2h_weight=0.0, h2h_residuals=None):
+                      xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_residuals=None):
     split = snapshot_split(matches, cutoff_matchday)
     if split is None:
         return pd.DataFrame(), None, None, None
@@ -120,7 +121,7 @@ def position_metrics(probabilities, points, actual_order, actual_standings):
 def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=2000,
                  seed=7, prior_seasons=2, xi=0.003, lambda_reg=0.1,
                  weights=None, odds_snapshot=None, use_odds=False, out_dir=Path("out/backtests"), cache=True,
-                 xg_weight=0.0, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
+                 xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
     if n_sim < 1 or prior_seasons < 0:
         raise ValueError("n_sim must be positive; prior_seasons cannot be negative.")
     client = FootballDataClient(use_cache=cache) if os.getenv("FOOTBALL_DATA_API_KEY") else None
@@ -196,6 +197,7 @@ def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=20
     metadata = {"competition": competition, "seasons": sorted(set(seasons)), "cutoff_rounds": list(cutoffs),
                 "n_sim": n_sim, "seed": seed, "prior_seasons": prior_seasons, "xi": xi, "lambda_reg": lambda_reg,
                 "weights": weights or DEFAULT_WEIGHTS, "odds_snapshot": str(odds_snapshot) if odds_snapshot else None,
+                "weight_calibration_version": CALIBRATION_VERSION,
                 "xg_weight": xg_weight, "h2h_weight": h2h_weight, "h2h_seasons": h2h_seasons if h2h_weight else None,
                 "validation": "Expanding chronological seasons; first season has no calibrated evaluation.",
                 "cutoff": "End of UTC day containing the Nth completed game (N = cutoff round × teams/2).",
@@ -216,11 +218,11 @@ def main(argv=None):
     parser.add_argument("--prior-seasons", type=int, default=2)
     parser.add_argument("--xi", type=float, default=0.003)
     parser.add_argument("--lambda-reg", type=float, default=0.1)
-    parser.add_argument("--weights", default="main=0.35,odds=0.55,elo=0.10")
+    parser.add_argument("--weights", help="Override the stored global main/odds/elo weights")
     parser.add_argument("--use-odds", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--odds-snapshot", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("out/backtests"))
-    parser.add_argument("--xg-weight", type=float, default=0.0)
+    parser.add_argument("--xg-weight", type=float, default=DEFAULT_XG_WEIGHT)
     parser.add_argument("--h2h-weight", type=float, default=0.0)
     parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
@@ -228,7 +230,7 @@ def main(argv=None):
     load_dotenv()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     options = vars(args)
-    options["weights"] = _parse_weights(options["weights"])
+    options["weights"] = _parse_weights(options["weights"]) if options["weights"] else None
     report = run_backtest(**options)
     columns = ["season", "cutoff_round", "model", "match_log_loss", "position_rps", "expected_points_mae", "title_brier", "top_four_brier", "bottom_three_brier"]
     print(report[columns].to_string(index=False, float_format=lambda value: f"{value:.4f}"))

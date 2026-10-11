@@ -1,0 +1,2945 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-10T16:43:07.775584+00:00",
+  "xg_weight": 0.75,
+  "weights": {
+    "main": 8.174249740158526e-07,
+    "odds": 0.999999,
+    "elo": 1.8257502601290303e-07
+  },
+  "no_odds_weights": {
+    "main": 0.817424973992347,
+    "elo": 0.18257502600765296
+  },
+  "metrics": {
+    "matches": 19763,
+    "odds_matches": 19762,
+    "no_odds_log_loss": 0.9825848730281787,
+    "dc_log_loss": 0.9832887829259482,
+    "elo_log_loss": 0.9974339239561628,
+    "with_odds_log_loss": 0.9675566171028003,
+    "book_log_loss": 0.9675566123340387,
+    "objective": 0.9750707450654894
+  },
+  "h2h_weight": 0.0,
+  "fit_settings": {
+    "xi": 0.003,
+    "lambda_reg": 0.1,
+    "prior_seasons": 2
+  },
+  "dataset": {
+    "schema_version": 1,
+    "leagues": [
+      "E0",
+      "SP1",
+      "D1",
+      "I1",
+      "F1"
+    ],
+    "seasons": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "xg_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "prior_seasons": 2,
+    "xi": 0.003,
+    "lambda_reg": 0.1,
+    "feature_code_sha256": "a51a1452311ed1a0f4ab3a25d9ad3249dc189d821c3a598e13a23eb5bedc610d",
+    "matches": 19763,
+    "coverage": [
+      {
+        "league": "E0",
+        "season": 2014,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2015,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2016,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2017,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2018,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2019,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2020,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2021,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2022,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2023,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2024,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "E0",
+        "season": 2025,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2014,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2015,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2016,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2017,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2018,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2019,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2020,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2021,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2022,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2023,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2024,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "SP1",
+        "season": 2025,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2014,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2015,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2016,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2017,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2018,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2019,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2020,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2021,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2022,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2023,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2024,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 305,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 1
+        }
+      },
+      {
+        "league": "D1",
+        "season": 2025,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2014,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2015,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2016,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 379,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 1
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2017,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2018,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2019,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2020,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2021,
+        "matches": 380,
+        "odds": 379,
+        "odds_sources": {
+          "Avg": 379,
+          "": 1
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2022,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2023,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 379,
+          "unmatched": 0,
+          "kickoff_mismatch": 1,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2024,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "I1",
+        "season": 2025,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2014,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2015,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2016,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2017,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 379,
+          "unmatched": 0,
+          "kickoff_mismatch": 1,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2018,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "BbAv": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2019,
+        "matches": 279,
+        "odds": 279,
+        "odds_sources": {
+          "Avg": 279
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 279,
+          "matched": 279,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2020,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2021,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2022,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 380,
+          "matched": 380,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2023,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2024,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      },
+      {
+        "league": "F1",
+        "season": 2025,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": {
+          "provider": "understat",
+          "finished": 306,
+          "matched": 306,
+          "unmatched": 0,
+          "kickoff_mismatch": 0,
+          "score_mismatch": 0
+        }
+      }
+    ],
+    "sha256": "d8a0c79bdb166248136438ad0428e0c425d8c48c3cc78bd16dccf174e2092d3d",
+    "odds_timing": "Approximate preceding Tuesday/Friday 00:00 UTC; actual quotes collected that afternoon, not timestamped.",
+    "result_timing": "Results and xG available next UTC day after local match date; unknown kickoffs anchored at 12:00 UTC.",
+    "history": "Up to two prior seasons by default, starting in 2014/15; features use only results available at origin."
+  },
+  "grid": [
+    {
+      "xg_weight": 0.0,
+      "weights": {
+        "main": 6.095098057759724e-07,
+        "odds": 0.999999,
+        "elo": 3.904901942527832e-07
+      },
+      "no_odds_weights": {
+        "main": 0.6095098057584456,
+        "elo": 0.3904901942415544
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9881139532802397,
+        "dc_log_loss": 0.9914777231643231,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566185433827,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9778352859118111
+      }
+    },
+    {
+      "xg_weight": 0.25,
+      "weights": {
+        "main": 7.439514527529001e-07,
+        "odds": 0.999999,
+        "elo": 2.5604854727585554e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7439514527315073,
+        "elo": 0.2560485472684927
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9853960462880722,
+        "dc_log_loss": 0.9866923117959696,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566179246048,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9764763321063386
+      }
+    },
+    {
+      "xg_weight": 0.5,
+      "weights": {
+        "main": 8.213610461916187e-07,
+        "odds": 0.999999,
+        "elo": 1.78638953837137e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8213610461679999,
+        "elo": 0.17863895383200012
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9833420815277767,
+        "dc_log_loss": 0.9839644819895794,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566173934171,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9754493494605969
+      }
+    },
+    {
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.174249740158526e-07,
+        "odds": 0.999999,
+        "elo": 1.8257502601290303e-07
+      },
+      "no_odds_weights": {
+        "main": 0.817424973992347,
+        "elo": 0.18257502600765296
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9825848730281787,
+        "dc_log_loss": 0.9832887829259482,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566171028003,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9750707450654894
+      }
+    },
+    {
+      "xg_weight": 1.0,
+      "weights": {
+        "main": 7.470182939227747e-07,
+        "odds": 0.999999,
+        "elo": 2.5298170610598095e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7470182939012937,
+        "elo": 0.2529817060987063
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9831249755178801,
+        "dc_log_loss": 0.9846964310105426,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566170855567,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9753407963017184
+      }
+    }
+  ],
+  "chronological_holdout": {
+    "training_seasons": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "held_out_seasons": [
+      2024,
+      2025
+    ],
+    "xg_weight": 0.75,
+    "weights": {
+      "main": 8.03599559000856e-07,
+      "odds": 0.999999,
+      "elo": 1.964004410278996e-07
+    },
+    "no_odds_weights": {
+      "main": 0.803599558977748,
+      "elo": 0.19640044102225196
+    },
+    "metrics": {
+      "matches": 16259,
+      "odds_matches": 16258,
+      "no_odds_log_loss": 0.981655559679341,
+      "dc_log_loss": 0.9825015039021577,
+      "elo_log_loss": 0.996608262859773,
+      "with_odds_log_loss": 0.9667903228577124,
+      "book_log_loss": 0.9667903184585964,
+      "objective": 0.9742229412685267
+    },
+    "evaluation": {
+      "fitted": {
+        "matches": 3504,
+        "odds_matches": 3504,
+        "no_odds_log_loss": 0.986789214403097,
+        "dc_log_loss": 0.9868315385330064,
+        "elo_log_loss": 1.001149398889909,
+        "with_odds_log_loss": 0.9710049414901725,
+        "book_log_loss": 0.971004934773525,
+        "objective": 0.9788970779466347
+      },
+      "baseline": {
+        "matches": 3504,
+        "odds_matches": 3504,
+        "no_odds_log_loss": 0.994719758731319,
+        "dc_log_loss": 0.9974385636673898,
+        "elo_log_loss": 1.001149398889909,
+        "with_odds_log_loss": 0.9783114981865972,
+        "book_log_loss": 0.971004934773525,
+        "objective": 0.9865156284589581
+      }
+    }
+  },
+  "folds": [
+    {
+      "held_out": "season",
+      "value": 2015,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.320212585826193e-07,
+        "odds": 0.999999,
+        "elo": 1.6797874144613631e-07
+      },
+      "no_odds_weights": {
+        "main": 0.832021258558694,
+        "elo": 0.16797874144130598
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17936,
+        "no_odds_log_loss": 0.9805223740580865,
+        "dc_log_loss": 0.9811109495669257,
+        "elo_log_loss": 0.9956790374307553,
+        "with_odds_log_loss": 0.9660302086787532,
+        "book_log_loss": 0.9660302042611152,
+        "objective": 0.9732762913684199
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 1.0032597933680738,
+          "dc_log_loss": 1.0050671165161713,
+          "elo_log_loss": 1.014982789210229,
+          "with_odds_log_loss": 0.9828207007425769,
+          "book_log_loss": 0.9828206930632724,
+          "objective": 0.9930402470553253
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 1.010048882500956,
+          "dc_log_loss": 1.014923502640849,
+          "elo_log_loss": 1.014982789210229,
+          "with_odds_log_loss": 0.9898105688618555,
+          "book_log_loss": 0.9828206930632724,
+          "objective": 0.9999297256814057
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2016,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.178804362863501e-07,
+        "odds": 0.999999,
+        "elo": 1.821195637424056e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8178804362628314,
+        "elo": 0.18211956373716864
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17936,
+        "no_odds_log_loss": 0.985976199649983,
+        "dc_log_loss": 0.9866721991062948,
+        "elo_log_loss": 1.0007183525395358,
+        "with_odds_log_loss": 0.9707801411586978,
+        "book_log_loss": 0.9707801361490954,
+        "objective": 0.9783781704043404
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.9486716554724943,
+          "dc_log_loss": 0.9494546211224818,
+          "elo_log_loss": 0.9645896381224244,
+          "with_odds_log_loss": 0.9353213765250786,
+          "book_log_loss": 0.9353213741834681,
+          "objective": 0.9419965159987864
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.953273402368986,
+          "dc_log_loss": 0.9555142142795867,
+          "elo_log_loss": 0.9645896381224244,
+          "with_odds_log_loss": 0.9394373332919306,
+          "book_log_loss": 0.9353213741834681,
+          "objective": 0.9463553678304583
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2017,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.203068136061341e-07,
+        "odds": 0.999999,
+        "elo": 1.7969318642262156e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8203068135825456,
+        "elo": 0.17969318641745435
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17936,
+        "no_odds_log_loss": 0.9841728547885903,
+        "dc_log_loss": 0.9848535793576667,
+        "elo_log_loss": 0.9991108704695967,
+        "with_odds_log_loss": 0.9694494847859546,
+        "book_log_loss": 0.9694494803387441,
+        "objective": 0.9768111697872724
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.9667070030306264,
+          "dc_log_loss": 0.9676408186087615,
+          "elo_log_loss": 0.9806644588218151,
+          "with_odds_log_loss": 0.9486279401526566,
+          "book_log_loss": 0.94862793228698,
+          "objective": 0.9576674715916416
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.9698010750036719,
+          "dc_log_loss": 0.9718320178319262,
+          "elo_log_loss": 0.9806644588218151,
+          "with_odds_log_loss": 0.9544554913890957,
+          "book_log_loss": 0.94862793228698,
+          "objective": 0.9621282831963838
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2018,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.152847989428842e-07,
+        "odds": 0.999999,
+        "elo": 1.8471520108587144e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8152847989194402,
+        "elo": 0.18471520108055983
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17936,
+        "no_odds_log_loss": 0.9829142893937479,
+        "dc_log_loss": 0.9836361642142329,
+        "elo_log_loss": 0.9977398961849222,
+        "with_odds_log_loss": 0.968024601141458,
+        "book_log_loss": 0.9680245964925409,
+        "objective": 0.9754694452676029
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.9792917837178818,
+          "dc_log_loss": 0.9798149700430989,
+          "elo_log_loss": 0.9943742016685613,
+          "with_odds_log_loss": 0.9628767768042961,
+          "book_log_loss": 0.9628767707490133,
+          "objective": 0.971084280261089
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.984908378030892,
+          "dc_log_loss": 0.9880978242203029,
+          "elo_log_loss": 0.9943742016685613,
+          "with_odds_log_loss": 0.9688229750098563,
+          "book_log_loss": 0.9628767707490133,
+          "objective": 0.9768656765203741
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2019,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.057792607188911e-07,
+        "odds": 0.999999,
+        "elo": 1.9422073930986457e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8057792606957204,
+        "elo": 0.19422073930427963
+      },
+      "metrics": {
+        "matches": 18038,
+        "odds_matches": 18037,
+        "no_odds_log_loss": 0.982299103787057,
+        "dc_log_loss": 0.9830998977010466,
+        "elo_log_loss": 0.9968140492984424,
+        "with_odds_log_loss": 0.966736548631217,
+        "book_log_loss": 0.966736543101655,
+        "objective": 0.974517826209137
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1725,
+          "odds_matches": 1725,
+          "no_odds_log_loss": 0.9854743934820172,
+          "dc_log_loss": 0.9851776351749647,
+          "elo_log_loss": 1.00363267053336,
+          "with_odds_log_loss": 0.9757573022978889,
+          "book_log_loss": 0.975757304657874,
+          "objective": 0.980615847889953
+        },
+        "baseline": {
+          "matches": 1725,
+          "odds_matches": 1725,
+          "no_odds_log_loss": 0.9921688185701775,
+          "dc_log_loss": 0.9934489026034297,
+          "elo_log_loss": 1.00363267053336,
+          "with_odds_log_loss": 0.9786923937293563,
+          "book_log_loss": 0.975757304657874,
+          "objective": 0.9854306061497669
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2020,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.402873506118829e-07,
+        "odds": 0.999999,
+        "elo": 1.597126494168728e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8402873505877199,
+        "elo": 0.15971264941228014
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17936,
+        "no_odds_log_loss": 0.9813311585710046,
+        "dc_log_loss": 0.9818560690960332,
+        "elo_log_loss": 0.9965860160919224,
+        "with_odds_log_loss": 0.9661260970205063,
+        "book_log_loss": 0.9661260920265106,
+        "objective": 0.9737286277957555
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.995244460845198,
+          "dc_log_loss": 0.997615921225099,
+          "elo_log_loss": 1.005913002598557,
+          "with_odds_log_loss": 0.9818618169848654,
+          "book_log_loss": 0.9818618154093173,
+          "objective": 0.9885531389150317
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 1.0025774216889103,
+          "dc_log_loss": 1.0069412896480676,
+          "elo_log_loss": 1.005913002598557,
+          "with_odds_log_loss": 0.9876152257973705,
+          "book_log_loss": 0.9818618154093173,
+          "objective": 0.9950963237431404
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2021,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.07863149122935e-07,
+        "odds": 0.999999,
+        "elo": 1.9213685090582067e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8078631490997044,
+        "elo": 0.19213685090029564
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17937,
+        "no_odds_log_loss": 0.981759178202511,
+        "dc_log_loss": 0.9825425380958115,
+        "elo_log_loss": 0.9963289303320306,
+        "with_odds_log_loss": 0.9665364558524385,
+        "book_log_loss": 0.9665364508933433,
+        "objective": 0.9741478170274748
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1825,
+          "no_odds_log_loss": 0.9908632754127471,
+          "dc_log_loss": 0.9907512312273167,
+          "elo_log_loss": 1.0084838601974782,
+          "with_odds_log_loss": 0.9777582299999107,
+          "book_log_loss": 0.9777582267409908,
+          "objective": 0.9843107527063288
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1825,
+          "no_odds_log_loss": 0.997332071295693,
+          "dc_log_loss": 0.9998557862834656,
+          "elo_log_loss": 1.0084838601974782,
+          "with_odds_log_loss": 0.9827022612474798,
+          "book_log_loss": 0.9777582267409908,
+          "objective": 0.9900171662715864
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2022,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.306318007540529e-07,
+        "odds": 0.999999,
+        "elo": 1.6936819927470278e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8306318007301675,
+        "elo": 0.1693681992698325
+      },
+      "metrics": {
+        "matches": 17937,
+        "odds_matches": 17936,
+        "no_odds_log_loss": 0.9818667353447624,
+        "dc_log_loss": 0.9824690693265228,
+        "elo_log_loss": 0.997126404013597,
+        "with_odds_log_loss": 0.9664521018144855,
+        "book_log_loss": 0.9664520968674509,
+        "objective": 0.974159418579624
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.9898071299256281,
+          "dc_log_loss": 0.9914859189202034,
+          "elo_log_loss": 1.0005091233818164,
+          "with_odds_log_loss": 0.9786017694424382,
+          "book_log_loss": 0.9786017669999131,
+          "objective": 0.9842044496840332
+        },
+        "baseline": {
+          "matches": 1826,
+          "odds_matches": 1826,
+          "no_odds_log_loss": 0.9968279537131409,
+          "dc_log_loss": 1.0011334567830983,
+          "elo_log_loss": 1.0005091233818164,
+          "with_odds_log_loss": 0.9835374433617653,
+          "book_log_loss": 0.9786017669999131,
+          "objective": 0.9901826985374531
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2023,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.007140958469562e-07,
+        "odds": 0.999999,
+        "elo": 1.9928590418179945e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8007140958239312,
+        "elo": 0.19928590417606884
+      },
+      "metrics": {
+        "matches": 18011,
+        "odds_matches": 18010,
+        "no_odds_log_loss": 0.9832243670372559,
+        "dc_log_loss": 0.9840671309904114,
+        "elo_log_loss": 0.9975448542314064,
+        "with_odds_log_loss": 0.9685635796004161,
+        "book_log_loss": 0.968563575363788,
+        "objective": 0.975893973318836
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1752,
+          "odds_matches": 1752,
+          "no_odds_log_loss": 0.9762554860462798,
+          "dc_log_loss": 0.9755053022813167,
+          "elo_log_loss": 0.9963246212037178,
+          "with_odds_log_loss": 0.957486992814348,
+          "book_log_loss": 0.9574869820365421,
+          "objective": 0.9668712394303138
+        },
+        "baseline": {
+          "matches": 1752,
+          "odds_matches": 1752,
+          "no_odds_log_loss": 0.979933279136608,
+          "dc_log_loss": 0.9796308331820349,
+          "elo_log_loss": 0.9963246212037178,
+          "with_odds_log_loss": 0.9645203673778886,
+          "book_log_loss": 0.9574869820365421,
+          "objective": 0.9722268232572483
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2024,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.031545585837898e-07,
+        "odds": 0.999999,
+        "elo": 1.968454414449658e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8031545585606946,
+        "elo": 0.19684544143930538
+      },
+      "metrics": {
+        "matches": 18011,
+        "odds_matches": 18010,
+        "no_odds_log_loss": 0.9828157026349764,
+        "dc_log_loss": 0.9836443559685649,
+        "elo_log_loss": 0.9973360421738592,
+        "with_odds_log_loss": 0.9678307303114274,
+        "book_log_loss": 0.9678307257128205,
+        "objective": 0.975323216473202
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1752,
+          "odds_matches": 1752,
+          "no_odds_log_loss": 0.9803243751771323,
+          "dc_log_loss": 0.9797330524997799,
+          "elo_log_loss": 0.9984127417791893,
+          "with_odds_log_loss": 0.9648154856037947,
+          "book_log_loss": 0.9648154785462199,
+          "objective": 0.9725699303904636
+        },
+        "baseline": {
+          "matches": 1752,
+          "odds_matches": 1752,
+          "no_odds_log_loss": 0.9888642491519758,
+          "dc_log_loss": 0.9911187272286814,
+          "elo_log_loss": 0.9984127417791893,
+          "with_odds_log_loss": 0.9725183460910836,
+          "book_log_loss": 0.9648154785462199,
+          "objective": 0.9806912976215296
+        }
+      }
+    },
+    {
+      "held_out": "season",
+      "value": 2025,
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.1891391996346e-07,
+        "odds": 0.999999,
+        "elo": 1.8108608006529566e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8189139199399116,
+        "elo": 0.18108608006008842
+      },
+      "metrics": {
+        "matches": 18011,
+        "odds_matches": 18010,
+        "no_odds_log_loss": 0.9815170270684139,
+        "dc_log_loss": 0.9822246587619197,
+        "elo_log_loss": 0.9967887107517155,
+        "with_odds_log_loss": 0.966592839072026,
+        "book_log_loss": 0.9665928344673592,
+        "objective": 0.97405493307022
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 1752,
+          "odds_matches": 1752,
+          "no_odds_log_loss": 0.9932638525785944,
+          "dc_log_loss": 0.9939300245662336,
+          "elo_log_loss": 1.003886056000628,
+          "with_odds_log_loss": 0.9771943973492686,
+          "book_log_loss": 0.9771943910008303,
+          "objective": 0.9852291249639316
+        },
+        "baseline": {
+          "matches": 1752,
+          "odds_matches": 1752,
+          "no_odds_log_loss": 1.000575268310662,
+          "dc_log_loss": 1.003758400106098,
+          "elo_log_loss": 1.003886056000628,
+          "with_odds_log_loss": 0.9841046502821114,
+          "book_log_loss": 0.9771943910008303,
+          "objective": 0.9923399592963866
+        }
+      }
+    },
+    {
+      "held_out": "league",
+      "value": "D1",
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.193308773365985e-07,
+        "odds": 0.999999,
+        "elo": 1.8066912269215716e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8193308773130381,
+        "elo": 0.1806691226869619
+      },
+      "metrics": {
+        "matches": 16397,
+        "odds_matches": 16396,
+        "no_odds_log_loss": 0.979887195407424,
+        "dc_log_loss": 0.9805732212679509,
+        "elo_log_loss": 0.994612535282082,
+        "with_odds_log_loss": 0.964807756271689,
+        "book_log_loss": 0.964807751624648,
+        "objective": 0.9723474758395565
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 3366,
+          "odds_matches": 3366,
+          "no_odds_log_loss": 0.9933759707419821,
+          "dc_log_loss": 0.9941510295579371,
+          "elo_log_loss": 1.0087194786524782,
+          "with_odds_log_loss": 0.9785520603915906,
+          "book_log_loss": 0.9785520551716009,
+          "objective": 0.9859640155667864
+        },
+        "baseline": {
+          "matches": 3366,
+          "odds_matches": 3366,
+          "no_odds_log_loss": 1.0020191350126861,
+          "dc_log_loss": 1.0058215595946818,
+          "elo_log_loss": 1.0087194786524782,
+          "with_odds_log_loss": 0.9856910772701774,
+          "book_log_loss": 0.9785520551716009,
+          "objective": 0.9938551061414318
+        }
+      }
+    },
+    {
+      "held_out": "league",
+      "value": "E0",
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.238749498256566e-07,
+        "odds": 0.999999,
+        "elo": 1.7612505020309907e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8238749498019655,
+        "elo": 0.17612505019803448
+      },
+      "metrics": {
+        "matches": 15583,
+        "odds_matches": 15582,
+        "no_odds_log_loss": 0.98548526806554,
+        "dc_log_loss": 0.986130998846463,
+        "elo_log_loss": 1.000351831524457,
+        "with_odds_log_loss": 0.9696223014645917,
+        "book_log_loss": 0.9696222955383424,
+        "objective": 0.9775537847650659
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 4180,
+          "odds_matches": 4180,
+          "no_odds_log_loss": 0.970987726575338,
+          "dc_log_loss": 0.9719199192438889,
+          "elo_log_loss": 0.9857622936829795,
+          "with_odds_log_loss": 0.9592938795349781,
+          "book_log_loss": 0.9592938795168238,
+          "objective": 0.965140803055158
+        },
+        "baseline": {
+          "matches": 4180,
+          "odds_matches": 4180,
+          "no_odds_log_loss": 0.9766398561352492,
+          "dc_log_loss": 0.9793991686402808,
+          "elo_log_loss": 0.9857622936829795,
+          "with_odds_log_loss": 0.9630384007453858,
+          "book_log_loss": 0.9592938795168238,
+          "objective": 0.9698391284403175
+        }
+      }
+    },
+    {
+      "held_out": "league",
+      "value": "F1",
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.366459908853804e-07,
+        "odds": 0.999999,
+        "elo": 1.6335400914337528e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8366459908613221,
+        "elo": 0.16335400913867792
+      },
+      "metrics": {
+        "matches": 15906,
+        "odds_matches": 15905,
+        "no_odds_log_loss": 0.9779138114581305,
+        "dc_log_loss": 0.9784764926249762,
+        "elo_log_loss": 0.9934470548269104,
+        "with_odds_log_loss": 0.9629413379610634,
+        "book_log_loss": 0.9629413334001529,
+        "objective": 0.970427574709597
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 3857,
+          "odds_matches": 3857,
+          "no_odds_log_loss": 1.0013084657894789,
+          "dc_log_loss": 1.0025379441298365,
+          "elo_log_loss": 1.0133814004731638,
+          "with_odds_log_loss": 0.9860177333101942,
+          "book_log_loss": 0.9860177280695801,
+          "objective": 0.9936630995498366
+        },
+        "baseline": {
+          "matches": 3857,
+          "odds_matches": 3857,
+          "no_odds_log_loss": 1.0078947232111493,
+          "dc_log_loss": 1.0113511975787937,
+          "elo_log_loss": 1.0133814004731638,
+          "with_odds_log_loss": 0.9918720733630417,
+          "book_log_loss": 0.9860177280695801,
+          "objective": 0.9998833982870955
+        }
+      }
+    },
+    {
+      "held_out": "league",
+      "value": "I1",
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 7.955514644500942e-07,
+        "odds": 0.999999,
+        "elo": 2.0444853557866148e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7955514644272176,
+        "elo": 0.20444853557278242
+      },
+      "metrics": {
+        "matches": 15583,
+        "odds_matches": 15583,
+        "no_odds_log_loss": 0.9857926602056795,
+        "dc_log_loss": 0.9866759123716266,
+        "elo_log_loss": 0.9999390723032775,
+        "with_odds_log_loss": 0.9718917073223955,
+        "book_log_loss": 0.9718917038243879,
+        "objective": 0.9788421837640375
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 4180,
+          "odds_matches": 4179,
+          "no_odds_log_loss": 0.9698047898395349,
+          "dc_log_loss": 0.9697402651432334,
+          "elo_log_loss": 0.9874133305676962,
+          "with_odds_log_loss": 0.9502162566335846,
+          "book_log_loss": 0.9502162463726406,
+          "objective": 0.9600105232365597
+        },
+        "baseline": {
+          "matches": 4180,
+          "odds_matches": 4179,
+          "no_odds_log_loss": 0.9730121494632922,
+          "dc_log_loss": 0.973902912820977,
+          "elo_log_loss": 0.9874133305676962,
+          "with_odds_log_loss": 0.9569948026879802,
+          "book_log_loss": 0.9502162463726406,
+          "objective": 0.9650034760756362
+        }
+      }
+    },
+    {
+      "held_out": "league",
+      "value": "SP1",
+      "xg_weight": 0.75,
+      "weights": {
+        "main": 8.119765561799465e-07,
+        "odds": 0.999999,
+        "elo": 1.8802344384880916e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8119765561565976,
+        "elo": 0.18802344384340242
+      },
+      "metrics": {
+        "matches": 15583,
+        "odds_matches": 15582,
+        "no_odds_log_loss": 0.9838257508630754,
+        "dc_log_loss": 0.9845872895187238,
+        "elo_log_loss": 0.9988191258440794,
+        "with_odds_log_loss": 0.9685199824745496,
+        "book_log_loss": 0.9685199772826615,
+        "objective": 0.9761728666688125
+      },
+      "evaluation": {
+        "fitted": {
+          "matches": 4180,
+          "odds_matches": 4180,
+          "no_odds_log_loss": 0.9776245272457829,
+          "dc_log_loss": 0.9780947565548455,
+          "elo_log_loss": 0.9918931164044911,
+          "with_odds_log_loss": 0.9637031557177174,
+          "book_log_loss": 0.9637031525395472,
+          "objective": 0.9706638414817501
+        },
+        "baseline": {
+          "matches": 4180,
+          "odds_matches": 4180,
+          "no_odds_log_loss": 0.9842117724374746,
+          "dc_log_loss": 0.986913777186876,
+          "elo_log_loss": 0.9918931164044911,
+          "with_odds_log_loss": 0.9688659443151393,
+          "book_log_loss": 0.9637031525395472,
+          "objective": 0.9765388583763069
+        }
+      }
+    }
+  ],
+  "fold_weight_spread": {
+    "main": {
+      "min": 7.955514644500942e-07,
+      "max": 8.402873506118829e-07
+    },
+    "odds": {
+      "min": 0.999999,
+      "max": 0.999999
+    },
+    "elo": {
+      "min": 1.597126494168728e-07,
+      "max": 2.0444853557866148e-07
+    },
+    "main_without_odds": {
+      "min": 0.7955514644272176,
+      "max": 0.8402873505877199
+    },
+    "xg_weight": {
+      "min": 0.75,
+      "max": 0.75
+    }
+  },
+  "baseline": {
+    "matches": 19763,
+    "odds_matches": 19762,
+    "no_odds_log_loss": 0.9887555272519704,
+    "dc_log_loss": 0.9914777231643231,
+    "elo_log_loss": 0.9974339239561628,
+    "with_odds_log_loss": 0.9732924596763448,
+    "book_log_loss": 0.9675566123340387,
+    "objective": 0.9810239934641576
+  },
+  "objective": "Equal league-season weights; half log loss without odds, half with pre-closing odds. Missing-odds weights renormalize over main/Elo.",
+  "odds_weight_limit": "At most 1 - 1e-6, keeping a defined main/Elo ratio when quotes are absent.",
+  "limitations": [
+    "Historical quote collection times are approximate; xG publication times are assumed.",
+    "Leave-out folds measure stability, not prospective performance; the latest seasons form a separate chronological holdout.",
+    "Weights are fixed after this explicit rerun; match-level tuning does not guarantee optimal long-horizon standings."
+  ],
+  "robustness": {
+    "B1": {
+      "fitted": {
+        "matches": 3045,
+        "odds_matches": 3045,
+        "no_odds_log_loss": 1.0132674554279724,
+        "dc_log_loss": 1.0165479111298896,
+        "elo_log_loss": 1.0170021336799626,
+        "with_odds_log_loss": 0.9905039439598955,
+        "book_log_loss": 0.99050393900244,
+        "objective": 1.001885699693934
+      },
+      "baseline": {
+        "matches": 3045,
+        "odds_matches": 3045,
+        "no_odds_log_loss": 1.0127369885856798,
+        "dc_log_loss": 1.0165479111298896,
+        "elo_log_loss": 1.0170021336799626,
+        "with_odds_log_loss": 0.9962946531553285,
+        "book_log_loss": 0.99050393900244,
+        "objective": 1.004515820870504
+      }
+    },
+    "G1": {
+      "fitted": {
+        "matches": 2628,
+        "odds_matches": 2627,
+        "no_odds_log_loss": 0.9516890071032967,
+        "dc_log_loss": 0.9530821264446439,
+        "elo_log_loss": 0.9697310622808699,
+        "with_odds_log_loss": 0.9330931861519816,
+        "book_log_loss": 0.9330931881613497,
+        "objective": 0.9423910966276392
+      },
+      "baseline": {
+        "matches": 2628,
+        "odds_matches": 2627,
+        "no_odds_log_loss": 0.9516141080054775,
+        "dc_log_loss": 0.9530821264446439,
+        "elo_log_loss": 0.9697310622808699,
+        "with_odds_log_loss": 0.9364759198441185,
+        "book_log_loss": 0.9330931881613497,
+        "objective": 0.944045013924798
+      }
+    },
+    "N1": {
+      "fitted": {
+        "matches": 3292,
+        "odds_matches": 3292,
+        "no_odds_log_loss": 0.956221400786603,
+        "dc_log_loss": 0.9593328598094744,
+        "elo_log_loss": 0.9661524193154444,
+        "with_odds_log_loss": 0.9363187569805469,
+        "book_log_loss": 0.9363187514024403,
+        "objective": 0.946270078883575
+      },
+      "baseline": {
+        "matches": 3292,
+        "odds_matches": 3292,
+        "no_odds_log_loss": 0.9557682040278278,
+        "dc_log_loss": 0.9593328598094744,
+        "elo_log_loss": 0.9661524193154444,
+        "with_odds_log_loss": 0.9417159979104679,
+        "book_log_loss": 0.9363187514024403,
+        "objective": 0.9487421009691479
+      }
+    },
+    "P1": {
+      "fitted": {
+        "matches": 3366,
+        "odds_matches": 3366,
+        "no_odds_log_loss": 0.9385659151834185,
+        "dc_log_loss": 0.9397576482125848,
+        "elo_log_loss": 0.9518370200914054,
+        "with_odds_log_loss": 0.9208802600758144,
+        "book_log_loss": 0.9208802575752179,
+        "objective": 0.9297230876296164
+      },
+      "baseline": {
+        "matches": 3366,
+        "odds_matches": 3366,
+        "no_odds_log_loss": 0.9384863389951115,
+        "dc_log_loss": 0.9397576482125848,
+        "elo_log_loss": 0.9518370200914054,
+        "with_odds_log_loss": 0.9251955478228855,
+        "book_log_loss": 0.9208802575752179,
+        "objective": 0.9318409434089985
+      }
+    },
+    "SC0": {
+      "fitted": {
+        "matches": 2459,
+        "odds_matches": 2459,
+        "no_odds_log_loss": 0.9635390997491903,
+        "dc_log_loss": 0.9655370059990189,
+        "elo_log_loss": 0.9722350279355443,
+        "with_odds_log_loss": 0.9460195019740845,
+        "book_log_loss": 0.9460194964280482,
+        "objective": 0.9547793008616374
+      },
+      "baseline": {
+        "matches": 2459,
+        "odds_matches": 2459,
+        "no_odds_log_loss": 0.9632791708298893,
+        "dc_log_loss": 0.9655370059990189,
+        "elo_log_loss": 0.9722350279355443,
+        "with_odds_log_loss": 0.9508744278969397,
+        "book_log_loss": 0.9460194964280482,
+        "objective": 0.9570767993634145
+      }
+    },
+    "T1": {
+      "fitted": {
+        "matches": 3700,
+        "odds_matches": 3671,
+        "no_odds_log_loss": 1.0018949972416717,
+        "dc_log_loss": 1.0055504621009503,
+        "elo_log_loss": 1.0024126746522228,
+        "with_odds_log_loss": 0.9803888432057297,
+        "book_log_loss": 0.9803888379988038,
+        "objective": 0.9911419202237007
+      },
+      "baseline": {
+        "matches": 3700,
+        "odds_matches": 3671,
+        "no_odds_log_loss": 1.0012701922623608,
+        "dc_log_loss": 1.0055504621009503,
+        "elo_log_loss": 1.0024126746522228,
+        "with_odds_log_loss": 0.9865980406413446,
+        "book_log_loss": 0.9803888379988038,
+        "objective": 0.9939341164518527
+      }
+    }
+  },
+  "robustness_dataset": {
+    "schema_version": 1,
+    "leagues": [
+      "P1",
+      "N1",
+      "B1",
+      "T1",
+      "G1",
+      "SC0"
+    ],
+    "seasons": [
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "xg_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "prior_seasons": 2,
+    "xi": 0.003,
+    "lambda_reg": 0.1,
+    "feature_code_sha256": "a51a1452311ed1a0f4ab3a25d9ad3249dc189d821c3a598e13a23eb5bedc610d",
+    "matches": 18490,
+    "coverage": [
+      {
+        "league": "P1",
+        "season": 2014,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2015,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2016,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2017,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2018,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2019,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2020,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2021,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2022,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2023,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2024,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "P1",
+        "season": 2025,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2014,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2015,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2016,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2017,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2018,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2019,
+        "matches": 232,
+        "odds": 232,
+        "odds_sources": {
+          "Avg": 232
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2020,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2021,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2022,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2023,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2024,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "N1",
+        "season": 2025,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2014,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2015,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2016,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2017,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2018,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2019,
+        "matches": 232,
+        "odds": 232,
+        "odds_sources": {
+          "Avg": 232
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2020,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2021,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2022,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2023,
+        "matches": 312,
+        "odds": 312,
+        "odds_sources": {
+          "Avg": 312
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2024,
+        "matches": 312,
+        "odds": 312,
+        "odds_sources": {
+          "Avg": 312
+        },
+        "xg": null
+      },
+      {
+        "league": "B1",
+        "season": 2025,
+        "matches": 311,
+        "odds": 311,
+        "odds_sources": {
+          "Avg": 311
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2014,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2015,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2016,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2017,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2018,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "BbAv": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2019,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2020,
+        "matches": 420,
+        "odds": 420,
+        "odds_sources": {
+          "Avg": 420
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2021,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2022,
+        "matches": 342,
+        "odds": 313,
+        "odds_sources": {
+          "Avg": 313,
+          "": 29
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2023,
+        "matches": 380,
+        "odds": 380,
+        "odds_sources": {
+          "Avg": 380
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2024,
+        "matches": 342,
+        "odds": 342,
+        "odds_sources": {
+          "Avg": 342
+        },
+        "xg": null
+      },
+      {
+        "league": "T1",
+        "season": 2025,
+        "matches": 306,
+        "odds": 306,
+        "odds_sources": {
+          "Avg": 306
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2014,
+        "matches": 305,
+        "odds": 281,
+        "odds_sources": {
+          "BbAv": 281,
+          "": 24
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2015,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2016,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2017,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "BbAv": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2018,
+        "matches": 239,
+        "odds": 239,
+        "odds_sources": {
+          "BbAv": 239
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2019,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "Avg": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2020,
+        "matches": 240,
+        "odds": 239,
+        "odds_sources": {
+          "Avg": 239,
+          "": 1
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2021,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "Avg": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2022,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "Avg": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2023,
+        "matches": 240,
+        "odds": 240,
+        "odds_sources": {
+          "Avg": 240
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2024,
+        "matches": 233,
+        "odds": 233,
+        "odds_sources": {
+          "Avg": 233
+        },
+        "xg": null
+      },
+      {
+        "league": "G1",
+        "season": 2025,
+        "matches": 236,
+        "odds": 236,
+        "odds_sources": {
+          "Avg": 236
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2014,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "BbAv": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2015,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "BbAv": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2016,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "BbAv": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2017,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "BbAv": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2018,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "BbAv": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2019,
+        "matches": 179,
+        "odds": 179,
+        "odds_sources": {
+          "Avg": 179
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2020,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "Avg": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2021,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "Avg": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2022,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "Avg": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2023,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "Avg": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2024,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "Avg": 228
+        },
+        "xg": null
+      },
+      {
+        "league": "SC0",
+        "season": 2025,
+        "matches": 228,
+        "odds": 228,
+        "odds_sources": {
+          "Avg": 228
+        },
+        "xg": null
+      }
+    ],
+    "sha256": "e380c74b5843ae125856bdde4be0cce742dde9d636b44626be87cfba628d506a",
+    "odds_timing": "Approximate preceding Tuesday/Friday 00:00 UTC; actual quotes collected that afternoon, not timestamped.",
+    "result_timing": "Results and xG available next UTC day after local match date; unknown kickoffs anchored at 12:00 UTC.",
+    "history": "Up to two prior seasons by default, starting in 2014/15; features use only results available at origin."
+  },
+  "code_version": {
+    "git_revision": "f494a4ebe40fae546d7507b1883a12eb44e1f09c",
+    "feature_sha256": "a51a1452311ed1a0f4ab3a25d9ad3249dc189d821c3a598e13a23eb5bedc610d",
+    "optimizer_sha256": "f8ebc8d11b138db0d0fe74897ceb4f5731cb904cb0b04d2f4dee660c92f9cb64"
+  },
+  "version": "global-8c8185b60bc9"
+}

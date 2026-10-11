@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 
 from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.data import FootballDataClient, fetch_matches, fetch_standings, validate_schedule
+from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_WEIGHT
 from standing_prediction.dixon_coles import fit_dixon_coles
 from standing_prediction.elo import fit_elo
 from standing_prediction.ensemble import blend_probabilities
@@ -31,7 +32,6 @@ from standing_prediction.utils import normalize_team
 
 
 LOG = logging.getLogger(__name__)
-DEFAULT_WEIGHTS = {"main": 0.35, "odds": 0.55, "elo": 0.10}
 DEFAULT_H2H = {"seasons": 6, "half_life_days": 730, "shrinkage": 4.0}
 COMPETITION_TO_THE_ODDS_API_SPORT = {
     "PD": "soccer_spain_la_liga", "PL": "soccer_epl", "BL1": "soccer_germany_bundesliga",
@@ -54,19 +54,19 @@ def main(argv=None):
     parser.add_argument("--n-sim", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--max-goals", type=int, default=10)
-    parser.add_argument("--xi", type=float, default=0.003)
-    parser.add_argument("--lambda-reg", type=float, default=0.1)
-    parser.add_argument("--prior-seasons", type=int, default=2)
+    parser.add_argument("--xi", type=float, default=DEFAULT_FIT["xi"])
+    parser.add_argument("--lambda-reg", type=float, default=DEFAULT_FIT["lambda_reg"])
+    parser.add_argument("--prior-seasons", type=int, default=DEFAULT_FIT["prior_seasons"])
     parser.add_argument("--use-odds", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--odds-provider", choices=["the_odds_api", "football_data_uk", "none"], default="the_odds_api")
     parser.add_argument("--odds-days", type=int, default=180)
     parser.add_argument("--odds-snapshot", type=Path, help="CSV with timestamped odds saved by an earlier run")
     parser.add_argument("--out-dir", type=Path, default=Path("out"))
-    parser.add_argument("--weights", default="main=0.35,odds=0.55,elo=0.10")
+    parser.add_argument("--weights", help="Override the stored global main/odds/elo weights")
     parser.add_argument("--calibrate", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--calibration-seasons", nargs="+", type=int)
     parser.add_argument("--calibration-cutoffs", "--calibration-cutoff-matchday", nargs="+", type=int, default=[5, 10, 20, 30])
-    parser.add_argument("--xg-weight", type=float, default=0.0, help="Weight of Understat xG strengths in log goal rates (0 disables)")
+    parser.add_argument("--xg-weight", type=float, default=DEFAULT_XG_WEIGHT, help="Override the stored global xG weight (0 disables)")
     parser.add_argument("--h2h-weight", type=float, default=0.0, help="Log-rate shift per goal of shrunk head-to-head residual (0 disables)")
     parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
@@ -74,7 +74,7 @@ def main(argv=None):
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     load_dotenv()
     options = vars(args)
-    options["weights"] = _parse_weights(options["weights"])
+    options["weights"] = _parse_weights(options["weights"]) if options["weights"] else None
     result = run_prediction(**options)
     print(result.summary.to_string(float_format=lambda x: f"{x:.2f}"))
     print(f"Wrote forecast files to {args.out_dir}")
@@ -159,7 +159,7 @@ def adjust_goal_model(dc, *, teams, xg_strengths=None, xg_weight=0.0, h2h_effect
 
 
 def fit_prediction_models(finished, *, teams, history=None, reference_date=None, xi=0.003, lambda_reg=0.1,
-                          xg_weight=0.0, h2h_weight=0.0, h2h_residuals=None,
+                          xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_residuals=None,
                           h2h_half_life=DEFAULT_H2H["half_life_days"], h2h_shrinkage=DEFAULT_H2H["shrinkage"]):
     dc, elo, xg_strengths, effects = fit_model_components(
         finished, teams=teams, history=history, reference_date=reference_date, xi=xi, lambda_reg=lambda_reg,
@@ -171,11 +171,11 @@ def fit_prediction_models(finished, *, teams, history=None, reference_date=None,
 
 
 def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_goals=10,
-                   xi=0.003, lambda_reg=0.1, prior_seasons=2, use_odds=True,
+                   xi=DEFAULT_FIT["xi"], lambda_reg=DEFAULT_FIT["lambda_reg"], prior_seasons=DEFAULT_FIT["prior_seasons"], use_odds=True,
                    odds_provider="the_odds_api", odds_days=180, odds_snapshot=None,
                    out_dir=Path("out"), weights=None, calibrate=False, calibration_seasons=None,
                    calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None,
-                   xg_weight=0.0, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
+                   xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
     if n_sim < 1 or max_goals < 1 or prior_seasons < 0:
         raise ValueError("n_sim/max_goals must be positive; prior_seasons cannot be negative.")
     if not 0 <= xg_weight <= 1 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
@@ -230,7 +230,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                 raise ValueError("Calibration seasons must precede the forecast season.")
             calibrator = _train_calibrator(client, competition=competition, seasons=years,
                                           cutoffs=calibration_cutoffs, prior_seasons=prior_seasons,
-                                          xi=xi, lambda_reg=lambda_reg, cache=cache, weights=weights)
+                                          xi=xi, lambda_reg=lambda_reg, cache=cache, weights=weights, xg_weight=xg_weight)
         specs = build_fixture_specs(remaining, dc=dc, elo=elo, odds=odds, as_of=cutoff,
                                    max_goals=max_goals, weights=weights or DEFAULT_WEIGHTS, calibrator=calibrator)
         counts, points = simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed,
@@ -246,6 +246,11 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         "prior_seasons": history.attrs.get("seasons", []), "n_sim": n_sim, "seed": seed,
         "max_goals": max_goals, "xi": xi, "lambda_reg": lambda_reg,
         "weights": weights or DEFAULT_WEIGHTS, "calibrated": calibrator is not None,
+        "weight_calibration_version": CALIBRATION_VERSION,
+        "global_defaults_overridden": bool((weights is not None and weights != DEFAULT_WEIGHTS)
+                                           or xg_weight != DEFAULT_XG_WEIGHT or h2h_weight != 0
+                                           or xi != DEFAULT_FIT["xi"] or lambda_reg != DEFAULT_FIT["lambda_reg"]
+                                           or prior_seasons != DEFAULT_FIT["prior_seasons"]),
         "calibration_seasons": years if calibrate else [],
         "calibration_cutoffs": list(calibration_cutoffs) if calibrate else [],
         "xg_weight": xg_weight, "xg_provider": "understat", "xg_coverage": xg_coverage,
@@ -416,17 +421,18 @@ def style_probabilities(probabilities):
     )
 
 
-def _train_calibrator(client, *, competition, seasons, cutoffs, prior_seasons, xi, lambda_reg, cache=True, weights=None):
+def _train_calibrator(client, *, competition, seasons, cutoffs, prior_seasons, xi, lambda_reg, cache=True, weights=None,
+                      xg_weight=DEFAULT_XG_WEIGHT):
     from standing_prediction.backtest import snapshot_features
     frames = []
     for season in sorted(set(seasons)):
-        matches = load_season_results(client, competition, season, cache=cache)
+        matches = load_season_results(client, competition, season, cache=cache, xg=xg_weight > 0)
         teams = sorted(set(matches["homeTeam"]) | set(matches["awayTeam"]))
-        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache)
+        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
         for cutoff in cutoffs:
             frame, _, _, _ = snapshot_features(matches, season=season, competition=competition,
                                                cutoff_matchday=cutoff, history=history, xi=xi,
-                                               lambda_reg=lambda_reg, weights=weights)
+                                               lambda_reg=lambda_reg, weights=weights, xg_weight=xg_weight)
             if not frame.empty:
                 frames.append(frame)
     if not frames:

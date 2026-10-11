@@ -85,14 +85,14 @@ def fit_elo(
     def expected_home_score(p_home, p_draw):
         return p_home + 0.5 * p_draw
 
-    for _, row in finished.iterrows():
-        home = row["homeTeam"]
-        away = row["awayTeam"]
-        hg = int(row["homeGoals"])
-        ag = int(row["awayGoals"])
+    for row in finished.itertuples(index=False):
+        home = row.homeTeam
+        away = row.awayTeam
+        hg = int(row.homeGoals)
+        ag = int(row.awayGoals)
 
         if "utcDate" in finished.columns:
-            date = row["utcDate"]
+            date = row.utcDate
             season = date.year - (date.month < 7)
             if previous_season is not None and season > previous_season:
                 retained = season_regression ** (season - previous_season)

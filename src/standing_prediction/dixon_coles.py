@@ -128,6 +128,11 @@ def fit_dixon_coles(
 
     days_ago = (latest_date - finished["utcDate"]).dt.total_seconds().to_numpy() / 86400.0
     weights = np.exp(-xi * days_ago)
+    log_factorials = gammaln(home_goals + 1) + gammaln(away_goals + 1)
+    mask_00 = (home_goals == 0) & (away_goals == 0)
+    mask_01 = (home_goals == 0) & (away_goals == 1)
+    mask_10 = (home_goals == 1) & (away_goals == 0)
+    mask_11 = (home_goals == 1) & (away_goals == 1)
 
     # Reasonable initial values
     intercept0 = float(np.log(max(away_goals.mean(), 1e-3)))
@@ -168,33 +173,47 @@ def fit_dixon_coles(
         lambda_ = np.exp(np.clip(log_lambda, -15.0, 15.0))
         mu_ = np.exp(np.clip(log_mu, -15.0, 15.0))
 
-        log_p_home = home_goals * np.log(lambda_) - lambda_ - gammaln(home_goals + 1)
-        log_p_away = away_goals * np.log(mu_) - mu_ - gammaln(away_goals + 1)
+        log_poisson = home_goals * np.log(lambda_) - lambda_ + away_goals * np.log(mu_) - mu_ - log_factorials
 
         # Tau correction (only for low scores)
         tau = np.ones_like(lambda_)
-        mask_00 = (home_goals == 0) & (away_goals == 0)
-        mask_01 = (home_goals == 0) & (away_goals == 1)
-        mask_10 = (home_goals == 1) & (away_goals == 0)
-        mask_11 = (home_goals == 1) & (away_goals == 1)
-
         tau[mask_00] = 1.0 - (lambda_[mask_00] * mu_[mask_00] * rho)
         tau[mask_01] = 1.0 + (lambda_[mask_01] * rho)
         tau[mask_10] = 1.0 + (mu_[mask_10] * rho)
         tau[mask_11] = 1.0 - rho
 
         # Guard against log(<=0) from extreme parameters.
+        active = tau > 1e-12
         tau = np.clip(tau, 1e-12, None)
         log_tau = np.log(tau)
 
-        ll = (weights * (log_tau + log_p_home + log_p_away)).sum()
+        ll = (weights * (log_tau + log_poisson)).sum()
 
         reg = lambda_reg * (home_adv**2 + np.square(attack).sum() + np.square(defense).sum())
-        return float(-(ll - reg))
+        tau_home, tau_away, tau_rho = np.zeros((3, len(weights)))
+        tau_home[mask_00] = tau_away[mask_00] = -lambda_[mask_00] * mu_[mask_00] * rho
+        tau_home[mask_01] = lambda_[mask_01] * rho
+        tau_away[mask_10] = mu_[mask_10] * rho
+        tau_rho[mask_00] = -lambda_[mask_00] * mu_[mask_00]
+        tau_rho[mask_01] = lambda_[mask_01]
+        tau_rho[mask_10] = mu_[mask_10]
+        tau_rho[mask_11] = -1
+        correction = weights * active / tau
+        r_home = (weights * (lambda_ - home_goals) - correction * tau_home) * (abs(log_lambda) < 15)
+        r_away = (weights * (mu_ - away_goals) - correction * tau_away) * (abs(log_mu) < 15)
+        grad_attack = np.bincount(home_idx, r_home, n_teams) + np.bincount(away_idx, r_away, n_teams) + 2 * lambda_reg * attack
+        grad_defense = np.bincount(away_idx, r_home, n_teams) + np.bincount(home_idx, r_away, n_teams) + 2 * lambda_reg * defense
+        gradient = np.concatenate([
+            [r_home.sum() + r_away.sum(), r_home.sum() + 2 * lambda_reg * home_adv],
+            grad_attack[:-1] - grad_attack[-1], grad_defense[:-1] - grad_defense[-1],
+            [-(correction * tau_rho).sum()],
+        ])
+        return float(-(ll - reg)), gradient
 
     result = minimize(
         neg_log_likelihood,
         x0=x0,
+        jac=True,
         method="L-BFGS-B",
         bounds=bounds,
         options={"maxiter": max_iter},

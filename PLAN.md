@@ -12,7 +12,8 @@ Keep `src/standing_prediction` as the main product, with one current notebook in
 - Vectorized simulations, expected points/positions, point percentiles, event probabilities, and Monte Carlo standard errors.
 - Chart-first HTML/notebook output with continuous nonlinear colors, two-decimal percentages, saved provenance, input snapshots, and timestamped forecast archives.
 - Chronological historical snapshots and expanding-season calibration evaluation, with match, position, and event metrics. Official completed-season prediction exports bypass fitting.
-- Optional xG and predictive head-to-head (H2H) goal-rate adjustments (`xg_weight`, `h2h_weight`, both 0 by default), a `football-ablation` command that tunes them on earlier seasons and compares variants on later ones, and tests for prior-only features.
+- xG and predictive head-to-head (H2H) goal-rate adjustments, a `football-ablation` command that tunes them on earlier seasons and compares variants on later ones, and tests for prior-only features. xG now uses the stored global default; H2H remains off.
+- Separately installable `packages/forecast-calibration`, with `football-calibrate`, pooled league-season weighting, chronological holdout and leave-out checks, external robustness leagues, and versioned defaults included with `standing_prediction`.
 
 ## xG and H2H: sources and design
 
@@ -48,7 +49,7 @@ Checked on **2026-10-09**:
 - **H2H adds nothing.** In both leagues, every positive weight raised tuning log loss, monotonically: La Liga 0.9706 → 0.9741 and Premier League 0.9484 → 0.9556 from weight 0 to 0.3. Tuning therefore selected 0, so the H2H-only and combined variants equal baseline and xG. H2H stays available but off.
 - **Caveats:** snapshots within a season overlap; xG availability is assumed rather than reconstructed; odds were excluded. Live forecasts give odds 0.55 of the blend, and the market may already price in the xG information. No dated historical odds exist to test that.
 
-## Plan A: one-time global weight calibration
+## Plan A: one-time global weight calibration (implemented)
 
 Goal: fit one set of blend weights (main / odds / Elo) and the xG weight on a decade of matches across Europe's main leagues, store it with the package, and use it as the fixed default for every competition. It is refit only by an explicit, versioned rerun, not per season or per forecast.
 
@@ -57,13 +58,30 @@ Goal: fit one set of blend weights (main / odds / Elo) and the xG weight on a de
 - Robustness set: P1, N1, B1, T1, G1 and SC0 over the same years, without xG. It checks that the odds/model weights transfer to leagues outside the top five.
 
 **Method.**
-1. Build a rolling one-week-ahead dataset. For each league and match week, fit Dixon–Coles, Elo and xG strengths on results before that week's odds collection time (the preceding Tuesday or Friday, 00:00 UTC). Store `p_dc` for each xG weight in a grid {0, 0.25, 0.5, 0.75, 1}, plus `p_elo`, `p_odds` (average pre-closing, de-margined) and the outcome. Each fit happens once per league-week, which is cheap.
-2. Fit the log-linear pool weights for main, odds and Elo by minimizing pooled log loss with nonnegative weights (scipy), separately for each xG grid value. Choose the xG weight with the lowest loss. For the rows without odds, which is most of a season simulation, the same weights renormalize over main and Elo; also report the loss for that case.
-3. Check stability rather than tuning per league: leave-one-season-out and leave-one-league-out losses, weight spread across folds, and the robustness leagues. A fold whose weights move outside the spread is a warning, not an override.
-4. Optionally include the decay `xi` and ridge `lambda_reg` in the same search (a small grid). Head-to-head stays at 0 unless it improves pooled loss.
+1. Build a rolling one-week-ahead dataset. For each league and match week, fit Dixon–Coles, Elo and xG strengths on results available before that week's approximate odds collection time (the preceding Tuesday or Friday, 00:00 UTC). Results and xG become available the next UTC day after the local match date; unknown kickoffs use a noon UTC anchor. Store `p_dc` for each xG weight in a grid {0, 0.25, 0.5, 0.75, 1}, plus `p_elo`, `p_odds` (average pre-closing, de-margined, Bet365 fallback) and the outcome. Each fit happens once per league-week.
+2. Fit nonnegative log-linear pool weights with scipy, separately for each xG grid value. Every league-season contributes equally; the objective averages log loss with odds masked and log loss on rows with quotes. This estimates the main/Elo ratio for unquoted future fixtures alongside market share for quoted fixtures. Choose the xG weight with the lowest combined loss. Market weight is capped at `1 - 1e-6` so the main/Elo renormalization remains defined.
+3. Hold out the latest two seasons chronologically before refitting all data. Check stability with leave-one-season-out and leave-one-league-out losses, weight spread across folds, and the robustness leagues. Fold variation is reported, without per-league overrides.
+4. Keep decay `xi=0.003`, ridge `lambda_reg=0.1` and up to two prior seasons fixed for this run. A future version may search decay and ridge explicitly. Head-to-head stays at 0.
 5. Refit on all calibration data and write `src/standing_prediction/calibrated_weights.json` with the weights, data range, leagues, metrics, fold spread and code version. `DEFAULT_WEIGHTS`, `xg_weight` and the CLI defaults read from it, and forecast metadata records the calibration version.
 
 **Deliverables:** `football-calibrate` (dataset build plus weight fit), the stored weights file, and a short report in this file. Every later forecast, including Champions League, uses these weights unchanged.
+
+### Calibration results (2026-10-10)
+
+Implemented in the separate [forecast-calibration package](packages/forecast-calibration/README.md), with artifact `src/standing_prediction/calibrated_weights.json`, version **`global-8c8185b60bc9`**. The run contains **19,763** unique calibration fixtures across five leagues and 11 seasons, plus **18,490** fixtures in six external leagues. Pre-closing odds cover 19,762 calibration fixtures; Understat xG matches 19,759, with four score/date mismatches rejected. Provider spelling fixes recovered 238 additional xG joins.
+
+Final defaults: **xG weight 0.75**; **main 81.74%, Elo 18.26% when odds are absent**. With odds present, the fitted market share reaches the 99.9999% cap, so quoted outcome probabilities effectively follow the market. This is the fitted result, rather than a prescribed three-way blend. H2H remains 0. Forecasts load these settings and record the version; only an explicit calibration rerun replaces them.
+
+The chronological check fitted weights on 2015/16–2023/24, then froze them for **3,504 matches in 2024/25–2025/26**. Its no-odds ratio was 80.36% main / 19.64% Elo, independently of the final all-data refit. Log loss uses equal league-season weights; lower is better:
+
+| Forecast | Previous defaults | Frozen fit |
+| :--- | ---: | ---: |
+| Without odds | 0.99472 | **0.98679** |
+| With pre-closing odds | 0.97831 | **0.97100** |
+
+All 16 leave-out folds selected xG weight 0.75 and improved no-odds loss over the previous defaults. The fitted main share without odds ranged from **79.56% to 84.03%**. These folds measure stability; the chronological comparison above is the check on later seasons.
+
+**Transfer limitation:** without xG or odds, external-league loss worsened slightly in all six leagues (0.00007–0.00062). With odds it improved in all six (0.00338–0.00621). The same global weights remain in use; these checks do not establish universal optimality. Quote collection and xG publication times are approximate, and match-level improvements do not establish calibrated long-horizon standings probabilities.
 
 ## Plan B: Champions League forecasts (league phase and knockout bracket)
 

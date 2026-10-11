@@ -31,3 +31,6 @@ football-ablation = "standing_prediction.ablation:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["standing_prediction*"]
+
+[tool.setuptools.package-data]
+standing_prediction = ["calibrated_weights.json"]

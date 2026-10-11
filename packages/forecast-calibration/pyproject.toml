@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "football-forecast-calibration"
+version = "0.1.0"
+description = "One-time pooled calibration of football forecast weights"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["football-predictions>=0.1.0"]
+
+[project.scripts]
+football-calibrate = "forecast_calibration.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
