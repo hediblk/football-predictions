@@ -1,11 +1,12 @@
 "use strict";
 
+// Display order; the first entry is the default page.
 const COMPS = [
-  { slug: "premier-league", label: "Premier League" },
   { slug: "la-liga", label: "La Liga" },
+  { slug: "premier-league", label: "Premier League" },
   { slug: "bundesliga", label: "Bundesliga" },
-  { slug: "serie-a", label: "Serie A" },
   { slug: "ligue-1", label: "Ligue 1" },
+  { slug: "serie-a", label: "Serie A" },
   { slug: "champions-league", label: "Champions League" },
 ];
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
