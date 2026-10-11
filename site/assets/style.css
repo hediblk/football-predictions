@@ -47,9 +47,6 @@ button { font: inherit; color: inherit; }
 }
 .lamp { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 6px var(--amber); }
 .lamp.stale { background: var(--rule); box-shadow: none; }
-.reload { background: none; border: 1px solid var(--rule); color: var(--ink-2); cursor: pointer; padding: 6px 10px; font: 700 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.reload:hover { border-color: var(--amber); color: var(--amber); }
-.reload[disabled] { opacity: .5; cursor: progress; }
 
 /* ---------- frames (signature: legends cut into the border) ---------- */
 .page { max-width: 1320px; margin: 0 auto; padding: 0 16px 24px; }
