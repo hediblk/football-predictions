@@ -16,6 +16,8 @@ A Python package for estimating every team's final league-position probabilities
 
 ![Projected Champions League knockout bracket](docs/champions-league-bracket.png)
 
+[Download bracket (PDF)](docs/champions-league-bracket.pdf)
+
 **Bayern München is the title favorite at 18.99%.** The bracket shows one permitted draw from projected league standings, advancing each matchup's favorite. Its pairings are illustrative until the real draw; title probabilities average all simulated draws and results.
 
 Install and run the separate [Champions League package](packages/champions-league/README.md):

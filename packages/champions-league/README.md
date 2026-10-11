@@ -6,6 +6,8 @@ The separate UCL package forecasts all 36 league-phase positions and the knockou
 
 ![Projected Champions League bracket](../../docs/champions-league-bracket.png)
 
+[Download bracket (PDF)](../../docs/champions-league-bracket.pdf)
+
 *October 10, 2026, 21:30 Toronto / October 11, 01:30 UTC; 10,000 simulations. Bayern München leads title probabilities at 18.99%. The displayed draw is illustrative. [Stage probabilities](../../docs/champions-league-summary.csv), [coverage](../../docs/champions-league-coverage.csv), [provenance](../../docs/champions-league-metadata.json).*
 
 From the repository root, with `FOOTBALL_DATA_API_KEY` in `.env`:
@@ -15,7 +17,7 @@ pip install -e . -e packages/champions-league
 football-ucl --season 2026 --n-sim 10000
 ```
 
-Open `out/cl_forecast.html` for the heatmap, projected bracket, qualification probabilities, and per-club data coverage. CSV/JSON/PNG files and dated input snapshots are exported alongside it. `--as-of 2026-10-11T00:00:00Z` fixes the forecast origin; `--odds-snapshot path.csv` optionally supplies dated quotes for specific scheduled fixtures. The default uses no odds.
+Open `out/cl_forecast.html` for the heatmap, projected bracket, qualification probabilities, and per-club data coverage. CSV/JSON/PNG files, a bracket PDF and dated input snapshots are exported alongside it. `--as-of 2026-10-11T00:00:00Z` fixes the forecast origin; `--odds-snapshot path.csv` optionally supplies dated quotes for specific scheduled fixtures. The default uses no odds.
 
 Odds CSVs use `date` (or `commence_time`), `observed_at`, `home_team`, `away_team`, `p_home`, `p_draw`, and `p_away`. Quotes must precede kickoff, match the fixture date, be available at the origin, and be at most seven days old.
 
