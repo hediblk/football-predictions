@@ -8,6 +8,19 @@
 
 A Python package for estimating every team's final league-position probabilities. The implementation lives in `src/standing_prediction`; the CLI and notebook call the same pipeline.
 
+## Website
+
+`site/` is a static, dependency-free page (dark theme) showing the latest standings forecast for the top five leagues and the Champions League, including the projected knockout bracket. It reads the JSON in `site/data/`, and GitHub Actions deploys it to GitHub Pages on every push to `main` that touches `site/`.
+
+To refresh the published numbers, rerun all six forecasts and rebuild the data, then commit `site/data`:
+
+```bash
+pip install -e . -e packages/champions-league
+scripts/refresh_site.sh
+```
+
+A competition whose run fails keeps its previous outputs in `out/site`, so the site shows its last good forecast. Preview locally with `python3 -m http.server -d site 8000`.
+
 ## Champions League
 
 ![Champions League league-phase position probabilities](docs/champions-league-forecast.png)
