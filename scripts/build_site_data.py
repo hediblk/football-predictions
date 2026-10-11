@@ -96,6 +96,11 @@ def export_league(src, slug, code, name, country, zones):
         "generated_at": meta["generated_at"], "data_cutoff": meta["data_cutoff"], "n_sim": meta["n_sim"],
         "played_fixtures": meta["finished_fixtures"], "remaining_fixtures": meta["remaining_fixtures"],
         "zones": zones_json(zones), "teams": teams,
+        "fixture_notes": [{
+            "home": short_name(note["home"]), "away": short_name(note["away"]), "kickoff": note["kickoff"],
+            "reported_status": note["reported_status"], "used_status": note["used_status"],
+            "score": note["score"], "reason": note["reason"],
+        } for note in meta.get("fixture_adjustments", [])],
     }
 
 

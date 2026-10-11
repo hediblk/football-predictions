@@ -74,6 +74,83 @@ def _matches_to_df(matches):
     return df
 
 
+OVERRIDE_COLUMNS = ["competition", "season", "home_team", "away_team", "status", "home_goals", "away_goals", "note"]
+CANCELLED_STATUSES = {"CANCELLED", "CANCELED"}
+
+
+def load_fixture_overrides(path, competition, season):
+    """Read the committed overrides for one competition-season; a missing file means no overrides."""
+    if path is None or not os.path.exists(path):
+        return pd.DataFrame(columns=OVERRIDE_COLUMNS)
+    overrides = pd.read_csv(path, dtype={"competition": str, "home_team": str, "away_team": str, "status": str, "note": str})
+    missing = set(OVERRIDE_COLUMNS) - set(overrides.columns)
+    if missing:
+        raise ValueError(f"Fixture overrides file is missing columns: {sorted(missing)}")
+    chosen = overrides[overrides["competition"].eq(competition) & overrides["season"].eq(season)]
+    return chosen.reset_index(drop=True)
+
+
+def resolve_fixture_statuses(matches, overrides=None, *, strict=False):
+    """Decide how to treat cancelled or awarded fixtures without altering the fetched data.
+
+    Returns a copy of `matches` whose `status` column is what the forecast uses, plus a
+    `reported_status` column keeping the provider's value, and a list describing every change.
+    Precedence: an explicit override, then an awarded result's reported score, then cancelled
+    fixtures are treated as still to be played (league fixtures must be replayed or awarded).
+    """
+    out = matches.copy()
+    out["reported_status"] = out["status"]
+    adjustments = []
+
+    def record(index, reason):
+        row = out.loc[index]
+        adjustments.append({
+            "home": row["homeTeam"], "away": row["awayTeam"],
+            "kickoff": row["utcDate"].isoformat() if pd.notna(row["utcDate"]) else None,
+            "reported_status": row["reported_status"], "used_status": row["status"],
+            "score": None if row["status"] != "FINISHED" else f"{int(row['homeGoals'])}-{int(row['awayGoals'])}",
+            "reason": reason,
+        })
+
+    for override in (overrides if overrides is not None else pd.DataFrame(columns=OVERRIDE_COLUMNS)).itertuples(index=False):
+        hit = out.index[out["homeTeam"].eq(override.home_team) & out["awayTeam"].eq(override.away_team)]
+        if len(hit) != 1:
+            raise ValueError(f"Fixture override {override.home_team} v {override.away_team} matches {len(hit)} fixtures.")
+        status = str(override.status).upper()
+        if status == "FINISHED":
+            goals = pd.to_numeric(pd.Series([override.home_goals, override.away_goals]), errors="coerce")
+            if goals.isna().any() or (goals < 0).any() or (goals != goals.round()).any():
+                raise ValueError(f"Fixture override {override.home_team} v {override.away_team} needs both scores.")
+            out.loc[hit, ["homeGoals", "awayGoals"]] = goals.astype(int).tolist()
+        elif status == "SCHEDULED":
+            out.loc[hit, ["homeGoals", "awayGoals"]] = None
+        else:
+            raise ValueError("Fixture overrides may only set status FINISHED (with a score) or SCHEDULED.")
+        out.loc[hit, "status"] = status
+        record(hit[0], f"override: {override.note}" if isinstance(override.note, str) and override.note else "override")
+
+    pending = out["status"].eq(out["reported_status"])
+    awarded = pending & out["status"].eq("AWARDED")
+    for index in out.index[awarded]:
+        goals = pd.to_numeric(out.loc[index, ["homeGoals", "awayGoals"]], errors="coerce")
+        if goals.isna().any():
+            raise ValueError(f"Awarded fixture {out.loc[index, 'homeTeam']} v {out.loc[index, 'awayTeam']} has no score; "
+                             "add it to the fixture overrides file.")
+        out.loc[index, "status"] = "FINISHED"
+        record(index, "awarded result counted as played")
+
+    cancelled = pending & out["status"].isin(CANCELLED_STATUSES)
+    if cancelled.any() and strict:
+        names = ", ".join(f"{r.homeTeam} v {r.awayTeam}" for r in out[cancelled].itertuples())
+        raise ValueError(f"Cancelled fixtures need an override in strict mode: {names}")
+    for index in out.index[cancelled]:
+        out.loc[index, ["status", "homeGoals", "awayGoals"]] = ["SCHEDULED", None, None]
+        record(index, "cancelled; simulated as if it will be replayed")
+    if adjustments:
+        warnings.warn("; ".join(f"{a['home']} v {a['away']}: {a['reason']}" for a in adjustments), stacklevel=2)
+    return out, adjustments
+
+
 def validate_schedule(matches, standings):
     required = {"homeTeam", "awayTeam", "status", "homeGoals", "awayGoals"}
     if not required.issubset(matches.columns):

@@ -250,7 +250,19 @@ function renderTable(data) {
   $("table-note").textContent = ucl
     ? "Places 1–8 go straight to the round of 16, 9–24 enter the knockout play-offs and 25–36 are eliminated."
     : `Europe = places ${data.zones[1].from}–${data.zones[1].to}; the real Europa and Conference League spots also depend on cup winners.`
-      + (n === 18 ? ` Down includes ${ordinal(bad.from)}, which goes to a relegation play-off.` : "");
+      + (n === 18 ? ` Down includes ${ordinal(bad.from)}, which goes to a relegation play-off.` : "")
+      + fixtureNotes(data);
+}
+
+/* cancelled/awarded fixtures the model had to interpret, from the forecast metadata */
+function fixtureNotes(data) {
+  return (data.fixture_notes || []).map((f) => {
+    const day = f.kickoff ? new Date(f.kickoff).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" }) : "";
+    const what = f.used_status === "FINISHED"
+      ? `is counted as ${f.score} (${f.reason.replace(/^override: /, "")})`
+      : "is simulated as if it will be replayed";
+    return ` ${f.home} v ${f.away}${day ? ` (${day})` : ""} was reported ${f.reported_status.toLowerCase()} and ${what}.`;
+  }).join("");
 }
 
 function toggleDetail(data, tr, span) {
