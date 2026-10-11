@@ -1,4 +1,4 @@
-# Package plan: xG and predictive head-to-head
+# Football forecasting plan
 
 Keep `src/standing_prediction` as the main product, with one current notebook in `notebooks/laliga_prediction.ipynb` and a concise README. Notebook and CLI behavior should come from the package.
 
@@ -47,7 +47,7 @@ Checked on **2026-10-09**:
 
 - **xG helps consistently.** In La Liga it improves match log loss in 21/24 snapshots and RPS in 23/24, and every evaluation season improves on average. In the Premier League it improves log loss in 18/24 and RPS in 16/24. Only 2021/22 is worse on average.
 - **H2H adds nothing.** In both leagues, every positive weight raised tuning log loss, monotonically: La Liga 0.9706 → 0.9741 and Premier League 0.9484 → 0.9556 from weight 0 to 0.3. Tuning therefore selected 0, so the H2H-only and combined variants equal baseline and xG. H2H stays available but off.
-- **Caveats:** snapshots within a season overlap; xG availability is assumed rather than reconstructed; odds were excluded. Live forecasts give odds 0.55 of the blend, and the market may already price in the xG information. No dated historical odds exist to test that.
+- **Caveats:** snapshots within a season overlap; xG availability is assumed rather than reconstructed; odds were excluded. These experiments preceded the global calibration below, which now supplies the defaults. That calibration uses approximate historical quote times; prospective timestamped odds archives remain necessary for exact live-forecast comparisons.
 
 ## Plan A: one-time global weight calibration (implemented)
 
@@ -85,40 +85,74 @@ All 16 leave-out folds selected xG weight 0.75 and improved no-odds loss over th
 
 ## Plan B: Champions League forecasts (league phase and knockout bracket)
 
-**Format (2026/27 [regulations](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27-Online)).** 36 teams, not 48. Each plays 8 league-phase matches (4 home, 4 away) in one 36-team table.
-- Positions 1–8 go to the round of 16, 9–24 to two-legged knockout playoffs, and 25–36 are eliminated.
-- Table order: points, then goal difference, goals scored, away goals scored, wins, away wins, then the opponents' collective points, goal difference and goals scored, then disciplinary points and club coefficient. Head-to-head is not used.
-- Playoffs: 9/10 v 23/24, 11/12 v 21/22, 13/14 v 19/20, 15/16 v 17/18. Each seeded team's opponent is drawn from its pair, and the seeded team hosts the second leg.
-- Round of 16: 1/2 v winners of the 15/16–17/18 ties, 3/4 v winners of 13/14–19/20, 5/6 v winners of 11/12–21/22, 7/8 v winners of 9/10–23/24. Each seeded pair is split by draw across the two halves of the bracket.
-- Quarter-finals and semi-finals follow a fixed bracket. The better league-phase team hosts second legs. There are no away goals; level ties go to 30 minutes of extra time, then penalties. The final is a single match at a neutral venue.
+**Planning only; researched 2026-10-10.** Keep the calibrated model and saved weights unchanged. UCL forecasts should run **without odds by default**. A quote remains an optional adjustment for that particular fixture, not a requirement for forecasting the tournament. The existing league predictor's defaults are unchanged by this plan.
 
-**Data (verified 2026-10-09).**
-- football-data.org `CL`: the 2026/27 table and all 144 league-phase fixtures (18 played), plus complete 2024/25 and 2025/26 seasons in the new format (league phase 144, playoffs 16, round of 16 16, quarter-finals 8, semi-finals 4, final 1). Scores include `regularTime`, `extraTime` and `penalties`. The free tier refuses seasons before 2023/24 (HTTP 403).
-- Domestic leagues of the 36 teams: 18 play in the top five leagues (Understat xG plus football-data.co.uk). Another 14 are covered by football-data.co.uk results and odds: P1, N1, B1, T1, G1, plus `new/AUT` and `new/NOR`. Four teams have no free domestic data: Slavia Praha, Slovan Bratislava, Shakhtar and Sabah.
-- Odds: The Odds API `soccer_uefa_champs_league` for scheduled fixtures; outright markets are an optional cross-check. ClubElo is not usable: its API returned HTTP 502 and its fixtures API is deactivated.
+### Competition rules
 
-**Model.** The new piece is a common strength scale across leagues; everything else reuses current code.
-1. **European Dixon–Coles:** one joint, time-decayed fit over all available domestic matches plus every Champions League match since 2023/24, using `regularTime` scores. Team attack/defense = league offset + team deviation. Deviations are shrunk toward their league offset rather than the global mean, so weak-league teams are not pulled up. League offsets are identified by cross-league European matches, with weak shrinkage. Teams without domestic data share an "other leagues" offset learned from their European results. European matches get their own home advantage. xG strengths blend into the deviation of top-five teams with the calibrated xG weight.
-2. **Elo** over the same combined match stream; a new team starts at its league's mean rating.
-3. **Blend** with the Plan A weights; odds apply wherever a fixture has a quote. The four teams without domestic data rely mostly on European results and odds, and their coverage is reported.
-4. Optional: more cross-league links from Europa League and Conference League matches if a free, dated source is verified (for example openfootball); football-data.org's free tier excludes them.
+- **League phase:** 36 clubs, eight different opponents each, four matches at home and four away, one table and 144 fixtures. Positions 1–8 enter the round of 16; 9–24 enter the knockout playoffs; 25–36 are eliminated. [UEFA Article 17](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-17-Match-system-league-phase-Online)
+- **Ranking:** points, goal difference, goals scored, away goals scored, wins, away wins, opponents' collective points, opponents' collective goal difference, opponents' collective goals scored, lower disciplinary points, then higher club coefficient. Head-to-head is absent. Opponent totals must come from each simulated final table. [Article 18](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-18-Equality-of-points-league-phase-Online)
+- **Playoff draw:** 9/10 v 23/24, 11/12 v 21/22, 13/14 v 19/20, 15/16 v 17/18. The seeded clubs host the second legs in principle. Round-of-16 seeds 1/2 face winners from 15/16–17/18, 3/4 from 13/14–19/20, 5/6 from 11/12–21/22, and 7/8 from 9/10–23/24. Draws assign clubs to their allowed bracket slots; same-country opponents and repeat league-phase meetings are allowed. [Article 19](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-19-Draw-system-knockout-phase-Online)
+- **Later rounds:** use the fixed bracket. Ranks 1–4 have second-leg home priority in the quarter-finals; ranks 1–2 have it in the semi-finals. An upset winner inherits the eliminated seed's bracket position and priority. Do not rerank surviving clubs. Round-of-16 seeds also host their second legs in principle. [Article 19.04](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-19-Draw-system-knockout-phase-Online), [Annex B](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Annex-B-UEFA-Champions-League-Competition-System-Online)
+- **Resolving ties:** playoffs through semi-finals have two legs, decided on aggregate, without an away-goals rule. A level aggregate goes to 30 minutes of extra time at the second-leg venue, then penalties. The final is one match, with extra time and penalties if required. [Article 20](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-20-Match-system-knockout-phase-Online), [Article 21](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-21-Knockout-system-extra-time-and-penalty-shoot-outs-Online), [Article 22](https://documents.uefa.com/r/Regulations-of-the-UEFA-Champions-League-2026/27/Article-22-Match-system-final-Online)
+- **2026/27 final:** Madrid's Estadio Metropolitano, 5 June 2027. Use neutral match rates initially; an Atlético stadium-effect sensitivity would be an explicit modeling choice, not automatic home advantage from the nominal home designation. [UEFA final announcement](https://www.uefa.com/uefachampionsleague/news/029d-1eb2d5faf53c-d67c9fed04fa-1000--2027-uefa-champions-league-final-estadio-metropolitano/)
 
-**Simulator** (new module, reusing `build_fixture_specs` and vectorized scoreline sampling):
-1. League phase: simulate the remaining scheduled fixtures and rank with the UEFA criteria above, including the opponent-strength criteria. Random order replaces the disciplinary and coefficient criteria, and this is labeled.
-2. Draws: simulate the playoff draw within each seeded pair and the round-of-16 split across bracket halves. Once a real draw is published, use the actual pairings instead.
-3. Two-legged ties: two scorelines at the correct venues (seeded team hosts the second leg). If the aggregate is level, extra time uses one third of the 90-minute rates at the second-leg venue; penalties are 50/50, configurable. The final is neutral. If a finalist plays at its own stadium, it gets home advantage; the 2026/27 venue still needs verifying.
-4. Precompute blended score matrices for all 36×35 ordered pairs plus neutral pairs once per forecast, so knockout pairings decided during a simulation need no refits.
+### Available data
 
-**Outputs:**
-- A 36-position heatmap (same style as the league chart).
-- Per team: expected points; P(top 8), P(9–24), P(eliminated); P(reaching the playoffs, round of 16, quarter-finals, semi-finals, final) and P(winning).
-- Bracket views: the most likely playoff and round-of-16 pairings with their probabilities, and conditional advance probabilities once the draw is known.
-- CSV/JSON/HTML plus snapshots, and a `football-ucl` CLI and notebook, as for leagues.
+Live football-data.org API checks returned **144 fixtures, 18 finished and 126 scheduled** for 2026/27, with all 36 clubs on **one UCL match played**. Matchday 2 is 13–14 October, so current domestic results and prior seasons are essential; one European game per club is insufficient to estimate strength. [UEFA season dates and participants](https://www.uefa.com/uefachampionsleague/news/02a6-20d57cfcd03e-407c22a7f465-1000--2026-27-champions-league-teams-dates-draws-format-final/)
 
-**Validation:** backtest 2024/25 and 2025/26 from origins after league-phase matchdays 2, 4, 6 and 8 and before each knockout round. Metrics: match log loss (also on the subset with odds), 36-position RPS, and stage-reach Brier scores. Compare the joint European model against a version that only uses domestic strengths with no league offsets, to show the cross-league scale is needed. Only two new-format seasons exist, so report these as checks, not tuning.
+The same API returned all **125 finished matches in 2023/24**, **189 in 2024/25** and **189 in 2025/26**. Each new-format season contains 144 league matches, 16 playoff legs, 16 round-of-16 legs, eight quarter-final legs, four semi-final legs and one final. Earlier seasons are outside the verified free-tier access. Retain raw stage, match ID, kickoff, venue and score-period fields. [API match schema](https://docs.football-data.org/general/v4/match.html)
 
-**Order:** Plan A first, because it fixes the weights. Then the European model and its match-level validation, then the league-phase simulator with the 2026/27 forecast, then knockout simulation, bracket outputs and backtests.
+**Domestic coverage:** 21 clubs play in England (5), Spain (5), Germany (4), Italy (4) and France (3), where the existing results and Understat xG adapters apply. The other **15 clubs** have the following results sources; none has verified xG from our existing provider:
+
+| League | UCL clubs | Source and audit result |
+| :--- | :--- | :--- |
+| Portugal | Sporting, Porto | [P1 CSV](https://www.football-data.co.uk/mmz4281/2627/P1.csv): seven finished games per club. |
+| Netherlands | PSV, Feyenoord | [N1 CSV](https://www.football-data.co.uk/mmz4281/2627/N1.csv): seven each. |
+| Belgium | Club Brugge | [B1 CSV](https://www.football-data.co.uk/mmz4281/2627/B1.csv): seven. |
+| Turkey | Galatasaray, Fenerbahçe | [T1 CSV](https://www.football-data.co.uk/mmz4281/2627/T1.csv): six each. |
+| Greece | AEK | [G1 CSV](https://www.football-data.co.uk/mmz4281/2627/G1.csv): five. |
+| Austria | LASK | [AUT CSV](https://www.football-data.co.uk/new/AUT.csv): seven; filter season 2026/27. |
+| Norway | Bodø/Glimt, Viking | [NOR CSV](https://www.football-data.co.uk/new/NOR.csv): 21 each; calendar season 2026. |
+| Czech Republic | Slavia Praha | [Pinned openfootball source](https://github.com/openfootball/europe/blob/0bf83f88e8feb22904c5f9d93c6407574c1347e0/czech-republic/2026-27_cz1.txt): 71 scored fixtures, nine for Slavia; needs a football.txt adapter. |
+| Slovakia | Slovan Bratislava | [Official results](https://www.nikeliga.sk/zapasy): current results and season selectors back through 2012/13 are accessible; needs an HTML adapter and completeness checks. |
+| Ukraine | Shakhtar | [Official UPL calendar](https://upl.ua/en/tournaments/championship/432/calendar): dated current results; selectors include 2025/26 and 2024/25. Needs an HTML adapter, limited to the senior league. |
+| Azerbaijan | Sabah | [Official PFL seasons API](https://pfl.az/api/v1/seasons?project_id=1) lists current and prior seasons. Its [current games API](https://pfl.az/api/v1/tours/get-games?league_id=52&withGames=true) returns dated scores and statuses: 38 finished fixtures, six for Sabah. Needs a small adapter; discover league IDs from seasons rather than hardcoding them. |
+
+The seven extra-league CSVs and Czech file above currently stop at **20 September**, despite fetching them on 10 October. Show each source's latest result and every club's match count; source availability does not establish freshness or completeness. Norway's calendar-season history must be selected by dates. The four new country adapters are planned, not implemented, and their historical coverage still needs reconciliation with official tables. Current official sources mean these clubs need not be classified as having no domestic data.
+
+For cross-league links beyond UCL, [openfootball's European competitions repository](https://github.com/openfootball/champions-league/tree/abfaeddc2ee3d14f99ecc163c9ddb46cb4d67cef) contains scored 2024/25 Europa League and Conference League files, plus some later qualifying files. This is useful supplementary history, not verified complete 2025/26–2026/27 coverage. Ingest only audited files, preserve the commit SHA and correctly parse extra-time notation. Do not make a paid provider, ClubElo or bookmaker coverage a dependency.
+
+### Data and strength model
+
+Reuse the installed `standing_prediction` model, xG, blending and score-sampling code. Put UCL ingestion, joint strengths and tournament logic in a small separate `packages/champions-league` package depending on it, with `football-ucl` as its entry point. Do not copy the existing league implementation or change its behavior.
+
+1. **Normalize and audit inputs.** Map provider club IDs and aliases explicitly, and record the domestic league associated with each match. Load full domestic leagues, including opponents outside the UCL field, current results and up to two prior seasons. Add the available dated European history and filter every source strictly before the forecast origin. Deduplicate overlapping European sources. Cache raw responses and store origin, source versions, coverage and freshness in forecast metadata.
+2. **Use 90-minute scores.** On API games with `duration=REGULAR`, use `fullTime`; on extra-time or shootout games, require `regularTime`. The existing league `_matches_to_df` cannot be reused blindly: for example, Liverpool–PSG in March 2025 has API `fullTime=1–5`, but `regularTime=0–1` and penalties 1–4. Extra-time and penalty scores belong in tie state, not the 90-minute goal fit. Verify neutral venues for historical finals and relocated home games separately.
+3. **Put leagues on a common scale.** Fit one time-decayed Dixon–Coles model over the combined stream. Domestic attack/defense deviations describe a club relative to its league; European matches estimate the strength differences between leagues. A minimal identifiable formulation uses one league-strength offset, added to attack and subtracted from defensive weakness, so it cancels in domestic games. Center team deviations within each league, fix one reference league offset, and use separate domestic and European scoring/home baselines. Regularize sparse estimates and audit the graph of European links. Equal domestic win rates must not imply equal international strength.
+4. **Apply xG where observed.** Blend top-five domestic team deviations with their centered Understat xG deviations using the saved **0.75** weight, retaining the European league offsets and baselines. Clubs without xG retain their goal-based deviations; do not fill xG with zero or mix unvalidated providers. Missing domestic histories require an explicit European-results fallback and coverage flag, not a shared strength offset for unrelated countries. Sparse countries need prior-sensitivity reporting before presenting their title probabilities as reliable.
+5. **Keep Elo on the same connected stream.** Process domestic and European results chronologically. New clubs start from a league center estimated from earlier European evidence, with season regression. A joint Elo stream alone does not solve disconnected league ratings; report sparse links and verify international match predictions.
+6. **Keep the global blend fixed.** Without odds, use **81.74% main / 18.26% Elo**, H2H off, and calibration version `global-8c8185b60bc9`. Reuse the saved artifact rather than rounding these values in code. Optional timestamped 1X2 quotes affect only matching fixtures and expire; missing quotes use the normal no-odds blend. These weights were validated on domestic matches, so European validation remains necessary.
+
+### Tournament simulation
+
+1. **Condition on observed results.** Keep played scores fixed; simulate only future fixtures. Add a UCL validator: 36 clubs, eight distinct opponents and four home/four away games each, 144 unique league fixtures, with played totals matching official standings. The existing double-round-robin validator is unsuitable.
+2. **Finish and rank the league phase.** Compute all sporting tiebreakers, including opponents' collective totals, within each simulation. Load the season's club coefficients. Future disciplinary points are not currently modeled; if they decide a tie, use a seeded random fallback before the coefficient criterion and report its frequency. This is an approximation, not official-table equivalence. Once the league phase is complete, use official final ranks.
+3. **Draw the allowed bracket.** Before draws, sample permitted playoff and round-of-16 slot assignments; do not sample unrestricted opponents or reseed later rounds. Once real pairings and venue order are published, condition on them. Represent later home-leg priority as an attribute of the seeded bracket slot, inherited after an upset.
+4. **Play each tie.** Sample two venue-correct 90-minute scorelines, combine the aggregate, then resolve extra time and penalties if required. After a played first leg, fix its score and simulate only the return leg. Initially use one third of the second-leg goal rates for extra time and a 50/50 shootout. These are explicit approximations; future tactical responses to aggregate score are outside the first version. Use neutral rates in the single-match final.
+5. **Reuse score distributions.** Precompute possible ordered and neutral matchups once per forecast, then simulate brackets without refitting strengths on simulated results. Stage probabilities describe match/draw randomness conditional on fitted strengths; Monte Carlo error does not include uncertainty in the strength estimates.
+
+### Outputs and implementation order
+
+Deliver a 36-position heatmap and a table with expected league points, P(top 8), P(9–24), P(league-phase elimination), and probabilities of reaching each knockout round and winning. Export CSV/JSON/HTML, input snapshots and calibration/rule versions. Label P(entering playoffs) separately from P(reaching round of 16), since the top eight bypass playoffs. Add pairing/bracket views after the basic probabilities work.
+
+1. **Data first:** existing sources plus the four missing domestic adapters; reconcile identities, 90-minute scores, current freshness, history and league-phase fixtures. Produce a coverage report for all 36 clubs before a forecast.
+2. **Strengths second:** fit the common European scale and check held-out international match log loss against the same model without league offsets and a simple joint-Elo baseline. Freeze the global blend and xG weights. Use a goals-only comparison to measure the effect of uneven xG coverage.
+3. **League phase third:** implement the schedule/ranking rules and publish the current 2026/27 league-phase forecast.
+4. **Knockouts fourth:** implement the bracket, inherited home priority, aggregate state, extra time and penalties; export stage and title probabilities.
+5. **Historical checks:** replay 2024/25 and 2025/26 after matchdays 2, 4, 6 and 8 and before knockout rounds, with strictly earlier data. Use each season's actual rules, draws and final venue; do not apply the newer home-priority rule retroactively. Report match log loss, position RPS and stage-reach Brier scores, including results split by xG coverage. Check probability conservation (eight direct qualifiers, eight playoff winners, 16 round-of-16 entrants, eight quarter-finalists, four semi-finalists, two finalists, one champion). Two seasons provide limited tournament-level evidence, so avoid tuning repeatedly against their winners.
+
+First-version scope: a dated forecast from the current league phase through the final, using the fixed weights and available observed matches. No live in-play model, transfer/injury model, new weight search or paid-data integration.
 
 ## Other existing priorities
 
-Continue comparing baseline decay, priors, blend weights, and calibration; retain dated odds archives. Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. Tournament formats and larger model experiments remain outside this league-package plan.
+Retain dated odds archives. Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. The global weights stay fixed unless explicitly recalibrated; UCL is the separate-package plan above, while larger model experiments remain outside the league package.
