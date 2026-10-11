@@ -4,8 +4,6 @@
 
 *La Liga 2026/27 snapshot, generated October 11, 2026 at 00:24 UTC. Results through October 10, 2026 at 19:00 UTC; 73 completed fixtures, 10,000 simulations, fixed calibrated weights and no odds.*
 
-*The [suspended Rayo–Athletic fixture](https://www.athletic-club.eus/en/news/2026/10/10/the-athletic-club-squad-returns-to-bilbao/), since reported as cancelled, is simulated as if it will be replayed (see [Cancelled and awarded fixtures](#cancelled-and-awarded-fixtures)).*
-
 A Python package for estimating every team's final league-position probabilities. The implementation lives in `src/standing_prediction`; the CLI and notebook call the same pipeline.
 
 ## Website
