@@ -53,6 +53,7 @@ jobs:
     if: always() && (needs.refresh.result == 'success' || needs.refresh.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
+      contents: read  # checkout needs it on a private repo once permissions are listed
       pages: write
       id-token: write
     environment:
