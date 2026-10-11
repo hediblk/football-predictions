@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Table · Football Forecasts</title>
+<meta name="description" content="Simulated final-table probabilities for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League.">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230b0b0d'/%3E%3Crect x='3' y='3' width='4' height='4' rx='1' fill='%233987e5'/%3E%3Crect x='9' y='3' width='4' height='4' rx='1' fill='%2386b6ef'/%3E%3Crect x='3' y='9' width='4' height='4' rx='1' fill='%23256abf'/%3E%3Crect x='9' y='9' width='4' height='4' rx='1' fill='%23184f95'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=Chivo+Mono:wght@400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#" aria-label="Final Table home">
+      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+      <span>Final Table</span>
+    </a>
+    <span class="tag">Football forecasts</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="picker" aria-label="Competition" id="picker"></nav>
+
+  <section id="intro" class="intro" aria-live="polite"></section>
+  <section id="hero" class="hero"></section>
+  <section id="races" class="races"></section>
+
+  <section class="card" id="table-card">
+    <div class="card-head">
+      <div>
+        <h2 id="table-title">Projected table</h2>
+        <p class="sub" id="table-sub"></p>
+      </div>
+      <div class="legend" id="table-legend"></div>
+    </div>
+    <div class="scroll"><table class="ft" id="table"></table></div>
+    <p class="foot-note" id="table-note"></p>
+  </section>
+
+  <section class="card" id="ko-card" hidden>
+    <div class="card-head">
+      <div>
+        <h2>Knockout odds</h2>
+        <p class="sub">The 16 likeliest winners: chance of reaching each round, across every simulated league phase and draw.</p>
+      </div>
+    </div>
+    <div class="scroll"><table class="ft ko" id="ko-table"></table></div>
+  </section>
+
+  <section class="card" id="bracket-card" hidden>
+    <div class="card-head">
+      <div>
+        <h2>Projected bracket</h2>
+        <p class="sub" id="bracket-sub"></p>
+      </div>
+    </div>
+    <div class="scroll"><div class="bracket" id="bracket"></div></div>
+  </section>
+
+  <section class="about">
+    <h2>How it works</h2>
+    <div class="about-grid">
+      <p><b>Match model.</b> A time-weighted Dixon–Coles goal model, blended with Elo ratings and expected-goals (xG) strengths, prices every remaining fixture.</p>
+      <p><b>Simulation.</b> Each remaining scoreline is drawn 10,000 times. Tables are ranked with each competition's tie-break rules, so every percentage is a share of simulated seasons.</p>
+      <p><b>Ranges.</b> Point ranges cover the middle 80% of simulated outcomes (10th–90th percentile). They reflect match randomness, not uncertainty in the team ratings themselves.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span>Final Table · results from football-data.org, xG from Understat</span>
+  <span id="foot-updated"></span>
+</footer>
+
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
