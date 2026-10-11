@@ -5,75 +5,68 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Final Table · Football Forecasts</title>
 <meta name="description" content="Simulated final-table probabilities for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League.">
-<meta name="theme-color" content="#0b0b0d">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%230b0b0d'/%3E%3Crect x='3' y='3' width='4' height='4' rx='1' fill='%233987e5'/%3E%3Crect x='9' y='3' width='4' height='4' rx='1' fill='%2386b6ef'/%3E%3Crect x='3' y='9' width='4' height='4' rx='1' fill='%23256abf'/%3E%3Crect x='9' y='9' width='4' height='4' rx='1' fill='%23184f95'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#131312">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23131312'/%3E%3Cg fill='%23eaa85e'%3E%3Ccircle cx='4' cy='4' r='1.6'/%3E%3Ccircle cx='8' cy='4' r='1.6'/%3E%3Ccircle cx='12' cy='4' r='1.6'/%3E%3Ccircle cx='12' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='12' r='1.6'/%3E%3C/g%3E%3Cg fill='%233f3b36'%3E%3Ccircle cx='4' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='4' cy='12' r='1.6'/%3E%3Ccircle cx='12' cy='12' r='1.6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400..900&family=Chivo+Mono:wght@400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 <header class="top">
-  <div class="wrap top-in">
-    <a class="brand" href="#" aria-label="Final Table home">
-      <span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-      <span>Final Table</span>
-    </a>
-    <span class="tag">Football forecasts</span>
+  <div class="top-in">
+    <a class="logo" href="#">Final Table</a>
+    <nav class="nav" id="nav" aria-label="Competition"></nav>
+    <div class="status">
+      <span class="lamp" id="lamp" aria-hidden="true"></span>
+      <span id="status-text">Loading</span>
+      <button type="button" class="reload" id="reload" aria-label="Reload the latest forecast">Reload</button>
+    </div>
   </div>
 </header>
 
-<main class="wrap">
-  <nav class="picker" aria-label="Competition" id="picker"></nav>
+<main class="page">
+  <fieldset class="frame hero" id="hero">
+    <legend id="hero-legend">Title</legend>
+    <div class="hero-in" id="hero-in"></div>
+  </fieldset>
 
-  <section id="intro" class="intro" aria-live="polite"></section>
-  <section id="hero" class="hero"></section>
-  <section id="races" class="races"></section>
+  <section class="races" id="races" aria-label="Races"></section>
 
-  <section class="card" id="table-card">
-    <div class="card-head">
-      <div>
-        <h2 id="table-title">Projected table</h2>
-        <p class="sub" id="table-sub"></p>
-      </div>
-      <div class="legend" id="table-legend"></div>
-    </div>
-    <div class="scroll"><table class="ft" id="table"></table></div>
-    <p class="foot-note" id="table-note"></p>
-  </section>
+  <fieldset class="frame">
+    <legend id="table-legend">Projected table</legend>
+    <div class="key" id="table-key"></div>
+    <div class="scroll"><table class="board" id="table"></table></div>
+    <p class="note" id="table-note"></p>
+  </fieldset>
 
-  <section class="card" id="ko-card" hidden>
-    <div class="card-head">
-      <div>
-        <h2>Knockout odds</h2>
-        <p class="sub">The 16 likeliest winners: chance of reaching each round, across every simulated league phase and draw.</p>
-      </div>
-    </div>
-    <div class="scroll"><table class="ft ko" id="ko-table"></table></div>
-  </section>
+  <fieldset class="frame" id="ko-frame" hidden>
+    <legend>Road to the final</legend>
+    <p class="note top-note">Chance of reaching each round across every simulated league phase and draw. Sixteen likeliest winners.</p>
+    <div class="scroll"><table class="board ko" id="ko-table"></table></div>
+  </fieldset>
 
-  <section class="card" id="bracket-card" hidden>
-    <div class="card-head">
-      <div>
-        <h2>Projected bracket</h2>
-        <p class="sub" id="bracket-sub"></p>
-      </div>
-    </div>
+  <fieldset class="frame" id="bracket-frame" hidden>
+    <legend>Projected bracket</legend>
+    <p class="note top-note" id="bracket-note"></p>
     <div class="scroll"><div class="bracket" id="bracket"></div></div>
-  </section>
+  </fieldset>
 
-  <section class="about">
-    <h2>How it works</h2>
-    <div class="about-grid">
-      <p><b>Match model.</b> A time-weighted Dixon–Coles goal model, blended with Elo ratings and expected-goals (xG) strengths, prices every remaining fixture.</p>
-      <p><b>Simulation.</b> Each remaining scoreline is drawn 10,000 times. Tables are ranked with each competition's tie-break rules, so every percentage is a share of simulated seasons.</p>
-      <p><b>Ranges.</b> Point ranges cover the middle 80% of simulated outcomes (10th–90th percentile). They reflect match randomness, not uncertainty in the team ratings themselves.</p>
-    </div>
-  </section>
+  <fieldset class="frame method">
+    <legend>How it works</legend>
+    <dl>
+      <dt>Match model</dt>
+      <dd>A time-weighted Dixon–Coles goal model, blended with Elo ratings and expected-goals strengths, prices every remaining fixture.</dd>
+      <dt>Simulation</dt>
+      <dd>Every remaining scoreline is drawn 10,000 times and each table is ranked with its competition's tie-break rules. Every percentage is a share of those simulated seasons.</dd>
+      <dt>Ranges</dt>
+      <dd>Point ranges cover the middle 80% of outcomes (10th to 90th percentile). They show match-to-match luck, not doubt about the team ratings themselves.</dd>
+    </dl>
+  </fieldset>
 </main>
 
-<footer class="wrap foot">
-  <span>Final Table · results from football-data.org, xG from Understat</span>
+<footer class="foot">
+  <span>Final Table · results from football-data.org · xG from Understat</span>
   <span id="foot-updated"></span>
 </footer>
 

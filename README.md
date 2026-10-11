@@ -10,7 +10,7 @@ A Python package for estimating every team's final league-position probabilities
 
 ## Website
 
-`site/` is a static, dependency-free page (dark theme) showing the latest standings forecast for the top five leagues and the Champions League, including the projected knockout bracket. It reads the JSON in `site/data/`, and GitHub Actions deploys it to GitHub Pages on every push to `main` that touches `site/`.
+`site/` is a static, dependency-free page (dark "scoreboard" design; see [DESIGN.md](DESIGN.md)) showing the latest standings forecast for the top five leagues and the Champions League, including the projected knockout bracket. It reads the JSON in `site/data/`, and GitHub Actions deploys it to GitHub Pages on every push to `main` that touches `site/`.
 
 To refresh the published numbers, rerun all six forecasts and rebuild the data, then commit `site/data`:
 

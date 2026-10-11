@@ -146,12 +146,26 @@ def main(argv=None):
     parser.add_argument("--dest", type=Path, default=Path("site/data"))
     args = parser.parse_args(argv)
     args.dest.mkdir(parents=True, exist_ok=True)
-    exports = [export_league(args.src, *league) for league in LEAGUES] + [export_ucl(args.src)]
-    for data in exports:
-        (args.dest / f"{data['slug']}.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+    jobs = [(league[0], lambda league=league: export_league(args.src, *league)) for league in LEAGUES]
+    jobs.append(("champions-league", lambda: export_ucl(args.src)))
+    exports, kept = [], []
+    for slug, export in jobs:
+        path = args.dest / f"{slug}.json"
+        try:
+            data = export()
+        except FileNotFoundError:
+            # No fresh outputs (e.g. the forecast run failed): keep the last published file.
+            if not path.exists():
+                raise
+            exports.append(json.loads(path.read_text()))
+            kept.append(slug)
+            continue
+        path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
+        exports.append(data)
     index = [{key: data[key] for key in ("slug", "code", "name", "country", "season", "generated_at")} for data in exports]
     (args.dest / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
-    print(f"Wrote {len(exports)} competitions to {args.dest}")
+    print(f"Wrote {len(exports) - len(kept)} competitions to {args.dest}"
+          + (f"; kept previous data for {', '.join(kept)}" if kept else ""))
 
 
 if __name__ == "__main__":
