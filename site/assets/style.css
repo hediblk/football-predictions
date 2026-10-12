@@ -340,7 +340,7 @@ h3.dgroup { margin: 18px 0 4px; padding-bottom: 6px; border-bottom: 1px solid va
 @media (max-width: 759px) { .panel { padding-left: 52px; } }
 .panel h4 { margin: 0 0 9px; font: 800 12px/1 var(--sign); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
 .scores { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-width: 280px; }
-.scores li { display: grid; grid-template-columns: 36px minmax(0, 1fr) 40px; align-items: center; gap: 10px; font: 500 12px/1 var(--mono); color: var(--ink-2); }
+.scores li { display: grid; grid-template-columns: 44px minmax(0, 1fr) 40px; align-items: center; gap: 10px; font: 500 12px/1 var(--mono); color: var(--ink-2); }
 .scores li i { height: 6px; background: repeating-linear-gradient(to right, var(--amber) 0 4px, transparent 4px 6px); }
 .scores li b { text-align: right; color: var(--ink); }
 .scores li.hit span { color: var(--amber); font-weight: 700; }
@@ -393,7 +393,6 @@ table.rank { min-width: 720px; }
 .rank td.club a { color: inherit; text-decoration: none; }
 .rank td.club a:hover { color: var(--amber); }
 .rank td.lg { font: 700 12px/1 var(--sign); letter-spacing: .12em; color: var(--dim); }
-.rank small { color: var(--dim); font-size: 10px; }
 .rank tr.featured td.rk { color: var(--amber-t); }
 
 .scatter svg { display: block; width: 100%; max-width: 920px; height: auto; }
@@ -446,7 +445,7 @@ h3.sub + .scroll { margin-bottom: 14px; }
 .c-opp small { font: 500 11px var(--mono); letter-spacing: 0; text-transform: none; color: var(--dim); margin-right: 3px; }
 .c-score { font: 700 13px/1 var(--mono); color: var(--ink); white-space: nowrap; }
 .c-score .xp { color: var(--dim); font-weight: 500; }
-.c-score .xp::before { content: "exp "; font-size: 10px; color: #6b655f; }
+.c-score .xp::before { content: "pick "; font-size: 10px; color: #6b655f; }
 @media (max-width: 759px) {
   .crow { grid-template-columns: auto auto minmax(0, 1fr); grid-template-areas: "when comp verdict" "opp opp score" "probs probs probs"; row-gap: 6px; padding: 10px 8px; }
   .c-when { grid-area: when; }
@@ -489,3 +488,30 @@ h3.sub + .scroll { margin-bottom: 14px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* category ranks: #1 is a lit plate, the top ten warm, the rest dim */
+.crk { color: var(--dim); font-size: 10px; }
+.crk.top { color: var(--amber-t); }
+.crk.first { color: var(--bg); background: var(--amber); font-weight: 700; padding: 1px 4px; }
+.cell .crk { font-size: 11px; }
+
+/* the call strip: one bar per game, its height the chance given to what happened */
+.callstrip { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin: 4px 0 6px; }
+.cs-axis { display: flex; flex-direction: column; justify-content: space-between; height: 96px; font-size: 10px; color: var(--dim); text-align: right; }
+.cs-axis em { font-style: normal; line-height: 1; }
+.cs-bars { display: flex; gap: 3px; align-items: stretch; overflow-x: auto;
+  background: linear-gradient(var(--rule-2), var(--rule-2)) 0 48px / 100% 1px no-repeat; }
+.cs { flex: 1 0 14px; max-width: 34px; display: grid; grid-template-rows: 96px auto; gap: 4px; outline-offset: 2px; }
+.cs i { align-self: end; display: block; min-height: 2px; background: var(--green); opacity: .85; }
+.cs.miss i { background: var(--red); }
+.cs:hover i, .cs:focus i { opacity: 1; }
+.cs b { font: 800 11px/1 var(--sign); text-align: center; color: var(--dim); }
+.key .k-lamp { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.key .k-lamp.miss { background: var(--red); }
+#p-results > .key { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 14px; color: var(--dim); font-size: 11px; }
+#p-results > .key span { display: inline-flex; align-items: center; gap: 7px; }
+
+/* scorelines in a match panel: the pick is lit, scores for other results are dimmed */
+.scores li.call span { color: var(--amber); font-weight: 700; }
+.scores li.off { opacity: .6; }
+.m-verdict.pick b { color: var(--amber-t); font-weight: 700; }

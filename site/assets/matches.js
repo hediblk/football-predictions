@@ -1,7 +1,7 @@
 // Matches view: one day's fixtures across the six competitions, with the model's call on each.
 import {
   COMPS, compBySlug, $, esc, getJSON, setStatus, clock, dayKey, parseDay, shiftDay, verdict, pick, pct1, dec,
-  expandable, bulb, outcome,
+  expandable, bulb, outcome, callScore,
 } from "./core.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
@@ -151,7 +151,9 @@ function verdictBadge(m) {
   const reported = PENDING[m.reported || m.status];
   if (reported) return `<span class="m-verdict wait">${reported}</span>`;
   if (new Date(m.kickoff) < Date.now()) return `<span class="m-verdict wait">Result pending</span>`;
-  return m.top ? `<span class="m-verdict pick">Likeliest ${m.top[0][0]}–${m.top[0][1]}</span>` : "";
+  if (!m.p) return "";
+  const [h, a] = callScore(m);
+  return `<span class="m-verdict pick">Pick <b>${h}–${a}</b></span>`;
 }
 
 /* `when` replaces the kickoff column, e.g. with the round and date when listing one team's games */
@@ -177,30 +179,34 @@ export function matchPanel(m, slugs = null) {
     return panel;
   }
   const v = verdict(m);
+  const fav = pick(m.p);
+  const [ch, ca] = callScore(m);
   const max = m.top[0][2];
   const scores = m.top.map(([h, a, p]) => {
     const hit = m.score && m.score[0] === h && m.score[1] === a;
-    return `<li class="${hit ? "hit" : ""}"><span>${h}–${a}</span><i style="width:${((p / max) * 100).toFixed(0)}%"></i><b>${pct1(p)}</b></li>`;
+    const call = h === ch && a === ca;
+    return `<li class="${hit ? "hit" : ""}${call ? " call" : ""}${outcome([h, a]) === fav ? "" : " off"}"><span>${h}–${a}</span><i style="width:${((p / max) * 100).toFixed(0)}%"></i><b>${pct1(p)}</b></li>`;
   }).join("");
+  const spread = outcome(m.top[0]) !== fav
+    ? `<p class="note">${m.top[0][0]}–${m.top[0][1]} tops the list, but a ${OUTCOMES[fav].toLowerCase()} is likelier overall: its chance is split across more scores.</p>` : "";
   const xg = m.xg ? `<dt>xG (Understat)</dt><dd>${dec(m.xg[0], 2)}–${dec(m.xg[1], 2)}</dd>` : "";
   const origin = new Date(m.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
   let call;
   if (v) {
-    const fav = pick(m.p);
     const result = OUTCOMES[v.actual].toLowerCase().replace("draw", "the draw");
     call = (v.hit
-      ? `<p>Called it: ${OUTCOMES[fav].toLowerCase()} was the model's pick at <b>${pct1(m.p[fav])}</b>.`
-      : `<p>Missed it: the model picked ${OUTCOMES[fav].toLowerCase()} at <b>${pct1(m.p[fav])}</b>; ${result} had <b>${pct1(v.given)}</b>.`)
-      + ` The exact ${m.score[0]}–${m.score[1]} had <b>${pct1(m.p_score || 0)}</b>${v.exact ? ", the likeliest score" : ""}.</p>`
+      ? `<p>Called it: the model picked a ${OUTCOMES[fav].toLowerCase()} (<b>${pct1(m.p[fav])}</b>), ${ch}–${ca}.`
+      : `<p>Missed it: the model picked a ${OUTCOMES[fav].toLowerCase()} (<b>${pct1(m.p[fav])}</b>), ${ch}–${ca}; ${result} had <b>${pct1(v.given)}</b>.`)
+      + (v.exact ? ` Exact score, too.</p>` : ` The actual ${m.score[0]}–${m.score[1]} had <b>${pct1(m.p_score || 0)}</b>.</p>`)
       + `<p class="dim">Forecast as of ${origin} UTC on match day, from results before then.</p>`;
   } else {
-    call = `<p>Pick: <b>${OUTCOMES[pick(m.p)].toLowerCase()}</b> at ${pct1(Math.max(...m.p))}.</p><p class="dim">Forecast from the model run of ${origin} UTC.</p>`;
+    call = `<p>Pick: <b>${OUTCOMES[fav].toLowerCase()}, ${ch}–${ca}</b> (${pct1(m.p[fav])} for the result).</p><p class="dim">Forecast from the model run of ${origin} UTC.</p>`;
   }
   const clubLinks = slugs ? [[m.home_id, m.home], [m.away_id, m.away]]
     .filter(([id]) => slugs.has(id))
     .map(([id, name]) => `<a class="more" href="#clubs/${slugs.get(id)}">${esc(name)} →</a>`).join("") : "";
   panel.innerHTML = `
-    <div><h4>Likeliest scores</h4><ol class="scores">${scores}</ol></div>
+    <div><h4>Likeliest scores</h4><ol class="scores">${scores}</ol>${spread}</div>
     <div><h4>Goals</h4><dl class="kv"><dt>Expected goals</dt><dd>${dec(m.exp[0])}–${dec(m.exp[1])}</dd>${xg}
       <dt>Both teams score</dt><dd>${pct1(m.btts)}</dd><dt>Over 2.5 goals</dt><dd>${pct1(m.o25)}</dd></dl></div>
     <div class="call"><h4>The call</h4>${call}${clubLinks ? `<p class="links">${clubLinks}</p>` : ""}</div>`;

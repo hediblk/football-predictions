@@ -34,18 +34,26 @@ def scoreline_distribution(matrix, p_outcome):
 def describe_match(matrix, p_outcome, *, score=None, top=TOP_SCORELINES):
     """Outcome chances, expected goals, likeliest scorelines and goal markets for one fixture.
 
+    `pick_score` is the likeliest scoreline within the likeliest outcome, so the predicted
+    score never contradicts the predicted result (the overall likeliest score is often a draw
+    even when a win is the likelier outcome, because draws spread over fewer scorelines).
     With `score` (home, away goals), also the probability the model gave that exact score.
     """
     dist = scoreline_distribution(matrix, p_outcome)
     goals = np.arange(dist.shape[0])
     best = np.argsort(-dist, axis=None, kind="stable")[:top]
     p_home, p_draw, p_away = (float(p) for p in p_outcome)
+    home, away = np.indices(dist.shape)
+    favourite = int(np.argmax(p_outcome))
+    within = np.where((home > away, home == away, home < away)[favourite], dist, -1.0)
+    ph, pa = np.unravel_index(int(np.argmax(within)), dist.shape)
     out = {
         "p_home": p_home, "p_draw": p_draw, "p_away": p_away,
         "exp_home_goals": float(dist.sum(axis=1) @ goals), "exp_away_goals": float(dist.sum(axis=0) @ goals),
         "btts": float(dist[1:, 1:].sum()),
         "over_2_5": float(dist[np.add.outer(goals, goals) >= 3].sum()),
         "scorelines": [[int(h), int(a), float(dist[h, a])] for h, a in zip(*np.unravel_index(best, dist.shape))],
+        "pick_score": [int(ph), int(pa), float(dist[ph, pa])],
     }
     if score is not None:
         hg, ag = (int(value) for value in score)
