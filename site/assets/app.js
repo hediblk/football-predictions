@@ -10,7 +10,9 @@ const COMPS = [
   { slug: "champions-league", label: "Champions League" },
 ];
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
-const STALE_HOURS = 24;
+// Mirrors the cron in .github/workflows/site.yml (daily, 05:30 UTC).
+const REFRESH_UTC = { hour: 5, minute: 30 };
+const STALE_HOURS = 30;
 
 const $ = (id) => document.getElementById(id);
 const cache = new Map();
@@ -60,6 +62,8 @@ $("nav").addEventListener("click", (e) => {
   if (b) location.hash = b.dataset.slug;
 });
 window.addEventListener("hashchange", route);
+// Keep the "updated / next" wording current on a page left open.
+setInterval(() => { if (cache.has(current)) renderStatus(cache.get(current)); }, 60000);
 
 function route() {
   const comp = COMPS.find((c) => c.slug === location.hash.slice(1)) || COMPS[0];
@@ -88,28 +92,28 @@ async function load(slug) {
   if (current === slug) render(cache.get(slug), true);
 }
 
-$("reload").addEventListener("click", async () => {
-  const btn = $("reload");
-  btn.disabled = true;
-  try {
-    const before = cache.get(current)?.generated_at;
-    const data = await fetchData(current);
-    cache.clear();
-    cache.set(current, data);
-    render(data, data.generated_at !== before);
-    if (data.generated_at === before) $("status-text").textContent = `No newer run · ${ago(data.generated_at)}`;
-  } catch {
-    $("status-text").textContent = "Reload failed";
-  } finally {
-    btn.disabled = false;
-  }
-});
+/* the most recent scheduled refresh at or before now */
+function lastScheduledRun(now) {
+  const run = new Date(now);
+  run.setUTCHours(REFRESH_UTC.hour, REFRESH_UTC.minute, 0, 0);
+  if (run > now) run.setUTCDate(run.getUTCDate() - 1);
+  return run;
+}
+
+function nextRunText(data) {
+  const now = new Date();
+  const last = lastScheduledRun(now);
+  // The run takes ~10 minutes; until its data lands, say so rather than promising tomorrow.
+  if (new Date(data.generated_at) < last && now - last < 3.6e6) return "updating now";
+  const mins = Math.ceil((last.getTime() + 864e5 - now) / 60000);
+  return mins < 60 ? `next in ${mins} min` : `next in ${Math.round(mins / 60)} h`;
+}
 
 function renderStatus(data) {
   const hours = (Date.now() - new Date(data.generated_at)) / 3.6e6;
   $("lamp").classList.toggle("stale", hours > STALE_HOURS);
-  $("status-text").textContent = `Updated ${ago(data.generated_at)}`;
-  $("status-text").title = `Model run ${when(data.generated_at)} · results through ${when(data.data_cutoff)}`;
+  $("status-text").textContent = `Updated ${ago(data.generated_at)} · ${nextRunText(data)}`;
+  $("status-text").title = `Model run ${when(data.generated_at)} · results through ${when(data.data_cutoff)} · refreshes daily at 05:30 UTC`;
   $("foot-updated").textContent = `Model run ${when(data.generated_at)} · results through ${when(data.data_cutoff)}`;
 }
 
