@@ -83,7 +83,7 @@ export function clubCrest(id, size = "row") {
   const crest = crests[id];
   if (!crest) return "";
   const pixels = crestSizes[size];
-  return `<span class="crest${crest.backing ? " crest--backed" : ""}"><img class="club-crest" src="${esc(crest.path)}" width="${pixels}" height="${pixels}" alt="" decoding="async"${size === "hero" ? "" : ' loading="lazy"'}></span>`;
+  return `<span class="crest"><img class="club-crest" src="${esc(crest.path)}" width="${pixels}" height="${pixels}" alt="" decoding="async"${size === "hero" ? "" : ' loading="lazy"'}></span>`;
 }
 export function clubName(id, name, size = "row") {
   return `<span class="club-name club-name--${size}">${clubCrest(id, size)}<span class="club-label" title="${esc(name)}">${esc(name)}</span></span>`;

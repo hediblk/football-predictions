@@ -31,8 +31,6 @@ button { font: inherit; color: inherit; }
 .club-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .crest { display: inline-flex; flex: none; align-items: center; justify-content: center; }
 .club-crest { display: block; object-fit: contain; flex: none; }
-.crest--backed { background: #e8e4de; border-radius: 2px; }
-.crest--backed .club-crest { padding: 2px; }
 .club-name--inline { gap: 5px; }
 .club-name--hero { gap: clamp(12px, 2vw, 24px); }
 .club-name--hero .club-label { overflow: visible; white-space: normal; }
