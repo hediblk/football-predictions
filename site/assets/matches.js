@@ -9,6 +9,8 @@ const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Ca
 let data = null;
 let comp = "all";
 let day = null;
+let slide = null;
+let dragOffset = 0;
 
 async function load() {
   if (data) return data;
@@ -45,9 +47,18 @@ export async function showMatches(param) {
     return;
   }
   setStatus(data.latest.generated_at);
-  day = /^\d{4}-\d{2}-\d{2}$/.test(param || "") ? param : dayKey(new Date());
+  const next = /^\d{4}-\d{2}-\d{2}$/.test(param || "") ? param : dayKey(new Date());
+  // Moving to another day slides the strip and the fixtures across; a finished drag slides on from where it let go.
+  slide = day && next !== day ? { days: daysBetween(day, next), from: dragOffset } : null;
+  dragOffset = 0;
+  day = next;
   render();
+  slide = null;
 }
+
+const daysBetween = (a, b) => Math.round((parseDay(b) - parseDay(a)) / 864e5);
+const still = matchMedia("(prefers-reduced-motion: reduce)");
+const SLIDE = { duration: 260, easing: "cubic-bezier(.2, .8, .2, 1)" };
 
 const visible = (key) => (data.byDay.get(key) || []).filter((x) => comp === "all" || x.comp === comp);
 
@@ -59,28 +70,86 @@ function render() {
 }
 
 /* ---------- day strip ---------- */
+const SPARE = 8; // days drawn either side of the chosen one, more than fit, so a drag or slide never shows a gap
+
 function renderDays() {
   const today = dayKey(new Date());
   const cells = [];
-  for (let i = -4; i <= 4; i++) {
+  for (let i = -SPARE; i <= SPARE; i++) {
     const key = shiftDay(day, i);
     const d = parseDay(key);
     const n = visible(key).length;
     const label = key === today ? "Today" : d.toLocaleDateString("en-GB", { weekday: "short" });
-    cells.push(`<a class="day${n ? "" : " empty"}" href="#matches/${key}"${key === day ? ' aria-current="date"' : ""}
+    const off = Math.abs(i) > 4 ? ' tabindex="-1" aria-hidden="true"' : "";
+    cells.push(`<a class="day${n ? "" : " empty"}" href="#matches/${key}" draggable="false"${key === day ? ' aria-current="date"' : ""}${off}
       aria-label="${esc(d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }))}, ${n} matches">
       <span class="wd">${label}</span><span class="dn">${d.getDate()}</span><span class="mo">${d.toLocaleDateString("en-GB", { month: "short" })}</span>
       <span class="ct">${n ? `${n} game${n > 1 ? "s" : ""}` : "–"}</span></a>`);
   }
   $("days").innerHTML = `
     <a class="step" href="#matches/${shiftDay(day, -1)}" aria-label="Previous day">‹</a>
-    <div class="day-row">${cells.join("")}</div>
+    <div class="day-row"><div class="day-track" style="--total:${2 * SPARE + 1}">${cells.join("")}</div></div>
     <a class="step" href="#matches/${shiftDay(day, 1)}" aria-label="Next day">›</a>`;
-  // Keep the chosen day in the middle when the strip scrolls (phones).
-  const row = $("days").querySelector(".day-row");
-  const cur = row.querySelector('[aria-current="date"]');
-  row.scrollLeft = cur.offsetLeft - (row.clientWidth - cur.offsetWidth) / 2;
+  if (slide) {
+    const track = $("days").querySelector(".day-track");
+    const w = cellWidth(track);
+    const reach = maxReach(track) / w;
+    slideTrack(track, Math.max(-reach, Math.min(reach, slide.days)) * w + slide.from);
+  }
 }
+
+const cellWidth = (track) => track.offsetWidth / (2 * SPARE + 1);
+/* how far the strip can move before running out of spare days */
+const maxReach = (track) => cellWidth(track) * (SPARE - (Number(getComputedStyle(track.parentElement).getPropertyValue("--n")) || 9) / 2);
+
+function slideTrack(track, from) {
+  if (still.matches || !from) return;
+  track.animate([{ transform: `translateX(${from}px)` }, { transform: "none" }], SLIDE);
+}
+
+/* drag the strip (mouse, pen or finger) to move through the days */
+let drag = null;
+let dragged = false;
+$("days").addEventListener("pointerdown", (e) => {
+  const row = e.target.closest(".day-row");
+  if (!row || e.button !== 0) return;
+  drag = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, live: false, row, track: row.firstElementChild };
+});
+$("days").addEventListener("pointermove", (e) => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const dx = e.clientX - drag.x;
+  if (!drag.live) {
+    if (Math.abs(dx) < 6) return;
+    if (Math.abs(e.clientY - drag.y) > Math.abs(dx)) { drag = null; return; }
+    drag.live = true;
+    drag.row.setPointerCapture(e.pointerId);
+    drag.row.classList.add("dragging");
+    drag.track.getAnimations().forEach((a) => a.cancel());
+  }
+  const max = maxReach(drag.track);
+  drag.dx = Math.max(-max, Math.min(max, dx));
+  drag.track.style.transform = `translateX(${drag.dx}px)`;
+});
+function endDrag(e) {
+  if (!drag || e.pointerId !== drag.id) return;
+  const { live, dx, row, track } = drag;
+  drag = null;
+  if (!live) return;
+  row.classList.remove("dragging");
+  // Swallow the click that ends a drag so it doesn't also open the day under the pointer.
+  dragged = true;
+  setTimeout(() => { dragged = false; });
+  const cells = Math.abs(dx) / cellWidth(track);
+  const shift = e.type === "pointercancel" ? 0 : -Math.sign(dx) * Math.round(cells + 0.2);
+  track.style.transform = "";
+  if (!shift) { slideTrack(track, dx); return; }
+  dragOffset = dx;
+  location.hash = `#matches/${shiftDay(day, shift)}`;
+}
+$("days").addEventListener("pointerup", endDrag);
+$("days").addEventListener("pointercancel", endDrag);
+$("days").addEventListener("click", (e) => { if (dragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+$("days").addEventListener("dragstart", (e) => e.preventDefault());
 
 function renderChips() {
   const all = data.byDay.get(day) || [];
@@ -116,6 +185,10 @@ function renderDay() {
   }
   if (data.missing.length) html += `<p class="note">No fixture data yet for ${esc(data.missing.join(", "))}.</p>`;
   $("m-day").innerHTML = html;
+  if (slide && !still.matches) {
+    const x = `${Math.sign(slide.days) * 28}px`;
+    $("m-day").animate([{ opacity: 0, transform: `translateX(${x})` }, { opacity: 1, transform: "none" }], SLIDE);
+  }
 }
 
 function stageLabel(c, rows) {
