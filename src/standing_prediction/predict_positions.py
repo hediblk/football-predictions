@@ -13,6 +13,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from standing_prediction.calibration import train_outcome_calibrator
+from standing_prediction.club_ratings import club_ratings
 from standing_prediction.data import (FootballDataClient, fetch_matches, fetch_standings, load_fixture_overrides,
                                       resolve_fixture_statuses, validate_schedule)
 from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_WEIGHT
@@ -27,6 +28,7 @@ from standing_prediction.odds import (
     match_odds,
 )
 from standing_prediction.h2h import encounter_residuals, h2h_shifts, pair_effects
+from standing_prediction.match_forecasts import describe_match, forecast_played, match_records, write_match_forecasts
 from standing_prediction.simulate import FixtureSimulationSpec, simulate_season_scores
 from standing_prediction.xg import XG_COLUMNS, blend_xg_strengths, fit_xg_strengths, load_season_xg
 from standing_prediction.utils import normalize_team
@@ -39,6 +41,9 @@ COMPETITION_TO_THE_ODDS_API_SPORT = {
     "PD": "soccer_spain_la_liga", "PL": "soccer_epl", "BL1": "soccer_germany_bundesliga",
     "SA": "soccer_italy_serie_a", "FL1": "soccer_france_ligue_one",
 }
+MATCH_FORECAST_COLUMNS = ["id", "utcDate", "matchday", "status", "reported_status", "homeTeam", "awayTeam",
+                          "homeTeamId", "awayTeamId", "homeGoals", "awayGoals", *XG_COLUMNS]
+PLAYED_FORECAST_RULE = "Played matches are forecast from models fitted at 00:00 UTC on match day, using only earlier results."
 
 
 @dataclass
@@ -76,6 +81,8 @@ def main(argv=None):
                         help="CSV of official decisions for cancelled or awarded fixtures (skipped if absent)")
     parser.add_argument("--strict-fixtures", action="store_true",
                         help="Fail on cancelled fixtures without an override instead of simulating them")
+    parser.add_argument("--match-forecasts", action=argparse.BooleanOptionalAction, default=True,
+                        help="Also write every fixture's forecast, with played matches forecast as of their match day")
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     load_dotenv()
@@ -182,7 +189,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                    out_dir=Path("out"), weights=None, calibrate=False, calibration_seasons=None,
                    calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None,
                    xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"],
-                   fixture_overrides=DEFAULT_FIXTURE_OVERRIDES, strict_fixtures=False):
+                   fixture_overrides=DEFAULT_FIXTURE_OVERRIDES, strict_fixtures=False, match_forecasts=True):
     if n_sim < 1 or max_goals < 1 or prior_seasons < 0:
         raise ValueError("n_sim/max_goals must be positive; prior_seasons cannot be negative.")
     if not 0 <= xg_weight <= 1 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
@@ -204,6 +211,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     teams = standings["team"].tolist()
     history = pd.DataFrame()
     odds, lookup, calibrator, years = None, {}, None, []
+    current_models, residuals = None, None
     if remaining.empty:
         counts = pd.DataFrame(0, index=teams, columns=range(1, len(teams) + 1))
         for row in standings.itertuples():
@@ -228,6 +236,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi,
                                         lambda_reg=lambda_reg, xg_weight=xg_weight, h2h_weight=h2h_weight,
                                         h2h_residuals=residuals)
+        current_models = dc, elo
         h2h_pairs = len(dc.pair_shift)
         lookup = match_odds(remaining, odds, as_of=cutoff) if odds is not None else {}
         LOG.info("Odds coverage: %s/%s remaining fixtures.", len(lookup), len(remaining))
@@ -270,6 +279,24 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     }
     result = Forecast(probabilities, summary, standings, metadata)
     write_forecast(result, out_dir)
+    ratings_path = Path(out_dir) / f"{competition.lower()}_club_ratings.csv"
+    ratings_path.unlink(missing_ok=True)
+    if current_models is not None:
+        club_ratings(current_models[0], teams).to_csv(ratings_path, index=False, float_format="%.4f")
+    forecasts_path = Path(out_dir) / f"{competition.lower()}_match_forecasts.json"
+    forecasts_path.unlink(missing_ok=True)
+    if match_forecasts:
+        if remaining.empty:
+            history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
+        records = season_match_forecasts(
+            matches, teams=teams, history=history, current_models=current_models, cutoff=cutoff,
+            weights=weights or DEFAULT_WEIGHTS, odds=odds, calibrator=calibrator, max_goals=max_goals,
+            xi=xi, lambda_reg=lambda_reg, xg_weight=xg_weight, h2h_weight=h2h_weight, h2h_residuals=residuals)
+        write_match_forecasts(forecasts_path, records, {
+            "competition": competition, "season": season, "generated_at": cutoff.isoformat(),
+            "weights": weights or DEFAULT_WEIGHTS, "xg_weight": xg_weight, "calibrated": calibrator is not None,
+            "weight_calibration_version": CALIBRATION_VERSION, "played_forecast_rule": PLAYED_FORECAST_RULE,
+        })
     matches.to_csv(Path(out_dir) / f"{competition.lower()}_matches_snapshot.csv", index=False)
     standings.to_csv(Path(out_dir) / f"{competition.lower()}_standings_snapshot.csv", index=False)
     if odds is not None and not odds.empty:
@@ -330,6 +357,47 @@ def build_fixture_specs(remaining, *, dc, elo, odds, max_goals, weights, calibra
         conditionals = tuple(_conditional_probs(matrix.reshape(-1), mask) for mask in masks)
         specs.append(FixtureSimulationSpec(home, away, *p, scorelines, conditionals))
     return specs
+
+
+def fixture_forecasts(fixtures, *, dc, elo, forecast_at, weights, odds=None, calibrator=None, max_goals=10):
+    """Forecast each fixture from fitted models; played fixtures also get the chance of their exact score."""
+    lookup = match_odds(fixtures, odds, as_of=forecast_at) if odds is not None else {}
+    forecasts = []
+    for row in fixtures.itertuples():
+        home, away = str(row.homeTeam), str(row.awayTeam)
+        p = predict_outcome_probs(dc.match_outcome_probs(home, away, max_goals=max_goals), elo.predict_probs(home, away),
+                                  lookup.get((home, away)), weights=weights, calibrator=calibrator)
+        _, matrix = dc.score_matrix(home, away, max_goals=max_goals)
+        score = (row.homeGoals, row.awayGoals) if row.status == "FINISHED" else None
+        forecasts.append({"forecast_at": pd.Timestamp(forecast_at).isoformat(), **describe_match(matrix, p, score=score)})
+    return forecasts
+
+
+def season_match_forecasts(matches, *, teams, history, current_models, cutoff, weights, odds=None, calibrator=None,
+                           max_goals=10, **fit_options):
+    """Every fixture's forecast: unplayed ones from the current models, played ones as of their match day."""
+    played = matches[matches["status"].eq("FINISHED")]
+    upcoming = matches[~matches["status"].eq("FINISHED")]
+    forecasts = {}
+    if current_models is not None and not upcoming.empty:
+        dc, elo = current_models
+        forecasts.update(zip(upcoming.index, fixture_forecasts(
+            upcoming, dc=dc, elo=elo, forecast_at=cutoff, weights=weights, odds=odds,
+            calibrator=calibrator, max_goals=max_goals)))
+
+    def fit(origin):
+        try:
+            return fit_prediction_models(played, teams=teams, history=history, reference_date=origin, **fit_options)
+        except ValueError:
+            return None  # No results before this origin to fit on.
+
+    def forecast(models, fixtures, origin):
+        dc, elo = models
+        return fixture_forecasts(fixtures, dc=dc, elo=elo, forecast_at=origin, weights=weights, odds=odds,
+                                 calibrator=calibrator, max_goals=max_goals)
+
+    forecasts.update(forecast_played(played, fit, forecast))
+    return match_records(matches, forecasts, MATCH_FORECAST_COLUMNS)
 
 
 def predict_outcome_probs(p_dc, p_elo, p_odds=None, *, weights=None, calibrator=None):
