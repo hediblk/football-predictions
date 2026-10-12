@@ -240,23 +240,99 @@ function renderKnockouts(data) {
       ${cols.map(([k]) => cell(value(t, k), k)).join("")}</tr>`).join("")}</tbody>`;
 }
 
+/* Columns share one grid so every tie sits level with the two things that feed it; lines are drawn on top.
+   The first column holds 16 slots: each last-16 tie is fed by one club straight from the league table and one play-off tie. */
+const B_ROWS = 32;
+const B_SUBS = { playoffs: "Top 8 skip · 9th–24th play off", round16: "&nbsp;" };
+
 function renderBracket(data) {
   const b = data.bracket;
   const byName = new Map(data.teams.map((t) => [t.name, t.id]));
   const champion = data.teams.find((t) => t.name === b.champion);
+  const seeds = new Map((b.seeds || []).map((name, i) => [name, i + 1]));
+  const key = (name, id) => String(id ?? byName.get(name) ?? name);
+  const at = (row, span) => `style="grid-row:${row + 1} / span ${span}"`;
+  const tieHtml = (tie, stage, pos) => {
+    const side = (name, id) => {
+      const win = name === tie.winner;
+      const seed = stage === "playoffs" && seeds.get(name);
+      return `<div class="tm ${win ? "win" : ""}" data-t="${esc(key(name, id))}"><span class="nm">${clubName(id ?? byName.get(name), name)}</span>${seed ? `<i class="seed">${ordinal(seed)}</i>` : ""}<em>${win ? Math.round(tie.advance) + "%" : ""}</em></div>`;
+    };
+    const tip = `${clubName(tie.winner_id ?? byName.get(tie.winner), tie.winner, "inline")} go through in <b>${tie.advance.toFixed(1)}%</b> of simulations of this tie`;
+    return `<div class="tie" data-w="${esc(key(tie.winner, tie.winner_id))}" ${pos} data-tip="${esc(tip)}">${side(tie.team1, tie.team1_id)}${side(tie.team2, tie.team2_id)}</div>`;
+  };
+  // A club already in the last 16 from the league phase: a card with no tie, joined by a dashed line.
+  const directHtml = (name, id, pos) => {
+    const seed = seeds.get(name);
+    return `<div class="tie direct" data-w="${esc(key(name, id))}" ${pos} data-tip="${esc(`${clubName(id ?? byName.get(name), name, "inline")} ${seed ? `finish <b>${ordinal(seed)}</b> and` : "finish in the top eight and"} skip the play-offs`)}">
+      <div class="tm win" data-t="${esc(key(name, id))}"><span class="nm">${clubName(id ?? byName.get(name), name)}</span><i class="seed bye">Top 8</i></div></div>`;
+  };
+  const playoffs = b.stages.playoffs || [];
+  const round16 = b.stages.round16 || [];
   const cols = STAGES.map(([stage, label]) => {
-    const ties = (b.stages[stage] || []).map((tie) => {
-      const side = (name, id) => {
-        const win = name === tie.winner;
-        return `<div class="tm ${win ? "win" : ""}"><span class="nm">${clubName(id ?? byName.get(name), name)}</span><em>${win ? Math.round(tie.advance) + "%" : ""}</em></div>`;
-      };
-      const tip = `${clubName(tie.winner_id ?? byName.get(tie.winner), tie.winner, "inline")} go through in <b>${tie.advance.toFixed(1)}%</b> of simulations of this tie`;
-      return `<div class="tie" data-tip="${esc(tip)}">${side(tie.team1, tie.team1_id)}${side(tie.team2, tie.team2_id)}</div>`;
-    }).join("");
-    return `<div class="b-col"><h3>${label}</h3><div class="b-ties">${ties}</div></div>`;
+    let items;
+    if (stage === "playoffs" && round16.length) {
+      // Line each feeder up with the slot it fills: two per last-16 tie, in the order that tie lists its clubs.
+      items = round16.flatMap((tie, i) => [[tie.team1, tie.team1_id], [tie.team2, tie.team2_id]].map(([name, id], k) => {
+        const pos = at((2 * i + k) * 2, 2);
+        const feeder = playoffs.find((p) => p.winner === name);
+        return feeder ? tieHtml(feeder, stage, pos) : directHtml(name, id, pos);
+      }));
+    } else {
+      const list = b.stages[stage] || [];
+      const span = B_ROWS / Math.max(1, list.length);
+      items = list.map((tie, i) => tieHtml(tie, stage, at(i * span, span)));
+    }
+    return `<div class="b-col" data-stage="${stage}"><h3>${label}<small>${B_SUBS[stage] || "&nbsp;"}</small></h3><div class="b-ties">${items.join("")}</div></div>`;
   }).join("");
-  $("bracket").innerHTML = cols + `<div class="b-col"><h3>Winner</h3><div class="champ">
-    <div class="who-won">${clubName(b.champion_id ?? champion?.id, b.champion, "card")}</div>
-    ${champion ? `<div class="sub">${pct(champion.title)} to win across every draw</div>` : ""}</div></div>`;
-  $("bracket-note").textContent = "One path through the knockouts: the most likely league-phase order, a permitted draw, and the favourite going through in every tie (the number is that tie's chance). Pairings are illustrative until the real draw.";
+  const el = $("bracket");
+  el.innerHTML = `<svg class="b-lines" aria-hidden="true"></svg>` + cols + `<div class="b-col"><h3>Winner<small>&nbsp;</small></h3><div class="b-ties">
+    <div class="champ" data-t="${esc(key(b.champion, b.champion_id ?? champion?.id))}"><div class="who-won">${clubName(b.champion_id ?? champion?.id, b.champion, "card")}</div>
+    ${champion ? `<div class="sub">${pct(champion.title)} to win across every draw</div>` : ""}</div></div></div>`;
+  $("bracket-note").innerHTML = `One path through the knockouts: the most likely league-phase order, a permitted draw, and the favourite going through in every tie (the number is that tie's chance). Half the last 16 comes straight from the league table: the top eight (<i class="seed bye">Top 8</i>, dashed line) skip the play-offs, while 9th to 24th play off for the other eight places. Hover a club to trace its run. Pairings are illustrative until the real draw.`;
+  drawBracketLines(el);
+  bracketObserver.disconnect();
+  bracketObserver.observe(el);
 }
+
+/* an elbow from each tie's winner to the slot it fills in the next round (or the winner card) */
+function drawBracketLines(el) {
+  const svg = el.querySelector(".b-lines");
+  if (!svg) return;
+  const box = el.getBoundingClientRect();
+  const cols = [...el.querySelectorAll(".b-col")];
+  const paths = [];
+  cols.slice(1).forEach((col, c) => {
+    const prev = [...cols[c].querySelectorAll(".tie")];
+    for (const slot of col.querySelectorAll(".tm, .champ")) {
+      const from = prev.find((tie) => tie.dataset.w === slot.dataset.t);
+      if (!from) continue;
+      const a = from.querySelector(`.tm[data-t="${CSS.escape(slot.dataset.t)}"]`).getBoundingClientRect();
+      const r = from.getBoundingClientRect();
+      const z = slot.getBoundingClientRect();
+      const x1 = r.right - box.left, y1 = a.top + a.height / 2 - box.top;
+      const x2 = z.left - box.left, y2 = z.top + z.height / 2 - box.top;
+      const xm = Math.round((x1 + x2) / 2) + 0.5;
+      paths.push(`<path${from.classList.contains("direct") ? ' class="bye"' : ""} data-t="${esc(slot.dataset.t)}" d="M${x1} ${Math.round(y1) + 0.5}H${xm}V${Math.round(y2) + 0.5}H${x2}"/>`);
+    }
+  });
+  svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+  svg.innerHTML = paths.join("");
+  const on = el.dataset.trace;
+  if (on) traceTeam(el, on);
+}
+const bracketObserver = new ResizeObserver((entries) => entries.forEach((e) => drawBracketLines(e.target)));
+
+/* light one club's run: its rows, its ties and the lines between them */
+function traceTeam(el, t) {
+  if (t) el.dataset.trace = t; else delete el.dataset.trace;
+  el.querySelectorAll(".on").forEach((n) => n.classList.remove("on"));
+  if (!t) return;
+  el.querySelectorAll(`[data-t="${CSS.escape(t)}"]`).forEach((n) => {
+    n.classList.add("on");
+    n.closest(".tie")?.classList.add("on");
+  });
+}
+const bracketEl = $("bracket");
+bracketEl.addEventListener("pointerover", (e) => traceTeam(bracketEl, e.target.closest(".tm, .champ")?.dataset.t));
+bracketEl.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") traceTeam(bracketEl, null); });

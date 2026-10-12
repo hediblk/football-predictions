@@ -10,7 +10,7 @@ The page reads like the board at the ground: one lit number you see from the sta
 TYPE        Big Shoulders Display (condensed civic signage, 600–900) for names, labels and the hero numeral, over JetBrains Mono (400–700) for every number and running text. Hierarchy by weight, caps and tracking, not size steps; one huge jump for the hero.
 COLOR       seed amber (h68) · warm near-black ground · mono harmony · one lit accent (amber) plus a red bulb reserved for relegation/elimination.
 COMPOSITION Poster Bleed (Terminal/Mono-Core) — the favourite's percentage is set at poster scale and bleeds off the frame's right edge; everything else is caption-rank and ruled.
-MOTION      State-only, ≤150 ms, stepped (no easing curves): the hero numeral "powers on" in four steps when the competition changes. Nothing else moves. Off under `prefers-reduced-motion`.
+MOTION      State-only and short: the hero numeral "powers on" in four steps (≤150 ms, stepped) when the competition changes; changing match day slides the day strip and the fixtures across (260 ms ease-out), and the strip can be dragged. Nothing else moves. Off under `prefers-reduced-motion`.
 REGISTER    Product structure (tables, nav) · expressive at: the hero numeral only.
 DNA         Terminal/Mono-Core base + type voice borrowed from Swiss/International (a condensed grotesk instead of mono display) · dominant: color (the single lit amber).
 SIGNATURE   Section headings are legends cut into their frame's top border, like the labels on a stadium board; probabilities are drawn as bulbs whose brightness is the chance.
