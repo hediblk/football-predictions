@@ -1,5 +1,5 @@
 // Champions League fixtures by round (opening on the next one to be played) or by team.
-import { $, esc, getJSON, dayKey, parseDay, shortDate, verdict, expandable } from "./core.js";
+import { $, esc, getJSON, dayKey, parseDay, shortDate, verdict, expandable, clubCrest } from "./core.js";
 import { matchRow, matchPanel } from "./matches.js";
 
 const KNOCKOUTS = [
@@ -86,7 +86,7 @@ function render() {
     </div>
     <div class="rnav">
       <button type="button" class="nav-step" data-step="-1" aria-label="Previous ${noun}"${index > 0 ? "" : " disabled"}>‹</button>
-      <span class="picker"><select id="round-pick" aria-label="Choose a ${noun}">
+      <span class="picker">${mode === "team" ? clubCrest(team) : ""}<select id="round-pick" aria-label="Choose a ${noun}">
         ${list.map(([key, label]) => `<option value="${key}"${key === value ? " selected" : ""}>${esc(label)}</option>`).join("")}
       </select></span>
       <button type="button" class="nav-step" data-step="1" aria-label="Next ${noun}"${index < list.length - 1 ? "" : " disabled"}>›</button>

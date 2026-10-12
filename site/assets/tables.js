@@ -1,5 +1,5 @@
 // Tables view: the projected final table for one competition.
-import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus } from "./core.js";
+import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus, clubName } from "./core.js";
 import { showRounds } from "./rounds.js";
 
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
@@ -49,14 +49,14 @@ function renderHero(data) {
   const [fav, ...rest] = byTitle;
   const runs = ucl ? "simulated tournaments" : "simulated seasons";
   const wins = Math.round((fav.title / 100) * data.n_sim);
-  const rivals = rest.slice(0, 2).map((t) => `${esc(t.name)} <b>${pct(t.title)}</b>`).join(" · ");
+  const rivals = rest.slice(0, 2).map((t) => `${clubName(t.id, t.name, "inline")} <b>${pct(t.title)}</b>`).join(" · ");
   const extra = ucl
     ? `Reaches the final in <b>${pct(fav.stages.final)}</b>`
     : `Expected <b>${Math.round(fav.xpts)}</b> pts (${fav.p10}–${fav.p90})`;
   $("hero-legend").textContent = `${data.name} · ${data.season} · ${ucl ? "Trophy" : "Title"}`;
   $("hero-in").innerHTML = `
     <div class="who">
-      <h1>${esc(fav.name)}</h1>
+      <h1>${clubName(fav.id, fav.name, "hero")}</h1>
       <p class="caption">${ucl ? "Wins it" : "Champions"} in <b>${nf.format(wins)}</b> of ${nf.format(data.n_sim)} ${runs} · ${rivals} · ${extra}</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${fav.name}: ${pct(fav.title)} chance`)}">${Math.round(fav.title)}<sup>%</sup></div>`;
@@ -64,7 +64,7 @@ function renderHero(data) {
 
 function raceLine(title, note, rows, field, tone, emptyText) {
   const items = rows.length
-    ? `<ol>${rows.map((t) => `<li><span class="nm">${esc(t.name)}</span><span class="v">${pct(t[field])}</span></li>`).join("")}</ol>`
+    ? `<ol>${rows.map((t) => `<li><span class="nm">${clubName(t.id, t.name)}</span><span class="v">${pct(t[field])}</span></li>`).join("")}</ol>`
     : `<span class="empty">${emptyText}</span>`;
   return `<div class="race ${tone}"><h2>${title}<small>${note}</small></h2>${items}</div>`;
 }
@@ -123,8 +123,8 @@ function renderTable(data) {
   const rows = data.teams.map((t, i) => {
     const rank = i + 1;
     const bulbs = t.probs.map((p, j) =>
-      `<i class="${gaps.has(j + 1) ? "gap" : ""}" style="background:${bulb(p, top)}" data-tip="${esc(`<b>${esc(t.name)}</b> ${ordinal(j + 1)}: <b>${p.toFixed(2)}%</b>`)}"></i>`).join("");
-    const tip = `<b>${esc(t.name)}</b><br>Projected <b>${t.xpts.toFixed(1)}</b> pts · 80% range <b>${t.p10}–${t.p90}</b><br>Now <b>${t.points}</b> after ${t.played}`;
+      `<i class="${gaps.has(j + 1) ? "gap" : ""}" style="background:${bulb(p, top)}" data-tip="${esc(`${clubName(t.id, t.name, "inline")} ${ordinal(j + 1)}: <b>${p.toFixed(2)}%</b>`)}"></i>`).join("");
+    const tip = `${clubName(t.id, t.name, "inline")}<br>Projected <b>${t.xpts.toFixed(1)}</b> pts · 80% range <b>${t.p10}–${t.p90}</b><br>Now <b>${t.points}</b> after ${t.played}`;
     const cells = cols.map(([k, , tone]) => {
       const v = t[k];
       const cls = v <= 0 ? "off" : tone === "warn" ? (v >= 10 ? "warn" : "") : tone === "lit" ? (v >= 1 ? "lit" : "") : tone;
@@ -133,7 +133,7 @@ function renderTable(data) {
     const cut = cuts[rank] && rank < n ? `<tr class="cut ${cuts[rank][1]}"><td colspan="${span}"><span>${cuts[rank][0]}</span></td></tr>` : "";
     return `<tr class="row" data-i="${i}" aria-expanded="false" tabindex="0">
       <td class="rk l">${String(rank).padStart(2, "0")}</td>
-      <td class="club l" title="${esc(t.full)}">${esc(t.name)}</td>
+      <td class="club l" title="${esc(t.full)}">${clubName(t.id, t.name)}</td>
       <td>${t.played}</td><td class="b">${t.points}</td>
       <td class="${t.gd >= 0 ? "gd-pos" : "gd-neg"}">${t.gd > 0 ? "+" : ""}${t.gd}</td>
       <td data-tip="${esc(tip)}"><span class="rg"><span class="band" style="left:${x(t.p10)}%;width:${x(t.p90) - x(t.p10)}%"></span><span class="now" style="left:${x(t.points)}%"></span><span class="proj" style="left:${x(t.xpts)}%"></span></span>&nbsp; <b class="b">${Math.round(t.xpts)}</b></td>
@@ -194,7 +194,7 @@ function toggleDetail(data, tr, span) {
   const bad = data.zones[data.zones.length - 1];
   const row = document.createElement("tr");
   row.className = "detail";
-  const profile = t.slug && clubSlugs.has(t.slug) ? `<a class="more" href="#clubs/${t.slug}">${esc(t.name)} club profile →</a>` : "";
+  const profile = t.slug && clubSlugs.has(t.slug) ? `<a class="more" href="#clubs/${t.slug}">${clubName(t.id, t.name, "inline")} club profile →</a>` : "";
   row.innerHTML = `<td colspan="${span}">${spreadPanel(t, bad.from, profile)}</td>`;
   tr.after(row);
 }
@@ -207,7 +207,7 @@ export function spreadPanel(t, dropFrom, extra = "") {
   const bars = t.probs.map((p, j) => {
     const pos = j + 1;
     const label = !many || [1, 8, 9, 24, 25, 36].includes(pos) ? pos : "";
-    return `<div class="col" data-tip="${esc(`<b>${esc(t.name)}</b> ${ordinal(pos)}: <b>${p.toFixed(2)}%</b>`)}">
+    return `<div class="col" data-tip="${esc(`${clubName(t.id, t.name, "inline")} ${ordinal(pos)}: <b>${p.toFixed(2)}%</b>`)}">
       ${pos === mode ? `<span class="v">${Math.round(p)}</span>` : ""}
       <div class="bar" style="height:${((p / max) * 100).toFixed(1)}%${pos >= dropFrom ? ";--c:var(--red)" : ""}"></div>
       <span class="x">${label}</span></div>`;
@@ -236,26 +236,27 @@ function renderKnockouts(data) {
     return `<td class="p" style="color:color-mix(in srgb, var(--amber-t) ${Math.round(t * 100)}%, var(--dim))">${num(p)}</td>`;
   };
   $("ko-table").innerHTML = `<thead><tr><th class="rk l">#</th><th class="club l">Club</th>${cols.map(([, l]) => `<th>${l} %</th>`).join("")}</tr></thead>
-    <tbody>${teams.map((t, i) => `<tr><td class="rk l">${String(i + 1).padStart(2, "0")}</td><td class="club l">${esc(t.name)}</td>
+    <tbody>${teams.map((t, i) => `<tr><td class="rk l">${String(i + 1).padStart(2, "0")}</td><td class="club l">${clubName(t.id, t.name)}</td>
       ${cols.map(([k]) => cell(value(t, k), k)).join("")}</tr>`).join("")}</tbody>`;
 }
 
 function renderBracket(data) {
   const b = data.bracket;
+  const byName = new Map(data.teams.map((t) => [t.name, t.id]));
   const champion = data.teams.find((t) => t.name === b.champion);
   const cols = STAGES.map(([stage, label]) => {
     const ties = (b.stages[stage] || []).map((tie) => {
-      const side = (name) => {
+      const side = (name, id) => {
         const win = name === tie.winner;
-        return `<div class="tm ${win ? "win" : ""}"><span class="nm">${esc(name)}</span><em>${win ? Math.round(tie.advance) + "%" : ""}</em></div>`;
+        return `<div class="tm ${win ? "win" : ""}"><span class="nm">${clubName(id ?? byName.get(name), name)}</span><em>${win ? Math.round(tie.advance) + "%" : ""}</em></div>`;
       };
-      const tip = `<b>${esc(tie.winner)}</b> go through in <b>${tie.advance.toFixed(1)}%</b> of simulations of this tie`;
-      return `<div class="tie" data-tip="${esc(tip)}">${side(tie.team1)}${side(tie.team2)}</div>`;
+      const tip = `${clubName(tie.winner_id ?? byName.get(tie.winner), tie.winner, "inline")} go through in <b>${tie.advance.toFixed(1)}%</b> of simulations of this tie`;
+      return `<div class="tie" data-tip="${esc(tip)}">${side(tie.team1, tie.team1_id)}${side(tie.team2, tie.team2_id)}</div>`;
     }).join("");
     return `<div class="b-col"><h3>${label}</h3><div class="b-ties">${ties}</div></div>`;
   }).join("");
   $("bracket").innerHTML = cols + `<div class="b-col"><h3>Winner</h3><div class="champ">
-    <div class="who-won">${esc(b.champion)}</div>
+    <div class="who-won">${clubName(b.champion_id ?? champion?.id, b.champion, "card")}</div>
     ${champion ? `<div class="sub">${pct(champion.title)} to win across every draw</div>` : ""}</div></div>`;
   $("bracket-note").textContent = "One path through the knockouts: the most likely league-phase order, a permitted draw, and the favourite going through in every tie (the number is that tie's chance). Pairings are illustrative until the real draw.";
 }
