@@ -68,6 +68,7 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
         result.summary["prior_title_max_pct"] = alternate_titles.max(axis=1)
     write_report(result, inputs, out_dir)
     out_dir = Path(out_dir)
+    save_match_forecasts(inputs, model, out_dir, origin=origin, season=season, offset_ridge=offset_ridge)
     inputs.fixtures.to_csv(out_dir / "cl_matches_snapshot.csv", index=False)
     inputs.standings.to_csv(out_dir / "cl_standings_snapshot.csv", index=False)
     inputs.history.to_csv(out_dir / "cl_history_snapshot.csv", index=False)
@@ -83,6 +84,21 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
         if path.is_file():
             shutil.copy2(path, archive / path.name)
     return result
+
+
+def save_match_forecasts(inputs, model, out_dir, *, origin, season, offset_ridge=4.0):
+    """Every known UCL fixture's 90-minute forecast, with played matches forecast as of their match day."""
+    from champions_league.match_forecasts import match_forecasts
+    from standing_prediction.match_forecasts import write_match_forecasts
+    from standing_prediction.predict_positions import PLAYED_FORECAST_RULE
+
+    records = match_forecasts(inputs, model, origin=origin, offset_ridge=offset_ridge)
+    write_match_forecasts(out_dir / "cl_match_forecasts.json", records, {
+        "competition": "CL", "season": season, "generated_at": origin.isoformat(), "weights": DEFAULT_WEIGHTS,
+        "xg_weight": DEFAULT_XG_WEIGHT, "odds": False, "weight_calibration_version": CALIBRATION_VERSION,
+        "played_forecast_rule": PLAYED_FORECAST_RULE, "score_rule": "Scores and forecasts cover 90 minutes.",
+        "display_names": inputs.metadata["display_names"],
+    })
 
 
 def main(argv=None):

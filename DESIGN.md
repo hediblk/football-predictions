@@ -28,7 +28,18 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 --dim:     #8a837c;  /* labels, 4.9:1 */
 --amber:   #eaa85e;  /* the lit accent */
 --amber-t: #d7af86;  /* amber text on dark, 8.7:1 */
---red:     #e1524f;  /* relegation / elimination bulb */
+--red:     #e1524f;  /* relegation / elimination bulb; a missed call */
+--green:   #5ad664;  /* a called result: lamp only */
+--green-t: #88cb8a;  /* "Called" text */
 ```
+
+`--green` came from the same generator (`--seed 145`, accent steps 9 and 11) and only marks a called result. Calls always pair a lamp with a word (Called, Missed, Exact), never colour alone.
+
+## Components added with Matches and Clubs
+
+- **Section tabs** (Tables, Matches, Clubs) sit beside the logo; the competition row appears only under Tables.
+- **Outcome bulbs:** a match's home/draw/away chances are three small bulbs whose brightness is the chance; the brightest is the model's pick, and a ruled box marks what actually happened.
+- **Day strip:** nine days with big numerals and a game count; the chosen day is lit and underlined in amber.
+- **Club board:** ruled cells, not cards, with the rating as the lit number and attack/defence hairline meters.
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.

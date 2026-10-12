@@ -125,7 +125,7 @@ def normalize_team(name):
         "west brom": "west bromwich albion", "stoke": "stoke city",
         "hull": "hull city", "huddersfield": "huddersfield town",
         "cardiff": "cardiff city", "swansea": "swansea city",
-        "qpr": "queens park rangers", "blackburn": "blackburn rovers",
+        "qpr": "queens park rangers", "blackburn": "blackburn rovers", "coventry": "coventry city",
         "bolton": "bolton wanderers", "wigan": "wigan athletic",
         "birmingham": "birmingham city", "charlton": "charlton athletic",
         # Bundesliga: keep explicit provider variants rather than dropping club prefixes.
@@ -147,6 +147,7 @@ def normalize_team(name):
         "1 union berlin": "union berlin", "1 heidenheim 1846": "heidenheim",
         "heidenheim 1846": "heidenheim", "1 koln": "koln", "cologne": "koln",
         "st pauli 1910": "st pauli", "ksv holstein 1900": "holstein kiel",
+        "sv 07 elversberg": "elversberg", "sv elversberg": "elversberg",
         "ksv holstein kiel": "holstein kiel",
         "sv darmstadt 98": "darmstadt", "darmstadt 98": "darmstadt",
         "hamburg": "hamburger sv", "hannover": "hannover 96",

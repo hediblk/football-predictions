@@ -8,7 +8,15 @@ A Python package for estimating every team's final league-position probabilities
 
 ## Website
 
-`site/` is a static, dependency-free page (dark "scoreboard" design; see [DESIGN.md](DESIGN.md)) showing the latest standings forecast for the top five leagues and the Champions League, including the projected knockout bracket. It reads the JSON in `site/data/`.
+`site/` is a static, dependency-free page (dark "scoreboard" design; see [DESIGN.md](DESIGN.md)) with three tabs. It reads the JSON in `site/data/`.
+
+- **Tables:** the latest standings forecast for the top five leagues and the Champions League. The Champions League page adds its fixtures by round (opening on the next matchday; knockout rounds join once drawn) or by team, with the same forecasts and calls as the Matches tab, plus the projected knockout bracket.
+- **Matches:** every fixture of a day across the six competitions, browsable by date, with home/draw/away chances, expected goals and the likeliest scores. Played matches show the score and whether the model **called** it (its likeliest outcome happened) or **missed**, plus **exact** when its likeliest score was right. The season record compares the hit rate with always backing the home side.
+- **Clubs:** a strength ranking of all 96 clubs in the five leagues, an attack-against-defence chart, and a profile per club (twelve big clubs up front): season record home and away with xG, the goals the model expects home and away for the rest of the season, upcoming fixtures, every played game against its pre-match forecast, points won against points expected, and finishing-place odds.
+
+Played matches are forecast as of 00:00 UTC on their match day from earlier results only, so the record never sees the result it is judged on.
+
+**Club ratings** come from each league's match model (goals and xG): the share of points a club would take off its league's average side on a neutral pitch. The attack rating rates a club as if its defence were as far above average as its attack, and the defence rating the reverse, so all three share one scale. To compare leagues, each league's ratings are multiplied by its average team rating in the [Opta Power Rankings](https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true) divided by the Premier League's (12 October 2026: Bundesliga 0.93, La Liga 0.93, Serie A 0.92, Ligue 1 0.92). Update `LEAGUE_STRENGTH` in `scripts/build_site_data.py` occasionally; Opta refreshes the league averages daily.
 
 `.github/workflows/site.yml` refreshes and deploys it: daily at 05:30 UTC (or on demand from the Actions tab via **Run workflow**) it reruns all six forecasts, commits `site/data` and redeploys GitHub Pages; pushes to `main` that touch `site/` redeploy without refreshing. It needs the `FOOTBALL_DATA_API_KEY` repository secret.
 
@@ -79,6 +87,8 @@ Goal rates support two adjustments:
 
 `out/pd_position_probs.html` shows the colored chart first, sorted by each team's most likely finishing position, with average position breaking ties. Two-decimal percentages and a continuous nonlinear scale make small probabilities easier to distinguish. CSVs contain position probabilities and a summary of expected points/position, point percentiles, and title/top-four/bottom-three probabilities. JSON records the cutoff, odds coverage, model settings, and seed.
 
+`pd_match_forecasts.json` holds every fixture's forecast (home/draw/away chances, expected goals, both teams scoring, over 2.5 goals and the four likeliest scores); played fixtures are forecast from models refitted at 00:00 UTC on their match day and include the probability of the actual score. `pd_club_ratings.csv` holds the club ratings above, before league scaling. `football-ucl` writes the same match file for the Champions League (`cl_match_forecasts.json`, 90-minute scores, team models only).
+
 Input snapshots and each forecast are archived under `out/snapshots/pd/<season>/<timestamp>/`. Point intervals are conditional on fitted team strengths; `*_mc_se_pp` measures simulation sampling error in percentage points, not model error.
 
 ## Customize
@@ -96,6 +106,7 @@ Use keyword arguments with `run_prediction`, or the corresponding CLI flags (`pr
 | `max_goals`, `lambda_reg` | `10`, `0.1` | Score-grid limit and model regularization |
 | `xg_weight` | Stored global calibration | Weight of xG strengths in log goal rates (0–1); `0` disables |
 | `h2h_weight`, `h2h_seasons` | `0`, `6` | Log-rate shift per goal of head-to-head residual; seasons of past meetings |
+| `match_forecasts` | `True` | Also forecast every fixture, played ones as of their match day (`--no-match-forecasts` skips it) |
 | `out_dir` | `"out"` | Output directory |
 
 ```python

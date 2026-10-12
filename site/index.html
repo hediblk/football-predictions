@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Final Table · Football Forecasts</title>
-<meta name="description" content="Simulated final-table probabilities for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League.">
+<meta name="description" content="Simulated final tables, match-by-match forecasts and club strength ratings for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League.">
 <meta name="theme-color" content="#131312">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23131312'/%3E%3Cg fill='%23eaa85e'%3E%3Ccircle cx='4' cy='4' r='1.6'/%3E%3Ccircle cx='8' cy='4' r='1.6'/%3E%3Ccircle cx='12' cy='4' r='1.6'/%3E%3Ccircle cx='12' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='12' r='1.6'/%3E%3C/g%3E%3Cg fill='%233f3b36'%3E%3Ccircle cx='4' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='4' cy='12' r='1.6'/%3E%3Ccircle cx='12' cy='12' r='1.6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,60 +16,139 @@
 <header class="top">
   <div class="top-in">
     <a class="logo" href="#">Final Table</a>
-    <nav class="nav" id="nav" aria-label="Competition"></nav>
+    <nav class="tabs" id="tabs" aria-label="Sections">
+      <a href="#la-liga" data-view="tables">Tables</a>
+      <a href="#matches" data-view="matches">Matches</a>
+      <a href="#clubs" data-view="clubs">Clubs</a>
+    </nav>
     <div class="status">
       <span class="lamp" id="lamp" aria-hidden="true"></span>
       <span id="status-text" title="Forecasts refresh daily at 05:30 UTC">Loading</span>
     </div>
   </div>
+  <div class="subnav" id="subnav"><nav class="nav" id="nav" aria-label="Competition"></nav></div>
 </header>
 
 <main class="page">
-  <fieldset class="frame hero" id="hero">
-    <legend id="hero-legend">Title</legend>
-    <div class="hero-in" id="hero-in"></div>
-  </fieldset>
+  <div id="view-tables">
+    <fieldset class="frame hero" id="hero">
+      <legend id="hero-legend">Title</legend>
+      <div class="hero-in" id="hero-in"></div>
+    </fieldset>
 
-  <section class="races" id="races" aria-label="Races"></section>
+    <section class="races" id="races" aria-label="Races"></section>
 
-  <fieldset class="frame">
-    <legend id="table-legend">Projected table</legend>
-    <div class="key" id="table-key"></div>
-    <div class="scroll"><table class="board" id="table"></table></div>
-    <p class="note" id="table-note"></p>
-  </fieldset>
+    <fieldset class="frame" id="rounds-frame" hidden>
+      <legend>Fixtures · round by round</legend>
+      <div class="round-nav" id="round-nav"></div>
+      <div id="rounds"></div>
+    </fieldset>
 
-  <fieldset class="frame" id="ko-frame" hidden>
-    <legend>Road to the final</legend>
-    <p class="note top-note">Chance of reaching each round across every simulated league phase and draw. Sixteen likeliest winners.</p>
-    <div class="scroll"><table class="board ko" id="ko-table"></table></div>
-  </fieldset>
+    <fieldset class="frame">
+      <legend id="table-legend">Projected table</legend>
+      <div class="key" id="table-key"></div>
+      <div class="scroll"><table class="board" id="table"></table></div>
+      <p class="note" id="table-note"></p>
+    </fieldset>
 
-  <fieldset class="frame" id="bracket-frame" hidden>
-    <legend>Projected bracket</legend>
-    <p class="note top-note" id="bracket-note"></p>
-    <div class="scroll"><div class="bracket" id="bracket"></div></div>
-  </fieldset>
+    <fieldset class="frame" id="ko-frame" hidden>
+      <legend>Road to the final</legend>
+      <p class="note top-note">Chance of reaching each round across every simulated league phase and draw. Sixteen likeliest winners.</p>
+      <div class="scroll"><table class="board ko" id="ko-table"></table></div>
+    </fieldset>
 
-  <fieldset class="frame method">
-    <legend>How it works</legend>
-    <dl>
-      <dt>Match model</dt>
-      <dd>A time-weighted Dixon–Coles goal model, blended with Elo ratings and expected-goals strengths, prices every remaining fixture.</dd>
-      <dt>Simulation</dt>
-      <dd>Every remaining scoreline is drawn 10,000 times and each table is ranked with its competition's tie-break rules. Every percentage is a share of those simulated seasons.</dd>
-      <dt>Ranges</dt>
-      <dd>Point ranges cover the middle 80% of outcomes (10th to 90th percentile). They show match-to-match luck, not doubt about the team ratings themselves.</dd>
-    </dl>
-  </fieldset>
+    <fieldset class="frame" id="bracket-frame" hidden>
+      <legend>Projected bracket</legend>
+      <p class="note top-note" id="bracket-note"></p>
+      <div class="scroll"><div class="bracket" id="bracket"></div></div>
+    </fieldset>
+
+    <fieldset class="frame method">
+      <legend>How it works</legend>
+      <dl>
+        <dt>Match model</dt>
+        <dd>A time-weighted Dixon–Coles goal model, blended with Elo ratings and expected-goals strengths, prices every remaining fixture.</dd>
+        <dt>Simulation</dt>
+        <dd>Every remaining scoreline is drawn 10,000 times and each table is ranked with its competition's tie-break rules. Every percentage is a share of those simulated seasons.</dd>
+        <dt>Ranges</dt>
+        <dd>Point ranges cover the middle 80% of outcomes (10th to 90th percentile). They show match-to-match luck, not doubt about the team ratings themselves.</dd>
+      </dl>
+    </fieldset>
+  </div>
+
+  <div id="view-matches" hidden>
+    <fieldset class="frame m-top">
+      <legend>Matches</legend>
+      <div class="days" id="days"></div>
+      <div class="chips" id="m-chips" role="group" aria-label="Competition"></div>
+    </fieldset>
+    <div id="m-day" aria-live="polite"></div>
+    <fieldset class="frame">
+      <legend>Model record · this season</legend>
+      <p class="note top-note">Every played match is forecast at 00:00 UTC on its match day from earlier results only, so the record never peeks at the result. A call is right when the model's likeliest outcome (home win, draw or away win) happens; the baseline always picks the home side.</p>
+      <div class="scroll"><table class="board record" id="m-record-table"></table></div>
+    </fieldset>
+  </div>
+
+  <div id="view-clubs" hidden>
+    <div id="clubs-index">
+      <fieldset class="frame hero">
+        <legend id="c-legend">Club strength</legend>
+        <div class="hero-in" id="c-hero"></div>
+      </fieldset>
+      <fieldset class="frame">
+        <legend>Big clubs</legend>
+        <div class="cboard" id="c-board"></div>
+      </fieldset>
+      <fieldset class="frame">
+        <legend>Power ranking</legend>
+        <div class="chips" id="c-chips" role="group" aria-label="League"></div>
+        <div class="scroll"><table class="board rank" id="c-rank"></table></div>
+        <button type="button" class="more-btn" id="c-more">Show all</button>
+      </fieldset>
+      <fieldset class="frame">
+        <legend>Attack against defence</legend>
+        <div class="scatter" id="c-scatter"></div>
+        <p class="note" id="c-scatter-note"></p>
+      </fieldset>
+      <fieldset class="frame method">
+        <legend>How the ratings work</legend>
+        <dl>
+          <dt>Rating</dt>
+          <dd>The share of the points a club would take off an average side on a neutral pitch, from the same match model that drives the forecasts: goals and expected goals, recent games counting more.</dd>
+          <dt>Attack, defence</dt>
+          <dd>Attack rates a club as if its defence were exactly as good as its attack, and defence the reverse, so all three numbers share one scale. Scores and Concedes are goals per game against an average side from the club's own league.</dd>
+          <dt>Across leagues</dt>
+          <dd>Each league's ratings are scaled by its average team rating in the Opta Power Rankings, relative to the Premier League: <span id="c-factors"></span> (12 Oct 2026).</dd>
+        </dl>
+      </fieldset>
+    </div>
+
+    <div id="club-profile" hidden>
+      <p class="crumbs"><a href="#clubs">← All clubs</a></p>
+      <fieldset class="frame hero">
+        <legend id="p-legend">Club</legend>
+        <div class="hero-in" id="p-hero"></div>
+      </fieldset>
+      <section class="tiles" id="p-tiles" aria-label="Outlook"></section>
+      <div class="pair">
+        <fieldset class="frame"><legend>Season so far</legend><div id="p-season"></div></fieldset>
+        <fieldset class="frame"><legend>Goals: reality and model</legend><div id="p-goals"></div></fieldset>
+      </div>
+      <fieldset class="frame"><legend>Next up</legend><div id="p-next"></div></fieldset>
+      <fieldset class="frame"><legend>Results against the model</legend><div id="p-results"></div></fieldset>
+      <fieldset class="frame"><legend>Strength</legend><div id="p-strength"></div></fieldset>
+      <fieldset class="frame"><legend>Where they finish</legend><div id="p-finish"></div></fieldset>
+    </div>
+  </div>
 </main>
 
 <footer class="foot">
-  <span>Final Table · results from football-data.org · xG from Understat</span>
+  <span>Final Table · results from football-data.org · xG from Understat · league strength from Opta Power Rankings</span>
   <span id="foot-updated"></span>
 </footer>
 
 <div class="tip" id="tip" role="tooltip" hidden></div>
-<script src="assets/app.js" defer></script>
+<script type="module" src="assets/main.js"></script>
 </body>
 </html>

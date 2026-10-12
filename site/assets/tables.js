@@ -1,139 +1,49 @@
-"use strict";
+// Tables view: the projected final table for one competition.
+import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus } from "./core.js";
+import { showRounds } from "./rounds.js";
 
-// Display order; the first entry is the default page.
-const COMPS = [
-  { slug: "la-liga", label: "La Liga" },
-  { slug: "premier-league", label: "Premier League" },
-  { slug: "bundesliga", label: "Bundesliga" },
-  { slug: "ligue-1", label: "Ligue 1" },
-  { slug: "serie-a", label: "Serie A" },
-  { slug: "champions-league", label: "Champions League" },
-];
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
-// Mirrors the cron in .github/workflows/site.yml (daily, 05:30 UTC).
-const REFRESH_UTC = { hour: 5, minute: 30 };
-const STALE_HOURS = 30;
-
-const $ = (id) => document.getElementById(id);
-const cache = new Map();
+let clubSlugs = new Set();
 let current = null;
 
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-const nf = new Intl.NumberFormat("en-US");
-const ordinal = (n) => {
-  const s = ["th", "st", "nd", "rd"], v = n % 100;
-  return n + (s[(v - 20) % 10] || s[v] || s[0]);
-};
-
-/* table cells drop the % sign (headers carry it); prose keeps it */
-function num(p) {
-  if (p <= 0) return "–";
-  if (p < 0.5) return "<1";
-  if (p > 99.5) return ">99";
-  return Math.round(p).toString();
-}
-const pct = (p) => (p <= 0 ? "0%" : num(p) + "%");
-
-function when(iso) {
-  return new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC";
-}
-function ago(iso) {
-  const mins = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000));
-  if (mins < 60) return `${mins} min ago`;
-  const h = Math.round(mins / 60);
-  return h < 48 ? `${h} h ago` : `${Math.round(h / 24)} days ago`;
-}
-
-/* bulb brightness: near-linear so only real contenders for a place light up; `top` is the brightest chance on the board */
-function bulb(p, top) {
-  const t = Math.min(1, Math.pow(Math.max(0, p) / top, 0.9));
-  return t < 0.02 ? "var(--bulb-off)" : `color-mix(in srgb, var(--amber) ${Math.round(t * 100)}%, var(--bulb-off))`;
-}
-
-/* ---------- navigation ---------- */
-function renderNav(active) {
-  $("nav").innerHTML = COMPS.map((c) =>
-    `<button type="button" data-slug="${c.slug}" aria-current="${c.slug === active}">${c.label}</button>`).join("");
-  const on = $("nav").querySelector('[aria-current="true"]');
-  if (on) on.scrollIntoView({ block: "nearest", inline: "nearest" });
-}
-$("nav").addEventListener("click", (e) => {
-  const b = e.target.closest("button[data-slug]");
-  if (b) location.hash = b.dataset.slug;
-});
-window.addEventListener("hashchange", route);
-// Keep the "updated / next" wording current on a page left open.
-setInterval(() => { if (cache.has(current)) renderStatus(cache.get(current)); }, 60000);
-
-function route() {
-  const comp = COMPS.find((c) => c.slug === location.hash.slice(1)) || COMPS[0];
-  renderNav(comp.slug);
-  load(comp.slug);
-}
-
-async function fetchData(slug) {
-  const res = await fetch(`data/${slug}.json`, { cache: "no-cache" });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.json();
-}
-
-async function load(slug) {
+export async function showTables(slug) {
   current = slug;
-  if (!cache.has(slug)) {
-    $("status-text").textContent = "Loading";
-    try {
-      cache.set(slug, await fetchData(slug));
-    } catch (err) {
-      $("hero-in").innerHTML = `<div class="who"><h1>No signal</h1><p class="caption">This forecast could not be loaded (${esc(err.message)}).</p></div>`;
-      $("status-text").textContent = "Offline";
-      return;
-    }
+  let data;
+  try {
+    [data] = await Promise.all([getJSON(`${slug}.json`), loadClubSlugs()]);
+  } catch (err) {
+    $("hero-in").innerHTML = `<div class="who"><h1>No signal</h1><p class="caption">This forecast could not be loaded (${esc(err.message)}).</p></div>`;
+    $("status-text").textContent = "Offline";
+    return;
   }
-  if (current === slug) render(cache.get(slug), true);
+  if (current === slug) render(data);
 }
 
-/* the most recent scheduled refresh at or before now */
-function lastScheduledRun(now) {
-  const run = new Date(now);
-  run.setUTCHours(REFRESH_UTC.hour, REFRESH_UTC.minute, 0, 0);
-  if (run > now) run.setUTCDate(run.getUTCDate() - 1);
-  return run;
+async function loadClubSlugs() {
+  try {
+    const clubs = await getJSON("clubs.json");
+    clubSlugs = new Set(clubs.clubs.map((c) => c.slug));
+  } catch { /* profiles are optional here */ }
 }
 
-function nextRunText(data) {
-  const now = new Date();
-  const last = lastScheduledRun(now);
-  // The run takes ~10 minutes; until its data lands, say so rather than promising tomorrow.
-  if (new Date(data.generated_at) < last && now - last < 3.6e6) return "updating now";
-  const mins = Math.ceil((last.getTime() + 864e5 - now) / 60000);
-  return mins < 60 ? `next in ${mins} min` : `next in ${Math.round(mins / 60)} h`;
-}
-
-function renderStatus(data) {
-  const hours = (Date.now() - new Date(data.generated_at)) / 3.6e6;
-  $("lamp").classList.toggle("stale", hours > STALE_HOURS);
-  $("status-text").textContent = `Updated ${ago(data.generated_at)} · ${nextRunText(data)}`;
-  $("status-text").title = `Model run ${when(data.generated_at)} · results through ${when(data.data_cutoff)} · refreshes daily at 05:30 UTC`;
-  $("foot-updated").textContent = `Model run ${when(data.generated_at)} · results through ${when(data.data_cutoff)}`;
-}
-
-/* ---------- page ---------- */
-function render(data, fresh) {
+function render(data) {
   const ucl = data.kind === "ucl";
   document.title = `${data.name} forecast ${data.season} · Final Table`;
-  renderStatus(data);
-  renderHero(data, fresh);
+  setStatus(data.generated_at, data.data_cutoff);
+  renderHero(data);
   renderRaces(data);
   renderTable(data);
+  $("rounds-frame").hidden = !ucl;
   $("ko-frame").hidden = !ucl;
   $("bracket-frame").hidden = !ucl;
   if (ucl) {
+    showRounds(data);
     renderKnockouts(data);
     renderBracket(data);
   }
 }
 
-function renderHero(data, fresh) {
+function renderHero(data) {
   const ucl = data.kind === "ucl";
   const byTitle = [...data.teams].sort((a, b) => b.title - a.title);
   const [fav, ...rest] = byTitle;
@@ -149,7 +59,7 @@ function renderHero(data, fresh) {
       <h1>${esc(fav.name)}</h1>
       <p class="caption">${ucl ? "Wins it" : "Champions"} in <b>${nf.format(wins)}</b> of ${nf.format(data.n_sim)} ${runs} · ${rivals} · ${extra}</p>
     </div>
-    <div class="numeral${fresh ? " on" : ""}" role="img" aria-label="${esc(`${fav.name}: ${pct(fav.title)} chance`)}">${Math.round(fav.title)}<sup>%</sup></div>`;
+    <div class="numeral on" role="img" aria-label="${esc(`${fav.name}: ${pct(fav.title)} chance`)}">${Math.round(fav.title)}<sup>%</sup></div>`;
 }
 
 function raceLine(title, note, rows, field, tone, emptyText) {
@@ -238,10 +148,14 @@ function renderTable(data) {
       <th class="l"><span class="bulb-head" style="--b:${size}px">${head}</span></th>
       ${cols.map(([, label]) => `<th>${label}</th>`).join("")}
     </tr></thead><tbody>${rows}</tbody>`;
-  table.onclick = (e) => { const tr = e.target.closest("tr.row"); if (tr) toggleDetail(data, tr, span); };
+  table.onclick = (e) => {
+    if (e.target.closest("a")) return;
+    const tr = e.target.closest("tr.row");
+    if (tr) toggleDetail(data, tr, span);
+  };
   table.onkeydown = (e) => {
     const tr = e.target.closest("tr.row");
-    if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleDetail(data, tr, span); }
+    if (tr && e.target === tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleDetail(data, tr, span); }
   };
 
   $("table-legend").textContent = ucl ? "League phase · projected" : "Projected table";
@@ -278,6 +192,15 @@ function toggleDetail(data, tr, span) {
   if (open) return;
   const t = data.teams[+tr.dataset.i];
   const bad = data.zones[data.zones.length - 1];
+  const row = document.createElement("tr");
+  row.className = "detail";
+  const profile = t.slug && clubSlugs.has(t.slug) ? `<a class="more" href="#clubs/${t.slug}">${esc(t.name)} club profile →</a>` : "";
+  row.innerHTML = `<td colspan="${span}">${spreadPanel(t, bad.from, profile)}</td>`;
+  tr.after(row);
+}
+
+/* finishing-place spread for one club: key numbers and one bar per place */
+export function spreadPanel(t, dropFrom, extra = "") {
   const max = Math.max(...t.probs);
   const mode = t.probs.indexOf(max) + 1;
   const many = t.probs.length > 20;
@@ -286,12 +209,10 @@ function toggleDetail(data, tr, span) {
     const label = !many || [1, 8, 9, 24, 25, 36].includes(pos) ? pos : "";
     return `<div class="col" data-tip="${esc(`<b>${esc(t.name)}</b> ${ordinal(pos)}: <b>${p.toFixed(2)}%</b>`)}">
       ${pos === mode ? `<span class="v">${Math.round(p)}</span>` : ""}
-      <div class="bar" style="height:${((p / max) * 100).toFixed(1)}%${pos >= bad.from ? ";--c:var(--red)" : ""}"></div>
+      <div class="bar" style="height:${((p / max) * 100).toFixed(1)}%${pos >= dropFrom ? ";--c:var(--red)" : ""}"></div>
       <span class="x">${label}</span></div>`;
   }).join("");
-  const row = document.createElement("tr");
-  row.className = "detail";
-  row.innerHTML = `<td colspan="${span}"><div class="det">
+  return `<div class="det">
     <dl>
       <dt>Projected</dt><dd>${t.xpts.toFixed(1)} pts</dd>
       <dt>80% range</dt><dd>${t.p10}–${t.p90} pts</dd>
@@ -299,8 +220,8 @@ function toggleDetail(data, tr, span) {
       <dt>Average finish</dt><dd>${t.xpos.toFixed(1)}</dd>
     </dl>
     <div class="segs" role="img" aria-label="${esc(`${t.name}: chance of each finishing place`)}">${bars}</div>
-  </div></td>`;
-  tr.after(row);
+    ${extra}
+  </div>`;
 }
 
 /* ---------- Champions League extras ---------- */
@@ -338,29 +259,3 @@ function renderBracket(data) {
     ${champion ? `<div class="sub">${pct(champion.title)} to win across every draw</div>` : ""}</div></div>`;
   $("bracket-note").textContent = "One path through the knockouts: the most likely league-phase order, a permitted draw, and the favourite going through in every tie (the number is that tie's chance). Pairings are illustrative until the real draw.";
 }
-
-/* ---------- tooltip ---------- */
-const tip = $("tip");
-let tipTimer;
-function showTip(el, x, y) {
-  tip.innerHTML = el.dataset.tip;
-  tip.hidden = false;
-  const r = tip.getBoundingClientRect();
-  tip.style.left = Math.min(window.innerWidth - r.width - 8, Math.max(8, x + 14)) + "px";
-  tip.style.top = (y - r.height - 12 < 8 ? y + 18 : y - r.height - 12) + "px";
-}
-document.addEventListener("mousemove", (e) => {
-  const el = e.target.closest && e.target.closest("[data-tip]");
-  if (el) showTip(el, e.clientX, e.clientY);
-  else tip.hidden = true;
-});
-document.addEventListener("touchstart", (e) => {
-  const el = e.target.closest && e.target.closest("[data-tip]");
-  if (!el) { tip.hidden = true; return; }
-  showTip(el, e.touches[0].clientX, e.touches[0].clientY);
-  clearTimeout(tipTimer);
-  tipTimer = setTimeout(() => { tip.hidden = true; }, 2500);
-}, { passive: true });
-window.addEventListener("scroll", () => { tip.hidden = true; }, { passive: true });
-
-route();

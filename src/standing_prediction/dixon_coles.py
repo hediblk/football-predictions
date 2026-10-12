@@ -45,28 +45,7 @@ class DixonColesModel:
 
     def score_matrix(self, home, away, *, max_goals=10):
         lambda_, mu_ = self.expected_goals(home, away)
-        goals = np.arange(max_goals + 1, dtype=int)
-
-        home_p = _poisson_probs(goals, lambda_)
-        away_p = _poisson_probs(goals, mu_)
-        matrix = np.outer(home_p, away_p)
-
-        # Dixon–Coles low-score correction (tau) affects only 0/1 goals combinations.
-        tau = np.ones_like(matrix)
-        rho = self.rho
-        tau[0, 0] = max(0.0, 1.0 - (lambda_ * mu_ * rho))
-        tau[0, 1] = max(0.0, 1.0 + (lambda_ * rho))
-        tau[1, 0] = max(0.0, 1.0 + (mu_ * rho))
-        tau[1, 1] = max(0.0, 1.0 - rho)
-
-        matrix = matrix * tau
-        total = float(matrix.sum())
-        if total <= 0:
-            # Fallback to independent Poisson if correction collapses mass.
-            matrix = np.outer(home_p, away_p)
-            total = float(matrix.sum())
-        matrix = matrix / total
-        return goals, matrix
+        return score_matrix_from_rates(lambda_, mu_, self.rho, max_goals=max_goals)
 
     def match_outcome_probs(self, home, away, *, max_goals=10):
         goals, matrix = self.score_matrix(home, away, max_goals=max_goals)
@@ -238,6 +217,31 @@ def fit_dixon_coles(
         xi=xi,
         fitted_at=datetime.utcnow(),
     )
+
+
+def score_matrix_from_rates(lambda_, mu_, rho, *, max_goals=10):
+    """Home-by-away goal probabilities for two Poisson rates with the Dixon–Coles low-score correction."""
+    goals = np.arange(max_goals + 1, dtype=int)
+
+    home_p = _poisson_probs(goals, lambda_)
+    away_p = _poisson_probs(goals, mu_)
+    matrix = np.outer(home_p, away_p)
+
+    # Dixon–Coles low-score correction (tau) affects only 0/1 goals combinations.
+    tau = np.ones_like(matrix)
+    tau[0, 0] = max(0.0, 1.0 - (lambda_ * mu_ * rho))
+    tau[0, 1] = max(0.0, 1.0 + (lambda_ * rho))
+    tau[1, 0] = max(0.0, 1.0 + (mu_ * rho))
+    tau[1, 1] = max(0.0, 1.0 - rho)
+
+    matrix = matrix * tau
+    total = float(matrix.sum())
+    if total <= 0:
+        # Fallback to independent Poisson if correction collapses mass.
+        matrix = np.outer(home_p, away_p)
+        total = float(matrix.sum())
+    matrix = matrix / total
+    return goals, matrix
 
 
 def _poisson_probs(goals, mean):
