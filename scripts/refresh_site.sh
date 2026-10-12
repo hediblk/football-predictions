@@ -18,16 +18,16 @@ for competition in PL PD BL1 SA FL1; do
   echo "== $competition"
   # Remove stale outputs so a failed run can't republish an old forecast as new.
   prefix=$(echo "$competition" | tr '[:upper:]' '[:lower:]')
-  rm -f "$OUT/$prefix"_{summary,position_probs,standings_snapshot}.csv "$OUT/${prefix}_metadata.json"
+  rm -f "$OUT/$prefix"_{summary,position_probs,standings_snapshot,matches_snapshot,club_ratings}.csv "$OUT/$prefix"_{metadata,match_forecasts}.json
   football-predict --competition "$competition" --n-sim "$N_SIM" --no-use-odds --out-dir "$OUT" || failed+=("$competition")
   sleep 15  # football-data.org free tier allows 10 requests per minute
 done
 echo "== UCL"
 sleep 45
-rm -f "$OUT"/cl_{forecast,metadata}.json "$OUT"/cl_standings_snapshot.csv
+rm -f "$OUT"/cl_{forecast,metadata,match_forecasts}.json "$OUT"/cl_{standings_snapshot,matches_snapshot}.csv
 football-ucl --n-sim "$N_SIM" --out-dir "$OUT" || failed+=(UCL)
 
-python scripts/build_site_data.py --src "$OUT" --dest site/data
+python scripts/build_site_data.py --src "$OUT" --dest site/data || exit 1
 if ((${#failed[@]})); then
   warn "Forecast failed for ${failed[*]}; the site keeps their previous data."
 fi
