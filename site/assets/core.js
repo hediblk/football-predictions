@@ -76,10 +76,17 @@ export function getJSON(path) {
 /* ---------- match helpers (probabilities are home, draw, away) ---------- */
 export const outcome = (score) => (score[0] > score[1] ? 0 : score[0] === score[1] ? 1 : 2);
 export const pick = (p) => p.indexOf(Math.max(...p));
+/* the predicted score: the likeliest scoreline within the picked outcome, so it never contradicts the pick
+   (older data has no `call`; its top four always hold one) */
+export function callScore(m) {
+  if (m.call) return m.call;
+  const fav = pick(m.p);
+  return m.top.find(([h, a]) => outcome([h, a]) === fav) || m.top[0];
+}
 export function verdict(m) {
   if (!m.score || !m.p) return null;
   const actual = outcome(m.score);
-  const [h, a] = m.top[0];
+  const [h, a] = callScore(m);
   return { hit: pick(m.p) === actual, exact: h === m.score[0] && a === m.score[1], given: m.p[actual], actual };
 }
 /* the match from one club's side: [win, draw, loss] and [for, against] */

@@ -45,6 +45,17 @@ def test_describe_match_summarises_the_distribution():
     assert describe_match(matrix, (0.6, 0.25, 0.15), score=(15, 0))["p_score"] == 0
 
 
+def test_pick_score_agrees_with_the_picked_outcome():
+    # Close teams: 1-1 is the single likeliest score, but a home win is the likeliest outcome.
+    _, matrix = score_matrix_from_rates(1.3, 1.1, 0.0)
+    out = describe_match(matrix, (0.42, 0.30, 0.28))
+    assert out["scorelines"][0][:2] == [1, 1]
+    home, away, p = out["pick_score"]
+    assert home > away
+    dist = scoreline_distribution(matrix, (0.42, 0.30, 0.28))
+    assert p == pytest.approx(dist[home, away]) == pytest.approx(max(dist[h, a] for h in range(dist.shape[0]) for a in range(h)))
+
+
 def test_played_matches_are_forecast_only_from_earlier_results():
     history = round_robin("2024-08-01", seed=1)
     season = round_robin("2025-08-01", seed=2)

@@ -202,6 +202,9 @@ def export_matches(src, slug, prefix):
                 "top": [[home, away, num(p, 4)] for home, away, p in match["scorelines"]],
                 "btts": num(match["btts"], 3), "o25": num(match["over_2_5"], 3), "at": match["forecast_at"],
             })
+            if "pick_score" in match:
+                home, away, p = match["pick_score"]
+                row["call"] = [home, away, num(p, 4)]
             if "p_score" in match:
                 row["p_score"] = num(match["p_score"], 4)
         matches.append(row)

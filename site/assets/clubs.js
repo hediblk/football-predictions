@@ -1,7 +1,7 @@
 // Clubs view: a strength ranking for the five leagues and a profile for every club.
 import {
   LEAGUES, compBySlug, $, esc, getJSON, setStatus, ordinal, pct, pct1, dec, verdict, sideProbs, sidePair,
-  outcome, expandable, bulb, shortDate, clock,
+  outcome, expandable, bulb, shortDate, clock, callScore,
 } from "./core.js";
 import { matchPanel, record } from "./matches.js";
 import { spreadPanel } from "./tables.js";
@@ -32,6 +32,8 @@ export async function showClubs(slug) {
 }
 
 const leagueName = (slug) => compBySlug[slug].label;
+/* a category rank: #1 lit, top ten warm, the rest dim */
+const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top" : ""}${cls}">#${rank}</${tag}>`;
 const leagueTables = () => Promise.all(LEAGUES.map((l) => getJSON(`${l.slug}.json`).catch(() => null)));
 const rowFor = (tables, club) => {
   const table = tables.find((t) => t && t.slug === club.league);
@@ -63,7 +65,7 @@ async function showIndex() {
       <span class="nm">${esc(c.name)}</span>
       <span class="lg">${esc(place)}</span>
       <span class="rt">${dec(c.rating)}</span>
-      <span class="rk">#${c.rating_rank}</span>
+      ${rankTag(c.rating_rank, "span", " rk")}
       <span class="ad"><span>Att</span><i style="--w:${c.attack}%"></i><b>${dec(c.attack)}</b></span>
       <span class="ad def"><span>Def</span><i style="--w:${c.defense}%"></i><b>${dec(c.defense)}</b></span>
     </a>`;
@@ -91,10 +93,10 @@ function renderRanking(tables) {
         <td class="club l"><a href="#clubs/${c.slug}">${esc(c.name)}</a></td>
         <td class="l lg">${esc(compBySlug[c.league].short)}</td>
         <td class="b">${dec(c.rating)}</td>
-        <td>${dec(c.attack)} <small>#${c.attack_rank}</small></td>
-        <td>${dec(c.defense)} <small>#${c.defense_rank}</small></td>
+        <td>${dec(c.attack)} ${rankTag(c.attack_rank)}</td>
+        <td>${dec(c.defense)} ${rankTag(c.defense_rank)}</td>
         <td>${dec(c.gf, 2)}</td><td>${dec(c.ga, 2)}</td>
-        <td>${row ? ordinal(row.position) : "–"}</td></tr>`;
+        <td>${row ? (row.position === 1 ? `<span class="crk first">1st</span>` : ordinal(row.position)) : "–"}</td></tr>`;
     }).join("")}</tbody>`;
   $("c-more").hidden = limit >= shown.length;
   $("c-more").textContent = `Show all ${shown.length} clubs`;
@@ -208,7 +210,6 @@ async function showProfile(club) {
   const all = [...league, ...europe].sort((a, b) => a.kickoff.localeCompare(b.kickoff));
   profile = new Map(all.map((m) => [`${m.comp}:${m.id}`, m]));
   const uclTeam = ucl ? ucl.teams.find((t) => t.id === club.id) : null;
-  const played = all.filter((m) => m.score);
 
   // Hero: rating as the lit number, the season in the caption.
   const leaguePlayed = league.filter((m) => m.score);
@@ -218,30 +219,26 @@ async function showProfile(club) {
   $("p-hero").innerHTML = `
     <div class="who">
       <h1>${esc(club.name)}</h1>
-      <p class="caption">${ordinal(team.position)} in ${esc(comp.label)} after ${team.played} · <b>${team.points}</b> pts (W${wdl[0]} D${wdl[1]} L${wdl[2]})
-        · projected <b>${Math.round(team.xpts)}</b> pts · <b>#${club.rating_rank}</b> of ${clubs.clubs.length} clubs by strength</p>
+      <p class="caption">${ordinal(team.position)} in ${esc(comp.label)} · <b>${team.points}</b> pts from ${team.played} (W${wdl[0]} D${wdl[1]} L${wdl[2]})
+        · the big number is its strength, <b>#${club.rating_rank}</b> of ${clubs.clubs.length}: the share of points it would take off an average side</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${club.name}: rating ${dec(club.rating)}`)}">${Math.round(club.rating)}<sup>%</sup></div>`;
 
   // Outlook tiles.
   const zones = Object.fromEntries(table.zones.map((z) => [z.key, z]));
-  const mode = team.probs.indexOf(Math.max(...team.probs)) + 1;
-  const calls = played.map(verdict).filter(Boolean);
   const tiles = [
     ["Projected points", Math.round(team.xpts), `80% range ${team.p10}–${team.p90}`],
-    ["Likeliest finish", ordinal(mode), `${pct(team.probs[mode - 1])} chance`],
     ["Title", pct(team.title), "finish first"],
     [`Top ${zones.ucl.to}`, pct(team.ucl), "Champions League places"],
   ];
   if (team.releg >= 1) tiles.push(["Relegation", pct(team.releg), `${ordinal(zones.releg.from)} or lower`]);
   if (uclTeam) tiles.push(["Wins the UCL", pct(uclTeam.title), `Top 8 ${pct(uclTeam.r16)} · final ${pct(uclTeam.stages.final)}`]);
-  tiles.push(["Model on their games", calls.length ? `${calls.filter((v) => v.hit).length}/${calls.length}` : "–", calls.length ? "results called" : "no games yet"]);
   $("p-tiles").innerHTML = tiles.map(([label, value, sub]) => `<div class="tile"><h2>${label}</h2><b>${value}</b><span>${sub}</span></div>`).join("");
 
   renderSeason(league, europe, uclTeam);
-  renderGoals(club, league);
+  renderGoals(league);
   renderNext(all);
-  renderResults(club, all, league);
+  renderResults(all);
   renderStrength(club);
   $("p-finish").innerHTML = spreadPanel(team, zones.releg.from);
 }
@@ -277,31 +274,20 @@ function renderSeason(league, europe, uclTeam) {
     ${uclTeam ? `<p class="note">Champions League league phase: ${ordinal(uclTeam.position)} on ${uclTeam.points} pts after ${uclTeam.played}.</p>` : ""}`;
 }
 
-/* actual goals and xG per game against what the model expects in the rest of the season, home and away */
-function renderGoals(club, league) {
-  const per = (rows, pick) => (rows.length ? rows.reduce((s, m) => s + pick(m), 0) / rows.length : null);
-  const block = (home) => {
+/* goals and xG per league game against what the model expects in the games left */
+function renderGoals(league) {
+  const per = (rows, f, i, home) => (rows.length ? rows.reduce((t, m) => t + sidePair(m[f], home)[i], 0) / rows.length : null);
+  const line = (label, home, i) => {
     const played = league.filter((m) => m.score && m.isHome === home);
-    const withXg = played.filter((m) => m.xg);
     const ahead = league.filter((m) => !m.score && m.exp && m.isHome === home);
-    const v = (rows, field, i) => per(rows, (m) => sidePair(m[field], home)[i]);
-    return {
-      gf: v(played, "score", 0), ga: v(played, "score", 1),
-      xg: v(withXg, "xg", 0), xga: v(withXg, "xg", 1),
-      pre: v(played.filter((m) => m.exp), "exp", 0), prea: v(played.filter((m) => m.exp), "exp", 1),
-      next: v(ahead, "exp", 0), nexta: v(ahead, "exp", 1), games: ahead.length,
-    };
+    const cells = [per(played, "score", i, home), per(played.filter((m) => m.xg), "xg", i, home), per(ahead, "exp", i, home)];
+    return `<tr><td class="l">${label}</td>${cells.map((v, k) => `<td${k === 2 ? ' class="lit"' : ""}>${v == null ? "–" : dec(v, 2)}</td>`).join("")}</tr>`;
   };
-  const h = block(true), a = block(false);
-  const cell = (val) => `<td>${val == null ? "–" : dec(val, 2)}</td>`;
-  const row = (label, s, k) => `<tr><td class="l">${label}</td>${cell(s[k[0]])}${cell(s[k[1]])}${cell(s[k[2]])}<td class="lit">${s[k[3]] == null ? "–" : dec(s[k[3]], 2)}</td></tr>`;
-  const head = `<thead><tr><th class="l"></th><th>Goals</th><th>xG</th><th>Model pre-match</th><th>Model, rest of season</th></tr></thead>`;
-  $("p-goals").innerHTML = `
-    <h3 class="sub">Scored per game</h3>
-    <div class="scroll"><table class="board stats">${head}<tbody>${row("Home", h, ["gf", "xg", "pre", "next"])}${row("Away", a, ["gf", "xg", "pre", "next"])}</tbody></table></div>
-    <h3 class="sub">Conceded per game</h3>
-    <div class="scroll"><table class="board stats">${head}<tbody>${row("Home", h, ["ga", "xga", "prea", "nexta"])}${row("Away", a, ["ga", "xga", "prea", "nexta"])}</tbody></table></div>
-    <p class="note">League games. xG is Understat's chance quality; the model's expected goals blend team strengths from goals and xG. The last column averages its expectation over the ${h.games} home and ${a.games} away league games left.</p>`;
+  const left = league.filter((m) => !m.score).length;
+  $("p-goals").innerHTML = `<div class="scroll"><table class="board stats">
+    <thead><tr><th class="l">Per game</th><th>Goals</th><th>xG</th><th>Model, next ${left}</th></tr></thead>
+    <tbody>${line("Scored at home", true, 0)}${line("Scored away", false, 0)}${line("Conceded at home", true, 1)}${line("Conceded away", false, 1)}</tbody></table></div>
+    <p class="note">League games. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>`;
 }
 
 function clubRow(m) {
@@ -312,7 +298,7 @@ function clubRow(m) {
   const cells = p ? `<span class="m-probs">${p.map((q, i) => `<span class="pc${q === top ? " fav" : ""}${i === r ? " act" : ""}"
       data-tip="${esc(`${RESULT_WORD[i]}: <b>${(q * 100).toFixed(1)}%</b>`)}"><i style="background:${bulb(q, top)}"></i><b>${RESULT[i]}</b>${Math.round(q * 100)}</span>`).join("")}</span>` : "";
   const score = m.score ? (() => { const [gf, ga] = sidePair(m.score, m.isHome); return `<span class="res r${r}">${RESULT[r]}</span> ${gf}–${ga}`; })()
-    : (m.exp ? (() => { const [f, a] = sidePair(m.exp, m.isHome); return `<span class="xp">${dec(f)}–${dec(a)}</span>`; })() : "");
+    : (m.p ? (() => { const [f, a] = sidePair(callScore(m), m.isHome); return `<span class="xp">${f}–${a}</span>`; })() : "");
   const v = verdict(m);
   const badge = v ? `<span class="m-verdict ${v.hit ? "hit" : "miss"}">${v.hit ? "Called" : "Missed"}${v.exact ? "<em>Exact</em>" : ""}</span>`
     : `<span class="m-verdict pick">${new Date(m.kickoff) < Date.now() ? "Result pending" : clock(m.kickoff)}</span>`;
@@ -326,63 +312,37 @@ function clubRow(m) {
 function renderNext(all) {
   const ahead = all.filter((m) => !m.score).slice(0, 6);
   $("p-next").innerHTML = ahead.length
-    ? `<div class="clist">${ahead.map(clubRow).join("")}</div><p class="note">W/D/L chances from this club's side; the score column is the model's expected goals.</p>`
+    ? `<div class="clist">${ahead.map(clubRow).join("")}</div><p class="note">W/D/L chances from this club's side; the score is the model's pick, the likeliest score for its likeliest result.</p>`
     : `<p class="note">No fixtures left.</p>`;
 }
 
-function renderResults(club, all, league) {
+function renderResults(all) {
   const played = all.filter((m) => m.score).reverse();
   const r = record(played);
   const avg = r.n ? pct1(r.given) : "–";
   $("p-results").innerHTML = played.length ? `
     <p class="lead">Called <b>${r.hits} of ${r.n}</b> results · <b>${r.exact}</b> exact score${r.exact === 1 ? "" : "s"} · gave the actual result <b>${avg}</b> on average.</p>
-    ${pointsChart(club, league)}
+    ${callStrip([...played].reverse())}
     <div class="clist">${played.map(clubRow).join("")}</div>
     <p class="note">Each forecast was made at 00:00 UTC on match day from earlier results only. Tap a game for the scorelines the model expected.</p>`
     : `<p class="note">No games played yet.</p>`;
 }
 
-/* league points against the points the pre-match forecasts expected, game by game */
-function pointsChart(club, league) {
-  const games = league.filter((m) => m.score && m.p);
-  if (games.length < 2) return "";
-  let pts = 0, xpts = 0;
-  const series = games.map((m) => {
-    const [w, d] = sideProbs(m, m.isHome);
-    pts += [3, 1, 0][sideResult(m)];
-    xpts += 3 * w + d;
-    return { m, pts, xpts };
-  });
-  const W = Math.round(Math.min(780, Math.max(300, $("p-results").clientWidth || 640)));
-  const H = W < 500 ? 200 : 220, pad = { l: 30, r: 78, t: 14, b: 30 };
-  const top = Math.max(3, Math.ceil(Math.max(pts, xpts) / 5) * 5);
-  const x = (i) => pad.l + (i / (series.length - 1)) * (W - pad.l - pad.r);
-  const y = (v) => H - pad.b - (v / top) * (H - pad.t - pad.b);
-  const path = (k) => series.map((s, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(s[k]).toFixed(1)}`).join("");
-  const grid = [];
-  for (let v = 0; v <= top; v += top > 30 ? 10 : 5) grid.push(`<line class="grid" x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${pad.l - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`);
-  const band = (W - pad.l - pad.r) / Math.max(1, series.length - 1);
-  const hits = series.map((s, i) => {
-    const opp = s.m.isHome ? s.m.away : s.m.home;
-    const [gf, ga] = sidePair(s.m.score, s.m.isHome);
-    const tip = `Game ${i + 1}: ${gf}–${ga} ${s.m.isHome ? "v" : "at"} <b>${esc(opp)}</b><br>Points <b>${s.pts}</b> · expected <b>${s.xpts.toFixed(1)}</b>`;
-    return `<rect class="band" x="${x(i) - band / 2}" y="${pad.t}" width="${band}" height="${H - pad.t - pad.b}" data-tip="${esc(tip)}"/>`;
+/* one bar per game, oldest first: its height is the chance the model gave what happened, lit green when it was the pick */
+function callStrip(games) {
+  const rows = games.filter((m) => m.p);
+  if (rows.length < 2) return "";
+  const bars = rows.map((m) => {
+    const v = verdict(m);
+    const r = sideResult(m);
+    const [gf, ga] = sidePair(m.score, m.isHome);
+    const tip = `${RESULT_WORD[r]} ${gf}–${ga} ${m.isHome ? "v" : "at"} <b>${esc(m.isHome ? m.away : m.home)}</b> · ${shortDate(m.kickoff)}<br>`
+      + `${v.hit ? "Called" : "Missed"}: the model gave it <b>${pct1(v.given)}</b>`;
+    return `<span class="cs ${v.hit ? "hit" : "miss"}" data-tip="${esc(tip)}" tabindex="0"><i style="height:${Math.round(v.given * 100)}%"></i><b>${RESULT[r]}</b></span>`;
   }).join("");
-  const last = series[series.length - 1];
-  const diff = last.pts - last.xpts;
-  const end = (v, cls, text) => `<text class="end ${cls}" x="${x(series.length - 1) + 8}" y="${y(v) + 4}">${text}</text>`;
-  const apart = Math.abs(y(last.pts) - y(last.xpts)) < 14;
-  return `<div class="chart">
-    <p class="key"><span><i class="k-line"></i>Points won</span><span><i class="k-line exp"></i>Points the forecasts expected</span>
-      <span>${diff >= 0 ? "+" : ""}${diff.toFixed(1)} against expectation</span></p>
-    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(`${club.name} won ${last.pts} league points; pre-match forecasts expected ${last.xpts.toFixed(1)}`)}">
-      ${grid.join("")}
-      <path class="line exp" d="${path("xpts")}"/><path class="line" d="${path("pts")}"/>
-      ${series.map((s, i) => `<circle class="pt" cx="${x(i)}" cy="${y(s.pts)}" r="3.5"/>`).join("")}
-      ${end(last.pts, "", `${last.pts} won`)}${end(apart ? last.xpts + (last.xpts > last.pts ? 1 : -1) * top * 0.08 : last.xpts, "exp", `${last.xpts.toFixed(1)} exp.`)}
-      <text class="tick" x="${pad.l}" y="${H - 8}">Game 1</text><text class="tick" x="${x(series.length - 1)}" y="${H - 8}" text-anchor="end">Game ${series.length}</text>
-      ${hits}
-    </svg></div>`;
+  return `<div class="callstrip" role="img" aria-label="Chance the model gave each actual result">
+    <span class="cs-axis"><em>100%</em><em>50%</em><em>0</em></span><div class="cs-bars">${bars}</div></div>
+    <p class="key"><span><i class="k-lamp hit"></i>Called: the result was the model's pick</span><span><i class="k-lamp miss"></i>Missed</span><span>Bar height: chance it gave what happened</span></p>`;
 }
 
 function renderStrength(club) {
@@ -390,7 +350,7 @@ function renderStrength(club) {
   const avg = clubs.clubs.reduce((s, c) => s + c.rating, 0) / n;
   const members = clubs.clubs.filter((c) => c.league === club.league).length;
   const meter = (label, value, rank, note) => `<div class="gauge">
-      <h3>${label}</h3><b>${dec(value)}</b><span class="rank">#${rank} of ${n}</span>
+      <h3>${label}</h3><b>${dec(value)}</b><span class="rank">${rankTag(rank, "span")} of ${n}</span>
       <span class="meter big"><i style="width:${value}%"></i><em style="left:${avg}%" title="Average club"></em></span>
       <span class="note">${note}</span></div>`;
   $("p-strength").innerHTML = `<div class="gauges">
