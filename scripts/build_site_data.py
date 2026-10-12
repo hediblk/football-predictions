@@ -157,6 +157,7 @@ def export_ucl(src):
     stages = {
         stage: [{
             "team1": label(tie["team1"]), "team2": label(tie["team2"]), "winner": label(tie["winner"]),
+            "team1_id": ids.get(tie["team1"]), "team2_id": ids.get(tie["team2"]), "winner_id": ids.get(tie["winner"]),
             "advance": num(tie["advance_probability"], 1), "observed": bool(tie["observed"]),
         } for tie in ties]
         for stage, ties in bracket["stages"].items()
@@ -168,7 +169,7 @@ def export_ucl(src):
         "generated_at": meta["generated_at"], "data_cutoff": meta["as_of"], "n_sim": meta["n_sim"],
         "played_fixtures": validation["finished"], "remaining_fixtures": validation["remaining"],
         "zones": zones_json(UCL_ZONES), "teams": teams,
-        "bracket": {"stages": stages, "champion": label(bracket["champion"]), "note": bracket["draw_label"]},
+        "bracket": {"stages": stages, "champion": label(bracket["champion"]), "champion_id": ids.get(bracket["champion"]), "note": bracket["draw_label"]},
     }
 
 

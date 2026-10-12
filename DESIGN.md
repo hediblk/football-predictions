@@ -37,6 +37,8 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 
 ## Components added with Matches and Clubs
 
+- **Club crests:** full-colour original artwork beside club names; 18 px inline, 24 px in rows and brackets, 36 px on cards, 80 px in heroes (64 px on phones). Preserve proportions and keep the club name visible. Dark artwork can use a light neutral backing. Charts keep their dots, with crests in hover details; native dropdown options remain text with a crest beside the selected club.
+
 - **Section tabs** (Tables, Matches, Clubs) sit beside the logo; the competition row appears only under Tables.
 - **Outcome bulbs:** a match's home/draw/away chances are three small bulbs whose brightness is the chance; the brightest is the model's pick, and a ruled box marks what actually happened.
 - **Day strip:** nine days with big numerals and a game count; the chosen day is lit and underlined in amber.

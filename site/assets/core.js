@@ -73,6 +73,25 @@ export function getJSON(path) {
   return cache.get(path);
 }
 
+/* Crests use provider IDs, including clubs outside the five domestic leagues. */
+let crests = {};
+export async function loadCrests() {
+  crests = await getJSON("crests.json");
+}
+const crestSizes = { inline: 18, row: 24, card: 36, hero: 80 };
+export function clubCrest(id, size = "row") {
+  const crest = crests[id];
+  if (!crest) return "";
+  const pixels = crestSizes[size];
+  return `<span class="crest${crest.backing ? " crest--backed" : ""}"><img class="club-crest" src="${esc(crest.path)}" width="${pixels}" height="${pixels}" alt="" decoding="async"${size === "hero" ? "" : ' loading="lazy"'}></span>`;
+}
+export function clubName(id, name, size = "row") {
+  return `<span class="club-name club-name--${size}">${clubCrest(id, size)}<span class="club-label" title="${esc(name)}">${esc(name)}</span></span>`;
+}
+document.addEventListener("error", (event) => {
+  if (event.target.classList?.contains("club-crest")) event.target.parentElement.hidden = true;
+}, true);
+
 /* ---------- match helpers (probabilities are home, draw, away) ---------- */
 export const outcome = (score) => (score[0] > score[1] ? 0 : score[0] === score[1] ? 1 : 2);
 export const pick = (p) => p.indexOf(Math.max(...p));

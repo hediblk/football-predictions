@@ -1,7 +1,7 @@
 // Clubs view: a strength ranking for the five leagues and a profile for every club.
 import {
   LEAGUES, compBySlug, $, esc, getJSON, setStatus, ordinal, pct, pct1, dec, verdict, sideProbs, sidePair,
-  outcome, expandable, bulb, shortDate, clock,
+  outcome, expandable, bulb, shortDate, clock, clubName,
 } from "./core.js";
 import { matchPanel, record } from "./matches.js";
 import { spreadPanel } from "./tables.js";
@@ -49,9 +49,9 @@ async function showIndex() {
   $("c-legend").textContent = `Club strength · ${clubs.season}`;
   $("c-hero").innerHTML = `
     <div class="who">
-      <h1><a href="#clubs/${best.slug}">${esc(best.name)}</a></h1>
+      <h1><a href="#clubs/${best.slug}">${clubName(best.id, best.name, "hero")}</a></h1>
       <p class="caption">The strongest club in Europe's top five leagues: it would take <b>${Math.round(best.rating)}%</b> of the points off an average side ·
-        best attack <b>${esc(topAttack.name)} ${dec(topAttack.attack)}</b> · best defence <b>${esc(topDefense.name)} ${dec(topDefense.defense)}</b> · ${list.length} clubs rated</p>
+        best attack <b>${clubName(topAttack.id, topAttack.name, "inline")} ${dec(topAttack.attack)}</b> · best defence <b>${clubName(topDefense.id, topDefense.name, "inline")} ${dec(topDefense.defense)}</b> · ${list.length} clubs rated</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${best.name}: rating ${dec(best.rating)}`)}">${Math.round(best.rating)}<sup>%</sup></div>`;
 
@@ -60,7 +60,7 @@ async function showIndex() {
     const row = rowFor(tables, c);
     const place = row ? `${ordinal(row.position)} in ${leagueName(c.league)}` : leagueName(c.league);
     return `<a class="cell" href="#clubs/${c.slug}">
-      <span class="nm">${esc(c.name)}</span>
+      <span class="nm">${clubName(c.id, c.name, "card")}</span>
       <span class="lg">${esc(place)}</span>
       <span class="rt">${dec(c.rating)}</span>
       <span class="rk">#${c.rating_rank}</span>
@@ -88,7 +88,7 @@ function renderRanking(tables) {
       const row = rowFor(tables, c);
       return `<tr class="${clubs.featured.includes(c.id) ? "featured" : ""}">
         <td class="rk l">${String(i + 1).padStart(2, "0")}</td>
-        <td class="club l"><a href="#clubs/${c.slug}">${esc(c.name)}</a></td>
+        <td class="club l"><a href="#clubs/${c.slug}">${clubName(c.id, c.name)}</a></td>
         <td class="l lg">${esc(compBySlug[c.league].short)}</td>
         <td class="b">${dec(c.rating)}</td>
         <td>${dec(c.attack)} <small>#${c.attack_rank}</small></td>
@@ -171,7 +171,7 @@ function renderScatter() {
   const order = [...all].sort((a, b) => lit.has(a.id) - lit.has(b.id));
   const dots = order.map((c) => {
     const on = lit.has(c.id);
-    const tip = `<b>${esc(c.name)}</b> · ${esc(leagueName(c.league))}<br>Attack <b>${dec(c.attack)}</b> · Defence <b>${dec(c.defense)}</b> · Rating <b>${dec(c.rating)}</b>`;
+    const tip = `${clubName(c.id, c.name, "inline")} · ${esc(leagueName(c.league))}<br>Attack <b>${dec(c.attack)}</b> · Defence <b>${dec(c.defense)}</b> · Rating <b>${dec(c.rating)}</b>`;
     return `<a href="#clubs/${c.slug}" class="pt${on ? " on" : ""}" data-tip="${esc(tip)}" tabindex="-1">
       <circle class="hit" cx="${x(c.attack)}" cy="${y(c.defense)}" r="12"/><circle class="dot" cx="${x(c.attack)}" cy="${y(c.defense)}" r="${on ? 5 : 3.5}"/></a>`;
   }).join("");
@@ -217,7 +217,7 @@ async function showProfile(club) {
   $("p-legend").textContent = `${comp.label} · ${table.season} · Strength`;
   $("p-hero").innerHTML = `
     <div class="who">
-      <h1>${esc(club.name)}</h1>
+      <h1>${clubName(club.id, club.name, "hero")}</h1>
       <p class="caption">${ordinal(team.position)} in ${esc(comp.label)} after ${team.played} · <b>${team.points}</b> pts (W${wdl[0]} D${wdl[1]} L${wdl[2]})
         · projected <b>${Math.round(team.xpts)}</b> pts · <b>#${club.rating_rank}</b> of ${clubs.clubs.length} clubs by strength</p>
     </div>
@@ -268,7 +268,7 @@ function renderSeason(league, europe, uclTeam) {
   const lamps = form.map((m) => {
     const r = sideResult(m);
     const [gf, ga] = sidePair(m.score, m.isHome);
-    const tip = `${RESULT_WORD[r]} ${gf}–${ga} ${m.isHome ? "v" : "at"} <b>${esc(m.isHome ? m.away : m.home)}</b> · ${shortDate(m.kickoff)}`;
+    const tip = `${RESULT_WORD[r]} ${gf}–${ga} ${m.isHome ? "v" : "at"} ${clubName(m.isHome ? m.away_id : m.home_id, m.isHome ? m.away : m.home, "inline")} · ${shortDate(m.kickoff)}`;
     return `<span class="form r${r}" data-tip="${esc(tip)}" tabindex="0">${RESULT[r]}</span>`;
   }).join("");
   $("p-season").innerHTML = `<div class="scroll"><table class="board stats"><thead><tr><th class="l"></th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>xG</th><th>xGA</th><th>Pts</th></tr></thead>
@@ -319,7 +319,7 @@ function clubRow(m) {
   const when = new Date(m.kickoff).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
   return `<div class="crow" role="button" tabindex="0" aria-expanded="false" data-key="${m.comp}:${m.id}">
     <span class="c-when">${when}</span><span class="c-comp">${esc(compBySlug[m.comp].short)}</span>
-    <span class="c-opp"><small>${m.isHome ? "v" : "at"}</small> ${esc(opp)}</span>
+    <span class="c-opp"><small>${m.isHome ? "v" : "at"}</small> ${clubName(m.isHome ? m.away_id : m.home_id, opp)}</span>
     <span class="c-score">${score}</span>${cells}${badge}</div>`;
 }
 
@@ -365,7 +365,7 @@ function pointsChart(club, league) {
   const hits = series.map((s, i) => {
     const opp = s.m.isHome ? s.m.away : s.m.home;
     const [gf, ga] = sidePair(s.m.score, s.m.isHome);
-    const tip = `Game ${i + 1}: ${gf}–${ga} ${s.m.isHome ? "v" : "at"} <b>${esc(opp)}</b><br>Points <b>${s.pts}</b> · expected <b>${s.xpts.toFixed(1)}</b>`;
+    const tip = `Game ${i + 1}: ${gf}–${ga} ${s.m.isHome ? "v" : "at"} ${clubName(s.m.isHome ? s.m.away_id : s.m.home_id, opp, "inline")}<br>Points <b>${s.pts}</b> · expected <b>${s.xpts.toFixed(1)}</b>`;
     return `<rect class="band" x="${x(i) - band / 2}" y="${pad.t}" width="${band}" height="${H - pad.t - pad.b}" data-tip="${esc(tip)}"/>`;
   }).join("");
   const last = series[series.length - 1];

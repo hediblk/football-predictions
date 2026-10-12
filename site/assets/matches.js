@@ -1,7 +1,7 @@
 // Matches view: one day's fixtures across the six competitions, with the model's call on each.
 import {
   COMPS, compBySlug, $, esc, getJSON, setStatus, clock, dayKey, parseDay, shiftDay, verdict, pick, pct1, dec,
-  expandable, bulb, outcome,
+  expandable, bulb, outcome, clubName,
 } from "./core.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
@@ -161,9 +161,9 @@ export function matchRow(m, slug, when = null) {
   const win = m.score ? outcome(m.score) : -1;
   return `<div class="mrow" role="button" tabindex="0" aria-expanded="false" data-c="${slug}" data-id="${m.id}">
     <span class="m-when">${when ? when(status) : status}</span>
-    <span class="m-home${win === 0 ? " won" : ""}">${esc(m.home)}</span>
+    <span class="m-home${win === 0 ? " won" : ""}">${clubName(m.home_id, m.home)}</span>
     <span class="m-hs">${hs}</span><span class="m-sep">${m.score ? "–" : "v"}</span><span class="m-as">${as}</span>
-    <span class="m-away${win === 2 ? " won" : ""}">${esc(m.away)}</span>
+    <span class="m-away${win === 2 ? " won" : ""}">${clubName(m.away_id, m.away)}</span>
     <span class="m-foot">${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>
   </div>`;
 }
@@ -198,7 +198,7 @@ export function matchPanel(m, slugs = null) {
   }
   const clubLinks = slugs ? [[m.home_id, m.home], [m.away_id, m.away]]
     .filter(([id]) => slugs.has(id))
-    .map(([id, name]) => `<a class="more" href="#clubs/${slugs.get(id)}">${esc(name)} →</a>`).join("") : "";
+    .map(([id, name]) => `<a class="more" href="#clubs/${slugs.get(id)}">${clubName(id, name, "inline")} →</a>`).join("") : "";
   panel.innerHTML = `
     <div><h4>Likeliest scores</h4><ol class="scores">${scores}</ol></div>
     <div><h4>Goals</h4><dl class="kv"><dt>Expected goals</dt><dd>${dec(m.exp[0])}–${dec(m.exp[1])}</dd>${xg}

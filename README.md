@@ -16,6 +16,8 @@ A Python package for estimating every team's final league-position probabilities
 
 Played matches are forecast as of 00:00 UTC on their match day from earlier results only, so the record never sees the result it is judged on.
 
+Club names have local, full-colour crests across the tables, fixtures, profiles and Champions League bracket. Assets are keyed by football-data.org club ID, with vector SVGs preferred and PNG fallbacks checked for 3× displays. See [crest sources and maintenance](site/assets/crests/README.md) for the manifest, quality checks and refresh command.
+
 **Club ratings** come from each league's match model (goals and xG): the share of points a club would take off its league's average side on a neutral pitch. The attack rating rates a club as if its defence were as far above average as its attack, and the defence rating the reverse, so all three share one scale. To compare leagues, each league's ratings are multiplied by its average team rating in the [Opta Power Rankings](https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true) divided by the Premier League's (12 October 2026: Bundesliga 0.93, La Liga 0.93, Serie A 0.92, Ligue 1 0.92). Update `LEAGUE_STRENGTH` in `scripts/build_site_data.py` occasionally; Opta refreshes the league averages daily.
 
 `.github/workflows/site.yml` refreshes and deploys it: daily at 05:30 UTC (or on demand from the Actions tab via **Run workflow**) it reruns all six forecasts, commits `site/data` and redeploys GitHub Pages; pushes to `main` that touch `site/` redeploy without refreshing. It needs the `FOOTBALL_DATA_API_KEY` repository secret.
