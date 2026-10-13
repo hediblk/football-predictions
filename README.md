@@ -2,164 +2,240 @@
 
 ![La Liga final-position probability heatmap](docs/laliga-forecast.png)
 
-*La Liga 2026/27 snapshot, generated October 11, 2026 at 00:24 UTC. Results through October 10, 2026 at 19:00 UTC; 73 completed fixtures, 10,000 simulations, fixed calibrated weights and no odds.*
+*La Liga 2026/27, generated October 11, 2026: 73 completed fixtures, 10,000 simulations, calibrated weights, no odds.*
 
-A Python package for estimating every team's final league-position probabilities. The implementation lives in `src/standing_prediction`; the CLI and notebook call the same pipeline.
+Estimates every team's final league-position probabilities for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League. The model rates each team from past results, forecasts every remaining match, then plays out the rest of the season thousands of times and counts where each team finishes.
 
-## Website
+The code lives in `src/standing_prediction`; the CLI, notebook and website all call the same pipeline.
 
-`site/` is a static, dependency-free page (dark "scoreboard" design; see [DESIGN.md](DESIGN.md)) with three tabs. It reads the JSON in `site/data/`.
+## How it works
 
-- **Tables:** the latest standings forecast for the top five leagues and the Champions League. The Champions League page adds its fixtures by round (opening on the next matchday; knockout rounds join once drawn) or by team, with the same forecasts and calls as the Matches tab, plus the projected knockout bracket.
-- **Matches:** every fixture of a day across the six competitions, browsable by date, with home/draw/away chances, expected goals and the likeliest scores. Played matches show the score and whether the model **called** it (its likeliest outcome happened) or **missed**, plus **exact** when its predicted score was right. The predicted score is the likeliest scoreline *within* the picked result, so a home-win pick never comes with a 1–1 (the single likeliest score is often a draw, because draws spread over fewer scorelines). The season record compares the hit rate with always backing the home side.
-- **Clubs:** a strength ranking of all 96 clubs in the five leagues, an attack-against-defence chart, and a profile per club (twelve big clubs up front): season record home and away with xG, the goals the model expects home and away for the rest of the season, upcoming fixtures, every played game against its pre-match forecast, how well the model called results over time, and finishing-place odds.
+```mermaid
+flowchart LR
+    subgraph Inputs
+        FD[football-data.org<br/>standings, results, fixtures]
+        HIST[football-data.co.uk<br/>2 prior seasons]
+        US[Understat<br/>match xG]
+        ODDS[The Odds API<br/>optional 1X2 odds]
+    end
 
-Played matches are forecast as of 00:00 UTC on their match day from earlier results only, so the record never sees the result it is judged on.
+    subgraph Model
+        DC[Dixon–Coles goal model]
+        XG[xG strengths]
+        ELO[Elo ratings]
+        BLEND[Log-space blend]
+        SIM[Monte Carlo season simulation]
+    end
 
-Club names have local, full-colour crests across the tables, fixtures, profiles and Champions League bracket. Assets are keyed by football-data.org club ID, with vector SVGs preferred and PNG fallbacks checked for 3× displays. See [crest sources and maintenance](site/assets/crests/README.md) for the manifest, quality checks and refresh command.
+    subgraph Outputs
+        POS[Position probabilities]
+        SUM[Season summary]
+        MATCH[Match forecasts]
+        RAT[Club ratings]
+    end
 
-**Club ratings** come from each league's match model (goals and xG): the share of points a club would take off its league's average side on a neutral pitch. The attack rating rates a club as if its defence were as far above average as its attack, and the defence rating the reverse, so all three share one scale. To compare leagues, each league's ratings are multiplied by its average team rating in the [Opta Power Rankings](https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true) divided by the Premier League's (12 October 2026: Bundesliga 0.93, La Liga 0.93, Serie A 0.92, Ligue 1 0.92). Update `LEAGUE_STRENGTH` in `scripts/build_site_data.py` occasionally; Opta refreshes the league averages daily.
-
-`.github/workflows/site.yml` refreshes and deploys it: daily at 05:30 UTC (or on demand from the Actions tab via **Run workflow**) it reruns all six forecasts, commits `site/data` and redeploys GitHub Pages; pushes to `main` that touch `site/` redeploy without refreshing. It needs the `FOOTBALL_DATA_API_KEY` repository secret.
-
-The same run archives bookmaker odds: `scripts/archive_odds.py` appends today's 1X2 prices for the six competitions to `data/odds/<season>/<code>.csv` (the bookmaker consensus and Pinnacle, de-margined; format in [data/odds](data/odds/README.md)). These dated quotes are the yardstick for future model-versus-market comparisons and cannot be collected after kickoff. The step needs an `ODDS_API_KEY` repository secret, skips without one, never blocks the refresh, and uses one The Odds API credit per competition per day (about 180 of the free 500 a month). The Odds API offers no title or Champions League winner markets for these competitions.
-
-To refresh by hand instead, rerun all six forecasts and rebuild the data, then commit `site/data`:
-
-```bash
-pip install -e . -e packages/champions-league
-scripts/refresh_site.sh
+    FD --> DC
+    HIST --> DC
+    FD --> ELO
+    HIST --> ELO
+    US --> XG
+    XG --> DC
+    DC --> BLEND
+    ELO --> BLEND
+    ODDS --> BLEND
+    BLEND --> SIM
+    DC --> SIM
+    SIM --> POS
+    SIM --> SUM
+    BLEND --> MATCH
+    DC --> RAT
 ```
 
-A competition whose run fails keeps its previous outputs in `out/site`, so the site shows its last good forecast. Preview locally with `python3 -m http.server -d site 8000`.
+1. **Rate teams.** A Dixon–Coles model fits each team's attack and defence from goals, weighting recent matches more (daily decay `xi = 0.003`) and correcting for low scores. Attack and defence are then blended with the same ratings fitted to xG. An Elo model rates teams from results alone.
+2. **Forecast matches.** Each model gives home/draw/away probabilities. They are combined as a weighted geometric mean (a blend in log space) with fixed weights.
+3. **Simulate.** For every remaining fixture, draw a result from the blended probabilities and a scoreline from the goal model within that result. Update points and goals, rank with the league's tie-breakers (La Liga uses head-to-head), repeat 10,000 times.
 
-## Cancelled, awarded and lagging fixtures
+## Components
 
-football-data.org sometimes reports a suspended league match as `CANCELLED` before it is rescheduled, or an official decision as `AWARDED`, and sometimes leaves a played match unfinished for days. Domestic forecasts resolve these in memory, after fetching and before validation, without editing the fetched data:
+```mermaid
+classDiagram
+    class DixonColesModel {
+        intercept
+        home_advantage
+        attack per team
+        defense per team
+        rho
+        expected_goals(home, away)
+        score_matrix(home, away)
+        match_outcome_probs(home, away)
+    }
+    class XgStrengths {
+        attack per team
+        defense per team
+    }
+    class EloModel {
+        ratings per team
+        k_factor = 30
+        home_advantage = 55
+        predict_probs(home, away)
+    }
+    class Odds {
+        p_home
+        p_draw
+        p_away
+    }
+    class blend_probabilities {
+        weights
+        p_home, p_draw, p_away
+    }
+    class FixtureSimulationSpec {
+        home, away
+        p_home_win, p_draw, p_away_win
+        score_probs_by_outcome
+    }
+    class simulate_season_scores {
+        n_sim
+        seed
+        tie-break rules
+    }
+    class Forecast {
+        probabilities
+        summary
+        standings
+        metadata
+    }
 
-1. **Overrides first.** `fixture_overrides.csv` (committed, empty by default) records official decisions: `competition,season,home_team,away_team,status,home_goals,away_goals,note`, with `status` either `FINISHED` (with the score) or `SCHEDULED`. Team names are football-data.org names.
-2. **Awarded results** with a reported score count as played; without a score the run stops and asks for an override.
-3. **Cancelled fixtures** are simulated as if they will be replayed, since a league fixture must be either replayed or awarded. `--strict-fixtures` makes them an error instead.
-4. **Lagging results.** football-data.org can update its table days before a fixture's status, so the two disagree and the forecast cannot run. When the table already counts a past fixture still listed as unplayed, its score is taken from Understat (same pairing, kickoff within two days); schedule validation then checks it against the table's goal totals.
-
-Every adjustment is logged as a warning, listed under `fixture_adjustments` in the forecast metadata and shown under the site's table. The matches snapshot keeps the provider's value in `reported_status` beside the `status` used. Postponed and suspended fixtures were already simulated as unplayed.
-
-## Champions League
-
-![Champions League league-phase position probabilities](docs/champions-league-forecast.png)
-
-*2026/27 forecast as of October 10, 2026 at 21:30 Toronto time (October 11 at 01:30 UTC): 18 played UCL fixtures, 11,165 domestic and European results, 10,000 simulations, fixed global weights and no odds. All 36 clubs have domestic history.*
-
-![Projected Champions League knockout bracket](docs/champions-league-bracket.png)
-
-[Download bracket (PDF)](docs/champions-league-bracket.pdf)
-
-**Bayern München is the title favorite at 18.99%.** The bracket shows one permitted draw from projected league standings, advancing each matchup's favorite. Its pairings are illustrative until the real draw; title probabilities average all simulated draws and results.
-
-Install and run the separate [Champions League package](packages/champions-league/README.md):
-
-```bash
-pip install -e . -e packages/champions-league
-football-ucl --season 2026 --n-sim 10000
+    XgStrengths --> DixonColesModel : blended into
+    DixonColesModel --> blend_probabilities : 1X2
+    EloModel --> blend_probabilities : 1X2
+    Odds --> blend_probabilities : 1X2 (optional)
+    blend_probabilities --> FixtureSimulationSpec : outcome probs
+    DixonColesModel --> FixtureSimulationSpec : scorelines
+    FixtureSimulationSpec --> simulate_season_scores : one per fixture
+    simulate_season_scores --> Forecast
 ```
 
-Open `out/cl_forecast.html` for the standings, bracket, stage probabilities and coverage report. Saved snapshot: [positions](docs/champions-league-positions.csv), [qualification/title probabilities](docs/champions-league-summary.csv), [club coverage](docs/champions-league-coverage.csv), and [provenance](docs/champions-league-metadata.json).
+| Component | File | Role |
+| --- | --- | --- |
+| Dixon–Coles | `dixon_coles.py` | Expected goals and scoreline probabilities per fixture |
+| xG strengths | `xg.py` | Attack/defence fitted to Understat xG |
+| Elo | `elo.py` | Result-based ratings, regressed toward average each season |
+| Odds | `odds.py` | De-margined bookmaker probabilities, only if quoted before the forecast time |
+| Blend | `ensemble.py` | Weighted geometric mean of the available models |
+| Simulation | `simulate.py` | Plays out the season and applies league tie-breakers |
+| Pipeline | `predict_positions.py` | Fetches data, fits models, writes outputs |
 
-Some secondary domestic sources stop on September 19–20, and Czech 2025/26 history is missing. Sparse-country estimates are sensitive to league-strength priors; the summary includes title-probability sensitivity ranges. The official coefficients feed returned HTTP 403; unresolved simulated disciplinary ties use a seeded random fallback, and completed league phases use official ranks. Probabilities condition on fitted strengths and are not calibrated tournament confidence levels.
+## Weights
 
-[Historical checks](docs/champions-league-evaluation.json) cover 18 forecast origins in 2024/25–2025/26 and 306 subsequent matches. Country offsets improve aggregate match log loss over the no-offset and Elo comparisons. Since the xG scale (Plan C), the joint xG model also beats a goals-only fit (0.9395 vs 0.9407); before it, goals only had won. See [per-origin metrics](docs/champions-league-evaluation-snapshots.json) and [PLAN.md](PLAN.md) for the comparisons and limits.
+```mermaid
+flowchart LR
+    DCG[Goal strengths] -->|"1 − w = 0.25"| DCS[Team strengths]
+    XGS[xG strengths × 1.3] -->|"w = 0.75"| DCS
+    DCS --> DC[Dixon–Coles 1X2]
+    DC -->|"0.844"| B[Blended 1X2]
+    ELO[Elo 1X2] -->|"0.156"| B
+    ODDS[Odds 1X2] -.->|"≈ 1.0 when quoted"| B
+```
 
-## Inputs
+| Weight | Value | Meaning |
+| --- | --- | --- |
+| `xg_weight` | 0.75 | Share of each team's strength taken from xG |
+| `xg_scale` | 1.3 | Stretches xG strengths; xG understates the gap between strong and weak teams |
+| `main` / `elo` (no odds) | 0.844 / 0.156 | Blend of Dixon–Coles and Elo |
+| `odds` | ≈ 1.0 | When odds exist, the market dominates the blend |
+| `xi` | 0.003 | Daily time decay (a match a year old counts about one third) |
+| `lambda_reg` | 2 | Ridge penalty on team strengths |
+| `h2h_weight` | 0 | Head-to-head adjustment, off |
 
-- **Current season:** standings, completed scores, and the full fixture schedule from [football-data.org](https://www.football-data.org/).
-- **Team history:** two prior seasons by default, primarily from [football-data.co.uk](https://www.football-data.co.uk/), with football-data.org as a fallback. Teams without observed history start at neutral strength.
-- **xG:** match-level expected goals from [Understat](https://understat.com/) (top five leagues from 2014/15), joined to results by team pairing, kickoff (±2 days) and final score. Unmatched matches keep missing xG. Current-season xG is saved with every forecast; it changes the model only when `xg_weight > 0`.
-- **Optional odds:** The Odds API or a saved odds CSV. Each observation must be timestamped before kickoff and available by the forecast origin. Undated historical odds are excluded.
+Weights are renormalized over the models available for a fixture, so without odds the blend is 84% Dixon–Coles and 16% Elo. The website runs without odds.
 
-## Methods
-
-1. Fit a **Dixon–Coles goal model**, with recent matches weighted more heavily and a correction for low-scoring results.
-2. Fit **Elo ratings**, accounting for home advantage and regressing ratings toward average strength between seasons.
-3. Blend available model/market probabilities in **log space**, using fixed global weights from the stored multi-league calibration. Explicit overrides and optional outcome calibration remain available.
-4. Simulate remaining **scorelines**, update points and goals, and rank teams using league sporting rules. La Liga uses head-to-head criteria and reapplies rules to remaining tied subsets.
-
-Goal rates support two adjustments:
-
-- **xG** (`xg_weight`, `xg_scale`): fits time-decayed attack/defense strengths to xG and blends them with the goal-based strengths: `strength = (1 − w)·goal strength + w·s·xG strength`, for each team's attack and defense deviation from the league average. xG understates the gaps between teams: the best sides keep beating their xG and the weakest keep falling short of it, so an unscaled blend pulled title contenders toward average. Both defaults are read from the global calibration. The goal model's intercept and home advantage are kept, so league scoring stays on the goal scale.
-- **Head-to-head** (`h2h_weight`, off by default): for each pair, the recency-weighted mean of past results relative to a model fitted only on earlier matches, shrunk toward zero. The home rate is shifted up and the away rate down by `h2h_weight ×` that effect. This is separate from La Liga's head-to-head ranking rules, which always apply.
+They come from one global fit across the top five leagues, 2015/16–2025/26, stored in `src/standing_prediction/calibrated_weights.json` (version `global-4c0170be18f1`). Forecasts never refit them. To rebuild them, see the [forecast-calibration package](packages/forecast-calibration/README.md).
 
 ## Outputs
 
-`out/pd_position_probs.html` shows the colored chart first, sorted by each team's most likely finishing position, with average position breaking ties. Two-decimal percentages and a continuous nonlinear scale make small probabilities easier to distinguish. CSVs contain position probabilities and a summary of expected points/position, point percentiles, and title/top-four/bottom-three probabilities. JSON records the cutoff, odds coverage, model settings, and seed.
+```mermaid
+flowchart LR
+    RUN[football-predict --competition PD] --> HTML[pd_position_probs.html<br/>heatmap]
+    RUN --> PROBS[pd_position_probs.csv<br/>P team finishes in each place]
+    RUN --> SUMM[pd_summary.csv<br/>expected points/position,<br/>title, top 4, bottom 3]
+    RUN --> MF[pd_match_forecasts.json<br/>1X2, xG, likeliest scores]
+    RUN --> CR[pd_club_ratings.csv]
+    RUN --> META[pd_metadata.json<br/>cutoff, weights, seed]
+```
 
-`pd_match_forecasts.json` holds every fixture's forecast (home/draw/away chances, expected goals, both teams scoring, over 2.5 goals, the four likeliest scores and `pick_score`, the likeliest score within the likeliest outcome); played fixtures are forecast from models refitted at 00:00 UTC on their match day and include the probability of the actual score. `pd_club_ratings.csv` holds the club ratings above, before league scaling. `football-ucl` writes the same match file for the Champions League (`cl_match_forecasts.json`, 90-minute scores, team models only).
+Files go to `out/`, and each run is archived under `out/snapshots/<competition>/<season>/<timestamp>/`. Played matches are forecast from data before their match day, so the model's record never sees the result it is judged on.
 
-Input snapshots and each forecast are archived under `out/snapshots/pd/<season>/<timestamp>/`. Point intervals are conditional on fitted team strengths; `*_mc_se_pp` measures simulation sampling error in percentage points, not model error.
+## Run
 
-## Customize
+Requires Python 3.11+ and a free [football-data.org](https://www.football-data.org/) API key.
 
-Use keyword arguments with `run_prediction`, or the corresponding CLI flags (`prior_seasons` → `--prior-seasons`).
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+cp .env.example .env   # set FOOTBALL_DATA_API_KEY; ODDS_API_KEY is optional
+football-predict --competition PD
+```
 
-| Argument | Default | Controls |
-| --- | --- | --- |
-| `competition` | `"PD"` | `PD`, `PL`, `BL1`, `SA`, or `FL1` |
-| `season` | `None` | Season start year; inferred using a July boundary |
-| `n_sim`, `seed` | `10000`, `7` | Simulation count and reproducibility |
-| `prior_seasons`, `xi` | `2`, `0.003` | History length and daily time decay |
-| `weights` | Stored global calibration | Log-space blend; renormalized across available components |
-| `use_odds`, `calibrate` | `True`, `False` | Optional market data and historical calibration |
-| `max_goals`, `lambda_reg` | `10`, stored global calibration | Score-grid limit and model regularization |
-| `xg_weight`, `xg_scale` | Stored global calibration | Weight of xG strengths in log goal rates (0–1; `0` disables) and the multiplier on xG strengths before blending |
-| `h2h_weight`, `h2h_seasons` | `0`, `6` | Log-rate shift per goal of head-to-head residual; seasons of past meetings |
-| `match_forecasts` | `True` | Also forecast every fixture, played ones as of their match day (`--no-match-forecasts` skips it) |
-| `out_dir` | `"out"` | Output directory |
+Competitions: `PL`, `PD`, `BL1`, `SA`, `FL1`. Common flags: `--n-sim`, `--seed`, `--season`, `--no-use-odds`, `--out-dir`; `--help` lists the rest.
+
+From Python:
 
 ```python
 from dotenv import load_dotenv
 from standing_prediction.predict_positions import run_prediction
 
 load_dotenv()
-forecast = run_prediction(competition="PD", season=None, n_sim=10000, use_odds=False)
+forecast = run_prediction(competition="PD", n_sim=10000, use_odds=False)
 forecast.probabilities
-forecast.summary
 ```
 
-## Run
+Other commands:
 
-Requires Python 3.11+. From the repository root:
+- `football-backtest --competition PD --seasons 2022 2023 2024`: score past forecasts.
+- `football-ablation --competition PD ...`: compare the xG and head-to-head adjustments.
+- `pytest` (after `pip install -e '.[test]'`).
+- Notebook: `pip install -e '.[notebook]'`, then open `notebooks/laliga_prediction.ipynb`.
+
+## Champions League
+
+![Champions League league-phase position probabilities](docs/champions-league-forecast.png)
+
+A separate package forecasts the 36-team league phase and the knockout bracket. It fits one model across domestic and European results, with country offsets to compare leagues. See the [Champions League README](packages/champions-league/README.md).
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
-cp .env.example .env
-# Set FOOTBALL_DATA_API_KEY in .env; ODDS_API_KEY is optional.
-football-predict --competition PD
+pip install -e . -e packages/champions-league
+football-ucl --season 2026 --n-sim 10000
 ```
 
-For the notebook: `pip install -e '.[notebook]'`, then `jupyter lab notebooks/laliga_prediction.ipynb`.
+## Website
 
-For historical evaluation: `football-backtest --competition PD --seasons 2022 2023 2024 --cutoffs 5 10 20 30`. Cutoffs count matches chronologically to approximate rounds; calibration uses only earlier evaluated seasons. Use `--help` for all options.
+`site/` is a static page with three tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result) and **Clubs** (strength ranking and profiles). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds to [data/odds](data/odds/README.md) for future model-versus-market comparisons.
 
-To compare the xG and head-to-head adjustments, run `football-ablation --competition PD --tune-seasons 2016 2017 2018 2019 --eval-seasons 2020 2021 2022 2023 2024 2025`. It picks weights by match log loss on the tuning seasons, freezes them, and then scores baseline, xG only, H2H only, and both on the evaluation seasons with identical origins and seeds.
+Club ratings are scaled across leagues by each league's average team rating in the [Opta Power Rankings](https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true), relative to the Premier League. Update `LEAGUE_STRENGTH` in `scripts/build_site_data.py` occasionally.
 
-Tests: `pip install -e '.[test]'`, then `pytest`.
-
-## Global calibration
-
-The separate [forecast-calibration package](packages/forecast-calibration/README.md) fits one set of main/odds/Elo weights, the xG weight and the xG scale across the top five leagues in 2015/16–2025/26, with decay 0.003 and ridge 2. Every league-season contributes equally, and both quoted and unquoted forecasts enter the objective. The latest two seasons form a chronological holdout; leave-out folds measure stability, and six additional leagues check transfer without entering the fit.
-
-Forecasts read `src/standing_prediction/calibrated_weights.json`, included in the installed package, and record its version in metadata. They do not refit these defaults per league, season or forecast. To explicitly rebuild and version them:
+Refresh by hand and preview:
 
 ```bash
-pip install -e . -e packages/forecast-calibration
-football-calibrate --weights-out src/standing_prediction/calibrated_weights.json
+scripts/refresh_site.sh
+python3 -m http.server -d site 8000
 ```
 
-Historical quote times and xG availability are approximated and labeled in the artifact. Backtests using these defaults on calibration seasons are retrospective; use the artifact's chronological holdout for the held-out comparison. Use `--weights main=0.35,odds=0.55,elo=0.10 --xg-weight 0 --lambda-reg 0.1` to reproduce the legacy baseline, and `--weights main=0.8174,odds=0,elo=0.1826 --xg-scale 1 --lambda-reg 0.1` for the previous calibration (`global-8c8185b60bc9`) without odds. [PLAN.md](PLAN.md) (Plan C) explains why the scale and ridge changed.
+## Data quirks
+
+- **Cancelled** fixtures are simulated as if they will be replayed; `--strict-fixtures` makes them an error.
+- **Awarded** results count as played. Official decisions without a score go in `fixture_overrides.csv`.
+- **Lagging** results, where the table already counts a match still listed as unplayed, take their score from Understat.
+
+`fixture_overrides.csv` columns: `competition,season,home_team,away_team,status,home_goals,away_goals,note`, with `status` either `FINISHED` (with the score) or `SCHEDULED`, using football-data.org team names.
+
+Every adjustment is logged and listed in the forecast metadata.
 
 ## Limits
 
-Point intervals exclude uncertainty in fitted strengths and future squad changes. Optional outcome recalibration has not consistently improved held-out scores. Global blend calibration measures match forecasts, so it does not establish that standings probabilities are calibrated. Fair-play criteria and deciding playoffs, including Serie A exceptions, are not simulated. Historical tables exclude disciplinary deductions and appeals; completed-season prediction exports use official positions. Top-four/bottom-three probabilities describe positions, not automatic qualification or direct relegation. In-progress fixtures are simulated from kickoff with a warning.
+- Probabilities assume the fitted team strengths are right; they ignore rating uncertainty, transfers and injuries.
+- Weights are calibrated on match forecasts, not on final standings.
+- Fair-play tie-breakers and deciding playoffs are not simulated.
+- "Top four" and "bottom three" are positions, not qualification or relegation.
 
-See [ROADMAP.md](ROADMAP.md) for the next priorities and [PLAN.md](PLAN.md) for what is implemented.
+See [ROADMAP.md](ROADMAP.md) for what is next and [PLAN.md](PLAN.md) for design history.
