@@ -25,11 +25,22 @@ Each team's title, top-four, relegation and Champions League stage odds through 
 
 For the next matchday, how much each result (home, draw, away) moves every team's title, top-four and Champions League odds. It comes from the existing simulations by recording each upcoming fixture's simulated result and conditioning on it, with no extra runs. Show it as badges on Matches and as "games that decide our season" on club pages.
 
-### 4. Scorecard tab
+### 4. Clubs tab: a weekly power ranking
+
+The Clubs tab already rates every club overall, in attack and in defence on one scale, but recomputes the ranking at every daily refresh, so nothing shows how clubs move. The changes:
+
+- **Weekly ranking.** Freeze the ranking every Monday, after the weekend round and any midweek Champions League games, and keep each week's ranks.
+- **Movement.** Next to every rank, show places gained or dropped since the previous Monday: a green ▲ with the number, a red ▼ with the number, or a dash. Do the same for the attack and defence ranks.
+- **Attack and defence up front.** Give the offensive and defensive scores the same prominence as the overall rating, and add the week's biggest risers and fallers.
+- **Movement from the first week.** Backfill earlier Mondays by rerunning the ratings at past dates (the same `--as-of` need as the title-race charts). Otherwise arrows only appear after two Mondays.
+- **Cross-league scale.** Leagues are compared through Opta's league averages, kept by hand in `LEAGUE_STRENGTH` (`scripts/build_site_data.py`). Once the Champions League league offsets (item 1) are fixed, they could replace that table and let the ranking include Champions League clubs from other leagues.
+- **Design.** [DESIGN.md](DESIGN.md) reserves green for called results and red for relegation or misses, so record the arrows there as a new use. As with calls, colour never stands alone: always show the arrow and the number.
+
+### 5. Scorecard tab
 
 The track record in proper scores (log loss, RPS, Brier) against always backing the home side, Elo, and the market from the odds archive, with a calibration chart and a rolling view. "Called N of M" moves below these. It needs a few weeks of archived odds first.
 
-### 5. Players (phase 6)
+### 6. Players (phase 6)
 
 Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. A player dataset with ratings for whole squads would give every player a prior, including clubs outside the top five leagues where we have the least data. Check each source's terms before republishing its data on the site. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
 
