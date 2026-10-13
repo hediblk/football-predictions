@@ -2,7 +2,7 @@
 
 The goals are good league-winner odds and good Champions League forecasts, from single matches through to the trophy. Title outcomes are too few to tell models apart (50 league-seasons put a standard error of 0.01–0.03 on champion log loss). Model changes are therefore judged on match log loss over all seasons, with the top-three points bias, title metrics and the market as checks. [PLAN.md](PLAN.md) records what is implemented and why.
 
-Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, the daily [odds archive](data/odds/README.md), Champions League league offsets with one European club scale (Plan D), league levels set by archived Champions League prices (Plan E), and past-date league reruns (`football-predict --as-of`) with dated site history in `site/data/history`, backfilled for 2026/27 and extended by every refresh.
+Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, the daily [odds archive](data/odds/README.md), Champions League league offsets with one European club scale (Plan D), league levels set by archived Champions League prices (Plan E), and past-date league reruns (`football-predict --as-of`) with dated site history in `site/data/history`, backfilled for 2026/27 and extended by every refresh, which feeds the title-race charts on each competition page, what's at stake for the next round's games (Matches and club pages) and the Clubs tab's weekly power ranking with movement arrows.
 
 ## Next
 
@@ -14,30 +14,19 @@ The main fix is done (Plan D in [PLAN.md](PLAN.md)). League offsets now shrink t
 - **Serie A looks low.** It sits last of the big five (57.5 against StatsUltra's 69.8); its few priced fixtures barely move it.
 - **Europa and Conference League data.** These are where mid-table clubs meet across leagues, so they matter for league levels. football-data.org's free tier refuses the Europa League (paid plans only) and has no Conference League; openfootball stops at 2024/25 plus qualifiers. The Odds API quotes both, and the archive has saved their 1X2 prices since 13 October 2026 (about 36 fixtures per round; 17 of the first 36 involve two clubs the Champions League model rates). Next: test them as extra market rows in the fit (the 10 December recheck does this). Its scores endpoint could also log results from now on for about 4 credits a day; the archive uses 8 of 500 monthly credits a day. 2025/26 results would need another source, such as Wikipedia's match tables or a paid API.
 
-### 2. Title-race charts
+### 2. Site follow-ups
 
-Each team's title, top-four, relegation and Champions League stage odds through the season. The data is in place: `site/data/history/<season>/<competition>.json` is backfilled for 2026/27 and gains a point on every day with new results. Left: the charts, on each competition page or in their own tab.
+Title-race charts, what's at stake and the weekly power ranking are live. Left:
 
-### 3. What's at stake
+- **Champions League stakes.** What's at stake covers the five leagues. Do the same for league-phase fixtures in the tournament simulation (top eight, top 24, winner).
+- **Champions League clubs in the power ranking.** Clubs from other leagues (Benfica, PSV…) are rated on the same scale in `cl_club_ratings.csv` and frozen weekly in `history/<season>/clubs.json`, but are not yet ranked on the Clubs tab.
+- **Asset caching.** Scripts and styles are served without version stamps, so after a deploy a browser can run old code against new data until its cache expires. Add a version query to asset URLs at build time.
 
-For the next matchday, how much each result (home, draw, away) moves every team's title, top-four and Champions League odds. It comes from the existing simulations by recording each upcoming fixture's simulated result and conditioning on it, with no extra runs. Show it as badges on Matches and as "games that decide our season" on club pages.
-
-### 4. Clubs tab: a weekly power ranking
-
-The Clubs tab already rates every club overall, in attack and in defence on one scale, but recomputes the ranking at every daily refresh, so nothing shows how clubs move. The changes:
-
-- **Weekly ranking.** Freeze the ranking every Monday, after the weekend round and any midweek Champions League games, and keep each week's ranks.
-- **Movement.** Next to every rank, show places gained or dropped since the previous Monday: a green ▲ with the number, a red ▼ with the number, or a dash. Do the same for the attack and defence ranks.
-- **Attack and defence up front.** Give the offensive and defensive scores the same prominence as the overall rating, and add the week's biggest risers and fallers.
-- **Movement from the first week.** Done: Mondays from 17 August are backfilled in `site/data/history/2026/clubs.json`, and the Monday refresh freezes each new week.
-- **Cross-league scale.** Done in Plan D: ratings come from the Champions League model on one European scale (the share of points against an average European top-flight side). Next, let the ranking include Champions League clubs from other leagues, which are already rated in `cl_club_ratings.csv`.
-- **Design.** [DESIGN.md](DESIGN.md) reserves green for called results and red for relegation or misses, so record the arrows there as a new use. As with calls, colour never stands alone: always show the arrow and the number.
-
-### 5. Scorecard tab
+### 3. Scorecard tab
 
 The track record in proper scores (log loss, RPS, Brier) against always backing the home side, Elo, and the market from the odds archive, with a calibration chart and a rolling view. "Called N of M" moves below these. It needs a few weeks of archived odds first. Champions League forecasts already use earlier archived prices (Plan E), so they are not independent of the market there.
 
-### 6. Players (phase 6)
+### 4. Players (phase 6)
 
 Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. A player dataset with ratings for whole squads would give every player a prior, including clubs outside the top five leagues where we have the least data. Check each source's terms before republishing its data on the site. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
 
