@@ -40,8 +40,61 @@ def fetch_the_odds_api_h2h_probs(
         "commenceTimeTo": (pd.Timestamp.now(tz="UTC") + pd.Timedelta(days=int(days))).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     data = json.loads(cached_get(f"{THE_ODDS_API_BASE}/sports/{sport_key}/odds", params=params, timeout=timeout))
+    columns = ["match_id", "commence_time", "observed_at", "home_team", "away_team", "home_norm", "away_norm", *PROB_COLUMNS]
+    df = pd.DataFrame(_h2h_quotes(data))
+    if df.empty:
+        return pd.DataFrame(columns=columns)
+    for column in ("commence_time", "observed_at"):
+        df[column] = pd.to_datetime(df[column], errors="coerce", utc=True)
+    df["home_norm"] = df["home_team"].apply(normalize_team)
+    df["away_norm"] = df["away_team"].apply(normalize_team)
+    # A consensus is only known after its newest component quote was observed.
+    grouped = df.groupby(["home_norm", "away_norm", "commence_time"], as_index=False).agg({
+        "match_id": "first", "home_team": "first", "away_team": "first",
+        "observed_at": lambda values: values.max() if values.notna().all() else pd.NaT,
+        **{column: "mean" for column in PROB_COLUMNS},
+    })
+    grouped[PROB_COLUMNS] = grouped[PROB_COLUMNS].div(grouped[PROB_COLUMNS].sum(axis=1), axis=0)
+    return grouped[columns]
+
+
+ARCHIVE_COLUMNS = ["fetched_at", "competition", "match_id", "commence_time", "observed_at", "home_team", "away_team",
+                   "books", "last_update", *PROB_COLUMNS, "pinnacle_home", "pinnacle_draw", "pinnacle_away"]
+
+
+def the_odds_api_snapshot(*, sport_key, competition, api_key=None, regions="eu", timeout=30, fetched_at=None):
+    """Current 1X2 prices for one competition, one row per fixture, for the dated odds archive.
+
+    Rows hold the bookmaker count, the mean of de-margined bookmaker probabilities and Pinnacle's
+    de-margined probabilities when it quotes. `observed_at` is the fetch time, so the archive can be
+    passed as an odds snapshot for forecasts made after it. Costs one API credit per region.
+    """
+    api_key = api_key or os.getenv("ODDS_API_KEY") or os.getenv("ODDS_DATA_API_KEY")
+    if not api_key:
+        raise ValueError("Missing ODDS_API_KEY / ODDS_DATA_API_KEY for The Odds API.")
+    fetched_at = pd.Timestamp.now(tz="UTC") if fetched_at is None else pd.to_datetime(fetched_at, utc=True)
+    params = {"apiKey": api_key, "regions": regions, "markets": "h2h", "oddsFormat": "decimal", "dateFormat": "iso"}
+    quotes = pd.DataFrame(_h2h_quotes(json.loads(cached_get(f"{THE_ODDS_API_BASE}/sports/{sport_key}/odds",
+                                                           params=params, timeout=timeout))))
+    if quotes.empty:
+        return pd.DataFrame(columns=ARCHIVE_COLUMNS)
+    keys = ["match_id", "commence_time", "home_team", "away_team"]
+    out = quotes.groupby(keys, as_index=False).agg(
+        books=("bookmaker", "nunique"), last_update=("observed_at", "max"),
+        **{column: (column, "mean") for column in PROB_COLUMNS})
+    out[PROB_COLUMNS] = out[PROB_COLUMNS].div(out[PROB_COLUMNS].sum(axis=1), axis=0)
+    pinnacle = quotes[quotes["bookmaker"].eq("pinnacle")].drop_duplicates("match_id").set_index("match_id")[PROB_COLUMNS]
+    pinnacle.columns = ["pinnacle_home", "pinnacle_draw", "pinnacle_away"]
+    out = out.join(pinnacle, on="match_id")
+    out["fetched_at"] = out["observed_at"] = fetched_at.isoformat()
+    out["competition"] = competition
+    return out[ARCHIVE_COLUMNS].sort_values(["commence_time", "home_team"]).reset_index(drop=True)
+
+
+def _h2h_quotes(events):
+    """One row per bookmaker 1X2 quote in a The Odds API response, with de-margined probabilities."""
     rows = []
-    for match in data:
+    for match in events:
         home, away = match.get("home_team"), match.get("away_team")
         if not home or not away:
             continue
@@ -59,25 +112,10 @@ def fetch_the_odds_api_h2h_probs(
                 rows.append({
                     "match_id": match.get("id"), "commence_time": match.get("commence_time"),
                     "observed_at": market.get("last_update") or bookmaker.get("last_update"),
-                    "home_team": home, "away_team": away,
+                    "bookmaker": bookmaker.get("key"), "home_team": home, "away_team": away,
                     **dict(zip(PROB_COLUMNS, probs)),
                 })
-    columns = ["match_id", "commence_time", "observed_at", "home_team", "away_team", "home_norm", "away_norm", *PROB_COLUMNS]
-    df = pd.DataFrame(rows)
-    if df.empty:
-        return pd.DataFrame(columns=columns)
-    for column in ("commence_time", "observed_at"):
-        df[column] = pd.to_datetime(df[column], errors="coerce", utc=True)
-    df["home_norm"] = df["home_team"].apply(normalize_team)
-    df["away_norm"] = df["away_team"].apply(normalize_team)
-    # A consensus is only known after its newest component quote was observed.
-    grouped = df.groupby(["home_norm", "away_norm", "commence_time"], as_index=False).agg({
-        "match_id": "first", "home_team": "first", "away_team": "first",
-        "observed_at": lambda values: values.max() if values.notna().all() else pd.NaT,
-        **{column: "mean" for column in PROB_COLUMNS},
-    })
-    grouped[PROB_COLUMNS] = grouped[PROB_COLUMNS].div(grouped[PROB_COLUMNS].sum(axis=1), axis=0)
-    return grouped[columns]
+    return rows
 
 
 def _football_data_csv(league_code, season_start_year, timeout, cache_dir, use_cache):
