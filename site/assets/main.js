@@ -1,5 +1,5 @@
 // Router: #<competition> (tables), #matches[/YYYY-MM-DD], #clubs[/<club>], #model[/<section>].
-import { COMPS, $, loadCrests } from "./core.js";
+import { COMPS, $, loadCrests, loadRun } from "./core.js";
 import { showTables } from "./tables.js";
 import { showMatches } from "./matches.js";
 import { showClubs } from "./clubs.js";
@@ -36,7 +36,10 @@ function renderSubnav() {
   if (on) on.scrollIntoView({ block: "nearest", inline: "nearest" });
 }
 
-loadCrests().catch(() => { /* Club names remain usable if the crest manifest is unavailable. */ }).finally(() => {
+Promise.all([
+  loadCrests().catch(() => { /* Club names remain usable if the crest manifest is unavailable. */ }),
+  loadRun().catch(() => { /* Each page falls back to its own run time. */ }),
+]).finally(() => {
   window.addEventListener("hashchange", route);
   route();
 });
