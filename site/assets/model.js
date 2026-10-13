@@ -1,12 +1,13 @@
-// Model view: how the forecasts and ratings are made. Static copy, plus the live league factors.
-import { LEAGUES, $, esc, getJSON, setStatus } from "./core.js";
+// Model view: how the forecasts and ratings are made. Static copy, plus the live league averages.
+import { LEAGUES, $, dec, esc, getJSON, setStatus } from "./core.js";
 
 export async function showModel(section) {
   document.title = "The model · Floodlight";
   try {
     const clubs = await getJSON("clubs.json");
     setStatus(clubs.generated_at);
-    $("c-factors").innerHTML = LEAGUES.map((l) => `${esc(l.label)} <b>${clubs.league_factors[l.slug].toFixed(2)}</b>`).join(" · ");
+    $("c-factors").innerHTML = LEAGUES.map((l) => `${esc(l.label)} <b>${dec(clubs.league_averages[l.slug])}</b>`).join(" · ");
+    $("c-pool").textContent = `${clubs.scale.clubs} clubs in ${clubs.scale.leagues} European top flights`;
   } catch {
     $("c-factors").textContent = "unavailable right now";
   }

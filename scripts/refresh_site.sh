@@ -24,7 +24,7 @@ for competition in PL PD BL1 SA FL1; do
 done
 echo "== UCL"
 sleep 45
-rm -f "$OUT"/cl_{forecast,metadata,match_forecasts}.json "$OUT"/cl_{standings_snapshot,matches_snapshot}.csv
+rm -f "$OUT"/cl_{forecast,metadata,match_forecasts}.json "$OUT"/cl_{standings_snapshot,matches_snapshot,club_ratings}.csv
 football-ucl --n-sim "$N_SIM" --out-dir "$OUT" || failed+=(UCL)
 
 python scripts/build_site_data.py --src "$OUT" --dest site/data || exit 1

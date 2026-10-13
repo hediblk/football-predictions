@@ -22,8 +22,8 @@ def points_share(attack, defense, opponent_attack, opponent_defense, *, intercep
     return float(100 * (3 * matrix[home > away].sum() + matrix[home == away].sum()) / 3)
 
 
-def club_ratings(dc, teams):
-    """Ratings for `teams` against their own average club, from a fitted (xG-blended) goal model.
+def club_ratings(dc, teams, reference=None):
+    """Ratings for `teams` against the average of `reference` clubs (default: `teams` themselves).
 
     A rating is the share of points a club would take off the average club on a neutral pitch.
     The attack rating rates the club as if its defence were as far above average as its attack,
@@ -33,7 +33,8 @@ def club_ratings(dc, teams):
     """
     index = [dc.team_index[team] for team in teams]
     attack, defense = dc.attack[index], dc.defense[index]
-    mean_attack, mean_defense = float(attack.mean()), float(defense.mean())
+    pool = index if reference is None else [dc.team_index[team] for team in reference]
+    mean_attack, mean_defense = float(dc.attack[pool].mean()), float(dc.defense[pool].mean())
 
     def share(a, d, venue=0.0):
         return points_share(a, d, mean_attack, mean_defense, intercept=dc.intercept, rho=dc.rho, home_advantage=venue)

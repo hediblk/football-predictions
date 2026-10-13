@@ -15,6 +15,8 @@ Keep `src/standing_prediction` as the main product, with one current notebook in
 - xG and predictive head-to-head (H2H) goal-rate adjustments, a `football-ablation` command that tunes them on earlier seasons and compares variants on later ones, and tests for prior-only features. xG now uses the stored global default; H2H remains off.
 - Separately installable `packages/forecast-calibration`, with `football-calibrate`, pooled league-season weighting, chronological holdout and leave-out checks, external robustness leagues, and versioned defaults included with `standing_prediction`.
 - A calibrated xG scale and a stronger ridge, so the xG blend no longer pulls title contenders toward average (Plan C); the Champions League joint fit uses the same scale.
+- Champions League league offsets shrink toward a typical league level, with shrunk club European effects, and club ratings sit on one European scale (Plan D).
+- Archived Champions League prices set each league's current level in the joint fit (Plan E).
 
 ## xG and H2H: sources and design
 
@@ -221,6 +223,104 @@ Scale 1.4 with ridge 2 improves on the previous model by 0.0120 (standard error 
 **Code.** `blend_xg_strengths` takes a scale; the artifact stores `xg_scale` beside `xg_weight`; `football-predict`, `football-backtest` and the Champions League joint fit read it, and metadata records it. `football-calibrate` searches each positive xG weight with scales 1–1.5 and now defaults to ridge 2. Backtest and ablation defaults follow the stored decay and ridge.
 
 **Limits.** The scale is one multiplier for every team; it does not separate persistent finishing skill from noise club by club. The replay covers two tournaments, and the ridge and scale were chosen on domestic data. Timing approximations from Plan A still apply.
+
+## Plan D: Champions League league offsets and a European club scale (implemented 2026-10-13)
+
+**Problem.** The joint model shrank league offsets toward the reference league, the Premier League. Countries with little European evidence therefore sat close to Premier League level: Poland +0.04, Wales −0.01 and Slovakia −0.11, on one to three effective European matches each. Dominant clubs from small leagues looked strong as a result.
+
+On the first archived bookmaker prices (18 Champions League fixtures, 13 October), the model was far flatter than the market. It gave LASK 38% to beat Liverpool (market 10%) and Slovan Bratislava 49% against Stuttgart (market 10%); KL(market‖model) was 0.089. Title odds had Manchester City at 2.3% and Liverpool at 0.5%, far below August bookmaker prices, while Shakhtar (5.3%) and Sporting (2.9%) sat above them.
+
+**Fix.**
+- **Fitted prior for offsets.** Offsets now shrink toward a fitted typical league level (a free prior mean shared by all leagues), so a sparsely observed league starts as an ordinary European league. The reference league still fixes the scale. The offset ridge drops from 4 to 1, and the title sensitivity check now refits at 0.25 and 4.
+- **Club European effects.** Each club with European matches gets an effect for its European record beyond its domestic strength and league offset, shrunk with ridge 16. One club's record (Paris Saint-Germain's) no longer moves every club in its league.
+
+**Checks.** Log loss is on the Plan B replay origins and 306 matches; KL is against the 18 priced fixtures.
+
+| Joint model | Replay log loss | KL(market‖model) |
+| :--- | ---: | ---: |
+| Previous (prior on the reference league, ridge 4) | 0.9395 | 0.089 |
+| Fitted prior, ridge 4 | 0.9162 | 0.047 |
+| Fitted prior, ridge 2 | 0.9159 | 0.039 |
+| Fitted prior, ridge 1 | 0.9165 | 0.033 |
+| Fitted prior, ridge 0.5 | 0.9173 | 0.030 |
+| Ridge 1 + club effects, club ridge 4 | 0.9078 | 0.041 |
+| **Ridge 1 + club effects, club ridge 16** | **0.9088** | **0.030** |
+
+Ridges 1 and 2 tie on the replay, and ridge 1 agrees better with the market. Club effects mainly help matches between two top-five clubs (0.944 to 0.928) and cost some accuracy between two clubs from other leagues (0.978 to 0.991). Club ridge 4 was rejected: it agreed worse with the market and lost more in those matches.
+
+Dropping Elo from the blend worsened the replay at every setting (for example 0.9165 to 0.9201 at ridge 1), so Elo stays. Elo alone is still the flattest component against the market (KL 0.152).
+
+The official replay (`football-ucl --evaluate`) with the final defaults, committed in place of the Plan C files:
+- Log loss: 0.90876 joint (Plan C: 0.93951), 0.91573 goals only, 0.93034 without offsets.
+- Position RPS after MD2–6: 0.0837 (Plan C: 0.0913).
+- Brier improves for round of 16 (0.0838 to 0.0766), quarter-finals (0.0667 to 0.0661) and final (0.0392 to 0.0345).
+- Brier worsens slightly for semi-finals (0.0457 to 0.0475) and title (0.0241 to 0.0252), on two tournaments.
+
+**Fitted scale (13 October).** Offsets relative to the Premier League: Ligue 1 −0.26, La Liga −0.30, Bundesliga −0.35, Serie A −0.35, Portugal −0.58, Netherlands −0.70; the typical league sits at −0.65. The largest club effects are Paris Saint-Germain +0.16, Bayern +0.09, Atlético and Real Madrid +0.07, and Manchester City and Villarreal −0.12.
+
+**Live effect.** Champions League title odds, published then new:
+- Arsenal 7.2% to 26.9%, Paris Saint-Germain 19.4% to 21.8%.
+- Bayern 21.3% to 14.9%, Barcelona 20.9% to 9.4%.
+- Liverpool 0.3% to 5.7%, Real Madrid 6.8% to 5.5%, Manchester City 2.1% to 5.4%.
+- Shakhtar 2.0% to 0.0%.
+
+**European club scale.** `football-ucl` now writes `cl_club_ratings.csv` in the SPI style. A rating is the share of points against the average of the 327 clubs with domestic results in the past year (17 top flights). Scores and Concedes are goals per game against that side. The Clubs tab reads these ratings instead of per-league ratings multiplied by Opta league factors (`LEAGUE_STRENGTH` is removed).
+- The top: Paris Saint-Germain 92.4, Bayern 91.2, Arsenal 90.6, Barcelona 90.5. StatsUltra's 13 October values were Barcelona 90.6, Bayern 90.3, Arsenal 89.2 and Paris Saint-Germain 87.6.
+- League averages: Premier League 78.2, Ligue 1 64.7, La Liga 61.9, Bundesliga 59.1, Serie A 58.7.
+
+**Limits.**
+- The Premier League's lead over the other big leagues (0.26–0.35) may be too large. Mid-table Premier League clubs rank above Atlético, Juventus and Dortmund, and bookmakers made Atlético 50% against Manchester United where the model said 37%. Addressed by Plan E.
+- Ligue 1 still edges the other big leagues. Addressed by Plan E.
+- Two tournaments and 18 priced fixtures are thin evidence; the odds archive will add more.
+- Offsets still learn only from European matches.
+
+## Plan E: market-informed league levels (implemented 2026-10-13)
+
+**Problem.** Plan D's offsets come only from European results since 2024/25, with a half-life of about 7.7 months, and on those results the Premier League dominates. Its clubs took 2.0 points a game from La Liga clubs (31 meetings), 2.2 from Bundesliga clubs and 2.3 from Serie A clubs; the lead holds without the Europa and Conference League, without 2024/25, and without any single club. Ligue 1 ranked second only through Paris Saint-Germain:
+- La Liga clubs took 2.0 points a game from Ligue 1 clubs in 13 direct meetings.
+- Without PSG's European games, Ligue 1's offset falls from −0.26 to −0.40, below La Liga's −0.30. Club ridge 16 credits only part of PSG's record to PSG.
+
+League averages put the Premier League 15.7 points ahead of La Liga. StatsUltra, which anchors league strength to ClubElo's long-run league averages, has 78.5 for the Premier League, 71.0 La Liga, 70.2 Bundesliga, 69.8 Serie A and 67.3 Ligue 1: a 7.5-point lead, with Ligue 1 last of the five.
+
+**The market disagrees by league.** One shift per league, fitted to 17 of the 18 archived MD3 prices, predicts the 18th far better: KL(market‖model) falls from 0.030 to 0.014, better on 14 of 18 fixtures, about three standard errors. The fitted shifts relative to the Premier League are Bundesliga +0.15, La Liga +0.07, Serie A +0.03 and Ligue 1 −0.08.
+
+**Fix.**
+- Archived Champions League quotes enter the joint fit as extra rows scored by the cross-entropy of the quoted 1X2 probabilities under Dixon–Coles. Each quote weighs like ten results and decays with the same xi. Only the latest quote observed before both the origin and kickoff counts.
+- Quotes see each league's offset plus a current shift with ridge 5; results see the offset alone. The market moves a league's present level without rewriting two seasons of European results. Forecasts use the shifted offsets; the metadata keeps the results-only ones.
+- `football-ucl` reads `data/odds` by default (`--odds-archive`, `--no-market`). The replay is unchanged, since no archived prices exist before 2026/27.
+
+**Checks.** Leave-one-fixture-out on the 18 MD3 prices: KL against the held-out fixture's price.
+
+| Joint fit | LOO KL |
+| :--- | ---: |
+| Plan D (results only) | 0.0301 |
+| Quotes, weight 10, no shifts | 0.0249 |
+| Quotes plus domestic league quotes, weight 10, no shifts | 0.0255 |
+| Quotes and shifts, weight 10, shift ridge 2 | 0.0169 |
+| **Quotes and shifts, weight 10, shift ridge 5** | **0.0167** |
+| Quotes and shifts, weight 10, shift ridge 10 | 0.0178 |
+| Quotes and shifts, weight 40, shift ridge 5 | 0.0161 |
+
+Without shifts, the quotes mostly move the quoted clubs, so little reaches the held-out fixture. Domestic league quotes add nothing and stay out. Weights above 10 gain little while leaning harder on single prices.
+
+**Tested and not adopted.**
+- A per-league spread scaling domestic deviations in European games. Replay 0.9088 to 0.9073 at ridge 4 (SE 0.0013), market KL unchanged. It lifts Barcelona and Bayern but widens the gap between league averages.
+- Club ridge 8: replay −0.0014 (SE 0.0029), market KL worse (0.033).
+
+**Effect (13 October).**
+- Offsets relative to the Premier League, results only then current: La Liga −0.29 to −0.17, Bundesliga −0.33 to −0.19, Serie A −0.34 to −0.29, Ligue 1 −0.27 to −0.31.
+- League averages: Premier League 74.2, La Liga 65.3, Bundesliga 63.6, Ligue 1 58.0, Serie A 57.5 (Plan D: 76.2, 60.6, 57.5, 63.2, 56.5).
+- Top clubs: Bayern 94.2, Barcelona 93.5, Arsenal 89.8, Paris Saint-Germain 89.8, Real Madrid 89.5.
+- Title odds, results only then with prices: Bayern 13.9% to 24.1%, Arsenal 28.2% to 22.0%, Barcelona 8.8% to 16.1%, Real Madrid 5.5% to 11.0%, Paris Saint-Germain 21.4% to 10.4%, Manchester City 5.8% to 3.8%, Liverpool 5.9% to 3.4%.
+- Atlético v Manchester United: 46% Atlético (market 50%, results only 40%).
+
+PSG's fall is league-level: without the Manchester City–PSG quote, PSG's ratings barely change, because the Lens and Lille prices also say the model overrated French clubs.
+
+**Limits.**
+- 18 priced fixtures, one matchday. Each matchday adds 18; recheck the weight and ridge with results after MD6.
+- Champions League forecasts now partly follow the market, so a scorecard against market prices must allow for that.
+- Serie A stays low (57.5 against StatsUltra's 69.8); its four priced fixtures barely move it.
+- Barcelona v Arsenal on a neutral pitch is still 32% Barcelona, 42% Arsenal. Barcelona rates higher against an average side and has the best attack, but Arsenal have the best defence by far (94.5; next best 85.0) and Barcelona's ranks 13th.
 
 ## Other existing priorities
 

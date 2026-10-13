@@ -2,20 +2,17 @@
 
 The goals are good league-winner odds and good Champions League forecasts, from single matches through to the trophy. Title outcomes are too few to tell models apart (50 league-seasons put a standard error of 0.01–0.03 on champion log loss). Model changes are therefore judged on match log loss over all seasons, with the top-three points bias, title metrics and the market as checks. [PLAN.md](PLAN.md) records what is implemented and why.
 
-Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, and the daily [odds archive](data/odds/README.md).
+Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, the daily [odds archive](data/odds/README.md), Champions League league offsets with one European club scale (Plan D), and league levels set by archived Champions League prices (Plan E).
 
 ## Next
 
-### 1. Champions League league offsets (highest priority)
+### 1. Champions League league offsets: follow-ups
 
-**Problem.** League offsets learned from European matches put Ligue 1 above the Premier League (+0.09 on the log goal-rate scale) and Ukraine above Portugal, the latter on about three effective European matches. Manchester City sits at 2.3% to win the Champions League and Liverpool at 0.5%, against about 10% each from bookmakers in August. European evidence comes mostly from each league's top clubs, so one club's record (Paris Saint-Germain's) moves every club in its league.
+The main fix is done (Plan D in [PLAN.md](PLAN.md)). League offsets now shrink toward a typical league level instead of the Premier League, and each club gets a shrunk European effect. Replay log loss fell from 0.9395 to about 0.909. Left to do:
 
-**Options to test:**
-- Club-level European effects with shrinkage, so a club's European record attaches to that club rather than its league.
-- A league-strength prior from an outside index, such as the Opta league ratings the Clubs tab already uses, updated by European results.
-- More European matches. Europa and Conference League games bring mid-table clubs and pin down league averages better; first check what the openfootball supplement already covers.
-
-**Measure:** the 306-match replay (`football-ucl --evaluate`), split by xG coverage, and current title odds against bookmaker prices.
+- **Recheck the market weight after MD6.** Archived Champions League prices now set each league's current level (Plan E), which cut the Premier League's lead over La Liga and the Bundesliga by about 40% and put La Liga above Ligue 1. The weight (10 per quote) and shift ridge (5) rest on one matchday of prices; refit them by leave-one-out on prices and score them on results once six matchdays are archived.
+- **Serie A looks low.** It sits last of the big five (57.5 against StatsUltra's 69.8); its few priced fixtures barely move it.
+- **Europa and Conference League results for 2025/26 onward.** No free source has them yet; openfootball stops at 2024/25 plus qualifiers. Qualifying rounds could still help the small leagues.
 
 ### 2. Title-race charts
 
@@ -33,12 +30,12 @@ The Clubs tab already rates every club overall, in attack and in defence on one 
 - **Movement.** Next to every rank, show places gained or dropped since the previous Monday: a green ▲ with the number, a red ▼ with the number, or a dash. Do the same for the attack and defence ranks.
 - **Attack and defence up front.** Give the offensive and defensive scores the same prominence as the overall rating, and add the week's biggest risers and fallers.
 - **Movement from the first week.** Backfill earlier Mondays by rerunning the ratings at past dates (the same `--as-of` need as the title-race charts). Otherwise arrows only appear after two Mondays.
-- **Cross-league scale.** Leagues are compared through Opta's league averages, kept by hand in `LEAGUE_STRENGTH` (`scripts/build_site_data.py`). Once the Champions League league offsets (item 1) are fixed, they could replace that table and let the ranking include Champions League clubs from other leagues.
+- **Cross-league scale.** Done in Plan D: ratings come from the Champions League model on one European scale (the share of points against an average European top-flight side). Next, let the ranking include Champions League clubs from other leagues, which are already rated in `cl_club_ratings.csv`.
 - **Design.** [DESIGN.md](DESIGN.md) reserves green for called results and red for relegation or misses, so record the arrows there as a new use. As with calls, colour never stands alone: always show the arrow and the number.
 
 ### 5. Scorecard tab
 
-The track record in proper scores (log loss, RPS, Brier) against always backing the home side, Elo, and the market from the odds archive, with a calibration chart and a rolling view. "Called N of M" moves below these. It needs a few weeks of archived odds first.
+The track record in proper scores (log loss, RPS, Brier) against always backing the home side, Elo, and the market from the odds archive, with a calibration chart and a rolling view. "Called N of M" moves below these. It needs a few weeks of archived odds first. Champions League forecasts already use earlier archived prices (Plan E), so they are not independent of the market there.
 
 ### 6. Players (phase 6)
 

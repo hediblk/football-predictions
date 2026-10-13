@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from champions_league.identities import canonical_team
+
 
 LEAGUES = [
     # slug, code, name, country, zones as (key, label, first, last)
@@ -53,13 +55,6 @@ SHORT_NAMES = {
 }
 # The big clubs the Clubs tab opens with, by football-data.org team id.
 FEATURED_CLUBS = [81, 86, 78, 5, 4, 524, 108, 98, 109, 64, 65, 57]
-# Average team rating of each league's clubs in the Opta Power Rankings (0-100 global scale), used to put
-# within-league club ratings on one scale. Opta updates these daily; refresh this table now and then.
-LEAGUE_STRENGTH = {"PL": 92.7, "BL1": 86.6, "PD": 86.4, "SA": 85.7, "FL1": 85.5}
-LEAGUE_STRENGTH_SOURCE = {
-    "name": "Opta Power Rankings, average team rating by league", "date": "2026-10-12",
-    "url": "https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true",
-}
 AFFIXES = r"^(?:FC|AFC|CF|AC|ACF|AS|SS|SSC|US|SC|SV|RC|RCD|CA|UD|SD|OGC|AJ|ES|BC|FK|SK|ŠK|VfB|VfL|1\.)\s+|\s+(?:FC|AFC|CF|CFC|BC|OSC|SCO|AC|UD|FK|SK|KV|Calcio|\d{4}|\d{2})$"
 
 
@@ -216,30 +211,37 @@ def export_matches(src, slug, prefix):
 
 
 def export_clubs(src, leagues, ucl, previous=None):
-    """Club ratings from each league's model, scaled by league strength onto one scale, with ranks.
+    """Club ratings on one European scale from the Champions League joint model, with ranks.
 
-    A league without fresh ratings keeps its clubs from `previous` (the last published file).
+    Ratings are shares of points against an average European top-flight club (`cl_club_ratings.csv`),
+    so leagues compare through the model's league offsets. Without fresh ratings the previous file is
+    kept; a club missing from them keeps its previous entry.
     """
+    path = src / "cl_club_ratings.csv"
+    if not path.exists():
+        if previous is None:
+            raise FileNotFoundError(path)
+        print("Club ratings unavailable; kept the previous file")
+        return previous
+    ratings = pd.read_csv(path).set_index("team")
+    earlier = {club["id"]: club for club in (previous or {}).get("clubs", [])}
     in_ucl = {team["id"] for team in ucl["teams"]}
-    strongest = max(LEAGUE_STRENGTH.values())
-    clubs, kept = [], []
-    factors = {league["slug"]: round(LEAGUE_STRENGTH[league["code"]] / strongest, 4) for league in leagues}
+    clubs, missing = [], []
     for league in leagues:
-        path = src / f"{league['code'].lower()}_club_ratings.csv"
-        if not path.exists():
-            clubs += [club for club in (previous or {}).get("clubs", []) if club["league"] == league["slug"]]
-            kept.append(league["slug"])
-            continue
-        ratings = pd.read_csv(path).set_index("team")
-        factor = factors[league["slug"]]
         for team in league["teams"]:
-            row = ratings.loc[team["full"]]
+            key = canonical_team(team["full"])
+            if key not in ratings.index:
+                missing.append(team["name"])
+                if team["id"] in earlier:
+                    clubs.append(earlier[team["id"]])
+                continue
+            row = ratings.loc[key]
             clubs.append({
                 "id": team["id"], "slug": team["slug"], "name": team["name"], "full": team["full"],
                 "league": league["slug"], "ucl": team["id"] in in_ucl,
-                "rating": num(factor * row["rating"], 1), "attack": num(factor * row["attack_rating"], 1),
-                "defense": num(factor * row["defense_rating"], 1), "home": num(factor * row["home_rating"], 1),
-                "away": num(factor * row["away_rating"], 1), "league_rating": num(row["rating"], 1),
+                "rating": num(row["rating"], 1), "attack": num(row["attack_rating"], 1),
+                "defense": num(row["defense_rating"], 1), "home": num(row["home_rating"], 1),
+                "away": num(row["away_rating"], 1), "league_rating": num(row["league_rating"], 1),
                 "gf": num(row["goals_for"]), "ga": num(row["goals_against"]),
             })
     for field in ("rating", "attack", "defense"):
@@ -250,11 +252,14 @@ def export_clubs(src, leagues, ucl, previous=None):
         for rank, club in enumerate(members, start=1):
             club["league_rank"] = rank
     clubs.sort(key=lambda club: club["rating_rank"])
-    if kept:
-        print(f"Club ratings unavailable for {', '.join(kept)}; kept their previous entries")
+    if missing:
+        print(f"No European-scale rating for {', '.join(missing)}; kept previous entries where available")
+    averages = {league["slug"]: num(sum(c["rating"] for c in clubs if c["league"] == league["slug"])
+                                    / max(1, sum(c["league"] == league["slug"] for c in clubs)), 1) for league in leagues}
     return {
-        "generated_at": max(league["generated_at"] for league in leagues), "season": ucl["season"],
-        "league_factors": factors, "league_strength": LEAGUE_STRENGTH_SOURCE,
+        "generated_at": ucl["generated_at"], "season": ucl["season"],
+        "scale": {"reference": "average European top-flight club", "clubs": len(ratings), "leagues": int(ratings["league"].nunique())},
+        "league_averages": averages,
         "featured": [club_id for club_id in FEATURED_CLUBS if any(club["id"] == club_id for club in clubs)],
         "clubs": clubs,
     }

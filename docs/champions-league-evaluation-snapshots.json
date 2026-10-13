@@ -4,14 +4,14 @@
     "snapshot": "MD2",
     "as_of": "2024-10-03T00:00:01+00:00",
     "history_matches": 10431,
-    "position_rps": 0.1145896523809524,
+    "position_rps": 0.10903089166666667,
     "conservation": {
       "top8_pct": {
         "actual": 800.0,
         "expected": 800
       },
       "playoffs_pct": {
-        "actual": 1600.0,
+        "actual": 1599.9999999999998,
         "expected": 1600
       },
       "eliminated_pct": {
@@ -19,11 +19,72 @@
         "expected": 1200
       },
       "round16_pct": {
-        "actual": 1600.0000000000002,
+        "actual": 1600.0,
         "expected": 1600
       },
       "quarterfinal_pct": {
-        "actual": 800.0000000000001,
+        "actual": 800.0,
+        "expected": 800
+      },
+      "semifinal_pct": {
+        "actual": 400.0,
+        "expected": 400
+      },
+      "final_pct": {
+        "actual": 200.0,
+        "expected": 200
+      },
+      "title_pct": {
+        "actual": 100.0,
+        "expected": 100
+      }
+    },
+    "playoffs_brier": 0.213539125,
+    "round16_brier": 0.19973644444444447,
+    "quarterfinal_brier": 0.1307415,
+    "semifinal_brier": 0.09744315277777779,
+    "final_brier": 0.059074611111111106,
+    "title_brier": 0.030041791666666665,
+    "position_rps_xg_True": 0.1169120301948052,
+    "playoffs_brier_xg_True": 0.26057720454545463,
+    "round16_brier_xg_True": 0.18532777272727274,
+    "quarterfinal_brier_xg_True": 0.2003824090909091,
+    "semifinal_brier_xg_True": 0.1565369659090909,
+    "final_brier_xg_True": 0.09602062500000003,
+    "title_brier_xg_True": 0.04902985227272727,
+    "position_rps_xg_False": 0.09664624540816327,
+    "playoffs_brier_xg_False": 0.13962214285714286,
+    "round16_brier_xg_False": 0.22237864285714287,
+    "quarterfinal_brier_xg_False": 0.021305785714285715,
+    "semifinal_brier_xg_False": 0.0045814464285714295,
+    "final_brier_xg_False": 0.0010165892857142858,
+    "title_brier_xg_False": 0.00020341071428571432
+  },
+  {
+    "season": 2024,
+    "snapshot": "MD4",
+    "as_of": "2024-11-07T00:00:01+00:00",
+    "history_matches": 11117,
+    "position_rps": 0.0885524111111111,
+    "conservation": {
+      "top8_pct": {
+        "actual": 800.0,
+        "expected": 800
+      },
+      "playoffs_pct": {
+        "actual": 1600.0000000000002,
+        "expected": 1600
+      },
+      "eliminated_pct": {
+        "actual": 1200.0,
+        "expected": 1200
+      },
+      "round16_pct": {
+        "actual": 1600.0,
+        "expected": 1600
+      },
+      "quarterfinal_pct": {
+        "actual": 800.0,
         "expected": 800
       },
       "semifinal_pct": {
@@ -35,105 +96,44 @@
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.00000000000001,
-        "expected": 100
-      }
-    },
-    "playoffs_brier": 0.19918479166666667,
-    "round16_brier": 0.21053102777777777,
-    "quarterfinal_brier": 0.15288170833333334,
-    "semifinal_brier": 0.09915890277777778,
-    "final_brier": 0.05875286111111111,
-    "title_brier": 0.030407319444444445,
-    "position_rps_xg_True": 0.12234488246753246,
-    "playoffs_brier_xg_True": 0.24249714772727274,
-    "round16_brier_xg_True": 0.21472528409090907,
-    "quarterfinal_brier_xg_True": 0.23108978409090913,
-    "semifinal_brier_xg_True": 0.15822346590909092,
-    "final_brier_xg_True": 0.09527675000000002,
-    "title_brier_xg_True": 0.049574545454545454,
-    "position_rps_xg_False": 0.10240286224489795,
-    "playoffs_brier_xg_False": 0.13112251785714285,
-    "round16_brier_xg_False": 0.2039400535714286,
-    "quarterfinal_brier_xg_False": 0.02998330357142857,
-    "semifinal_brier_xg_False": 0.006343160714285714,
-    "final_brier_xg_False": 0.0013581785714285712,
-    "title_brier_xg_False": 0.00028739285714285715
-  },
-  {
-    "season": 2024,
-    "snapshot": "MD4",
-    "as_of": "2024-11-07T00:00:01+00:00",
-    "history_matches": 11117,
-    "position_rps": 0.0829203119047619,
-    "conservation": {
-      "top8_pct": {
-        "actual": 800.0,
-        "expected": 800
-      },
-      "playoffs_pct": {
-        "actual": 1600.0,
-        "expected": 1600
-      },
-      "eliminated_pct": {
-        "actual": 1200.0,
-        "expected": 1200
-      },
-      "round16_pct": {
-        "actual": 1599.9999999999998,
-        "expected": 1600
-      },
-      "quarterfinal_pct": {
-        "actual": 800.0,
-        "expected": 800
-      },
-      "semifinal_pct": {
-        "actual": 400.0,
-        "expected": 400
-      },
-      "final_pct": {
-        "actual": 200.00000000000003,
-        "expected": 200
-      },
-      "title_pct": {
         "actual": 100.0,
         "expected": 100
       }
     },
-    "playoffs_brier": 0.16260675,
-    "round16_brier": 0.20199170833333335,
-    "quarterfinal_brier": 0.149820375,
-    "semifinal_brier": 0.0797781111111111,
-    "final_brier": 0.05361906944444445,
-    "title_brier": 0.03014413888888888,
-    "position_rps_xg_True": 0.08404346753246754,
-    "playoffs_brier_xg_True": 0.19263064772727273,
-    "round16_brier_xg_True": 0.19680279545454543,
-    "quarterfinal_brier_xg_True": 0.21905012499999998,
-    "semifinal_brier_xg_True": 0.12215231818181818,
-    "final_brier_xg_True": 0.08547078409090911,
-    "title_brier_xg_True": 0.04876788636363636,
-    "position_rps_xg_False": 0.08115535306122451,
-    "playoffs_brier_xg_False": 0.11542633928571426,
-    "round16_brier_xg_False": 0.2101457142857143,
-    "quarterfinal_brier_xg_False": 0.041030767857142866,
-    "semifinal_brier_xg_False": 0.01319007142857143,
-    "final_brier_xg_False": 0.0035663750000000005,
-    "title_brier_xg_False": 0.00087825
+    "playoffs_brier": 0.19285898611111113,
+    "round16_brier": 0.2150946527777778,
+    "quarterfinal_brier": 0.1456701111111111,
+    "semifinal_brier": 0.0959250138888889,
+    "final_brier": 0.05881991666666667,
+    "title_brier": 0.03107944444444445,
+    "position_rps_xg_True": 0.09283487987012987,
+    "playoffs_brier_xg_True": 0.24422923863636362,
+    "round16_brier_xg_True": 0.20525393181818183,
+    "quarterfinal_brier_xg_True": 0.2149411818181818,
+    "semifinal_brier_xg_True": 0.1488237840909091,
+    "final_brier_xg_True": 0.09335230681818181,
+    "title_brier_xg_True": 0.049935125,
+    "position_rps_xg_False": 0.08182281734693878,
+    "playoffs_brier_xg_False": 0.11213430357142859,
+    "round16_brier_xg_False": 0.23055864285714286,
+    "quarterfinal_brier_xg_False": 0.03681557142857144,
+    "semifinal_brier_xg_False": 0.012798375000000002,
+    "final_brier_xg_False": 0.004554732142857142,
+    "title_brier_xg_False": 0.001449089285714286
   },
   {
     "season": 2024,
     "snapshot": "MD6",
     "as_of": "2024-12-12T00:00:01+00:00",
     "history_matches": 11815,
-    "position_rps": 0.0460011488095238,
+    "position_rps": 0.0505470873015873,
     "conservation": {
       "top8_pct": {
-        "actual": 800.0,
+        "actual": 800.0000000000001,
         "expected": 800
       },
       "playoffs_pct": {
-        "actual": 1600.0,
+        "actual": 1600.0000000000002,
         "expected": 1600
       },
       "eliminated_pct": {
@@ -153,34 +153,34 @@
         "expected": 400
       },
       "final_pct": {
-        "actual": 200.00000000000003,
+        "actual": 200.0,
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.0,
+        "actual": 100.00000000000001,
         "expected": 100
       }
     },
-    "playoffs_brier": 0.06882584722222222,
-    "round16_brier": 0.13816231944444446,
-    "quarterfinal_brier": 0.12384829166666668,
-    "semifinal_brier": 0.07007084722222222,
-    "final_brier": 0.0548462638888889,
-    "title_brier": 0.03063552777777777,
-    "position_rps_xg_True": 0.049091382792207795,
-    "playoffs_brier_xg_True": 0.10716545454545456,
-    "round16_brier_xg_True": 0.14133076136363634,
-    "quarterfinal_brier_xg_True": 0.19091588636363632,
-    "semifinal_brier_xg_True": 0.11246029545454546,
-    "final_brier_xg_True": 0.08936710227272728,
-    "title_brier_xg_True": 0.05008192045454545,
-    "position_rps_xg_False": 0.04114506683673469,
-    "playoffs_brier_xg_False": 0.008577892857142852,
-    "round16_brier_xg_False": 0.13318333928571433,
-    "quarterfinal_brier_xg_False": 0.018456357142857142,
-    "semifinal_brier_xg_False": 0.003458857142857143,
-    "final_brier_xg_False": 0.0005992321428571429,
-    "title_brier_xg_False": 7.691071428571428e-05
+    "playoffs_brier": 0.09187970833333334,
+    "round16_brier": 0.14365770833333336,
+    "quarterfinal_brier": 0.11375979166666667,
+    "semifinal_brier": 0.08113122222222222,
+    "final_brier": 0.06084204166666667,
+    "title_brier": 0.031833055555555566,
+    "position_rps_xg_True": 0.05469327694805194,
+    "playoffs_brier_xg_True": 0.14592546590909092,
+    "round16_brier_xg_True": 0.1383212045454546,
+    "quarterfinal_brier_xg_True": 0.18170272727272724,
+    "semifinal_brier_xg_True": 0.13228292045454546,
+    "final_brier_xg_True": 0.09951652272727274,
+    "title_brier_xg_True": 0.05208673863636364,
+    "position_rps_xg_False": 0.044031646428571436,
+    "playoffs_brier_xg_False": 0.00695066071428571,
+    "round16_brier_xg_False": 0.15204364285714284,
+    "quarterfinal_brier_xg_False": 0.0069923214285714285,
+    "semifinal_brier_xg_False": 0.0007499821428571431,
+    "final_brier_xg_False": 6.785714285714286e-05,
+    "title_brier_xg_False": 5.839285714285716e-06
   },
   {
     "season": 2024,
@@ -210,7 +210,7 @@
         "expected": 800
       },
       "semifinal_pct": {
-        "actual": 400.00000000000006,
+        "actual": 400.0,
         "expected": 400
       },
       "final_pct": {
@@ -223,25 +223,25 @@
       }
     },
     "playoffs_brier": 0.0,
-    "round16_brier": 0.10807138888888888,
-    "quarterfinal_brier": 0.11879408333333331,
-    "semifinal_brier": 0.05665404166666667,
-    "final_brier": 0.04816530555555556,
-    "title_brier": 0.029702291666666665,
+    "round16_brier": 0.09653665277777779,
+    "quarterfinal_brier": 0.11188258333333333,
+    "semifinal_brier": 0.06293729166666667,
+    "final_brier": 0.052342069444444445,
+    "title_brier": 0.030218277777777778,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
-    "round16_brier_xg_True": 0.1090035340909091,
-    "quarterfinal_brier_xg_True": 0.18522654545454545,
-    "semifinal_brier_xg_True": 0.09175215909090909,
-    "final_brier_xg_True": 0.07873160227272728,
-    "title_brier_xg_True": 0.0485959090909091,
+    "round16_brier_xg_True": 0.08861957954545455,
+    "quarterfinal_brier_xg_True": 0.1795115340909091,
+    "semifinal_brier_xg_True": 0.10259234090909089,
+    "final_brier_xg_True": 0.08562519318181817,
+    "title_brier_xg_True": 0.049445125,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
-    "round16_brier_xg_False": 0.10660658928571429,
-    "quarterfinal_brier_xg_False": 0.014400214285714289,
-    "semifinal_brier_xg_False": 0.001499857142857143,
-    "final_brier_xg_False": 0.00013255357142857147,
-    "title_brier_xg_False": 1.2321428571428572e-05
+    "round16_brier_xg_False": 0.10897776785714286,
+    "quarterfinal_brier_xg_False": 0.005608517857142858,
+    "semifinal_brier_xg_False": 0.0006222142857142858,
+    "final_brier_xg_False": 4.001785714285715e-05,
+    "title_brier_xg_False": 4.660714285714287e-06
   },
   {
     "season": 2024,
@@ -263,7 +263,7 @@
         "expected": 1200
       },
       "round16_pct": {
-        "actual": 1600.0,
+        "actual": 1600.0000000000002,
         "expected": 1600
       },
       "quarterfinal_pct": {
@@ -279,30 +279,30 @@
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.00000000000001,
+        "actual": 100.0,
         "expected": 100
       }
     },
     "playoffs_brier": 0.0,
-    "round16_brier": 0.13897395833333334,
-    "quarterfinal_brier": 0.12177299999999998,
-    "semifinal_brier": 0.055119875,
-    "final_brier": 0.04878986111111112,
-    "title_brier": 0.030187763888888892,
+    "round16_brier": 0.120523,
+    "quarterfinal_brier": 0.110350375,
+    "semifinal_brier": 0.06283231944444445,
+    "final_brier": 0.05201920833333334,
+    "title_brier": 0.030120541666666667,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
-    "round16_brier_xg_True": 0.12373011363636365,
-    "quarterfinal_brier_xg_True": 0.18674712499999996,
-    "semifinal_brier_xg_True": 0.08901175,
-    "final_brier_xg_True": 0.07972630681818181,
-    "title_brier_xg_True": 0.04938736363636364,
+    "round16_brier_xg_True": 0.10487438636363637,
+    "quarterfinal_brier_xg_True": 0.1770748068181818,
+    "semifinal_brier_xg_True": 0.1025043409090909,
+    "final_brier_xg_True": 0.08510363636363637,
+    "title_brier_xg_True": 0.049286056818181816,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
-    "round16_brier_xg_False": 0.16292857142857145,
-    "quarterfinal_brier_xg_False": 0.019670803571428575,
-    "semifinal_brier_xg_False": 0.0018612142857142861,
-    "final_brier_xg_False": 0.0001754464285714286,
-    "title_brier_xg_False": 1.696428571428572e-05
+    "round16_brier_xg_False": 0.1451136785714286,
+    "quarterfinal_brier_xg_False": 0.005497696428571429,
+    "semifinal_brier_xg_False": 0.0004905714285714286,
+    "final_brier_xg_False": 2.939285714285715e-05,
+    "title_brier_xg_False": 3.30357142857143e-06
   },
   {
     "season": 2024,
@@ -328,7 +328,7 @@
         "expected": 1600
       },
       "quarterfinal_pct": {
-        "actual": 800.0000000000001,
+        "actual": 800.0,
         "expected": 800
       },
       "semifinal_pct": {
@@ -346,24 +346,24 @@
     },
     "playoffs_brier": 0.0,
     "round16_brier": 0.0,
-    "quarterfinal_brier": 0.08133097222222223,
-    "semifinal_brier": 0.05243115277777778,
-    "final_brier": 0.051108916666666664,
-    "title_brier": 0.02967191666666667,
+    "quarterfinal_brier": 0.07244422222222222,
+    "semifinal_brier": 0.05581447222222222,
+    "final_brier": 0.05148605555555556,
+    "title_brier": 0.028785111111111112,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
-    "quarterfinal_brier_xg_True": 0.1193275909090909,
-    "semifinal_brier_xg_True": 0.08428574999999999,
-    "final_brier_xg_True": 0.08352943181818182,
-    "title_brier_xg_True": 0.04854626136363637,
+    "quarterfinal_brier_xg_True": 0.10549273863636363,
+    "semifinal_brier_xg_True": 0.09007851136363637,
+    "final_brier_xg_True": 0.08416876136363637,
+    "title_brier_xg_True": 0.04709565909090909,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
-    "quarterfinal_brier_xg_False": 0.021622000000000006,
-    "semifinal_brier_xg_False": 0.002373928571428572,
-    "final_brier_xg_False": 0.00016239285714285718,
-    "title_brier_xg_False": 1.2232142857142859e-05
+    "quarterfinal_brier_xg_False": 0.02051083928571429,
+    "semifinal_brier_xg_False": 0.0019709821428571432,
+    "final_brier_xg_False": 0.00012751785714285716,
+    "title_brier_xg_False": 1.1392857142857144e-05
   },
   {
     "season": 2024,
@@ -401,23 +401,23 @@
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.0,
+        "actual": 100.00000000000001,
         "expected": 100
       }
     },
     "playoffs_brier": 0.0,
     "round16_brier": 0.0,
     "quarterfinal_brier": 0.0,
-    "semifinal_brier": 0.046121499999999996,
-    "final_brier": 0.054234722222222226,
-    "title_brier": 0.025917486111111113,
+    "semifinal_brier": 0.03839480555555555,
+    "final_brier": 0.04598747222222223,
+    "title_brier": 0.025265069444444444,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
     "quarterfinal_brier_xg_True": 0.0,
-    "semifinal_brier_xg_True": 0.07547154545454544,
-    "final_brier_xg_True": 0.08874772727272727,
-    "title_brier_xg_True": 0.04241043181818182,
+    "semifinal_brier_xg_True": 0.06282786363636363,
+    "final_brier_xg_True": 0.07525222727272728,
+    "title_brier_xg_True": 0.04134284090909091,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
@@ -458,11 +458,11 @@
         "expected": 400
       },
       "final_pct": {
-        "actual": 200.00000000000003,
+        "actual": 200.0,
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.0,
+        "actual": 100.00000000000001,
         "expected": 100
       }
     },
@@ -470,15 +470,15 @@
     "round16_brier": 0.0,
     "quarterfinal_brier": 0.0,
     "semifinal_brier": 0.0,
-    "final_brier": 0.05585361111111112,
-    "title_brier": 0.026769263888888888,
+    "final_brier": 0.042401125000000005,
+    "title_brier": 0.024781041666666666,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
     "quarterfinal_brier_xg_True": 0.0,
     "semifinal_brier_xg_True": 0.0,
-    "final_brier_xg_True": 0.09139681818181819,
-    "title_brier_xg_True": 0.043804249999999996,
+    "final_brier_xg_True": 0.0693836590909091,
+    "title_brier_xg_True": 0.04055079545454546,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
@@ -532,14 +532,14 @@
     "quarterfinal_brier": 0.0,
     "semifinal_brier": 0.0,
     "final_brier": 0.0,
-    "title_brier": 0.0120125,
+    "title_brier": 0.008342013888888888,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
     "quarterfinal_brier_xg_True": 0.0,
     "semifinal_brier_xg_True": 0.0,
     "final_brier_xg_True": 0.0,
-    "title_brier_xg_True": 0.01965681818181818,
+    "title_brier_xg_True": 0.01365056818181818,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
@@ -553,7 +553,7 @@
     "snapshot": "MD2",
     "as_of": "2025-10-02T00:00:01+00:00",
     "history_matches": 11203,
-    "position_rps": 0.12301546468253968,
+    "position_rps": 0.09288928293650794,
     "conservation": {
       "top8_pct": {
         "actual": 800.0,
@@ -561,6 +561,67 @@
       },
       "playoffs_pct": {
         "actual": 1600.0,
+        "expected": 1600
+      },
+      "eliminated_pct": {
+        "actual": 1200.0,
+        "expected": 1200
+      },
+      "round16_pct": {
+        "actual": 1600.0,
+        "expected": 1600
+      },
+      "quarterfinal_pct": {
+        "actual": 800.0000000000001,
+        "expected": 800
+      },
+      "semifinal_pct": {
+        "actual": 400.0,
+        "expected": 400
+      },
+      "final_pct": {
+        "actual": 200.0,
+        "expected": 200
+      },
+      "title_pct": {
+        "actual": 100.0,
+        "expected": 100
+      }
+    },
+    "playoffs_brier": 0.22313297222222225,
+    "round16_brier": 0.16032643055555554,
+    "quarterfinal_brier": 0.08554491666666668,
+    "semifinal_brier": 0.05298395833333333,
+    "final_brier": 0.02705076388888889,
+    "title_brier": 0.021657458333333338,
+    "position_rps_xg_True": 0.1041758340909091,
+    "playoffs_brier_xg_True": 0.25778085227272735,
+    "round16_brier_xg_True": 0.16235915909090906,
+    "quarterfinal_brier_xg_True": 0.09977760227272726,
+    "semifinal_brier_xg_True": 0.08667980681818181,
+    "final_brier_xg_True": 0.044263647727272724,
+    "title_brier_xg_True": 0.03543942045454546,
+    "position_rps_xg_False": 0.07515327397959183,
+    "playoffs_brier_xg_False": 0.16868630357142858,
+    "round16_brier_xg_False": 0.15713214285714283,
+    "quarterfinal_brier_xg_False": 0.06317926785714287,
+    "semifinal_brier_xg_False": 3.3339285714285713e-05,
+    "final_brier_xg_False": 1.9464285714285717e-06,
+    "title_brier_xg_False": 8.928571428571428e-08
+  },
+  {
+    "season": 2025,
+    "snapshot": "MD4",
+    "as_of": "2025-11-06T00:00:01+00:00",
+    "history_matches": 11806,
+    "position_rps": 0.08185651865079366,
+    "conservation": {
+      "top8_pct": {
+        "actual": 800.0,
+        "expected": 800
+      },
+      "playoffs_pct": {
+        "actual": 1600.0000000000002,
         "expected": 1600
       },
       "eliminated_pct": {
@@ -572,11 +633,11 @@
         "expected": 1600
       },
       "quarterfinal_pct": {
-        "actual": 800.0000000000001,
+        "actual": 800.0,
         "expected": 800
       },
       "semifinal_pct": {
-        "actual": 400.00000000000006,
+        "actual": 400.0,
         "expected": 400
       },
       "final_pct": {
@@ -584,44 +645,44 @@
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.00000000000003,
+        "actual": 100.0,
         "expected": 100
       }
     },
-    "playoffs_brier": 0.24162601388888894,
-    "round16_brier": 0.21477079166666668,
-    "quarterfinal_brier": 0.09156765277777777,
-    "semifinal_brier": 0.05940158333333333,
-    "final_brier": 0.04487415277777778,
-    "title_brier": 0.022480944444444446,
-    "position_rps_xg_True": 0.14727257564935065,
-    "playoffs_brier_xg_True": 0.27819254545454536,
-    "round16_brier_xg_True": 0.25113135227272737,
-    "quarterfinal_brier_xg_True": 0.11351136363636362,
-    "semifinal_brier_xg_True": 0.09661489772727272,
-    "final_brier_xg_True": 0.07338001136363635,
-    "title_brier_xg_True": 0.03678323863636363,
-    "position_rps_xg_False": 0.08489714744897957,
-    "playoffs_brier_xg_False": 0.1841643214285714,
-    "round16_brier_xg_False": 0.15763276785714284,
-    "quarterfinal_brier_xg_False": 0.057084678571428564,
-    "semifinal_brier_xg_False": 0.0009235178571428572,
-    "final_brier_xg_False": 7.923214285714285e-05,
-    "title_brier_xg_False": 5.910714285714286e-06
+    "playoffs_brier": 0.2258738611111111,
+    "round16_brier": 0.1220281111111111,
+    "quarterfinal_brier": 0.08994148611111112,
+    "semifinal_brier": 0.05460859722222222,
+    "final_brier": 0.02606720833333333,
+    "title_brier": 0.023489833333333335,
+    "position_rps_xg_True": 0.07917842467532468,
+    "playoffs_brier_xg_True": 0.21401051136363636,
+    "round16_brier_xg_True": 0.12487598863636365,
+    "quarterfinal_brier_xg_True": 0.10943873863636365,
+    "semifinal_brier_xg_True": 0.08932638636363635,
+    "final_brier_xg_True": 0.04265427272727273,
+    "title_brier_xg_True": 0.038437624999999996,
+    "position_rps_xg_False": 0.08606495204081634,
+    "playoffs_brier_xg_False": 0.24451626785714287,
+    "round16_brier_xg_False": 0.11755287499999999,
+    "quarterfinal_brier_xg_False": 0.05930294642857144,
+    "semifinal_brier_xg_False": 5.2071428571428566e-05,
+    "final_brier_xg_False": 1.8214285714285716e-06,
+    "title_brier_xg_False": 4.4642857142857147e-07
   },
   {
     "season": 2025,
-    "snapshot": "MD4",
-    "as_of": "2025-11-06T00:00:01+00:00",
-    "history_matches": 11806,
-    "position_rps": 0.09589917896825395,
+    "snapshot": "MD6",
+    "as_of": "2025-12-11T00:00:01+00:00",
+    "history_matches": 12397,
+    "position_rps": 0.07909975714285715,
     "conservation": {
       "top8_pct": {
         "actual": 800.0,
         "expected": 800
       },
       "playoffs_pct": {
-        "actual": 1600.0,
+        "actual": 1600.0000000000002,
         "expected": 1600
       },
       "eliminated_pct": {
@@ -645,91 +706,30 @@
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.00000000000001,
+        "actual": 99.99999999999999,
         "expected": 100
       }
     },
-    "playoffs_brier": 0.26013495833333333,
-    "round16_brier": 0.14160959722222222,
-    "quarterfinal_brier": 0.08207398611111111,
-    "semifinal_brier": 0.05194598611111111,
-    "final_brier": 0.03881694444444444,
-    "title_brier": 0.022973236111111114,
-    "position_rps_xg_True": 0.09552685129870131,
-    "playoffs_brier_xg_True": 0.26056511363636364,
-    "round16_brier_xg_True": 0.16179595454545453,
-    "quarterfinal_brier_xg_True": 0.10173549999999999,
-    "semifinal_brier_xg_True": 0.08440850000000001,
-    "final_brier_xg_True": 0.06347362499999998,
-    "title_brier_xg_True": 0.037585965909090906,
-    "position_rps_xg_False": 0.09648426530612243,
-    "playoffs_brier_xg_False": 0.259459,
-    "round16_brier_xg_False": 0.10988817857142855,
-    "quarterfinal_brier_xg_False": 0.05117732142857144,
-    "semifinal_brier_xg_False": 0.0009334642857142857,
-    "final_brier_xg_False": 7.073214285714286e-05,
-    "title_brier_xg_False": 1.0375000000000003e-05
-  },
-  {
-    "season": 2025,
-    "snapshot": "MD6",
-    "as_of": "2025-12-11T00:00:01+00:00",
-    "history_matches": 12397,
-    "position_rps": 0.08508099404761905,
-    "conservation": {
-      "top8_pct": {
-        "actual": 800.0,
-        "expected": 800
-      },
-      "playoffs_pct": {
-        "actual": 1600.0,
-        "expected": 1600
-      },
-      "eliminated_pct": {
-        "actual": 1200.0,
-        "expected": 1200
-      },
-      "round16_pct": {
-        "actual": 1600.0,
-        "expected": 1600
-      },
-      "quarterfinal_pct": {
-        "actual": 800.0,
-        "expected": 800
-      },
-      "semifinal_pct": {
-        "actual": 400.00000000000006,
-        "expected": 400
-      },
-      "final_pct": {
-        "actual": 200.0,
-        "expected": 200
-      },
-      "title_pct": {
-        "actual": 100.0,
-        "expected": 100
-      }
-    },
-    "playoffs_brier": 0.28501719444444445,
-    "round16_brier": 0.14790697222222224,
-    "quarterfinal_brier": 0.08454197222222222,
-    "semifinal_brier": 0.04694301388888889,
-    "final_brier": 0.03744519444444444,
-    "title_brier": 0.022603944444444447,
-    "position_rps_xg_True": 0.0848985831168831,
-    "playoffs_brier_xg_True": 0.26542159090909095,
-    "round16_brier_xg_True": 0.16135752272727272,
-    "quarterfinal_brier_xg_True": 0.11136075,
-    "semifinal_brier_xg_True": 0.0761541931818182,
-    "final_brier_xg_True": 0.06118261363636364,
-    "title_brier_xg_True": 0.036973465909090904,
-    "position_rps_xg_False": 0.08536763979591837,
-    "playoffs_brier_xg_False": 0.31581028571428565,
-    "round16_brier_xg_False": 0.12677039285714287,
-    "quarterfinal_brier_xg_False": 0.04239817857142857,
-    "semifinal_brier_xg_False": 0.001039732142857143,
-    "final_brier_xg_False": 0.00014353571428571432,
-    "title_brier_xg_False": 2.326785714285715e-05
+    "playoffs_brier": 0.2637853333333333,
+    "round16_brier": 0.12007631944444445,
+    "quarterfinal_brier": 0.08196393055555556,
+    "semifinal_brier": 0.04384886111111111,
+    "final_brier": 0.022704833333333334,
+    "title_brier": 0.02314063888888889,
+    "position_rps_xg_True": 0.07313389675324676,
+    "playoffs_brier_xg_True": 0.22235871590909087,
+    "round16_brier_xg_True": 0.1075768068181818,
+    "quarterfinal_brier_xg_True": 0.10012113636363634,
+    "semifinal_brier_xg_True": 0.07163334090909092,
+    "final_brier_xg_True": 0.03713923863636364,
+    "title_brier_xg_True": 0.03786501136363637,
+    "position_rps_xg_False": 0.0884746806122449,
+    "playoffs_brier_xg_False": 0.32888430357142856,
+    "round16_brier_xg_False": 0.13971841071428573,
+    "quarterfinal_brier_xg_False": 0.05343117857142858,
+    "semifinal_brier_xg_False": 0.0001875357142857143,
+    "final_brier_xg_False": 2.2196428571428575e-05,
+    "title_brier_xg_False": 2.339285714285715e-06
   },
   {
     "season": 2025,
@@ -755,42 +755,42 @@
         "expected": 1600
       },
       "quarterfinal_pct": {
-        "actual": 800.0,
+        "actual": 800.0000000000001,
         "expected": 800
       },
       "semifinal_pct": {
-        "actual": 400.0,
+        "actual": 400.00000000000006,
         "expected": 400
       },
       "final_pct": {
-        "actual": 200.0,
+        "actual": 200.00000000000003,
         "expected": 200
       },
       "title_pct": {
-        "actual": 100.0,
+        "actual": 100.00000000000001,
         "expected": 100
       }
     },
     "playoffs_brier": 0.0,
-    "round16_brier": 0.09979273611111111,
-    "quarterfinal_brier": 0.0759157361111111,
-    "semifinal_brier": 0.05541195833333333,
-    "final_brier": 0.03860838888888889,
-    "title_brier": 0.024044472222222224,
+    "round16_brier": 0.098812,
+    "quarterfinal_brier": 0.08892851388888888,
+    "semifinal_brier": 0.055355277777777774,
+    "final_brier": 0.029231833333333332,
+    "title_brier": 0.027162611111111113,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
-    "round16_brier_xg_True": 0.09837820454545455,
-    "quarterfinal_brier_xg_True": 0.10913357954545454,
-    "semifinal_brier_xg_True": 0.08865692045454544,
-    "final_brier_xg_True": 0.06270827272727274,
-    "title_brier_xg_True": 0.03924938636363637,
+    "round16_brier_xg_True": 0.09353194318181818,
+    "quarterfinal_brier_xg_True": 0.13129902272727276,
+    "semifinal_brier_xg_True": 0.08996494318181819,
+    "final_brier_xg_True": 0.04774255681818182,
+    "title_brier_xg_True": 0.04443693181818182,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
-    "round16_brier_xg_False": 0.10201557142857143,
-    "quarterfinal_brier_xg_False": 0.023716267857142852,
-    "semifinal_brier_xg_False": 0.003169875,
-    "final_brier_xg_False": 0.0007371428571428574,
-    "title_brier_xg_False": 0.00015103571428571428
+    "round16_brier_xg_False": 0.10710923214285716,
+    "quarterfinal_brier_xg_False": 0.022346285714285714,
+    "semifinal_brier_xg_False": 0.0009686607142857143,
+    "final_brier_xg_False": 0.00014355357142857144,
+    "title_brier_xg_False": 1.725e-05
   },
   {
     "season": 2025,
@@ -820,7 +820,7 @@
         "expected": 800
       },
       "semifinal_pct": {
-        "actual": 400.00000000000006,
+        "actual": 400.0,
         "expected": 400
       },
       "final_pct": {
@@ -833,25 +833,25 @@
       }
     },
     "playoffs_brier": 0.0,
-    "round16_brier": 0.10599520833333331,
-    "quarterfinal_brier": 0.07887087500000001,
-    "semifinal_brier": 0.05896755555555555,
-    "final_brier": 0.037945124999999996,
-    "title_brier": 0.024220138888888892,
+    "round16_brier": 0.10237579166666667,
+    "quarterfinal_brier": 0.09383656944444445,
+    "semifinal_brier": 0.057591277777777776,
+    "final_brier": 0.02882144444444444,
+    "title_brier": 0.027379694444444443,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
-    "round16_brier_xg_True": 0.09827482954545452,
-    "quarterfinal_brier_xg_True": 0.11276699999999998,
-    "semifinal_brier_xg_True": 0.09471398863636363,
-    "final_brier_xg_True": 0.06163120454545456,
-    "title_brier_xg_True": 0.03955623863636363,
+    "round16_brier_xg_True": 0.09581893181818182,
+    "quarterfinal_brier_xg_True": 0.13894819318181817,
+    "semifinal_brier_xg_True": 0.09353772727272727,
+    "final_brier_xg_True": 0.047099215909090913,
+    "title_brier_xg_True": 0.04479592045454545,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
-    "round16_brier_xg_False": 0.11812723214285713,
-    "quarterfinal_brier_xg_False": 0.025605535714285702,
-    "semifinal_brier_xg_False": 0.0027945892857142857,
-    "final_brier_xg_False": 0.0007241428571428573,
-    "title_brier_xg_False": 0.00012055357142857144
+    "round16_brier_xg_False": 0.11267942857142857,
+    "quarterfinal_brier_xg_False": 0.022946875,
+    "semifinal_brier_xg_False": 0.0011039999999999997,
+    "final_brier_xg_False": 9.923214285714289e-05,
+    "title_brier_xg_False": 1.1339285714285717e-05
   },
   {
     "season": 2025,
@@ -895,30 +895,91 @@
     },
     "playoffs_brier": 0.0,
     "round16_brier": 0.0,
-    "quarterfinal_brier": 0.03922476388888888,
-    "semifinal_brier": 0.04772668055555555,
-    "final_brier": 0.035189111111111115,
-    "title_brier": 0.02280858333333333,
+    "quarterfinal_brier": 0.06548016666666667,
+    "semifinal_brier": 0.05307327777777778,
+    "final_brier": 0.028557180555555554,
+    "title_brier": 0.02777826388888889,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
-    "quarterfinal_brier_xg_True": 0.045675022727272724,
-    "semifinal_brier_xg_True": 0.0748150568181818,
-    "final_brier_xg_True": 0.05691796590909093,
-    "title_brier_xg_True": 0.03716247727272727,
+    "quarterfinal_brier_xg_True": 0.09253735227272729,
+    "semifinal_brier_xg_True": 0.08558160227272728,
+    "final_brier_xg_True": 0.046596931818181815,
+    "title_brier_xg_True": 0.045440829545454545,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
-    "quarterfinal_brier_xg_False": 0.029088642857142858,
-    "semifinal_brier_xg_False": 0.005159232142857143,
-    "final_brier_xg_False": 0.0010437678571428575,
-    "title_brier_xg_False": 0.00025246428571428577
+    "quarterfinal_brier_xg_False": 0.022961732142857138,
+    "semifinal_brier_xg_False": 0.001988767857142858,
+    "final_brier_xg_False": 0.00020900000000000004,
+    "title_brier_xg_False": 2.280357142857143e-05
   },
   {
     "season": 2025,
     "snapshot": "before_QUARTER_FINALS",
     "as_of": "2026-04-07T00:00:00+00:00",
     "history_matches": 14225,
+    "position_rps": 0.0,
+    "conservation": {
+      "top8_pct": {
+        "actual": 800.0,
+        "expected": 800
+      },
+      "playoffs_pct": {
+        "actual": 1600.0,
+        "expected": 1600
+      },
+      "eliminated_pct": {
+        "actual": 1200.0,
+        "expected": 1200
+      },
+      "round16_pct": {
+        "actual": 1600.0,
+        "expected": 1600
+      },
+      "quarterfinal_pct": {
+        "actual": 800.0,
+        "expected": 800
+      },
+      "semifinal_pct": {
+        "actual": 400.00000000000006,
+        "expected": 400
+      },
+      "final_pct": {
+        "actual": 200.0,
+        "expected": 200
+      },
+      "title_pct": {
+        "actual": 100.00000000000001,
+        "expected": 100
+      }
+    },
+    "playoffs_brier": 0.0,
+    "round16_brier": 0.0,
+    "quarterfinal_brier": 0.0,
+    "semifinal_brier": 0.04291390277777777,
+    "final_brier": 0.025117236111111108,
+    "title_brier": 0.025032055555555557,
+    "position_rps_xg_True": 0.0,
+    "playoffs_brier_xg_True": 0.0,
+    "round16_brier_xg_True": 0.0,
+    "quarterfinal_brier_xg_True": 0.0,
+    "semifinal_brier_xg_True": 0.06935711363636364,
+    "final_brier_xg_True": 0.04102264772727273,
+    "title_brier_xg_True": 0.04094917045454545,
+    "position_rps_xg_False": 0.0,
+    "playoffs_brier_xg_False": 0.0,
+    "round16_brier_xg_False": 0.0,
+    "quarterfinal_brier_xg_False": 0.0,
+    "semifinal_brier_xg_False": 0.0013602857142857145,
+    "final_brier_xg_False": 0.00012301785714285716,
+    "title_brier_xg_False": 1.9446428571428573e-05
+  },
+  {
+    "season": 2025,
+    "snapshot": "before_SEMI_FINALS",
+    "as_of": "2026-04-28T00:00:00+00:00",
+    "history_matches": 14621,
     "position_rps": 0.0,
     "conservation": {
       "top8_pct": {
@@ -957,77 +1018,16 @@
     "playoffs_brier": 0.0,
     "round16_brier": 0.0,
     "quarterfinal_brier": 0.0,
-    "semifinal_brier": 0.04314897222222222,
-    "final_brier": 0.02958065277777777,
-    "title_brier": 0.01917758333333333,
-    "position_rps_xg_True": 0.0,
-    "playoffs_brier_xg_True": 0.0,
-    "round16_brier_xg_True": 0.0,
-    "quarterfinal_brier_xg_True": 0.0,
-    "semifinal_brier_xg_True": 0.06522850000000001,
-    "final_brier_xg_True": 0.047494602272727275,
-    "title_brier_xg_True": 0.03124895454545454,
-    "position_rps_xg_False": 0.0,
-    "playoffs_brier_xg_False": 0.0,
-    "round16_brier_xg_False": 0.0,
-    "quarterfinal_brier_xg_False": 0.0,
-    "semifinal_brier_xg_False": 0.008452571428571427,
-    "final_brier_xg_False": 0.0014301607142857148,
-    "title_brier_xg_False": 0.00020828571428571432
-  },
-  {
-    "season": 2025,
-    "snapshot": "before_SEMI_FINALS",
-    "as_of": "2026-04-28T00:00:00+00:00",
-    "history_matches": 14621,
-    "position_rps": 0.0,
-    "conservation": {
-      "top8_pct": {
-        "actual": 800.0,
-        "expected": 800
-      },
-      "playoffs_pct": {
-        "actual": 1600.0,
-        "expected": 1600
-      },
-      "eliminated_pct": {
-        "actual": 1200.0,
-        "expected": 1200
-      },
-      "round16_pct": {
-        "actual": 1600.0,
-        "expected": 1600
-      },
-      "quarterfinal_pct": {
-        "actual": 800.0,
-        "expected": 800
-      },
-      "semifinal_pct": {
-        "actual": 400.0,
-        "expected": 400
-      },
-      "final_pct": {
-        "actual": 200.00000000000003,
-        "expected": 200
-      },
-      "title_pct": {
-        "actual": 100.00000000000001,
-        "expected": 100
-      }
-    },
-    "playoffs_brier": 0.0,
-    "round16_brier": 0.0,
-    "quarterfinal_brier": 0.0,
     "semifinal_brier": 0.0,
-    "final_brier": 0.018354402777777775,
-    "title_brier": 0.018530124999999998,
+    "final_brier": 0.010769680555555555,
+    "title_brier": 0.019946541666666668,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
     "quarterfinal_brier_xg_True": 0.0,
     "semifinal_brier_xg_True": 0.0,
-    "final_brier_xg_True": 0.030034477272727268,
-    "title_brier_xg_True": 0.030322022727272725,
+    "final_brier_xg_True": 0.017623113636363638,
+    "title_brier_xg_True": 0.032639795454545456,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
@@ -1081,14 +1081,14 @@
     "quarterfinal_brier": 0.0,
     "semifinal_brier": 0.0,
     "final_brier": 0.0,
-    "title_brier": 0.012090125000000002,
+    "title_brier": 0.017020124999999997,
     "position_rps_xg_True": 0.0,
     "playoffs_brier_xg_True": 0.0,
     "round16_brier_xg_True": 0.0,
     "quarterfinal_brier_xg_True": 0.0,
     "semifinal_brier_xg_True": 0.0,
     "final_brier_xg_True": 0.0,
-    "title_brier_xg_True": 0.019783840909090914,
+    "title_brier_xg_True": 0.027851113636363632,
     "position_rps_xg_False": 0.0,
     "playoffs_brier_xg_False": 0.0,
     "round16_brier_xg_False": 0.0,
