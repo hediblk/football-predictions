@@ -1,30 +1,31 @@
 {
   "schema_version": 1,
-  "created_at": "2026-10-10T16:43:07.775584+00:00",
+  "created_at": "2026-10-13T00:29:32.262197+00:00",
   "xg_weight": 0.75,
+  "xg_scale": 1.3,
   "weights": {
-    "main": 8.174249740158526e-07,
+    "main": 8.441680232838192e-07,
     "odds": 0.999999,
-    "elo": 1.8257502601290303e-07
+    "elo": 1.558319767449365e-07
   },
   "no_odds_weights": {
-    "main": 0.817424973992347,
-    "elo": 0.18257502600765296
+    "main": 0.8441680232595445,
+    "elo": 0.15583197674045546
   },
   "metrics": {
     "matches": 19763,
     "odds_matches": 19762,
-    "no_odds_log_loss": 0.9825848730281787,
-    "dc_log_loss": 0.9832887829259482,
+    "no_odds_log_loss": 0.9805612552932055,
+    "dc_log_loss": 0.981097580042763,
     "elo_log_loss": 0.9974339239561628,
-    "with_odds_log_loss": 0.9675566171028003,
+    "with_odds_log_loss": 0.9675566159123722,
     "book_log_loss": 0.9675566123340387,
-    "objective": 0.9750707450654894
+    "objective": 0.9740589356027889
   },
   "h2h_weight": 0.0,
   "fit_settings": {
     "xi": 0.003,
-    "lambda_reg": 0.1,
+    "lambda_reg": 2.0,
     "prior_seasons": 2
   },
   "dataset": {
@@ -56,10 +57,18 @@
       0.75,
       1.0
     ],
+    "xg_scale_grid": [
+      1.0,
+      1.1,
+      1.2,
+      1.3,
+      1.4,
+      1.5
+    ],
     "prior_seasons": 2,
     "xi": 0.003,
-    "lambda_reg": 0.1,
-    "feature_code_sha256": "a51a1452311ed1a0f4ab3a25d9ad3249dc189d821c3a598e13a23eb5bedc610d",
+    "lambda_reg": 2.0,
+    "feature_code_sha256": "4c9d690404bb022e37c042365647e9df90889b680fc7935e9c7b602ad770de28",
     "matches": 19763,
     "coverage": [
       {
@@ -1084,7 +1093,7 @@
         }
       }
     ],
-    "sha256": "d8a0c79bdb166248136438ad0428e0c425d8c48c3cc78bd16dccf174e2092d3d",
+    "sha256": "889897330dcf19f48977a06ba62895c4b599027a89b444a91aee747c51a7a127",
     "odds_timing": "Approximate preceding Tuesday/Friday 00:00 UTC; actual quotes collected that afternoon, not timestamped.",
     "result_timing": "Results and xG available next UTC day after local match date; unknown kickoffs anchored at 12:00 UTC.",
     "history": "Up to two prior seasons by default, starting in 2014/15; features use only results available at origin."
@@ -1092,112 +1101,577 @@
   "grid": [
     {
       "xg_weight": 0.0,
+      "xg_scale": 1.0,
       "weights": {
-        "main": 6.095098057759724e-07,
+        "main": 8.23228446600912e-07,
         "odds": 0.999999,
-        "elo": 3.904901942527832e-07
+        "elo": 1.767715534278436e-07
       },
       "no_odds_weights": {
-        "main": 0.6095098057584456,
-        "elo": 0.3904901942415544
+        "main": 0.8232284465772396,
+        "elo": 0.1767715534227604
       },
       "metrics": {
         "matches": 19763,
         "odds_matches": 19762,
-        "no_odds_log_loss": 0.9881139532802397,
-        "dc_log_loss": 0.9914777231643231,
+        "no_odds_log_loss": 0.986442566335157,
+        "dc_log_loss": 0.9869294443487636,
         "elo_log_loss": 0.9974339239561628,
-        "with_odds_log_loss": 0.9675566185433827,
+        "with_odds_log_loss": 0.9675566185288484,
         "book_log_loss": 0.9675566123340387,
-        "objective": 0.9778352859118111
+        "objective": 0.9769995924320027
       }
     },
     {
       "xg_weight": 0.25,
+      "xg_scale": 1.0,
       "weights": {
-        "main": 7.439514527529001e-07,
+        "main": 9.257999145349989e-07,
         "odds": 0.999999,
-        "elo": 2.5604854727585554e-07
+        "elo": 7.420008549375671e-08
       },
       "no_odds_weights": {
-        "main": 0.7439514527315073,
-        "elo": 0.2560485472684927
+        "main": 0.925799914508377,
+        "elo": 0.07420008549162305
       },
       "metrics": {
         "matches": 19763,
         "odds_matches": 19762,
-        "no_odds_log_loss": 0.9853960462880722,
-        "dc_log_loss": 0.9866923117959696,
+        "no_odds_log_loss": 0.9843012792487078,
+        "dc_log_loss": 0.9843836808672711,
         "elo_log_loss": 0.9974339239561628,
-        "with_odds_log_loss": 0.9675566179246048,
+        "with_odds_log_loss": 0.967556618100596,
         "book_log_loss": 0.9675566123340387,
-        "objective": 0.9764763321063386
+        "objective": 0.9759289486746519
+      }
+    },
+    {
+      "xg_weight": 0.25,
+      "xg_scale": 1.1,
+      "weights": {
+        "main": 9.275596212715508e-07,
+        "odds": 0.999999,
+        "elo": 7.244037875720484e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9275596212448782,
+        "elo": 0.07244037875512177
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9838562353720581,
+        "dc_log_loss": 0.9839365131922317,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.967556617861657,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9757064266168576
+      }
+    },
+    {
+      "xg_weight": 0.25,
+      "xg_scale": 1.2,
+      "weights": {
+        "main": 9.249115787503793e-07,
+        "odds": 0.999999,
+        "elo": 7.50884212783764e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9249115787237828,
+        "elo": 0.07508842127621718
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9834774188806394,
+        "dc_log_loss": 0.9835658965784111,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566176328443,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9755170182567419
+      }
+    },
+    {
+      "xg_weight": 0.25,
+      "xg_scale": 1.3,
+      "weights": {
+        "main": 9.182386717030972e-07,
+        "odds": 0.999999,
+        "elo": 8.17613283256585e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9182386716766926,
+        "elo": 0.0817613283233074
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9831638816112582,
+        "dc_log_loss": 0.9832718487986425,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566174163591,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9753602495138087
+      }
+    },
+    {
+      "xg_weight": 0.25,
+      "xg_scale": 1.4,
+      "weights": {
+        "main": 9.079766208660618e-07,
+        "odds": 0.999999,
+        "elo": 9.202337916269385e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9079766208399523,
+        "elo": 0.09202337916004766
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9829131822576662,
+        "dc_log_loss": 0.9830543884536959,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566172138732,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9752348997357697
+      }
+    },
+    {
+      "xg_weight": 0.25,
+      "xg_scale": 1.5,
+      "weights": {
+        "main": 8.945913995042805e-07,
+        "odds": 0.999999,
+        "elo": 1.0540860052447517e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8945913994785559,
+        "elo": 0.10540860052144407
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9827217064854503,
+        "dc_log_loss": 0.9829135348047936,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566170265235,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9751391617559869
       }
     },
     {
       "xg_weight": 0.5,
+      "xg_scale": 1.0,
       "weights": {
-        "main": 8.213610461916187e-07,
+        "main": 9.474010373020968e-07,
         "odds": 0.999999,
-        "elo": 1.78638953837137e-07
+        "elo": 5.259896272665882e-08
       },
       "no_odds_weights": {
-        "main": 0.8213610461679999,
-        "elo": 0.17863895383200012
+        "main": 0.9474010372748537,
+        "elo": 0.0525989627251463
       },
       "metrics": {
         "matches": 19763,
         "odds_matches": 19762,
-        "no_odds_log_loss": 0.9833420815277767,
-        "dc_log_loss": 0.9839644819895794,
+        "no_odds_log_loss": 0.9831887280430744,
+        "dc_log_loss": 0.9832321181244583,
         "elo_log_loss": 0.9974339239561628,
-        "with_odds_log_loss": 0.9675566173934171,
+        "with_odds_log_loss": 0.9675566178153485,
         "book_log_loss": 0.9675566123340387,
-        "objective": 0.9754493494605969
+        "objective": 0.9753726729292115
+      }
+    },
+    {
+      "xg_weight": 0.5,
+      "xg_scale": 1.1,
+      "weights": {
+        "main": 9.521515756039526e-07,
+        "odds": 0.999999,
+        "elo": 4.78484244248031e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9521515755765728,
+        "elo": 0.04784842442342718
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9822547602433819,
+        "dc_log_loss": 0.9822920967647932,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566173224973,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9749056887829396
+      }
+    },
+    {
+      "xg_weight": 0.5,
+      "xg_scale": 1.2,
+      "weights": {
+        "main": 9.403508258815279e-07,
+        "odds": 0.999999,
+        "elo": 5.964917414722778e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9403508258544875,
+        "elo": 0.05964917414551252
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9815967092865977,
+        "dc_log_loss": 0.9816578461810623,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566168783518,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9745766630824748
+      }
+    },
+    {
+      "xg_weight": 0.5,
+      "xg_scale": 1.3,
+      "weights": {
+        "main": 9.15060583017079e-07,
+        "odds": 0.999999,
+        "elo": 8.493941701167662e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9150605829907659,
+        "elo": 0.08493941700923413
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9811974068415166,
+        "dc_log_loss": 0.9813295545327432,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566164958991,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9743770116687078
+      }
+    },
+    {
+      "xg_weight": 0.5,
+      "xg_scale": 1.4,
+      "weights": {
+        "main": 8.797635431508181e-07,
+        "odds": 0.999999,
+        "elo": 1.2023645687793764e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8797635431255199,
+        "elo": 0.12023645687448015
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9810223803138578,
+        "dc_log_loss": 0.9813074197294007,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566161803475,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9742894982471026
+      }
+    },
+    {
+      "xg_weight": 0.5,
+      "xg_scale": 1.5,
+      "weights": {
+        "main": 8.378458548206343e-07,
+        "odds": 0.999999,
+        "elo": 1.6215414520812135e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8378458547965415,
+        "elo": 0.1621541452034585
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9810292242564673,
+        "dc_log_loss": 0.9815916439704586,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566159305102,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9742929200934888
       }
     },
     {
       "xg_weight": 0.75,
+      "xg_scale": 1.0,
       "weights": {
-        "main": 8.174249740158526e-07,
+        "main": 8.923803225748791e-07,
         "odds": 0.999999,
-        "elo": 1.8257502601290303e-07
+        "elo": 1.076196774538765e-07
       },
       "no_odds_weights": {
-        "main": 0.817424973992347,
-        "elo": 0.18257502600765296
+        "main": 0.8923803225492182,
+        "elo": 0.10761967745078183
       },
       "metrics": {
         "matches": 19763,
         "odds_matches": 19762,
-        "no_odds_log_loss": 0.9825848730281787,
-        "dc_log_loss": 0.9832887829259482,
+        "no_odds_log_loss": 0.9832679738658971,
+        "dc_log_loss": 0.9834728129322502,
         "elo_log_loss": 0.9974339239561628,
-        "with_odds_log_loss": 0.9675566171028003,
+        "with_odds_log_loss": 0.9675566177218164,
         "book_log_loss": 0.9675566123340387,
-        "objective": 0.9750707450654894
+        "objective": 0.9754122957938568
+      }
+    },
+    {
+      "xg_weight": 0.75,
+      "xg_scale": 1.1,
+      "weights": {
+        "main": 9.048338261187664e-07,
+        "odds": 0.999999,
+        "elo": 9.516617390998925e-08
+      },
+      "no_odds_weights": {
+        "main": 0.9048338260927473,
+        "elo": 0.09516617390725268
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9818250443549441,
+        "dc_log_loss": 0.9819933269347592,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566170036107,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9746908306792774
+      }
+    },
+    {
+      "xg_weight": 0.75,
+      "xg_scale": 1.2,
+      "weights": {
+        "main": 8.8603587099927e-07,
+        "odds": 0.999999,
+        "elo": 1.1396412902948567e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8860358709737914,
+        "elo": 0.11396412902620856
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9809410524177437,
+        "dc_log_loss": 0.9812013317298183,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.967556616390274,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9742488344040088
+      }
+    },
+    {
+      "xg_weight": 0.75,
+      "xg_scale": 1.3,
+      "weights": {
+        "main": 8.441680232838192e-07,
+        "odds": 0.999999,
+        "elo": 1.558319767449365e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8441680232595445,
+        "elo": 0.15583197674045546
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9805612552932055,
+        "dc_log_loss": 0.981097580042763,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566159123722,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9740589356027889
+      }
+    },
+    {
+      "xg_weight": 0.75,
+      "xg_scale": 1.4,
+      "weights": {
+        "main": 7.882998427148099e-07,
+        "odds": 0.999999,
+        "elo": 2.1170015731394576e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7882998426921418,
+        "elo": 0.21170015730785818
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9805741805607744,
+        "dc_log_loss": 0.9816828525240227,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566155716243,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9740653980661993
+      }
+    },
+    {
+      "xg_weight": 0.75,
+      "xg_scale": 1.5,
+      "weights": {
+        "main": 7.262004942398485e-07,
+        "odds": 0.999999,
+        "elo": 2.7379950578890715e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7262004942189662,
+        "elo": 0.27379950578103385
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9808581622532536,
+        "dc_log_loss": 0.9829579149784687,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566153510711,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9742073888021623
       }
     },
     {
       "xg_weight": 1.0,
+      "xg_scale": 1.0,
       "weights": {
-        "main": 7.470182939227747e-07,
+        "main": 7.923493052488403e-07,
         "odds": 0.999999,
-        "elo": 2.5298170610598095e-07
+        "elo": 2.076506947799153e-07
       },
       "no_odds_weights": {
-        "main": 0.7470182939012937,
-        "elo": 0.2529817060987063
+        "main": 0.7923493052260558,
+        "elo": 0.20765069477394416
       },
       "metrics": {
         "matches": 19763,
         "odds_matches": 19762,
-        "no_odds_log_loss": 0.9831249755178801,
-        "dc_log_loss": 0.9846964310105426,
+        "no_odds_log_loss": 0.9842046552442755,
+        "dc_log_loss": 0.9851097641642862,
         "elo_log_loss": 0.9974339239561628,
-        "with_odds_log_loss": 0.9675566170855567,
+        "with_odds_log_loss": 0.9675566177857482,
         "book_log_loss": 0.9675566123340387,
-        "objective": 0.9753407963017184
+        "objective": 0.9758806365150119
+      }
+    },
+    {
+      "xg_weight": 1.0,
+      "xg_scale": 1.1,
+      "weights": {
+        "main": 8.156586642691679e-07,
+        "odds": 0.999999,
+        "elo": 1.8434133575958777e-07
+      },
+      "no_odds_weights": {
+        "main": 0.8156586642457131,
+        "elo": 0.1843413357542869
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9822913400325761,
+        "dc_log_loss": 0.9830433878701856,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566168950043,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9749239784637902
+      }
+    },
+    {
+      "xg_weight": 1.0,
+      "xg_scale": 1.2,
+      "weights": {
+        "main": 7.958064249024207e-07,
+        "odds": 0.999999,
+        "elo": 2.0419357512633494e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7958064248795368,
+        "elo": 0.2041935751204632
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9811867067318168,
+        "dc_log_loss": 0.9821991673616608,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566161591048,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9743716614454608
+      }
+    },
+    {
+      "xg_weight": 1.0,
+      "xg_scale": 1.3,
+      "weights": {
+        "main": 7.460272481924477e-07,
+        "odds": 0.999999,
+        "elo": 2.5397275183630794e-07
+      },
+      "no_odds_weights": {
+        "main": 0.7460272481709952,
+        "elo": 0.2539727518290048
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9808063312414854,
+        "dc_log_loss": 0.9825790594727044,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566156300184,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9741814734357519
+      }
+    },
+    {
+      "xg_weight": 1.0,
+      "xg_scale": 1.4,
+      "weights": {
+        "main": 6.808581239335727e-07,
+        "odds": 0.999999,
+        "elo": 3.19141876095183e-07
+      },
+      "no_odds_weights": {
+        "main": 0.6808581239139941,
+        "elo": 0.31914187608600586
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.980949721468316,
+        "dc_log_loss": 0.9841850300241971,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566152994001,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.974253168383858
+      }
+    },
+    {
+      "xg_weight": 1.0,
+      "xg_scale": 1.5,
+      "weights": {
+        "main": 6.115056403936577e-07,
+        "odds": 0.999999,
+        "elo": 3.8849435963509794e-07
+      },
+      "no_odds_weights": {
+        "main": 0.6115056403760735,
+        "elo": 0.38849435962392653
+      },
+      "metrics": {
+        "matches": 19763,
+        "odds_matches": 19762,
+        "no_odds_log_loss": 0.9814124093188723,
+        "dc_log_loss": 0.9870188792750686,
+        "elo_log_loss": 0.9974339239561628,
+        "with_odds_log_loss": 0.9675566151273454,
+        "book_log_loss": 0.9675566123340387,
+        "objective": 0.9744845122231088
       }
     }
   ],
@@ -1218,45 +1692,46 @@
       2025
     ],
     "xg_weight": 0.75,
+    "xg_scale": 1.3,
     "weights": {
-      "main": 8.03599559000856e-07,
+      "main": 8.265327996744566e-07,
       "odds": 0.999999,
-      "elo": 1.964004410278996e-07
+      "elo": 1.7346720035429912e-07
     },
     "no_odds_weights": {
-      "main": 0.803599558977748,
-      "elo": 0.19640044102225196
+      "main": 0.826532799650689,
+      "elo": 0.17346720034931096
     },
     "metrics": {
       "matches": 16259,
       "odds_matches": 16258,
-      "no_odds_log_loss": 0.981655559679341,
-      "dc_log_loss": 0.9825015039021577,
+      "no_odds_log_loss": 0.9797793387932761,
+      "dc_log_loss": 0.9804681740494505,
       "elo_log_loss": 0.996608262859773,
-      "with_odds_log_loss": 0.9667903228577124,
+      "with_odds_log_loss": 0.9667903220036925,
       "book_log_loss": 0.9667903184585964,
-      "objective": 0.9742229412685267
+      "objective": 0.9732848303984842
     },
     "evaluation": {
       "fitted": {
         "matches": 3504,
         "odds_matches": 3504,
-        "no_odds_log_loss": 0.986789214403097,
-        "dc_log_loss": 0.9868315385330064,
+        "no_odds_log_loss": 0.9841181156237033,
+        "dc_log_loss": 0.9839299070126686,
         "elo_log_loss": 1.001149398889909,
-        "with_odds_log_loss": 0.9710049414901725,
+        "with_odds_log_loss": 0.9710049389895901,
         "book_log_loss": 0.971004934773525,
-        "objective": 0.9788970779466347
+        "objective": 0.9775615273066467
       },
       "baseline": {
         "matches": 3504,
         "odds_matches": 3504,
-        "no_odds_log_loss": 0.994719758731319,
-        "dc_log_loss": 0.9974385636673898,
+        "no_odds_log_loss": 0.9924879020099298,
+        "dc_log_loss": 0.993168791771943,
         "elo_log_loss": 1.001149398889909,
-        "with_odds_log_loss": 0.9783114981865972,
+        "with_odds_log_loss": 0.9778781527152502,
         "book_log_loss": 0.971004934773525,
-        "objective": 0.9865156284589581
+        "objective": 0.98518302736259
       }
     }
   },
@@ -1265,45 +1740,46 @@
       "held_out": "season",
       "value": 2015,
       "xg_weight": 0.75,
+      "xg_scale": 1.4,
       "weights": {
-        "main": 8.320212585826193e-07,
+        "main": 8.016751633849952e-07,
         "odds": 0.999999,
-        "elo": 1.6797874144613631e-07
+        "elo": 1.983248366437604e-07
       },
       "no_odds_weights": {
-        "main": 0.832021258558694,
-        "elo": 0.16797874144130598
+        "main": 0.8016751633619426,
+        "elo": 0.19832483663805744
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17936,
-        "no_odds_log_loss": 0.9805223740580865,
-        "dc_log_loss": 0.9811109495669257,
+        "no_odds_log_loss": 0.9784920846850771,
+        "dc_log_loss": 0.9794531108656535,
         "elo_log_loss": 0.9956790374307553,
-        "with_odds_log_loss": 0.9660302086787532,
+        "with_odds_log_loss": 0.9660302070715037,
         "book_log_loss": 0.9660302042611152,
-        "objective": 0.9732762913684199
+        "objective": 0.9722611458782904
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 1.0032597933680738,
-          "dc_log_loss": 1.0050671165161713,
+          "no_odds_log_loss": 1.0014447073390471,
+          "dc_log_loss": 1.0039802691077142,
           "elo_log_loss": 1.014982789210229,
-          "with_odds_log_loss": 0.9828207007425769,
+          "with_odds_log_loss": 0.9828206997162792,
           "book_log_loss": 0.9828206930632724,
-          "objective": 0.9930402470553253
+          "objective": 0.9921327035276631
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 1.010048882500956,
-          "dc_log_loss": 1.014923502640849,
+          "no_odds_log_loss": 1.00508356882627,
+          "dc_log_loss": 1.0062089878097877,
           "elo_log_loss": 1.014982789210229,
-          "with_odds_log_loss": 0.9898105688618555,
+          "with_odds_log_loss": 0.9885717557196949,
           "book_log_loss": 0.9828206930632724,
-          "objective": 0.9999297256814057
+          "objective": 0.9968276622729825
         }
       }
     },
@@ -1311,45 +1787,46 @@
       "held_out": "season",
       "value": 2016,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.178804362863501e-07,
+        "main": 8.459034006957366e-07,
         "odds": 0.999999,
-        "elo": 1.821195637424056e-07
+        "elo": 1.5409659933301903e-07
       },
       "no_odds_weights": {
-        "main": 0.8178804362628314,
-        "elo": 0.18211956373716864
+        "main": 0.8459034006714121,
+        "elo": 0.15409659932858788
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17936,
-        "no_odds_log_loss": 0.985976199649983,
-        "dc_log_loss": 0.9866721991062948,
+        "no_odds_log_loss": 0.9839021036560254,
+        "dc_log_loss": 0.9844241468707686,
         "elo_log_loss": 1.0007183525395358,
-        "with_odds_log_loss": 0.9707801411586978,
+        "with_odds_log_loss": 0.9707801398508589,
         "book_log_loss": 0.9707801361490954,
-        "objective": 0.9783781704043404
+        "objective": 0.9773411217534421
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.9486716554724943,
-          "dc_log_loss": 0.9494546211224818,
+          "no_odds_log_loss": 0.9471535112868714,
+          "dc_log_loss": 0.9478319117627061,
           "elo_log_loss": 0.9645896381224244,
-          "with_odds_log_loss": 0.9353213765250786,
+          "with_odds_log_loss": 0.9353213764314307,
           "book_log_loss": 0.9353213741834681,
-          "objective": 0.9419965159987864
+          "objective": 0.9412374438591511
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.953273402368986,
-          "dc_log_loss": 0.9555142142795867,
+          "no_odds_log_loss": 0.9523790974442132,
+          "dc_log_loss": 0.9527006252892424,
           "elo_log_loss": 0.9645896381224244,
-          "with_odds_log_loss": 0.9394373332919306,
+          "with_odds_log_loss": 0.9397285416518866,
           "book_log_loss": 0.9353213741834681,
-          "objective": 0.9463553678304583
+          "objective": 0.9460538195480499
         }
       }
     },
@@ -1357,45 +1834,46 @@
       "held_out": "season",
       "value": 2017,
       "xg_weight": 0.75,
+      "xg_scale": 1.4,
       "weights": {
-        "main": 8.203068136061341e-07,
+        "main": 7.927213976456447e-07,
         "odds": 0.999999,
-        "elo": 1.7969318642262156e-07
+        "elo": 2.07278602383111e-07
       },
       "no_odds_weights": {
-        "main": 0.8203068135825456,
-        "elo": 0.17969318641745435
+        "main": 0.7927213976228494,
+        "elo": 0.20727860237715057
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17936,
-        "no_odds_log_loss": 0.9841728547885903,
-        "dc_log_loss": 0.9848535793576667,
+        "no_odds_log_loss": 0.982062803605524,
+        "dc_log_loss": 0.9831265408885224,
         "elo_log_loss": 0.9991108704695967,
-        "with_odds_log_loss": 0.9694494847859546,
+        "with_odds_log_loss": 0.9694494831604876,
         "book_log_loss": 0.9694494803387441,
-        "objective": 0.9768111697872724
+        "objective": 0.9757561433830058
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.9667070030306264,
-          "dc_log_loss": 0.9676408186087615,
+          "no_odds_log_loss": 0.9656933715420084,
+          "dc_log_loss": 0.9672459688790245,
           "elo_log_loss": 0.9806644588218151,
-          "with_odds_log_loss": 0.9486279401526566,
+          "with_odds_log_loss": 0.9486279393998281,
           "book_log_loss": 0.94862793228698,
-          "objective": 0.9576674715916416
+          "objective": 0.9571606554709182
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.9698010750036719,
-          "dc_log_loss": 0.9718320178319262,
+          "no_odds_log_loss": 0.9678459176346472,
+          "dc_log_loss": 0.9677424339460854,
           "elo_log_loss": 0.9806644588218151,
-          "with_odds_log_loss": 0.9544554913890957,
+          "with_odds_log_loss": 0.9541846986874618,
           "book_log_loss": 0.94862793228698,
-          "objective": 0.9621282831963838
+          "objective": 0.9610153081610545
         }
       }
     },
@@ -1403,45 +1881,46 @@
       "held_out": "season",
       "value": 2018,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.152847989428842e-07,
+        "main": 8.448261791378665e-07,
         "odds": 0.999999,
-        "elo": 1.8471520108587144e-07
+        "elo": 1.5517382089088918e-07
       },
       "no_odds_weights": {
-        "main": 0.8152847989194402,
-        "elo": 0.18471520108055983
+        "main": 0.8448261791135729,
+        "elo": 0.15517382088642706
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17936,
-        "no_odds_log_loss": 0.9829142893937479,
-        "dc_log_loss": 0.9836361642142329,
+        "no_odds_log_loss": 0.9807444292708548,
+        "dc_log_loss": 0.98127878767536,
         "elo_log_loss": 0.9977398961849222,
-        "with_odds_log_loss": 0.968024601141458,
+        "with_odds_log_loss": 0.9680245997710868,
         "book_log_loss": 0.9680245964925409,
-        "objective": 0.9754694452676029
+        "objective": 0.9743845145209709
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.9792917837178818,
-          "dc_log_loss": 0.9798149700430989,
+          "no_odds_log_loss": 0.9787296219336514,
+          "dc_log_loss": 0.979285503716792,
           "elo_log_loss": 0.9943742016685613,
-          "with_odds_log_loss": 0.9628767768042961,
+          "with_odds_log_loss": 0.9628767772887825,
           "book_log_loss": 0.9628767707490133,
-          "objective": 0.971084280261089
+          "objective": 0.970803199611217
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.984908378030892,
-          "dc_log_loss": 0.9880978242203029,
+          "no_odds_log_loss": 0.9837350229511543,
+          "dc_log_loss": 0.984521731004927,
           "elo_log_loss": 0.9943742016685613,
-          "with_odds_log_loss": 0.9688229750098563,
+          "with_odds_log_loss": 0.9691557473958013,
           "book_log_loss": 0.9628767707490133,
-          "objective": 0.9768656765203741
+          "objective": 0.9764453851734778
         }
       }
     },
@@ -1449,45 +1928,46 @@
       "held_out": "season",
       "value": 2019,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.057792607188911e-07,
+        "main": 8.308829442312643e-07,
         "odds": 0.999999,
-        "elo": 1.9422073930986457e-07
+        "elo": 1.6911705579749145e-07
       },
       "no_odds_weights": {
-        "main": 0.8057792606957204,
-        "elo": 0.19422073930427963
+        "main": 0.8308829442073716,
+        "elo": 0.16911705579262837
       },
       "metrics": {
         "matches": 18038,
         "odds_matches": 18037,
-        "no_odds_log_loss": 0.982299103787057,
-        "dc_log_loss": 0.9830998977010466,
+        "no_odds_log_loss": 0.980457384427326,
+        "dc_log_loss": 0.9810895326323477,
         "elo_log_loss": 0.9968140492984424,
-        "with_odds_log_loss": 0.966736548631217,
+        "with_odds_log_loss": 0.9667365475305209,
         "book_log_loss": 0.966736543101655,
-        "objective": 0.974517826209137
+        "objective": 0.9735969659789234
       },
       "evaluation": {
         "fitted": {
           "matches": 1725,
           "odds_matches": 1725,
-          "no_odds_log_loss": 0.9854743934820172,
-          "dc_log_loss": 0.9851776351749647,
+          "no_odds_log_loss": 0.9816433486091611,
+          "dc_log_loss": 0.9811780541469193,
           "elo_log_loss": 1.00363267053336,
-          "with_odds_log_loss": 0.9757573022978889,
+          "with_odds_log_loss": 0.9757573004663654,
           "book_log_loss": 0.975757304657874,
-          "objective": 0.980615847889953
+          "objective": 0.9787003245377632
         },
         "baseline": {
           "matches": 1725,
           "odds_matches": 1725,
-          "no_odds_log_loss": 0.9921688185701775,
-          "dc_log_loss": 0.9934489026034297,
+          "no_odds_log_loss": 0.9892257432274183,
+          "dc_log_loss": 0.9883183227194482,
           "elo_log_loss": 1.00363267053336,
-          "with_odds_log_loss": 0.9786923937293563,
+          "with_odds_log_loss": 0.9779382142707769,
           "book_log_loss": 0.975757304657874,
-          "objective": 0.9854306061497669
+          "objective": 0.9835819787490976
         }
       }
     },
@@ -1495,45 +1975,46 @@
       "held_out": "season",
       "value": 2020,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.402873506118829e-07,
+        "main": 8.566876318268093e-07,
         "odds": 0.999999,
-        "elo": 1.597126494168728e-07
+        "elo": 1.4331236820194638e-07
       },
       "no_odds_weights": {
-        "main": 0.8402873505877199,
-        "elo": 0.15971264941228014
+        "main": 0.8566876318021747,
+        "elo": 0.14331236819782533
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17936,
-        "no_odds_log_loss": 0.9813311585710046,
-        "dc_log_loss": 0.9818560690960332,
+        "no_odds_log_loss": 0.979507654726564,
+        "dc_log_loss": 0.9799533577460918,
         "elo_log_loss": 0.9965860160919224,
-        "with_odds_log_loss": 0.9661260970205063,
+        "with_odds_log_loss": 0.9661260959436655,
         "book_log_loss": 0.9661260920265106,
-        "objective": 0.9737286277957555
+        "objective": 0.9728168753351147
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.995244460845198,
-          "dc_log_loss": 0.997615921225099,
+          "no_odds_log_loss": 0.9911357223701174,
+          "dc_log_loss": 0.9925398030094754,
           "elo_log_loss": 1.005913002598557,
-          "with_odds_log_loss": 0.9818618169848654,
+          "with_odds_log_loss": 0.9818618149063265,
           "book_log_loss": 0.9818618154093173,
-          "objective": 0.9885531389150317
+          "objective": 0.986498768638222
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 1.0025774216889103,
-          "dc_log_loss": 1.0069412896480676,
+          "no_odds_log_loss": 0.999154500278747,
+          "dc_log_loss": 1.0010648358223524,
           "elo_log_loss": 1.005913002598557,
-          "with_odds_log_loss": 0.9876152257973705,
+          "with_odds_log_loss": 0.9865058718148256,
           "book_log_loss": 0.9818618154093173,
-          "objective": 0.9950963237431404
+          "objective": 0.9928301860467863
         }
       }
     },
@@ -1541,45 +2022,46 @@
       "held_out": "season",
       "value": 2021,
       "xg_weight": 0.75,
+      "xg_scale": 1.4,
       "weights": {
-        "main": 8.07863149122935e-07,
+        "main": 7.841453251234231e-07,
         "odds": 0.999999,
-        "elo": 1.9213685090582067e-07
+        "elo": 2.158546749053325e-07
       },
       "no_odds_weights": {
-        "main": 0.8078631490997044,
-        "elo": 0.19213685090029564
+        "main": 0.7841453251008745,
+        "elo": 0.21585467489912546
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17937,
-        "no_odds_log_loss": 0.981759178202511,
-        "dc_log_loss": 0.9825425380958115,
+        "no_odds_log_loss": 0.9796117239441813,
+        "dc_log_loss": 0.9807667424725643,
         "elo_log_loss": 0.9963289303320306,
-        "with_odds_log_loss": 0.9665364558524385,
+        "with_odds_log_loss": 0.9665364541658916,
         "book_log_loss": 0.9665364508933433,
-        "objective": 0.9741478170274748
+        "objective": 0.9730740890550365
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1825,
-          "no_odds_log_loss": 0.9908632754127471,
-          "dc_log_loss": 0.9907512312273167,
+          "no_odds_log_loss": 0.9902035363355715,
+          "dc_log_loss": 0.9908439530386051,
           "elo_log_loss": 1.0084838601974782,
-          "with_odds_log_loss": 0.9777582299999107,
+          "with_odds_log_loss": 0.977758229895008,
           "book_log_loss": 0.9777582267409908,
-          "objective": 0.9843107527063288
+          "objective": 0.9839808831152898
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1825,
-          "no_odds_log_loss": 0.997332071295693,
-          "dc_log_loss": 0.9998557862834656,
+          "no_odds_log_loss": 0.9944954756670161,
+          "dc_log_loss": 0.9943078326776817,
           "elo_log_loss": 1.0084838601974782,
-          "with_odds_log_loss": 0.9827022612474798,
+          "with_odds_log_loss": 0.9822644365754394,
           "book_log_loss": 0.9777582267409908,
-          "objective": 0.9900171662715864
+          "objective": 0.9883799561212278
         }
       }
     },
@@ -1587,45 +2069,46 @@
       "held_out": "season",
       "value": 2022,
       "xg_weight": 0.75,
+      "xg_scale": 1.4,
       "weights": {
-        "main": 8.306318007540529e-07,
+        "main": 8.062359648632125e-07,
         "odds": 0.999999,
-        "elo": 1.6936819927470278e-07
+        "elo": 1.9376403516554323e-07
       },
       "no_odds_weights": {
-        "main": 0.8306318007301675,
-        "elo": 0.1693681992698325
+        "main": 0.8062359648400286,
+        "elo": 0.19376403515997143
       },
       "metrics": {
         "matches": 17937,
         "odds_matches": 17936,
-        "no_odds_log_loss": 0.9818667353447624,
-        "dc_log_loss": 0.9824690693265228,
+        "no_odds_log_loss": 0.9796493760856524,
+        "dc_log_loss": 0.9805683445388492,
         "elo_log_loss": 0.997126404013597,
-        "with_odds_log_loss": 0.9664521018144855,
+        "with_odds_log_loss": 0.9664521001411884,
         "book_log_loss": 0.9664520968674509,
-        "objective": 0.974159418579624
+        "objective": 0.9730507381134204
       },
       "evaluation": {
         "fitted": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.9898071299256281,
-          "dc_log_loss": 0.9914859189202034,
+          "no_odds_log_loss": 0.9899113231780787,
+          "dc_log_loss": 0.9928279323757552,
           "elo_log_loss": 1.0005091233818164,
-          "with_odds_log_loss": 0.9786017694424382,
+          "with_odds_log_loss": 0.978601768727351,
           "book_log_loss": 0.9786017669999131,
-          "objective": 0.9842044496840332
+          "objective": 0.9842565459527148
         },
         "baseline": {
           "matches": 1826,
           "odds_matches": 1826,
-          "no_odds_log_loss": 0.9968279537131409,
-          "dc_log_loss": 1.0011334567830983,
+          "no_odds_log_loss": 0.9932654372720316,
+          "dc_log_loss": 0.9951093960365734,
           "elo_log_loss": 1.0005091233818164,
-          "with_odds_log_loss": 0.9835374433617653,
+          "with_odds_log_loss": 0.982501936577773,
           "book_log_loss": 0.9786017669999131,
-          "objective": 0.9901826985374531
+          "objective": 0.9878836869249024
         }
       }
     },
@@ -1633,45 +2116,46 @@
       "held_out": "season",
       "value": 2023,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.007140958469562e-07,
+        "main": 8.307510890671109e-07,
         "odds": 0.999999,
-        "elo": 1.9928590418179945e-07
+        "elo": 1.692489109616447e-07
       },
       "no_odds_weights": {
-        "main": 0.8007140958239312,
-        "elo": 0.19928590417606884
+        "main": 0.8307510890432221,
+        "elo": 0.16924891095677785
       },
       "metrics": {
         "matches": 18011,
         "odds_matches": 18010,
-        "no_odds_log_loss": 0.9832243670372559,
-        "dc_log_loss": 0.9840671309904114,
+        "no_odds_log_loss": 0.9812060753253851,
+        "dc_log_loss": 0.9818389267568463,
         "elo_log_loss": 0.9975448542314064,
-        "with_odds_log_loss": 0.9685635796004161,
+        "with_odds_log_loss": 0.9685635785380868,
         "book_log_loss": 0.968563575363788,
-        "objective": 0.975893973318836
+        "objective": 0.974884826931736
       },
       "evaluation": {
         "fitted": {
           "matches": 1752,
           "odds_matches": 1752,
-          "no_odds_log_loss": 0.9762554860462798,
-          "dc_log_loss": 0.9755053022813167,
+          "no_odds_log_loss": 0.9741573055069241,
+          "dc_log_loss": 0.9736841129019271,
           "elo_log_loss": 0.9963246212037178,
-          "with_odds_log_loss": 0.957486992814348,
+          "with_odds_log_loss": 0.9574869903980061,
           "book_log_loss": 0.9574869820365421,
-          "objective": 0.9668712394303138
+          "objective": 0.9658221479524651
         },
         "baseline": {
           "matches": 1752,
           "odds_matches": 1752,
-          "no_odds_log_loss": 0.979933279136608,
-          "dc_log_loss": 0.9796308331820349,
+          "no_odds_log_loss": 0.9810648066747407,
+          "dc_log_loss": 0.9799121389864107,
           "elo_log_loss": 0.9963246212037178,
-          "with_odds_log_loss": 0.9645203673778886,
+          "with_odds_log_loss": 0.9652679008263608,
           "book_log_loss": 0.9574869820365421,
-          "objective": 0.9722268232572483
+          "objective": 0.9731663537505508
         }
       }
     },
@@ -1679,45 +2163,46 @@
       "held_out": "season",
       "value": 2024,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.031545585837898e-07,
+        "main": 8.286215751616735e-07,
         "odds": 0.999999,
-        "elo": 1.968454414449658e-07
+        "elo": 1.7137842486708215e-07
       },
       "no_odds_weights": {
-        "main": 0.8031545585606946,
-        "elo": 0.19684544143930538
+        "main": 0.828621575137846,
+        "elo": 0.17137842486215404
       },
       "metrics": {
         "matches": 18011,
         "odds_matches": 18010,
-        "no_odds_log_loss": 0.9828157026349764,
-        "dc_log_loss": 0.9836443559685649,
+        "no_odds_log_loss": 0.9808707748961878,
+        "dc_log_loss": 0.9815273120546409,
         "elo_log_loss": 0.9973360421738592,
-        "with_odds_log_loss": 0.9678307303114274,
+        "with_odds_log_loss": 0.9678307292822377,
         "book_log_loss": 0.9678307257128205,
-        "objective": 0.975323216473202
+        "objective": 0.9743507520892127
       },
       "evaluation": {
         "fitted": {
           "matches": 1752,
           "odds_matches": 1752,
-          "no_odds_log_loss": 0.9803243751771323,
-          "dc_log_loss": 0.9797330524997799,
+          "no_odds_log_loss": 0.9775254802423289,
+          "dc_log_loss": 0.9768002599239849,
           "elo_log_loss": 0.9984127417791893,
-          "with_odds_log_loss": 0.9648154856037947,
+          "with_odds_log_loss": 0.9648154830743916,
           "book_log_loss": 0.9648154785462199,
-          "objective": 0.9725699303904636
+          "objective": 0.9711704816583602
         },
         "baseline": {
           "matches": 1752,
           "odds_matches": 1752,
-          "no_odds_log_loss": 0.9888642491519758,
-          "dc_log_loss": 0.9911187272286814,
+          "no_odds_log_loss": 0.9876268318067638,
+          "dc_log_loss": 0.9879766871856711,
           "elo_log_loss": 0.9984127417791893,
-          "with_odds_log_loss": 0.9725183460910836,
+          "with_odds_log_loss": 0.9724210778045297,
           "book_log_loss": 0.9648154785462199,
-          "objective": 0.9806912976215296
+          "objective": 0.9800239548056467
         }
       }
     },
@@ -1725,45 +2210,46 @@
       "held_out": "season",
       "value": 2025,
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.1891391996346e-07,
+        "main": 8.434613368822763e-07,
         "odds": 0.999999,
-        "elo": 1.8108608006529566e-07
+        "elo": 1.5653866314647944e-07
       },
       "no_odds_weights": {
-        "main": 0.8189139199399116,
-        "elo": 0.18108608006008842
+        "main": 0.8434613368580219,
+        "elo": 0.15653866314197806
       },
       "metrics": {
         "matches": 18011,
         "odds_matches": 18010,
-        "no_odds_log_loss": 0.9815170270684139,
-        "dc_log_loss": 0.9822246587619197,
+        "no_odds_log_loss": 0.9795490181124376,
+        "dc_log_loss": 0.9801013826369038,
         "elo_log_loss": 0.9967887107517155,
-        "with_odds_log_loss": 0.966592839072026,
+        "with_odds_log_loss": 0.9665928380286196,
         "book_log_loss": 0.9665928344673592,
-        "objective": 0.97405493307022
+        "objective": 0.9730709280705285
       },
       "evaluation": {
         "fitted": {
           "matches": 1752,
           "odds_matches": 1752,
-          "no_odds_log_loss": 0.9932638525785944,
-          "dc_log_loss": 0.9939300245662336,
+          "no_odds_log_loss": 0.9906837497149702,
+          "dc_log_loss": 0.9910595541013535,
           "elo_log_loss": 1.003886056000628,
-          "with_odds_log_loss": 0.9771943973492686,
+          "with_odds_log_loss": 0.9771943947890114,
           "book_log_loss": 0.9771943910008303,
-          "objective": 0.9852291249639316
+          "objective": 0.9839390722519907
         },
         "baseline": {
           "matches": 1752,
           "odds_matches": 1752,
-          "no_odds_log_loss": 1.000575268310662,
-          "dc_log_loss": 1.003758400106098,
+          "no_odds_log_loss": 0.9973489722130959,
+          "dc_log_loss": 0.9983608963582152,
           "elo_log_loss": 1.003886056000628,
-          "with_odds_log_loss": 0.9841046502821114,
+          "with_odds_log_loss": 0.9833352276259715,
           "book_log_loss": 0.9771943910008303,
-          "objective": 0.9923399592963866
+          "objective": 0.9903420999195337
         }
       }
     },
@@ -1771,45 +2257,46 @@
       "held_out": "league",
       "value": "D1",
       "xg_weight": 0.75,
+      "xg_scale": 1.4,
       "weights": {
-        "main": 8.193308773365985e-07,
+        "main": 8.074522424161278e-07,
         "odds": 0.999999,
-        "elo": 1.8066912269215716e-07
+        "elo": 1.925477576126279e-07
       },
       "no_odds_weights": {
-        "main": 0.8193308773130381,
-        "elo": 0.1806691226869619
+        "main": 0.8074522423929089,
+        "elo": 0.19254775760709109
       },
       "metrics": {
         "matches": 16397,
         "odds_matches": 16396,
-        "no_odds_log_loss": 0.979887195407424,
-        "dc_log_loss": 0.9805732212679509,
+        "no_odds_log_loss": 0.9774802460277061,
+        "dc_log_loss": 0.9783779117528406,
         "elo_log_loss": 0.994612535282082,
-        "with_odds_log_loss": 0.964807756271689,
+        "with_odds_log_loss": 0.9648077542052726,
         "book_log_loss": 0.964807751624648,
-        "objective": 0.9723474758395565
+        "objective": 0.9711440001164894
       },
       "evaluation": {
         "fitted": {
           "matches": 3366,
           "odds_matches": 3366,
-          "no_odds_log_loss": 0.9933759707419821,
-          "dc_log_loss": 0.9941510295579371,
+          "no_odds_log_loss": 0.9929960913928819,
+          "dc_log_loss": 0.9949026156087464,
           "elo_log_loss": 1.0087194786524782,
-          "with_odds_log_loss": 0.9785520603915906,
+          "with_odds_log_loss": 0.9785520604795184,
           "book_log_loss": 0.9785520551716009,
-          "objective": 0.9859640155667864
+          "objective": 0.9857740759362001
         },
         "baseline": {
           "matches": 3366,
           "odds_matches": 3366,
-          "no_odds_log_loss": 1.0020191350126861,
-          "dc_log_loss": 1.0058215595946818,
+          "no_odds_log_loss": 0.9981488701558094,
+          "dc_log_loss": 0.9990510274659257,
           "elo_log_loss": 1.0087194786524782,
-          "with_odds_log_loss": 0.9856910772701774,
+          "with_odds_log_loss": 0.9844792518296129,
           "book_log_loss": 0.9785520551716009,
-          "objective": 0.9938551061414318
+          "objective": 0.9913140609927111
         }
       }
     },
@@ -1817,45 +2304,46 @@
       "held_out": "league",
       "value": "E0",
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.238749498256566e-07,
+        "main": 8.494408565260098e-07,
         "odds": 0.999999,
-        "elo": 1.7612505020309907e-07
+        "elo": 1.505591435027458e-07
       },
       "no_odds_weights": {
-        "main": 0.8238749498019655,
-        "elo": 0.17612505019803448
+        "main": 0.8494408565015836,
+        "elo": 0.15055914349841637
       },
       "metrics": {
         "matches": 15583,
         "odds_matches": 15582,
-        "no_odds_log_loss": 0.98548526806554,
-        "dc_log_loss": 0.986130998846463,
+        "no_odds_log_loss": 0.9834974147095538,
+        "dc_log_loss": 0.9839916217068848,
         "elo_log_loss": 1.000351831524457,
-        "with_odds_log_loss": 0.9696223014645917,
+        "with_odds_log_loss": 0.9696223001793165,
         "book_log_loss": 0.9696222955383424,
-        "objective": 0.9775537847650659
+        "objective": 0.9765598574444352
       },
       "evaluation": {
         "fitted": {
           "matches": 4180,
           "odds_matches": 4180,
-          "no_odds_log_loss": 0.970987726575338,
-          "dc_log_loss": 0.9719199192438889,
+          "no_odds_log_loss": 0.9688197203275678,
+          "dc_log_loss": 0.9695214133862767,
           "elo_log_loss": 0.9857622936829795,
-          "with_odds_log_loss": 0.9592938795349781,
+          "with_odds_log_loss": 0.9592938787119034,
           "book_log_loss": 0.9592938795168238,
-          "objective": 0.965140803055158
+          "objective": 0.9640567995197356
         },
         "baseline": {
           "matches": 4180,
           "odds_matches": 4180,
-          "no_odds_log_loss": 0.9766398561352492,
-          "dc_log_loss": 0.9793991686402808,
+          "no_odds_log_loss": 0.974799658837525,
+          "dc_log_loss": 0.9753943572823572,
           "elo_log_loss": 0.9857622936829795,
-          "with_odds_log_loss": 0.9630384007453858,
+          "with_odds_log_loss": 0.9627803449885983,
           "book_log_loss": 0.9592938795168238,
-          "objective": 0.9698391284403175
+          "objective": 0.9687900019130616
         }
       }
     },
@@ -1863,45 +2351,46 @@
       "held_out": "league",
       "value": "F1",
       "xg_weight": 0.75,
+      "xg_scale": 1.4,
       "weights": {
-        "main": 8.366459908853804e-07,
+        "main": 8.060796219604291e-07,
         "odds": 0.999999,
-        "elo": 1.6335400914337528e-07
+        "elo": 1.939203780683265e-07
       },
       "no_odds_weights": {
-        "main": 0.8366459908613221,
-        "elo": 0.16335400913867792
+        "main": 0.8060796219372498,
+        "elo": 0.1939203780627502
       },
       "metrics": {
         "matches": 15906,
         "odds_matches": 15905,
-        "no_odds_log_loss": 0.9779138114581305,
-        "dc_log_loss": 0.9784764926249762,
+        "no_odds_log_loss": 0.9758067622770874,
+        "dc_log_loss": 0.9767347998822111,
         "elo_log_loss": 0.9934470548269104,
-        "with_odds_log_loss": 0.9629413379610634,
+        "with_odds_log_loss": 0.9629413362674397,
         "book_log_loss": 0.9629413334001529,
-        "objective": 0.970427574709597
+        "objective": 0.9693740492722636
       },
       "evaluation": {
         "fitted": {
           "matches": 3857,
           "odds_matches": 3857,
-          "no_odds_log_loss": 1.0013084657894789,
-          "dc_log_loss": 1.0025379441298365,
+          "no_odds_log_loss": 0.999683650344183,
+          "dc_log_loss": 1.0014750630912657,
           "elo_log_loss": 1.0133814004731638,
-          "with_odds_log_loss": 0.9860177333101942,
+          "with_odds_log_loss": 0.9860177322708061,
           "book_log_loss": 0.9860177280695801,
-          "objective": 0.9936630995498366
+          "objective": 0.9928506913074946
         },
         "baseline": {
           "matches": 3857,
           "odds_matches": 3857,
-          "no_odds_log_loss": 1.0078947232111493,
-          "dc_log_loss": 1.0113511975787937,
+          "no_odds_log_loss": 1.0047621514033709,
+          "dc_log_loss": 1.0057946905318174,
           "elo_log_loss": 1.0133814004731638,
-          "with_odds_log_loss": 0.9918720733630417,
+          "with_odds_log_loss": 0.9913205060211985,
           "book_log_loss": 0.9860177280695801,
-          "objective": 0.9998833982870955
+          "objective": 0.9980413287122847
         }
       }
     },
@@ -1909,45 +2398,46 @@
       "held_out": "league",
       "value": "I1",
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 7.955514644500942e-07,
+        "main": 8.223305281859189e-07,
         "odds": 0.999999,
-        "elo": 2.0444853557866148e-07
+        "elo": 1.7766947184283674e-07
       },
       "no_odds_weights": {
-        "main": 0.7955514644272176,
-        "elo": 0.20444853557278242
+        "main": 0.8223305281622723,
+        "elo": 0.17766947183772774
       },
       "metrics": {
         "matches": 15583,
         "odds_matches": 15583,
-        "no_odds_log_loss": 0.9857926602056795,
-        "dc_log_loss": 0.9866759123716266,
+        "no_odds_log_loss": 0.9837969165626426,
+        "dc_log_loss": 0.9844955575287873,
         "elo_log_loss": 0.9999390723032775,
-        "with_odds_log_loss": 0.9718917073223955,
+        "with_odds_log_loss": 0.971891706417964,
         "book_log_loss": 0.9718917038243879,
-        "objective": 0.9788421837640375
+        "objective": 0.9778443114903033
       },
       "evaluation": {
         "fitted": {
           "matches": 4180,
           "odds_matches": 4179,
-          "no_odds_log_loss": 0.9698047898395349,
-          "dc_log_loss": 0.9697402651432334,
+          "no_odds_log_loss": 0.9676719256137494,
+          "dc_log_loss": 0.9675056700986677,
           "elo_log_loss": 0.9874133305676962,
-          "with_odds_log_loss": 0.9502162566335846,
+          "with_odds_log_loss": 0.9502162544395301,
           "book_log_loss": 0.9502162463726406,
-          "objective": 0.9600105232365597
+          "objective": 0.9589440900266397
         },
         "baseline": {
           "matches": 4180,
           "odds_matches": 4179,
-          "no_odds_log_loss": 0.9730121494632922,
-          "dc_log_loss": 0.973902912820977,
+          "no_odds_log_loss": 0.9730901142738198,
+          "dc_log_loss": 0.9723521453513448,
           "elo_log_loss": 0.9874133305676962,
-          "with_odds_log_loss": 0.9569948026879802,
+          "with_odds_log_loss": 0.9575078264581951,
           "book_log_loss": 0.9502162463726406,
-          "objective": 0.9650034760756362
+          "objective": 0.9652989703660074
         }
       }
     },
@@ -1955,80 +2445,85 @@
       "held_out": "league",
       "value": "SP1",
       "xg_weight": 0.75,
+      "xg_scale": 1.3,
       "weights": {
-        "main": 8.119765561799465e-07,
+        "main": 8.289049814896947e-07,
         "odds": 0.999999,
-        "elo": 1.8802344384880916e-07
+        "elo": 1.7109501853906095e-07
       },
       "no_odds_weights": {
-        "main": 0.8119765561565976,
-        "elo": 0.18802344384340242
+        "main": 0.828904981465859,
+        "elo": 0.171095018534141
       },
       "metrics": {
         "matches": 15583,
         "odds_matches": 15582,
-        "no_odds_log_loss": 0.9838257508630754,
-        "dc_log_loss": 0.9845872895187238,
+        "no_odds_log_loss": 0.9820395507704064,
+        "dc_log_loss": 0.9827050773255042,
         "elo_log_loss": 0.9988191258440794,
-        "with_odds_log_loss": 0.9685199824745496,
+        "with_odds_log_loss": 0.9685199815362192,
         "book_log_loss": 0.9685199772826615,
-        "objective": 0.9761728666688125
+        "objective": 0.9752797661533128
       },
       "evaluation": {
         "fitted": {
           "matches": 4180,
           "odds_matches": 4180,
-          "no_odds_log_loss": 0.9776245272457829,
-          "dc_log_loss": 0.9780947565548455,
+          "no_odds_log_loss": 0.9746741066258395,
+          "dc_log_loss": 0.9746675909117997,
           "elo_log_loss": 0.9918931164044911,
-          "with_odds_log_loss": 0.9637031557177174,
+          "with_odds_log_loss": 0.9637031538010665,
           "book_log_loss": 0.9637031525395472,
-          "objective": 0.9706638414817501
+          "objective": 0.969188630213453
         },
         "baseline": {
           "matches": 4180,
           "odds_matches": 4180,
-          "no_odds_log_loss": 0.9842117724374746,
-          "dc_log_loss": 0.986913777186876,
+          "no_odds_log_loss": 0.9815743753277011,
+          "dc_log_loss": 0.9820550011123705,
           "elo_log_loss": 0.9918931164044911,
-          "with_odds_log_loss": 0.9688659443151393,
+          "with_odds_log_loss": 0.9684008929526329,
           "book_log_loss": 0.9637031525395472,
-          "objective": 0.9765388583763069
+          "objective": 0.974987634140167
         }
       }
     }
   ],
   "fold_weight_spread": {
     "main": {
-      "min": 7.955514644500942e-07,
-      "max": 8.402873506118829e-07
+      "min": 7.841453251234231e-07,
+      "max": 8.566876318268093e-07
     },
     "odds": {
       "min": 0.999999,
       "max": 0.999999
     },
     "elo": {
-      "min": 1.597126494168728e-07,
-      "max": 2.0444853557866148e-07
+      "min": 1.4331236820194638e-07,
+      "max": 2.158546749053325e-07
     },
     "main_without_odds": {
-      "min": 0.7955514644272176,
-      "max": 0.8402873505877199
+      "min": 0.7841453251008745,
+      "max": 0.8566876318021747
     },
     "xg_weight": {
       "min": 0.75,
       "max": 0.75
+    },
+    "xg_scale": {
+      "min": 1.3,
+      "max": 1.4
     }
   },
   "baseline": {
     "matches": 19763,
     "odds_matches": 19762,
-    "no_odds_log_loss": 0.9887555272519704,
-    "dc_log_loss": 0.9914777231643231,
+    "no_odds_log_loss": 0.9864750339996461,
+    "dc_log_loss": 0.9869294443487636,
     "elo_log_loss": 0.9974339239561628,
-    "with_odds_log_loss": 0.9732924596763448,
+    "with_odds_log_loss": 0.9728977644500476,
     "book_log_loss": 0.9675566123340387,
-    "objective": 0.9810239934641576
+    "objective": 0.9796863992248468
   },
   "objective": "Equal league-season weights; half log loss without odds, half with pre-closing odds. Missing-odds weights renormalize over main/Elo.",
   "odds_weight_limit": "At most 1 - 1e-6, keeping a defined main/Elo ratio when quotes are absent.",
@@ -2042,132 +2537,132 @@
       "fitted": {
         "matches": 3045,
         "odds_matches": 3045,
-        "no_odds_log_loss": 1.0132674554279724,
-        "dc_log_loss": 1.0165479111298896,
+        "no_odds_log_loss": 1.0085018864696873,
+        "dc_log_loss": 1.009309901886467,
         "elo_log_loss": 1.0170021336799626,
-        "with_odds_log_loss": 0.9905039439598955,
+        "with_odds_log_loss": 0.9905039431417748,
         "book_log_loss": 0.99050393900244,
-        "objective": 1.001885699693934
+        "objective": 0.9995029148057311
       },
       "baseline": {
         "matches": 3045,
         "odds_matches": 3045,
-        "no_odds_log_loss": 1.0127369885856798,
-        "dc_log_loss": 1.0165479111298896,
+        "no_odds_log_loss": 1.0083765760762795,
+        "dc_log_loss": 1.009309901886467,
         "elo_log_loss": 1.0170021336799626,
-        "with_odds_log_loss": 0.9962946531553285,
+        "with_odds_log_loss": 0.9951766539183707,
         "book_log_loss": 0.99050393900244,
-        "objective": 1.004515820870504
+        "objective": 1.001776614997325
       }
     },
     "G1": {
       "fitted": {
         "matches": 2628,
         "odds_matches": 2627,
-        "no_odds_log_loss": 0.9516890071032967,
-        "dc_log_loss": 0.9530821264446439,
+        "no_odds_log_loss": 0.9515150970535993,
+        "dc_log_loss": 0.9512467957455687,
         "elo_log_loss": 0.9697310622808699,
-        "with_odds_log_loss": 0.9330931861519816,
+        "with_odds_log_loss": 0.9330931890788461,
         "book_log_loss": 0.9330931881613497,
-        "objective": 0.9423910966276392
+        "objective": 0.9423041430662227
       },
       "baseline": {
         "matches": 2628,
         "odds_matches": 2627,
-        "no_odds_log_loss": 0.9516141080054775,
-        "dc_log_loss": 0.9530821264446439,
+        "no_odds_log_loss": 0.9519041852651695,
+        "dc_log_loss": 0.9512467957455687,
         "elo_log_loss": 0.9697310622808699,
-        "with_odds_log_loss": 0.9364759198441185,
+        "with_odds_log_loss": 0.9371846682599456,
         "book_log_loss": 0.9330931881613497,
-        "objective": 0.944045013924798
+        "objective": 0.9445444267625576
       }
     },
     "N1": {
       "fitted": {
         "matches": 3292,
         "odds_matches": 3292,
-        "no_odds_log_loss": 0.956221400786603,
-        "dc_log_loss": 0.9593328598094744,
+        "no_odds_log_loss": 0.9526018569754845,
+        "dc_log_loss": 0.953191474306255,
         "elo_log_loss": 0.9661524193154444,
-        "with_odds_log_loss": 0.9363187569805469,
+        "with_odds_log_loss": 0.9363187569301571,
         "book_log_loss": 0.9363187514024403,
-        "objective": 0.946270078883575
+        "objective": 0.9444603069528208
       },
       "baseline": {
         "matches": 3292,
         "odds_matches": 3292,
-        "no_odds_log_loss": 0.9557682040278278,
-        "dc_log_loss": 0.9593328598094744,
+        "no_odds_log_loss": 0.9526214816182661,
+        "dc_log_loss": 0.953191474306255,
         "elo_log_loss": 0.9661524193154444,
-        "with_odds_log_loss": 0.9417159979104679,
+        "with_odds_log_loss": 0.9410273895252392,
         "book_log_loss": 0.9363187514024403,
-        "objective": 0.9487421009691479
+        "objective": 0.9468244355717527
       }
     },
     "P1": {
       "fitted": {
         "matches": 3366,
         "odds_matches": 3366,
-        "no_odds_log_loss": 0.9385659151834185,
-        "dc_log_loss": 0.9397576482125848,
+        "no_odds_log_loss": 0.9381118252781211,
+        "dc_log_loss": 0.9378742750596359,
         "elo_log_loss": 0.9518370200914054,
-        "with_odds_log_loss": 0.9208802600758144,
+        "with_odds_log_loss": 0.920880263651396,
         "book_log_loss": 0.9208802575752179,
-        "objective": 0.9297230876296164
+        "objective": 0.9294960444647585
       },
       "baseline": {
         "matches": 3366,
         "odds_matches": 3366,
-        "no_odds_log_loss": 0.9384863389951115,
-        "dc_log_loss": 0.9397576482125848,
+        "no_odds_log_loss": 0.9384223644175687,
+        "dc_log_loss": 0.9378742750596359,
         "elo_log_loss": 0.9518370200914054,
-        "with_odds_log_loss": 0.9251955478228855,
+        "with_odds_log_loss": 0.9259802285285332,
         "book_log_loss": 0.9208802575752179,
-        "objective": 0.9318409434089985
+        "objective": 0.9322012964730509
       }
     },
     "SC0": {
       "fitted": {
         "matches": 2459,
         "odds_matches": 2459,
-        "no_odds_log_loss": 0.9635390997491903,
-        "dc_log_loss": 0.9655370059990189,
+        "no_odds_log_loss": 0.9625414996480203,
+        "dc_log_loss": 0.9632700711586207,
         "elo_log_loss": 0.9722350279355443,
-        "with_odds_log_loss": 0.9460195019740845,
+        "with_odds_log_loss": 0.946019502677929,
         "book_log_loss": 0.9460194964280482,
-        "objective": 0.9547793008616374
+        "objective": 0.9542805011629747
       },
       "baseline": {
         "matches": 2459,
         "odds_matches": 2459,
-        "no_odds_log_loss": 0.9632791708298893,
-        "dc_log_loss": 0.9655370059990189,
+        "no_odds_log_loss": 0.9624602280194394,
+        "dc_log_loss": 0.9632700711586207,
         "elo_log_loss": 0.9722350279355443,
-        "with_odds_log_loss": 0.9508744278969397,
+        "with_odds_log_loss": 0.9508340997456532,
         "book_log_loss": 0.9460194964280482,
-        "objective": 0.9570767993634145
+        "objective": 0.9566471638825463
       }
     },
     "T1": {
       "fitted": {
         "matches": 3700,
         "odds_matches": 3671,
-        "no_odds_log_loss": 1.0018949972416717,
-        "dc_log_loss": 1.0055504621009503,
+        "no_odds_log_loss": 0.9978569826479398,
+        "dc_log_loss": 0.9992518241977992,
         "elo_log_loss": 1.0024126746522228,
-        "with_odds_log_loss": 0.9803888432057297,
+        "with_odds_log_loss": 0.9803888443658276,
         "book_log_loss": 0.9803888379988038,
-        "objective": 0.9911419202237007
+        "objective": 0.9891229135068837
       },
       "baseline": {
         "matches": 3700,
         "odds_matches": 3671,
-        "no_odds_log_loss": 1.0012701922623608,
-        "dc_log_loss": 1.0055504621009503,
+        "no_odds_log_loss": 0.9974735777605934,
+        "dc_log_loss": 0.9992518241977992,
         "elo_log_loss": 1.0024126746522228,
-        "with_odds_log_loss": 0.9865980406413446,
+        "with_odds_log_loss": 0.9859347881962202,
         "book_log_loss": 0.9803888379988038,
-        "objective": 0.9939341164518527
+        "objective": 0.9917041829784068
       }
     }
   },
@@ -2201,10 +2696,18 @@
       0.75,
       1.0
     ],
+    "xg_scale_grid": [
+      1.0,
+      1.1,
+      1.2,
+      1.3,
+      1.4,
+      1.5
+    ],
     "prior_seasons": 2,
     "xi": 0.003,
-    "lambda_reg": 0.1,
-    "feature_code_sha256": "a51a1452311ed1a0f4ab3a25d9ad3249dc189d821c3a598e13a23eb5bedc610d",
+    "lambda_reg": 2.0,
+    "feature_code_sha256": "4c9d690404bb022e37c042365647e9df90889b680fc7935e9c7b602ad770de28",
     "matches": 18490,
     "coverage": [
       {
@@ -2931,15 +3434,15 @@
         "xg": null
       }
     ],
-    "sha256": "e380c74b5843ae125856bdde4be0cce742dde9d636b44626be87cfba628d506a",
+    "sha256": "40deb502cdd734125264104307a9cc411981e13a7371541445c694bc24907627",
     "odds_timing": "Approximate preceding Tuesday/Friday 00:00 UTC; actual quotes collected that afternoon, not timestamped.",
     "result_timing": "Results and xG available next UTC day after local match date; unknown kickoffs anchored at 12:00 UTC.",
     "history": "Up to two prior seasons by default, starting in 2014/15; features use only results available at origin."
   },
   "code_version": {
-    "git_revision": "f494a4ebe40fae546d7507b1883a12eb44e1f09c",
-    "feature_sha256": "a51a1452311ed1a0f4ab3a25d9ad3249dc189d821c3a598e13a23eb5bedc610d",
-    "optimizer_sha256": "f8ebc8d11b138db0d0fe74897ceb4f5731cb904cb0b04d2f4dee660c92f9cb64"
+    "git_revision": "5aaa0dcd2f33a23ea4978a95ab4e427f8082b6d0",
+    "feature_sha256": "4c9d690404bb022e37c042365647e9df90889b680fc7935e9c7b602ad770de28",
+    "optimizer_sha256": "232f40845b688f6d78934d25cf66ff640dad69b0a819c77d2df65bfa8347f73c"
   },
-  "version": "global-8c8185b60bc9"
+  "version": "global-4c0170be18f1"
 }

@@ -18,6 +18,13 @@ CALIBRATION_LEAGUES = ("E0", "SP1", "D1", "I1", "F1")
 ROBUSTNESS_LEAGUES = ("P1", "N1", "B1", "T1", "G1", "SC0")
 XG_COMPETITIONS = {"E0": "PL", "SP1": "PD", "D1": "BL1", "I1": "SA", "F1": "FL1"}
 XG_GRID = (0.0, 0.25, 0.5, 0.75, 1.0)
+# Scales on xG strengths before blending; 1 is the plain blend.
+XG_SCALE_GRID = (1.0, 1.1, 1.2, 1.3, 1.4, 1.5)
+
+
+def dc_prefix(xg_weight, xg_scale=1.0):
+    """Dataset column prefix of the goal model blended with this xG weight and scale."""
+    return f"dc_{xg_weight:g}" if xg_scale == 1 or xg_weight == 0 else f"dc_{xg_weight:g}x{xg_scale:g}"
 
 
 def collection_time(dates):
@@ -71,17 +78,21 @@ def load_season(league, season, *, cache=True):
     return matches
 
 
-def build_dataset(*, leagues, seasons, out_dir, xg_grid=XG_GRID, prior_seasons=2, xi=0.003, lambda_reg=0.1, cache=True):
+def build_dataset(*, leagues, seasons, out_dir, xg_grid=XG_GRID, xg_scale_grid=XG_SCALE_GRID, prior_seasons=2, xi=0.003,
+                  lambda_reg=2.0, cache=True):
     seasons = sorted(set(seasons))
     leagues = list(dict.fromkeys(leagues))
     xg_grid = sorted(set(float(w) for w in xg_grid))
+    xg_scale_grid = sorted(set(float(s) for s in xg_scale_grid))
     if not seasons or not leagues or prior_seasons < 1 or not xg_grid or any(not 0 <= w <= 1 for w in xg_grid):
         raise ValueError("Provide leagues, seasons, a nonempty xG grid in [0, 1], and at least one prior season.")
+    if 1.0 not in xg_scale_grid or any(not np.isfinite(s) or s <= 0 for s in xg_scale_grid):
+        raise ValueError("The xG scale grid must be positive and include 1.")
     if seasons != list(range(min(seasons), max(seasons) + 1)):
         raise ValueError("Dataset seasons must be consecutive.")
     output = Path(out_dir)
     output.mkdir(parents=True, exist_ok=True)
-    config = {"schema_version": 1, "leagues": leagues, "seasons": seasons, "xg_grid": xg_grid,
+    config = {"schema_version": 1, "leagues": leagues, "seasons": seasons, "xg_grid": xg_grid, "xg_scale_grid": xg_scale_grid,
               "prior_seasons": prior_seasons, "xi": xi, "lambda_reg": lambda_reg,
               "feature_code_sha256": feature_code_hash()}
     frames, coverage = [], []
@@ -109,7 +120,8 @@ def build_dataset(*, leagues, seasons, out_dir, xg_grid=XG_GRID, prior_seasons=2
                     train = prior[(prior["available_at"] <= cutoff) & (prior["utcDate"] < cutoff)]
                     dc, elo, xg, _ = fit_model_components(train, teams=teams, reference_date=cutoff, xi=xi,
                                                          lambda_reg=lambda_reg, xg=league in XG_COMPETITIONS)
-                    models = {w: blend_xg_strengths(dc, xg, w) for w in xg_grid}
+                    models = {dc_prefix(w, scale): blend_xg_strengths(dc, xg, w, scale)
+                              for w in xg_grid for scale in (xg_scale_grid if w else [1.0])}
                     for match in future.itertuples(index=False):
                         row = {"league": league, "season": season, "forecast_at": cutoff.isoformat(),
                                "utcDate": match.utcDate.isoformat(), "training_last_available_at": train["available_at"].max().isoformat(),
@@ -119,8 +131,8 @@ def build_dataset(*, leagues, seasons, out_dir, xg_grid=XG_GRID, prior_seasons=2
                         for c in "hda":
                             row[f"book_{c}"] = getattr(match, f"book_{c}")
                         row.update({f"elo_{c}": p for c, p in zip("hda", elo.predict_probs(match.homeTeam, match.awayTeam))})
-                        for w, model in models.items():
-                            row.update({f"dc_{w:g}_{c}": p for c, p in zip("hda", model.match_outcome_probs(match.homeTeam, match.awayTeam))})
+                        for prefix, model in models.items():
+                            row.update({f"{prefix}_{c}": p for c, p in zip("hda", model.match_outcome_probs(match.homeTeam, match.awayTeam))})
                         rows.append(row)
                 frame = pd.DataFrame(rows)
                 frame.to_csv(part_path, index=False)
