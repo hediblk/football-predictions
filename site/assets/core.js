@@ -127,8 +127,16 @@ function nextRunText(generatedAt) {
   const mins = Math.ceil((last.getTime() + 864e5 - now) / 60000);
   return mins < 60 ? `next in ${mins} min` : `next in ${Math.round(mins / 60)} h`;
 }
+/* One time for the whole site, whichever page is open: the latest competition run in index.json. Pages pass
+   their own file's time, used only when the index is unavailable. */
+let siteRun = null;
+export async function loadRun() {
+  const index = await getJSON("index.json");
+  siteRun = index.reduce((a, b) => (a.generated_at > b.generated_at ? a : b)).generated_at;
+}
 let statusSource = null;
-export function setStatus(generatedAt, cutoff) {
+export function setStatus(pageRun, cutoff) {
+  const generatedAt = siteRun || pageRun;
   statusSource = { generatedAt, cutoff };
   const hours = (Date.now() - new Date(generatedAt)) / 3.6e6;
   $("lamp").classList.toggle("stale", hours > STALE_HOURS);

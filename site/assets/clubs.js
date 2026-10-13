@@ -64,28 +64,28 @@ function move(delta, since) {
   const body = delta > 0 ? `▲<b>${delta}</b>` : delta < 0 ? `▼<b>${-delta}</b>` : "–";
   return `<span class="mv ${delta > 0 ? "up" : delta < 0 ? "down" : "flat"}" aria-label="${label}" title="${label}">${body}</span>`;
 }
-/* The ranking table and the risers use the latest frozen Monday. With no history they fall back to the live clubs.json
-   values and ranks, with no movement; a club missing from that week does the same on its own, without an arrow.
-   The hero, the club board and the scatter always use the live values. */
+/* the Monday (UTC) of the week holding `iso`, as YYYY-MM-DD */
+const mondayOf = (iso) => {
+  const d = new Date(iso);
+  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
+  return d.toISOString().slice(0, 10);
+};
+/* The ranking shows the live clubs.json values and ranks, the same numbers as the hero, the profiles and the scatter.
+   Arrows compare each live rank with the last Monday frozen before this week, so a Monday refresh still shows the
+   week's movement. With no earlier Monday there are no arrows; a club missing from it is "new". */
 function weeklyView(history) {
-  const weeks = history?.weeks || [];
-  const ids = clubs.clubs.map((c) => c.id);
-  const cur = weekRanks(weeks.at(-1), ids);
-  const prev = weekRanks(weeks.at(-2), ids);
+  const monday = mondayOf(clubs.generated_at);
+  const base = (history?.weeks || []).filter((w) => w.date < monday).at(-1);
+  const prev = weekRanks(base, clubs.clubs.map((c) => c.id));
   const byId = {};
   for (const c of clubs.clubs) {
     byId[c.id] = Object.fromEntries(KEYS.map((k) => {
-      const now = cur[c.id]?.[k];
-      if (!now) return [k, { v: c[k], rank: c[`${k}_rank`], d: null }];
+      const rank = c[`${k}_rank`];
       const before = prev[c.id]?.[k];
-      return [k, { ...now, d: weeks.length < 2 ? null : before ? before.rank - now.rank : "new" }];
+      return [k, { v: c[k], rank, d: !base ? null : before ? before.rank - rank : "new" }];
     }));
   }
-  return {
-    byId,
-    date: weeks.length ? weeks.at(-1).date : null,
-    since: weeks.length > 1 ? weeks.at(-2).date : null,
-  };
+  return { byId, since: base ? base.date : null };
 }
 let view = null;
 
@@ -139,7 +139,7 @@ function renderRanking(tables) {
   const since = view.since && weekDay(view.since);
   /* a strength cell: the value in bold, then its rank and movement, with a hairline meter underneath */
   const strength = (m, tag) => `<td class="ad"><b>${dec(m.v)}</b>${tag ? ` ${rankTag(m.rank)}${move(m.d, since)}` : ""}<i style="--w:${m.v}%"></i></td>`;
-  $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="mvc" title="Rating places gained or lost since last week" aria-label="Rating places gained or lost since last week">±</th><th class="club l">Club</th><th class="l">League</th>
+  $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="mvc" title="Rating places gained or lost since Monday${since ? ` ${since}` : ""}" aria-label="Rating places gained or lost since Monday${since ? ` ${since}` : ""}">±</th><th class="club l">Club</th><th class="l">League</th>
       ${sortable("rating", "Rating")}${sortable("attack", "Attack")}${sortable("defense", "Defence")}
       <th class="sec">Scores</th><th class="sec">Concedes</th><th>Now</th></tr></thead>
     <tbody>${shown.slice(0, limit).map((c, i) => {
@@ -156,9 +156,10 @@ function renderRanking(tables) {
     }).join("")}</tbody>`;
   $("c-more").hidden = limit >= shown.length;
   $("c-more").textContent = `Show all ${shown.length} clubs`;
-  $("c-rank-note").textContent = view.date
-    ? `Ranks are frozen every Monday after the weekend round; arrows show places gained or lost since the previous Monday. Frozen ${weekDay(view.date)}.`
-    : "Live ratings. Weekly ranks and movement appear once the first Monday has been frozen.";
+  $("c-rank-legend").textContent = since ? `Power ranking · arrows ▲▼ since Monday ${since}` : "Power ranking";
+  $("c-rank-note").textContent = since
+    ? `Live ratings, the same as on each club's page. Arrows show places gained or lost since the ranking frozen on Monday ${since}.`
+    : "Live ratings, the same as on each club's page. Movement appears once a Monday ranking has been frozen.";
   renderMoves(shown);
 }
 
@@ -167,7 +168,7 @@ function renderMoves(shown) {
   $("c-moves-frame").hidden = !view.since;
   if (!view.since) return;
   const since = weekDay(view.since);
-  $("c-moves-legend").textContent = `Week of ${weekDay(view.date)} · since ${since}`;
+  $("c-moves-legend").textContent = `Risers and fallers since Monday ${since}`;
   const list = (k, sign) => shown.filter((c) => typeof view.byId[c.id][k].d === "number" && view.byId[c.id][k].d * sign > 0)
     .sort((a, b) => (view.byId[b.id][k].d - view.byId[a.id][k].d) * sign || view.byId[a.id][k].rank - view.byId[b.id][k].rank)
     .slice(0, 3).map((c) => {
