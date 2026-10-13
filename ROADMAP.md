@@ -31,7 +31,7 @@ The track record in proper scores (log loss, RPS, Brier) against always backing 
 
 ### 5. Players (phase 6)
 
-Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. Andrew's FM26 dataset can rate every player, including squads outside the top five leagues where we have the least data. Football Manager data belongs to Sports Interactive, so use it for modelling and don't republish raw attributes. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
+Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. A player dataset with ratings for whole squads would give every player a prior, including clubs outside the top five leagues where we have the least data. Check each source's terms before republishing its data on the site. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
 
 ## Parked
 
