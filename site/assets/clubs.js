@@ -33,7 +33,7 @@ export async function showClubs(slug) {
 
 const leagueName = (slug) => compBySlug[slug].label;
 /* a category rank: #1 lit, top ten warm, the rest dim */
-const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top" : ""}${cls}">#${rank}</${tag}>`;
+const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top10" : ""}${cls}">#${rank}</${tag}>`;
 const leagueTables = () => Promise.all(LEAGUES.map((l) => getJSON(`${l.slug}.json`).catch(() => null)));
 const rowFor = (tables, club) => {
   const table = tables.find((t) => t && t.slug === club.league);
@@ -124,11 +124,11 @@ async function showIndex() {
     </a>`;
   }).join("");
 
-  renderRanking(tables);
+  renderRanking();
   renderScatter();
 }
 
-function renderRanking(tables) {
+function renderRanking() {
   const chips = [{ slug: "all", label: "All leagues" }, ...LEAGUES];
   $("c-chips").innerHTML = chips.map((l) => `<button type="button" class="chip" data-league="${l.slug}" aria-pressed="${leagueFilter === l.slug}">${esc(l.label)}</button>`).join("");
   const w = (c) => view.byId[c.id];
@@ -141,9 +141,8 @@ function renderRanking(tables) {
   const strength = (m, tag) => `<td class="ad"><b>${dec(m.v)}</b>${tag ? ` ${rankTag(m.rank)}${move(m.d, since)}` : ""}<i style="--w:${m.v}%"></i></td>`;
   $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="mvc" title="Rating places gained or lost since Monday${since ? ` ${since}` : ""}" aria-label="Rating places gained or lost since Monday${since ? ` ${since}` : ""}">±</th><th class="club l">Club</th><th class="l">League</th>
       ${sortable("rating", "Rating")}${sortable("attack", "Attack")}${sortable("defense", "Defence")}
-      <th class="sec">Scores</th><th class="sec">Concedes</th><th>Now</th></tr></thead>
+      <th class="sec">Scores</th><th class="sec">Concedes</th></tr></thead>
     <tbody>${shown.slice(0, limit).map((c, i) => {
-      const row = rowFor(tables, c);
       const m = w(c);
       return `<tr class="${clubs.featured.includes(c.id) ? "featured" : ""}">
         <td class="rk l">${String(i + 1).padStart(2, "0")}</td>
@@ -151,8 +150,7 @@ function renderRanking(tables) {
         <td class="club l"><a href="#clubs/${c.slug}">${clubName(c.id, c.name)}</a></td>
         <td class="l lg">${esc(compBySlug[c.league].short)}</td>
         ${strength(m.rating)}${strength(m.attack, true)}${strength(m.defense, true)}
-        <td class="sec">${dec(c.gf, 2)}</td><td class="sec">${dec(c.ga, 2)}</td>
-        <td>${row ? (row.position === 1 ? `<span class="crk first">1st</span>` : ordinal(row.position)) : "–"}</td></tr>`;
+        <td class="sec">${dec(c.gf, 2)}</td><td class="sec">${dec(c.ga, 2)}</td></tr>`;
     }).join("")}</tbody>`;
   $("c-more").hidden = limit >= shown.length;
   $("c-more").textContent = `Show all ${shown.length} clubs`;
@@ -181,22 +179,22 @@ function renderMoves(shown) {
       <h4>Fallers</h4><ol>${list(k, -1)}</ol></section>`).join("");
 }
 
-$("c-chips").addEventListener("click", async (e) => {
+$("c-chips").addEventListener("click", (e) => {
   const b = e.target.closest("button[data-league]");
   if (!b) return;
   leagueFilter = b.dataset.league;
-  renderRanking(await leagueTables());
+  renderRanking();
   renderScatter();
 });
-$("c-rank").addEventListener("click", async (e) => {
+$("c-rank").addEventListener("click", (e) => {
   const b = e.target.closest("button[data-sort]");
   if (!b) return;
   sortKey = b.dataset.sort;
-  renderRanking(await leagueTables());
+  renderRanking();
 });
-$("c-more").addEventListener("click", async () => {
+$("c-more").addEventListener("click", () => {
   showAll = true;
-  renderRanking(await leagueTables());
+  renderRanking();
 });
 
 /* attack against defence: one dot per club, the featured (or filtered) clubs lit and named where they fit */
