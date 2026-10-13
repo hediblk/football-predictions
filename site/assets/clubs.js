@@ -40,10 +40,63 @@ const rowFor = (tables, club) => {
   return table ? table.teams.find((t) => t.id === club.id) : null;
 };
 
+/* ---------- weekly ranks ---------- */
+const KEYS = ["rating", "attack", "defense"];
+const weekDay = (iso) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+/* one frozen Monday's values for the given clubs, with ranks (descending; ties share the better rank) */
+function weekRanks(week, ids) {
+  const out = {};
+  for (const id of ids) {
+    const v = week?.clubs[id];
+    if (v) out[id] = Object.fromEntries(KEYS.map((k, i) => [k, { v: v[i] }]));
+  }
+  for (const k of KEYS) {
+    const vals = Object.values(out).map((o) => o[k].v);
+    for (const o of Object.values(out)) o[k].rank = 1 + vals.filter((x) => x > o[k].v).length;
+  }
+  return out;
+}
+/* places climbed (positive) or lost, as arrow + number with a spoken label; "new" for a club without a previous week */
+function move(delta, since) {
+  if (delta == null) return "";
+  if (delta === "new") return `<span class="mv new" aria-label="new this week" title="new this week">new</span>`;
+  const label = delta === 0 ? `unchanged since ${since}` : `${delta > 0 ? "up" : "down"} ${Math.abs(delta)} ${Math.abs(delta) === 1 ? "place" : "places"} since ${since}`;
+  const body = delta > 0 ? `▲<b>${delta}</b>` : delta < 0 ? `▼<b>${-delta}</b>` : "–";
+  return `<span class="mv ${delta > 0 ? "up" : delta < 0 ? "down" : "flat"}" aria-label="${label}" title="${label}">${body}</span>`;
+}
+/* The ranking table and the risers use the latest frozen Monday. With no history they fall back to the live clubs.json
+   values and ranks, with no movement; a club missing from that week does the same on its own, without an arrow.
+   The hero, the club board and the scatter always use the live values. */
+function weeklyView(history) {
+  const weeks = history?.weeks || [];
+  const ids = clubs.clubs.map((c) => c.id);
+  const cur = weekRanks(weeks.at(-1), ids);
+  const prev = weekRanks(weeks.at(-2), ids);
+  const byId = {};
+  for (const c of clubs.clubs) {
+    byId[c.id] = Object.fromEntries(KEYS.map((k) => {
+      const now = cur[c.id]?.[k];
+      if (!now) return [k, { v: c[k], rank: c[`${k}_rank`], d: null }];
+      const before = prev[c.id]?.[k];
+      return [k, { ...now, d: weeks.length < 2 ? null : before ? before.rank - now.rank : "new" }];
+    }));
+  }
+  return {
+    byId,
+    date: weeks.length ? weeks.at(-1).date : null,
+    since: weeks.length > 1 ? weeks.at(-2).date : null,
+  };
+}
+let view = null;
+
 /* ---------- index ---------- */
 async function showIndex() {
   document.title = "Clubs · Floodlight";
-  const tables = await leagueTables();
+  const [tables, history] = await Promise.all([
+    leagueTables(),
+    getJSON(`history/${clubs.season.split("/")[0]}/clubs.json`).catch(() => null),
+  ]);
+  view = weeklyView(history);
   const list = clubs.clubs;
   const [best] = list;
   const topAttack = list.find((c) => c.attack_rank === 1);
@@ -78,27 +131,53 @@ async function showIndex() {
 function renderRanking(tables) {
   const chips = [{ slug: "all", label: "All leagues" }, ...LEAGUES];
   $("c-chips").innerHTML = chips.map((l) => `<button type="button" class="chip" data-league="${l.slug}" aria-pressed="${leagueFilter === l.slug}">${esc(l.label)}</button>`).join("");
+  const w = (c) => view.byId[c.id];
   const shown = clubs.clubs.filter((c) => leagueFilter === "all" || c.league === leagueFilter)
-    .sort((a, b) => b[sortKey] - a[sortKey] || a.rating_rank - b.rating_rank);
+    .sort((a, b) => w(b)[sortKey].v - w(a)[sortKey].v || w(a)[sortKey].rank - w(b)[sortKey].rank || a.rating_rank - b.rating_rank);
   const limit = showAll || leagueFilter !== "all" ? shown.length : 25;
   const sortable = (key, label) => `<th aria-sort="${sortKey === key ? "descending" : "none"}"><button type="button" data-sort="${key}">${label}${sortKey === key ? " ▾" : ""}</button></th>`;
-  $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="club l">Club</th><th class="l">League</th>
+  const since = view.since && weekDay(view.since);
+  /* a strength cell: the value in bold, then its rank and movement, with a hairline meter underneath */
+  const strength = (m, tag) => `<td class="ad"><b>${dec(m.v)}</b>${tag ? ` ${rankTag(m.rank)}${move(m.d, since)}` : ""}<i style="--w:${m.v}%"></i></td>`;
+  $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="mvc" title="Rating places gained or lost since last week" aria-label="Rating places gained or lost since last week">±</th><th class="club l">Club</th><th class="l">League</th>
       ${sortable("rating", "Rating")}${sortable("attack", "Attack")}${sortable("defense", "Defence")}
-      <th>Scores</th><th>Concedes</th><th>Now</th></tr></thead>
+      <th class="sec">Scores</th><th class="sec">Concedes</th><th>Now</th></tr></thead>
     <tbody>${shown.slice(0, limit).map((c, i) => {
       const row = rowFor(tables, c);
+      const m = w(c);
       return `<tr class="${clubs.featured.includes(c.id) ? "featured" : ""}">
         <td class="rk l">${String(i + 1).padStart(2, "0")}</td>
+        <td class="mvc">${move(m.rating.d, since)}</td>
         <td class="club l"><a href="#clubs/${c.slug}">${clubName(c.id, c.name)}</a></td>
         <td class="l lg">${esc(compBySlug[c.league].short)}</td>
-        <td class="b">${dec(c.rating)}</td>
-        <td>${dec(c.attack)} ${rankTag(c.attack_rank)}</td>
-        <td>${dec(c.defense)} ${rankTag(c.defense_rank)}</td>
-        <td>${dec(c.gf, 2)}</td><td>${dec(c.ga, 2)}</td>
+        ${strength(m.rating)}${strength(m.attack, true)}${strength(m.defense, true)}
+        <td class="sec">${dec(c.gf, 2)}</td><td class="sec">${dec(c.ga, 2)}</td>
         <td>${row ? (row.position === 1 ? `<span class="crk first">1st</span>` : ordinal(row.position)) : "–"}</td></tr>`;
     }).join("")}</tbody>`;
   $("c-more").hidden = limit >= shown.length;
   $("c-more").textContent = `Show all ${shown.length} clubs`;
+  $("c-rank-note").textContent = view.date
+    ? `Ranks are frozen every Monday after the weekend round; arrows show places gained or lost since the previous Monday. Frozen ${weekDay(view.date)}.`
+    : "Live ratings. Weekly ranks and movement appear once the first Monday has been frozen.";
+  renderMoves(shown);
+}
+
+/* the three biggest risers and fallers by rank change, per measure, among the clubs on show */
+function renderMoves(shown) {
+  $("c-moves-frame").hidden = !view.since;
+  if (!view.since) return;
+  const since = weekDay(view.since);
+  $("c-moves-legend").textContent = `Week of ${weekDay(view.date)} · since ${since}`;
+  const list = (k, sign) => shown.filter((c) => typeof view.byId[c.id][k].d === "number" && view.byId[c.id][k].d * sign > 0)
+    .sort((a, b) => (view.byId[b.id][k].d - view.byId[a.id][k].d) * sign || view.byId[a.id][k].rank - view.byId[b.id][k].rank)
+    .slice(0, 3).map((c) => {
+      const m = view.byId[c.id][k];
+      return `<li><a href="#clubs/${c.slug}">${clubName(c.id, c.name)}</a>${move(m.d, since)}<small>#${m.rank}</small></li>`;
+    }).join("") || `<li class="empty">None</li>`;
+  $("c-moves").innerHTML = [["rating", "Overall"], ["attack", "Attack"], ["defense", "Defence"]].map(([k, label]) => `
+    <section><h3>${label}</h3>
+      <h4>Risers</h4><ol>${list(k, 1)}</ol>
+      <h4>Fallers</h4><ol>${list(k, -1)}</ol></section>`).join("");
 }
 
 $("c-chips").addEventListener("click", async (e) => {
