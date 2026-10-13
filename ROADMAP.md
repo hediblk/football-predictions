@@ -32,6 +32,10 @@ The track record in proper scores (log loss, RPS, Brier) against always backing 
 
 Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. A player dataset with ratings for whole squads would give every player a prior, including clubs outside the top five leagues where we have the least data. Check each source's terms before republishing its data on the site. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
 
+### 5. Site browser checks
+
+Load the site against sample data in a headless browser and fail on console errors or an empty tab, on every change to `site/**`. The data contract checks the JSON, not the JavaScript that renders it ([ADR 0001](docs/adr/0001-site-model-boundary.md)).
+
 ## Parked
 
 - **Repository rename:** deferred. GitHub redirects remotes but not the Pages address; preserve existing links or set up a custom domain before renaming.

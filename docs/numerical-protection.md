@@ -29,7 +29,7 @@ Keep focused tests for exceptional rules, including awarded fixtures, temporal f
 
 ## Configuration and provenance
 
-Freeze the season, forecast origin, seed, simulation count, fixture/team order, score support, and every external input. Start with seed 7 and 10,000 simulations per case, then measure CI runtime before finalizing the fixture size.
+Freeze the season, forecast origin, seed, simulation count, fixture/team order, score support, and every external input. Both cases use seed 7 and 10,000 simulations.
 
 Run with the actual production defaults. Record and compare the expected effective configuration alongside the baseline: calibration version and artifact hash, blend weights and their no-odds ratio, xG weight/scale, decay, regularization, and UCL offset/club/market/shift settings. Passing yesterday's hardcoded configuration would conceal a change to today's defaults. Fixtures and seeds are fixed; production settings are exercised and checked against their recorded expectations.
 
@@ -55,7 +55,7 @@ The following absolute drift thresholds are enforced, with zero relative toleran
 
 At 10,000 simulations, 0.1 percentage point corresponds to ten simulated outcomes. This is a drift budget, not a confidence interval or a statement that a forecast is accurate to 0.1 point. With a fixed seed and fixed environment, ordinary rerun Monte Carlo noise is absent; changed numerical libraries or execution order can still change fitting and sampling.
 
-The initial baselines were generated on macOS/Python 3.12 with the pinned numerical libraries; repeated public-API runs agreed exactly locally. The first Linux CI run must establish cross-platform compatibility. If it fails, inspect the differences rather than automatically widening tolerances. Future baseline updates should be generated and repeated in the canonical CI environment. A change that passes a tolerance can still be real, so configuration and structural invariants are checked separately.
+The initial baselines were generated on macOS/Python 3.12 with the pinned numerical libraries; repeated public-API runs agreed exactly locally. Linux CI (Ubuntu 24.04) matches them within these tolerances. If a run fails, inspect the differences rather than automatically widening tolerances. Future baseline updates should be generated and repeated in the canonical CI environment. A change that passes a tolerance can still be real, so configuration and structural invariants are checked separately.
 
 For point quantiles, require finite, ordered, feasible bounds. If also comparing exact quantiles against a baseline, state the permitted movement explicitly: a discrete percentile can move by one point around a boundary. The expected points need not lie between the 10th and 90th percentiles.
 

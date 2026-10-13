@@ -15,8 +15,8 @@ Poisson rates with unequal club strengths; xG values vary around those rates, wi
   versions, platform, Python version, seed, simulation count and generating revision accompany them.
 
 Baselines were initially generated on macOS with Python 3.12 and the pinned dependencies; repeated
-public-API runs agreed exactly locally. Linux compatibility is checked by the first canonical CI
-run; local repeatability alone does not establish it. The generating revision identifies the source
+public-API runs agreed exactly locally, and Linux CI (Ubuntu 24.04) matches them within the
+tolerances. The generating revision identifies the source
 checkout before these uncommitted test artifacts were added.
 
 The test module injects frozen provider inputs into both public forecast APIs, blocks network access,

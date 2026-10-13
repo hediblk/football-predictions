@@ -26,8 +26,6 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: write
-    outputs:
-      revision: ${{ steps.publish.outputs.revision }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,7 +56,6 @@ jobs:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
         run: scripts/refresh_site.sh
       - name: Commit refreshed data
-        id: publish
         run: |
           git add site/data data/odds
           if ! git diff --cached --quiet; then
@@ -70,7 +67,6 @@ jobs:
           # Rebase can introduce site/schema changes; validate the final candidate.
           python scripts/validate_site_data.py --data site/data
           git push origin HEAD:main
-          echo "revision=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   # Pushes made with GITHUB_TOKEN don't trigger other workflows, so deploy here.
   deploy:
@@ -88,7 +84,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.refresh.outputs.revision || github.sha }}
+          # Always the newest main: a push run queued behind a refresh must not redeploy older data.
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
