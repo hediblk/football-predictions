@@ -1,4 +1,4 @@
-/* Final Table — "Scoreboard" DNA. See DESIGN.md. */
+/* Floodlight — "Scoreboard" DNA. See DESIGN.md. */
 :root {
   color-scheme: dark;
   --bg: #131312;
@@ -39,8 +39,12 @@ button { font: inherit; color: inherit; }
 /* ---------- top bar: sections, then competitions on Tables ---------- */
 .top { border-bottom: 1px solid var(--rule); background: var(--bg); z-index: 20; }
 .top-in { max-width: 1320px; margin: 0 auto; padding: 0 16px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0 28px; }
-.logo { font: 900 24px/1 var(--sign); letter-spacing: .04em; text-transform: uppercase; text-decoration: none; padding: 18px 0 6px; }
-.tabs { display: flex; gap: 26px; grid-column: 1 / -1; }
+.logo { display: inline-flex; align-items: center; gap: 10px; justify-self: start; font: 900 24px/1 var(--sign); letter-spacing: .04em; text-transform: uppercase; text-decoration: none; padding: 18px 0 6px; }
+.mark { width: 22px; height: 22px; flex: none; }
+.mark .on { fill: var(--amber); }
+.mark .off { fill: var(--rule); }
+.tabs { display: flex; gap: 22px; grid-column: 1 / -1; }
+@media (min-width: 420px) { .tabs { gap: 26px; } }
 .tabs a {
   display: inline-flex; align-items: center; min-height: 44px; padding: 4px 0 2px; text-decoration: none;
   font: 800 18px/1 var(--sign); letter-spacing: .14em; text-transform: uppercase; color: var(--dim);
@@ -228,8 +232,44 @@ tr.detail td { height: auto; padding: 14px 8px 20px; background: var(--panel); t
   .method dt { margin-top: 0; }
 }
 
-.foot { max-width: 1320px; margin: 0 auto; padding: 18px 16px 36px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 20px; color: var(--dim); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
-@media (min-width: 1000px) { .foot { padding: 18px 32px 40px; } }
+.more-link { margin: 18px 0 0; font: 800 14px/1 var(--sign); letter-spacing: .14em; text-transform: uppercase; }
+.more-link a { color: var(--amber-t); text-decoration: none; }
+.more-link a:hover { color: var(--amber); }
+.method dd a { color: var(--amber-t); }
+
+/* ---------- model view ---------- */
+#view-model .frame { scroll-margin-top: 80px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 22px; }
+.steps h2 { margin: 0 0 8px; font: 800 20px/1.1 var(--sign); letter-spacing: .1em; text-transform: uppercase; display: flex; align-items: baseline; gap: 12px; }
+.steps h2 span { font: 900 34px/1 var(--sign); color: var(--amber); letter-spacing: 0; }
+.steps p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+@media (min-width: 1000px) {
+  .steps { grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .steps li { padding: 0 24px; border-left: 1px solid var(--rule-2); }
+  .steps li:first-child { padding-left: 0; border-left: 0; }
+}
+.weights { display: grid; gap: 22px; }
+@media (min-width: 700px) { .weights { grid-template-columns: 1fr 1fr; gap: 40px; } }
+.w-group h3 { margin: 0 0 10px; font: 800 13px/1 var(--sign); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.w-row { display: grid; grid-template-columns: 120px 1fr 44px; align-items: center; gap: 12px; padding: 7px 0; border-top: 1px solid var(--rule-2); }
+.w-row span { font: 700 15px/1 var(--sign); letter-spacing: .06em; text-transform: uppercase; }
+.w-row i { height: 8px; background: linear-gradient(90deg, var(--amber) var(--w), var(--bulb-off) var(--w)); }
+.w-row b { text-align: right; color: var(--amber-t); }
+
+/* ---------- footer ---------- */
+.foot { border-top: 1px solid var(--rule); margin-top: 40px; }
+.foot-in { max-width: 1320px; margin: 0 auto; padding: 24px 16px 40px; display: grid; gap: 24px; color: var(--dim); font-size: 11.5px; }
+.foot .logo { padding: 0; font-size: 20px; color: var(--ink); }
+.foot .mark { width: 18px; height: 18px; }
+.foot p { margin: 10px 0 0; }
+.foot-brand p + p { margin-top: 4px; }
+.foot-col { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.foot-col h2 { margin: 0 0 4px; font: 800 13px/1 var(--sign); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
+.foot-col a { color: var(--ink-2); text-decoration: none; padding: 5px 0; }
+.foot-col a:hover { color: var(--amber-t); text-decoration: underline; }
+.foot-col small { color: var(--dim); font-size: inherit; margin-left: 4px; }
+@media (min-width: 700px) { .foot-in { grid-template-columns: 1.4fr 1fr 1.4fr; } }
+@media (min-width: 1000px) { .foot-in { padding: 28px 32px 44px; } }
 
 /* shared controls */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }

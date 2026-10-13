@@ -42,7 +42,7 @@ const rowFor = (tables, club) => {
 
 /* ---------- index ---------- */
 async function showIndex() {
-  document.title = "Clubs · Final Table";
+  document.title = "Clubs · Floodlight";
   const tables = await leagueTables();
   const list = clubs.clubs;
   const [best] = list;
@@ -73,7 +73,6 @@ async function showIndex() {
 
   renderRanking(tables);
   renderScatter();
-  $("c-factors").innerHTML = LEAGUES.map((l) => `${esc(l.label)} <b>${clubs.league_factors[l.slug].toFixed(2)}</b>`).join(" · ");
 }
 
 function renderRanking(tables) {
@@ -193,7 +192,7 @@ function renderScatter() {
 
 /* ---------- profile ---------- */
 async function showProfile(club) {
-  document.title = `${club.name} · Final Table`;
+  document.title = `${club.name} · Floodlight`;
   const comp = compBySlug[club.league];
   const [table, leagueMatches, ucl, uclMatches] = await Promise.all([
     getJSON(`${club.league}.json`),

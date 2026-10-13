@@ -210,7 +210,7 @@ football-ucl --season 2026 --n-sim 10000
 
 ## Website
 
-`site/` is a static page with three tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result) and **Clubs** (strength ranking and profiles). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds to [data/odds](data/odds/README.md) for future model-versus-market comparisons.
+`site/` is **Floodlight**, a static page with four tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result), **Clubs** (strength ranking and profiles) and **Model** (how the forecasts and ratings are made). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds to [data/odds](data/odds/README.md) for future model-versus-market comparisons.
 
 Club ratings are scaled across leagues by each league's average team rating in the [Opta Power Rankings](https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true), relative to the Premier League. Update `LEAGUE_STRENGTH` in `scripts/build_site_data.py` occasionally.
 
