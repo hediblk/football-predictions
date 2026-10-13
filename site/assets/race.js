@@ -57,7 +57,7 @@ function draw() {
   const rows = pickTeams(hist.teams, key);
   const first = fmt(hist.dates[0], { day: "numeric", month: "short" });
   const runs = ucl ? "simulated tournaments" : "simulated seasons";
-  $("race-note").textContent = `One point per day with new results, from ${first}. Chances are shares of 10,000 ${runs}, as forecast that day. The table below lists the current values.`;
+  $("race-note").textContent = `One point per day with new results, from ${first}. Chances are shares of 10,000 ${runs}, as forecast that day. The table above lists the current values.`;
   if (!rows.length) { $("race-chart").innerHTML = `<p class="note">Nobody has been in this race yet.</p>`; return; }
 
   const tone = key === "releg" ? "var(--red)" : "var(--amber)";
@@ -117,7 +117,7 @@ function draw() {
   }).join("");
 
   const now = rows.map((r) => `${r.t.name} ${pct(r.now)}`).join(", ");
-  const aria = `${label} chances since ${first}: ${now}. The table below lists the current values.`;
+  const aria = `${label} chances since ${first}: ${now}. The table above lists the current values.`;
   $("race-chart").style.cssText = `--tone:${tone};--tone-t:${key === "releg" ? tone : "var(--amber-t)"}`;
   $("race-chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(aria)}">
     ${grid}${axis.join("")}${lines}${labels}
