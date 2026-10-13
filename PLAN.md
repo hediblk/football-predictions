@@ -224,4 +224,4 @@ Scale 1.4 with ridge 2 improves on the previous model by 0.0120 (standard error 
 
 ## Other existing priorities
 
-Retain dated odds archives. Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. The global weights stay fixed unless explicitly recalibrated; UCL is the separate-package plan above, while larger model experiments remain outside the league package.
+Upcoming work is listed in [ROADMAP.md](ROADMAP.md). Dated odds are now archived daily in [data/odds](data/odds/README.md). Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. The global weights stay fixed unless explicitly recalibrated; UCL is the separate-package plan above, while larger model experiments remain outside the league package.
