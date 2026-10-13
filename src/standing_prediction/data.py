@@ -8,26 +8,32 @@ import numpy as np
 import pandas as pd
 import requests
 
+from standing_prediction.simulate import rank_table
 from standing_prediction.utils import cache_max_age, cached_get, normalize_team
 
 BASE_URL = "https://api.football-data.org/v4"
 MATCH_COLUMNS = ["id", "utcDate", "matchday", "status", "homeTeam", "awayTeam", "homeTeamId", "awayTeamId", "homeGoals", "awayGoals"]
 STANDING_COLUMNS = ["position", "team", "played", "points", "goals_for", "goals_against", "goal_diff"]
+# A result counts from kickoff plus three hours, as in the Champions League inputs.
+RESULT_DELAY = pd.Timedelta(hours=3)
 
 
 class FootballDataClient:
-    def __init__(self, cache_dir=".cache/football-data", use_cache=True):
+    def __init__(self, cache_dir=".cache/football-data", use_cache=True, max_age=None):
+        """`max_age` (seconds) overrides the default cache lifetime: an hour for the current season."""
         self.api_key = os.getenv("FOOTBALL_DATA_API_KEY")
         if not self.api_key:
             raise ValueError("FOOTBALL_DATA_API_KEY is not set.")
         self.session = requests.Session()
         self.session.headers.update({"X-Auth-Token": self.api_key})
         self.cache_dir = cache_dir if use_cache else None
+        self.max_age = max_age
 
     def get(self, path, params=None):
+        default = cache_max_age((params or {}).get("season"))
         content = cached_get(
-            f"{BASE_URL}{path}", params=params, session=self.session,
-            cache_dir=self.cache_dir, max_age=cache_max_age((params or {}).get("season")),
+            f"{BASE_URL}{path}", params=params, session=self.session, cache_dir=self.cache_dir,
+            max_age=default if self.max_age is None or default is None else self.max_age,
         )
         return json.loads(content)
 
@@ -204,6 +210,33 @@ def fill_lagging_results(matches, standings, results, *, as_of=None, max_kickoff
     if adjustments:
         warnings.warn("; ".join(f"{a['home']} v {a['away']}: {a['reason']}" for a in adjustments), stacklevel=2)
     return out, adjustments
+
+
+def rewind_season(matches, standings, as_of, *, competition="PD", delay=RESULT_DELAY):
+    """The fixtures and table as they stood at `as_of`, rebuilt from today's complete data.
+
+    A result counts once its kickoff is `delay` old; later results go back to scheduled. The table
+    is rebuilt from the results that remain, ordered by the league's tie-breaks. Points in today's
+    table that its results do not explain (deductions) are carried back, since the feed does not date
+    them. Returns the rewound fixtures, the table and the carried point adjustments by team.
+    """
+    as_of = pd.to_datetime(as_of, utc=True)
+    out = matches.copy()
+    kickoff = pd.to_datetime(out["utcDate"], utc=True, errors="coerce")
+    later = out["status"].eq("FINISHED") & ~(kickoff + delay <= as_of)
+    out.loc[later, ["homeGoals", "awayGoals"]] = None
+    out.loc[later, "status"] = "SCHEDULED"
+    if "reported_status" in out:
+        out.loc[later, "reported_status"] = "SCHEDULED"
+    teams = standings["team"].tolist()
+    explained = standings_from_matches(matches, teams=teams).set_index("team")["points"]
+    adjustments = (standings.set_index("team")["points"] - explained.reindex(teams)).astype(int)
+    table = standings_from_matches(out, teams=teams)
+    table["points"] += table["team"].map(adjustments).to_numpy()
+    order = rank_table(table, played_matches=out[out["status"].eq("FINISHED")], competition=competition)
+    table = table.set_index("team").loc[order].reset_index()
+    table["position"] = np.arange(1, len(table) + 1)
+    return out, table[STANDING_COLUMNS], {team: int(points) for team, points in adjustments.items() if points}
 
 
 def validate_schedule(matches, standings):

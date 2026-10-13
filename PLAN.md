@@ -17,6 +17,7 @@ Keep `src/standing_prediction` as the main product, with one current notebook in
 - A calibrated xG scale and a stronger ridge, so the xG blend no longer pulls title contenders toward average (Plan C); the Champions League joint fit uses the same scale.
 - Champions League league offsets shrink toward a typical league level, with shrunk club European effects, and club ratings sit on one European scale (Plan D).
 - Archived Champions League prices set each league's current level in the joint fit (Plan E).
+- `--as-of` for league runs, which rewinds results and the table to a past origin, and dated site history (`site/data/history`) backfilled for 2026/27 and extended by every refresh.
 
 ## xG and H2H: sources and design
 
