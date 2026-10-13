@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from standing_prediction.data import OVERRIDE_COLUMNS, resolve_fixture_statuses, validate_schedule
+from standing_prediction.data import OVERRIDE_COLUMNS, fill_lagging_results, resolve_fixture_statuses, validate_schedule
 
 TEAMS = ["Alpha", "Bravo", "Charlie"]
 
@@ -77,3 +77,47 @@ def test_override_must_match_one_fixture_and_have_a_score():
 def test_untouched_schedule_has_no_adjustments():
     resolved, adjustments = resolve_fixture_statuses(schedule())
     assert adjustments == [] and resolved.status.eq(resolved.reported_status).all()
+
+
+def table_after_alpha_bravo(home_goals=2, away_goals=1):
+    """The provider's table once Alpha 2-1 Bravo (15 August) counts, while the fixture still reads TIMED."""
+    return pd.DataFrame({"position": [1, 2, 3], "team": TEAMS, "played": [1, 1, 0],
+                         "goals_for": [home_goals, away_goals, 0], "goals_against": [away_goals, home_goals, 0]})
+
+
+def understat(home="Alpha", away="Bravo", score=(2, 1), day="2026-08-15"):
+    return pd.DataFrame({"homeTeam": [home], "awayTeam": [away], "utcDate": [pd.Timestamp(day, tz="UTC")],
+                         "homeGoals": [score[0]], "awayGoals": [score[1]]})
+
+
+def test_lagging_fixture_is_filled_when_the_table_already_counts_it():
+    matches = schedule({("Alpha", "Bravo"): "TIMED"})
+    with pytest.warns(UserWarning, match="Understat"):
+        filled, adjustments = fill_lagging_results(matches, table_after_alpha_bravo(), understat(), as_of="2026-08-20")
+    row = filled[filled.homeTeam.eq("Alpha") & filled.awayTeam.eq("Bravo")].iloc[0]
+    assert (row.status, row.reported_status, row.homeGoals, row.awayGoals) == ("FINISHED", "TIMED", 2, 1)
+    assert adjustments[0]["score"] == "2-1"
+    assert len(validate_schedule(filled, table_after_alpha_bravo())) == 5
+
+
+def test_lagging_fill_needs_a_past_kickoff_the_table_and_a_matching_result():
+    matches = schedule({("Alpha", "Bravo"): "TIMED"})
+    calls = []
+    unused, adjustments = fill_lagging_results(matches, empty_standings(), lambda: calls.append(1), as_of="2026-08-20")
+    assert adjustments == [] and calls == []  # nothing lags, so the second source is not fetched
+    for kwargs in ({"results": understat(), "as_of": "2026-08-14"},
+                   {"results": understat(day="2026-09-30"), "as_of": "2026-08-20"},
+                   {"results": understat(home="Charlie", away="Alpha"), "as_of": "2026-08-20"},
+                   {"results": None, "as_of": "2026-08-20"}):
+        unchanged, adjustments = fill_lagging_results(matches, table_after_alpha_bravo(), **kwargs)
+        assert adjustments == [] and unchanged.status.eq("FINISHED").sum() == 0
+    with pytest.raises(ValueError, match="disagree"):
+        validate_schedule(unchanged, table_after_alpha_bravo())
+
+
+def test_filled_score_that_contradicts_the_table_is_still_rejected():
+    matches = schedule({("Alpha", "Bravo"): "TIMED"})
+    with pytest.warns(UserWarning):
+        filled, _ = fill_lagging_results(matches, table_after_alpha_bravo(), understat(score=(0, 0)), as_of="2026-08-20")
+    with pytest.raises(ValueError, match="goals_for"):
+        validate_schedule(filled, table_after_alpha_bravo())

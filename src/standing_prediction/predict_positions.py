@@ -14,8 +14,8 @@ from dotenv import load_dotenv
 
 from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.club_ratings import club_ratings
-from standing_prediction.data import (FootballDataClient, fetch_matches, fetch_standings, load_fixture_overrides,
-                                      resolve_fixture_statuses, validate_schedule)
+from standing_prediction.data import (FootballDataClient, fetch_matches, fetch_standings, fill_lagging_results,
+                                      load_fixture_overrides, resolve_fixture_statuses, validate_schedule)
 from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
 from standing_prediction.dixon_coles import fit_dixon_coles
 from standing_prediction.elo import fit_elo
@@ -30,7 +30,7 @@ from standing_prediction.odds import (
 from standing_prediction.h2h import encounter_residuals, h2h_shifts, pair_effects
 from standing_prediction.match_forecasts import describe_match, forecast_played, match_records, write_match_forecasts
 from standing_prediction.simulate import FixtureSimulationSpec, simulate_season_scores
-from standing_prediction.xg import XG_COLUMNS, blend_xg_strengths, fit_xg_strengths, load_season_xg
+from standing_prediction.xg import XG_COLUMNS, blend_xg_strengths, fetch_understat_matches, fit_xg_strengths, load_season_xg
 from standing_prediction.utils import normalize_team
 
 
@@ -203,6 +203,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     matches = fetch_matches(client, competition=competition, season=season, status=None)
     overrides = load_fixture_overrides(fixture_overrides, competition, season)
     matches, fixture_adjustments = resolve_fixture_statuses(matches, overrides, strict=strict_fixtures)
+    matches, filled = fill_lagging_results(matches, standings, lambda: _understat_results(competition, season, cache))
+    fixture_adjustments += filled
     remaining = validate_schedule(matches, standings)
     finished = matches[matches["status"] == "FINISHED"].copy()
     # Retain current-season xG with every forecast for later prospective evaluation.
@@ -437,6 +439,14 @@ def _parse_weights(spec):
     if not weights or any(not np.isfinite(value) or value < 0 for value in weights.values()) or sum(weights.values()) <= 0:
         raise ValueError("Weights must be finite, nonnegative, and have a positive total.")
     return {key: weights.get(key, 0.0) for key in DEFAULT_WEIGHTS}
+
+
+def _understat_results(competition, season, cache):
+    try:
+        return fetch_understat_matches(competition=competition, season=season, use_cache=cache)
+    except (ValueError, OSError, RuntimeError, KeyError) as exc:
+        LOG.warning("Understat results unavailable (%s); lagging fixtures stay unplayed.", type(exc).__name__)
+        return None
 
 
 def _load_odds(*, competition, season, provider, days):

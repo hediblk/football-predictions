@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-from standing_prediction.utils import cache_max_age, cached_get
+from standing_prediction.utils import cache_max_age, cached_get, normalize_team
 
 BASE_URL = "https://api.football-data.org/v4"
 MATCH_COLUMNS = ["id", "utcDate", "matchday", "status", "homeTeam", "awayTeam", "homeTeamId", "awayTeamId", "homeGoals", "awayGoals"]
@@ -146,6 +146,61 @@ def resolve_fixture_statuses(matches, overrides=None, *, strict=False):
     for index in out.index[cancelled]:
         out.loc[index, ["status", "homeGoals", "awayGoals"]] = ["SCHEDULED", None, None]
         record(index, "cancelled; simulated as if it will be replayed")
+    if adjustments:
+        warnings.warn("; ".join(f"{a['home']} v {a['away']}: {a['reason']}" for a in adjustments), stacklevel=2)
+    return out, adjustments
+
+
+def fill_lagging_results(matches, standings, results, *, as_of=None, max_kickoff_gap=pd.Timedelta(days=2)):
+    """Fill past fixtures the provider still lists as unplayed although its own table counts them.
+
+    football-data.org can update standings days before a match's status, so the table and the
+    fixtures disagree and the forecast cannot run. A fixture is filled from `results` (another
+    source's completed matches with homeTeam, awayTeam, utcDate, homeGoals and awayGoals, or a
+    callable returning them, called only when something lags) when its kickoff has passed, both
+    clubs' table rows count more games than their finished fixtures, and the pairing appears
+    within `max_kickoff_gap` of kickoff. validate_schedule still checks the filled scores against
+    the table's goal totals. Returns a copy and the adjustments made.
+    """
+    out = matches.copy()
+    if "reported_status" not in out:
+        out["reported_status"] = out["status"]
+    as_of = pd.Timestamp.now(tz="UTC") if as_of is None else pd.to_datetime(as_of, utc=True)
+    finished = out["status"].eq("FINISHED")
+    counted = pd.concat([out.loc[finished, "homeTeam"], out.loc[finished, "awayTeam"]]).value_counts()
+    table = standings.set_index("team")["played"]
+    owed = (pd.to_numeric(table, errors="coerce") - counted.reindex(table.index).fillna(0)).to_dict()
+    kickoffs = pd.to_datetime(out["utcDate"], utc=True, errors="coerce")
+    lagging = (~finished & kickoffs.lt(as_of) & out["homeTeam"].map(owed).gt(0) & out["awayTeam"].map(owed).gt(0))
+    if not lagging.any():
+        return out, []
+    results = results() if callable(results) else results
+    if results is None or results.empty:
+        return out, []
+    source = results.assign(home_norm=results["homeTeam"].map(normalize_team), away_norm=results["awayTeam"].map(normalize_team))
+    # Each home/away pairing occurs once per league season; duplicates make the match ambiguous.
+    source = source.drop_duplicates(["home_norm", "away_norm"], keep=False).set_index(["home_norm", "away_norm"])
+    adjustments = []
+    for index in kickoffs[lagging].sort_values().index:
+        home, away = out.at[index, "homeTeam"], out.at[index, "awayTeam"]
+        key = (normalize_team(home), normalize_team(away))
+        if key not in source.index or owed[home] <= 0 or owed[away] <= 0:
+            continue
+        row = source.loc[key]
+        goals = pd.to_numeric(pd.Series([row["homeGoals"], row["awayGoals"]]), errors="coerce")
+        if (goals.isna().any() or (goals < 0).any()
+                or abs(pd.to_datetime(row["utcDate"], utc=True) - kickoffs[index]) > max_kickoff_gap):
+            continue
+        out.loc[index, ["homeGoals", "awayGoals"]] = goals.astype(int).tolist()
+        out.loc[index, "status"] = "FINISHED"
+        owed[home] -= 1
+        owed[away] -= 1
+        adjustments.append({
+            "home": home, "away": away, "kickoff": kickoffs[index].isoformat(),
+            "reported_status": out.at[index, "reported_status"], "used_status": "FINISHED",
+            "score": f"{int(goals[0])}-{int(goals[1])}",
+            "reason": "score from Understat while football-data.org catches up",
+        })
     if adjustments:
         warnings.warn("; ".join(f"{a['home']} v {a['away']}: {a['reason']}" for a in adjustments), stacklevel=2)
     return out, adjustments
