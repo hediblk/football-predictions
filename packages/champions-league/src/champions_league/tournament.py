@@ -132,6 +132,8 @@ class MatchupCache:
         self.goals = np.arange(max_goals + 1)
         self.width = len(self.goals)
         self.scores = np.stack(np.meshgrid(self.goals, self.goals, indexing="ij"), axis=-1).reshape(-1, 2)
+        self.outcome_masks = (self.scores[:, 0] > self.scores[:, 1], self.scores[:, 0] == self.scores[:, 1],
+                              self.scores[:, 0] < self.scores[:, 1])
         shape = (len(teams), len(teams), 2)
         self.probabilities = np.zeros((*shape, self.width ** 2))
         self.rates = np.zeros((*shape, 2))
@@ -153,11 +155,9 @@ class MatchupCache:
         if not np.isfinite(p).all() or (p < 0).any() or p.sum() <= 0:
             raise ValueError("Invalid model score probabilities.")
         p /= p.sum()
-        masks = (self.scores[:, 0] > self.scores[:, 1], self.scores[:, 0] == self.scores[:, 1],
-                 self.scores[:, 0] < self.scores[:, 1])
-        outcomes = [p[mask].sum() for mask in masks]
+        outcomes = [p[mask].sum() for mask in self.outcome_masks]
         blend = blend_probabilities(outcomes, p_elo=elo, p_odds=odds, weights=DEFAULT_WEIGHTS)
-        for mask, old, new in zip(masks, outcomes, blend):
+        for mask, old, new in zip(self.outcome_masks, outcomes, blend):
             if old > 0:
                 p[mask] *= new / old
         return p / p.sum()

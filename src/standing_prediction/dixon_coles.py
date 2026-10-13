@@ -48,17 +48,19 @@ class DixonColesModel:
         return score_matrix_from_rates(lambda_, mu_, self.rho, max_goals=max_goals)
 
     def match_outcome_probs(self, home, away, *, max_goals=10):
-        goals, matrix = self.score_matrix(home, away, max_goals=max_goals)
-        _ = goals  # unused, but returned to keep API symmetric.
+        _, matrix = self.score_matrix(home, away, max_goals=max_goals)
+        return outcome_probs_from_matrix(matrix)
 
-        p_draw = float(np.trace(matrix))
-        p_home = float(np.tril(matrix, -1).sum())
-        p_away = float(np.triu(matrix, 1).sum())
 
-        total = p_home + p_draw + p_away
-        if total <= 0:
-            return 1 / 3, 1 / 3, 1 / 3
-        return p_home / total, p_draw / total, p_away / total
+def outcome_probs_from_matrix(matrix):
+    p_draw = float(np.trace(matrix))
+    p_home = float(np.tril(matrix, -1).sum())
+    p_away = float(np.triu(matrix, 1).sum())
+
+    total = p_home + p_draw + p_away
+    if total <= 0:
+        return 1 / 3, 1 / 3, 1 / 3
+    return p_home / total, p_draw / total, p_away / total
 
 
 def fit_dixon_coles(

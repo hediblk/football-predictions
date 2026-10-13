@@ -34,13 +34,15 @@ The site is plain HTML, CSS and JavaScript. Model outputs reach the site through
 | `site/data/` | Published forecast JSON and historical site snapshots |
 | `data/odds/` | Committed, dated bookmaker observations; see its README |
 | `tests/` | Existing pytest suite for model behavior, timing, identities and exports |
-| `docs/` | Committed forecast examples and evaluation reports |
+| `docs/` | Forecast examples, evaluation reports, protection specifications and architectural decisions |
 | `.github/workflows/site.yml` | Daily refresh at 05:30 UTC and GitHub Pages deployment |
 
 ## Where to start
 
-- Read `README.md` for the current pipeline, supported commands and documented limits.
-- Read `ROADMAP.md` when the task concerns planned work. `PLAN.md` records design history and experiments; its older settings may have been superseded.
+- Before starting each task, read `README.md`, `CONTEXT.md`, the relevant sections of `ROADMAP.md`, and the relevant [ADRs](docs/adr/). Follow accepted architectural decisions.
+- Read `PLAN.md` for model design history and experiments; its older settings may have been superseded.
+- Read [numerical protection](docs/numerical-protection.md) before changing calculations, defaults or regression tests.
+- Read the [site data contract](docs/site-data-contract.md) before changing exported JSON, refresh or deployment.
 - Read `DESIGN.md` before changing the site's appearance or interaction patterns.
 - Read the relevant package README before working inside `packages/`.
 - Inspect the actual implementation and saved calibration artifact before relying on numeric defaults quoted in historical notes.
@@ -77,18 +79,20 @@ The site is plain HTML, CSS and JavaScript. Model outputs reach the site through
 
 ## Setup and commands
 
-Python 3.11 or newer is required. Use the existing environment when available. For a new environment:
+The package supports Python 3.11 or newer; the pinned development and CI environment uses Python 3.12. Use the existing environment when available. For a new pinned environment:
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
-PYTHONDONTWRITEBYTECODE=1 pip install -e '.[test]' -e packages/champions-league -e packages/forecast-calibration
+PYTHONDONTWRITEBYTECODE=1 pip install -r requirements-lock.txt
+PYTHONDONTWRITEBYTECODE=1 pip install -c requirements-lock.txt -e '.[test]' -e packages/champions-league -e packages/forecast-calibration
 ```
 
 Run the existing offline suite from the repository root:
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:packages/champions-league/src:packages/forecast-calibration/src pytest -q -p no:cacheprovider
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q -p no:cacheprovider
+PYTHONDONTWRITEBYTECODE=1 python scripts/validate_site_data.py --data site/data
 ```
 
 For documentation-only changes, check the diff, links and command accuracy; rerunning numerical models is unnecessary.
@@ -104,10 +108,11 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m http.server -d site 8000
 
 Live forecasts need `FOOTBALL_DATA_API_KEY`; odds collection needs `ODDS_API_KEY` or the supported fallback `ODDS_DATA_API_KEY`. Calibration, backfills, evaluation runs and `scripts/refresh_site.sh` may be slow, use network quotas and write many files. Run them when relevant to the task, not as a default smoke check.
 
-The current workflow refreshes and deploys the site; it does not run the pytest suite. Do not assume CI has verified model changes.
+Model/shared changes run the offline pytest suite; site/shared changes validate published data. Refresh and deployment validate the complete dataset and publish the exact checked revision. Check the actual CI results before claiming verification.
 
 ## Finishing work
 
+- Keep relevant documentation current with each change. When changing an accepted architectural decision, record the replacement and its reasoning in a superseding ADR.
 - Run the relevant existing checks and explain material limitations. Do not claim a historical replay is an independent holdout if its seasons influenced parameter selection.
 - Check `git diff --check`, inspect the final diff, and remove any generated `__pycache__` folders.
 - When committing, use the user's requested message if supplied; otherwise use a short conventional message. Use the `codex/` prefix if a new branch is needed.

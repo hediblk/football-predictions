@@ -1,0 +1,67 @@
+{
+  "metadata": {
+    "season": 2026,
+    "generated_at": "2026-10-13T05:32:00+00:00",
+    "as_of": "2026-10-13T05:30:00+00:00",
+    "data_cutoff": null,
+    "n_sim": 1000,
+    "finished_fixtures": 1,
+    "remaining_fixtures": 5,
+    "fixture_adjustments": [{
+      "home": "Alpha FC", "away": "Bravo FC", "kickoff": null,
+      "reported_status": "AWARDED", "used_status": "FINISHED", "score": "0-2", "reason": "override: league ruling"
+    }]
+  },
+  "summary": [
+    {"team": "Charlie FC", "expected_position": 2.6, "expected_points": -2.36, "points_p10": -6, "points_p90": 5, "title_pct": 10},
+    {"team": "Alpha FC", "expected_position": 1.5, "expected_points": 12.34, "points_p10": 8, "points_p90": 16, "title_pct": 60},
+    {"team": "Bravo FC", "expected_position": 1.9, "expected_points": 8.65, "points_p10": 3, "points_p90": 12, "title_pct": 30}
+  ],
+  "position_probs": [
+    {"team": "Alpha FC", "1": 60, "2": 30, "3": 10},
+    {"team": "Bravo FC", "1": 30, "2": 50, "3": 20},
+    {"team": "Charlie FC", "1": 10, "2": 20, "3": 70}
+  ],
+  "standings": [
+    {"team": "Alpha FC", "position": 2, "played": 1, "points": 3, "goal_diff": 2},
+    {"team": "Bravo FC", "position": 1, "played": 1, "points": 7, "goal_diff": 1},
+    {"team": "Charlie FC", "position": 3, "played": 0, "points": -6, "goal_diff": -3}
+  ],
+  "matches": {
+    "generated_at": "2026-10-13T05:30:00+00:00",
+    "played_forecast_rule": "Forecast from earlier results.",
+    "matches": [
+      {
+        "id": 1, "utcDate": "2026-09-02T15:00:00+00:00", "matchday": 1, "status": "FINISHED",
+        "homeTeam": "Alpha FC", "awayTeam": "Bravo FC", "homeTeamId": 57, "awayTeamId": 65,
+        "homeGoals": 0, "awayGoals": 2, "home_xg": 1.234, "away_xg": 0.456,
+        "p_home": 0.55, "p_draw": 0.25, "p_away": 0.2,
+        "exp_home_goals": 1.612, "exp_away_goals": 0.981,
+        "scorelines": [[2, 1, 0.13], [1, 1, 0.12], [1, 0, 0.11], [0, 0, 0.08]],
+        "pick_score": [2, 1, 0.13], "p_score": 0.03456,
+        "btts": 0.5321, "over_2_5": 0.6128, "forecast_at": "2026-09-02T00:00:00+00:00"
+      },
+      {
+        "id": 2, "utcDate": "2026-09-01T15:00:00+00:00", "matchday": null, "status": "SCHEDULED",
+        "reported_status": "CANCELLED", "homeTeam": "Charlie FC", "awayTeam": "Alpha FC",
+        "homeTeamId": null, "awayTeamId": 57,
+        "p_home": 0.2, "p_draw": 0.3, "p_away": 0.5,
+        "exp_home_goals": 0.8, "exp_away_goals": 1.4,
+        "scorelines": [[0, 1, 0.2], [1, 1, 0.15], [0, 0, 0.1], [0, 2, 0.08]],
+        "pick_score": [0, 1, 0.2], "btts": 0.4, "over_2_5": 0.3,
+        "forecast_at": "2026-10-13T05:30:00+00:00"
+      }
+    ]
+  },
+  "stakes": {"fixtures": [{"id": 2, "n": [100, 500, 400], "teams": {
+    "Alpha FC": {"title": [null, 60, 20]}, "Charlie FC": {"releg": [null, 30, 50]}
+  }}]},
+  "ratings": [
+    {"team": "alpha", "league": "PL", "rating": 70.04, "attack_rating": 75.06, "defense_rating": 65.02,
+     "home_rating": 78.01, "away_rating": 62.01, "league_rating": 68.01, "goals_for": 2.345, "goals_against": 1.126},
+    {"team": "bravo", "league": "PL", "rating": 60.01, "attack_rating": 55.01, "defense_rating": 67.01,
+     "home_rating": 68.01, "away_rating": 52.01, "league_rating": 58.01, "goals_for": 1.75, "goals_against": 1.25},
+    {"team": "charlie", "league": "PL", "rating": 40.01, "attack_rating": 35.01, "defense_rating": 42.01,
+     "home_rating": 48.01, "away_rating": 32.01, "league_rating": 38.01, "goals_for": 0.85, "goals_against": 2.25}
+  ]
+}
