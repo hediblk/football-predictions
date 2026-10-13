@@ -22,6 +22,8 @@ Club names have local, full-colour crests across the tables, fixtures, profiles 
 
 `.github/workflows/site.yml` refreshes and deploys it: daily at 05:30 UTC (or on demand from the Actions tab via **Run workflow**) it reruns all six forecasts, commits `site/data` and redeploys GitHub Pages; pushes to `main` that touch `site/` redeploy without refreshing. It needs the `FOOTBALL_DATA_API_KEY` repository secret.
 
+The same run archives bookmaker odds: `scripts/archive_odds.py` appends today's 1X2 prices for the six competitions to `data/odds/<season>/<code>.csv` (the bookmaker consensus and Pinnacle, de-margined; format in [data/odds](data/odds/README.md)). These dated quotes are the yardstick for future model-versus-market comparisons and cannot be collected after kickoff. The step needs an `ODDS_API_KEY` repository secret, skips without one, never blocks the refresh, and uses one The Odds API credit per competition per day (about 180 of the free 500 a month). The Odds API offers no title or Champions League winner markets for these competitions.
+
 To refresh by hand instead, rerun all six forecasts and rebuild the data, then commit `site/data`:
 
 ```bash
@@ -31,13 +33,14 @@ scripts/refresh_site.sh
 
 A competition whose run fails keeps its previous outputs in `out/site`, so the site shows its last good forecast. Preview locally with `python3 -m http.server -d site 8000`.
 
-## Cancelled and awarded fixtures
+## Cancelled, awarded and lagging fixtures
 
-football-data.org sometimes reports a suspended league match as `CANCELLED` before it is rescheduled, or an official decision as `AWARDED`. Domestic forecasts resolve these in memory, after fetching and before validation, without editing the fetched data:
+football-data.org sometimes reports a suspended league match as `CANCELLED` before it is rescheduled, or an official decision as `AWARDED`, and sometimes leaves a played match unfinished for days. Domestic forecasts resolve these in memory, after fetching and before validation, without editing the fetched data:
 
 1. **Overrides first.** `fixture_overrides.csv` (committed, empty by default) records official decisions: `competition,season,home_team,away_team,status,home_goals,away_goals,note`, with `status` either `FINISHED` (with the score) or `SCHEDULED`. Team names are football-data.org names.
 2. **Awarded results** with a reported score count as played; without a score the run stops and asks for an override.
 3. **Cancelled fixtures** are simulated as if they will be replayed, since a league fixture must be either replayed or awarded. `--strict-fixtures` makes them an error instead.
+4. **Lagging results.** football-data.org can update its table days before a fixture's status, so the two disagree and the forecast cannot run. When the table already counts a past fixture still listed as unplayed, its score is taken from Understat (same pairing, kickoff within two days); schedule validation then checks it against the table's goal totals.
 
 Every adjustment is logged as a warning, listed under `fixture_adjustments` in the forecast metadata and shown under the site's table. The matches snapshot keeps the provider's value in `reported_status` beside the `status` used. Postponed and suspended fixtures were already simulated as unplayed.
 
@@ -159,4 +162,4 @@ Historical quote times and xG availability are approximated and labeled in the a
 
 Point intervals exclude uncertainty in fitted strengths and future squad changes. Optional outcome recalibration has not consistently improved held-out scores. Global blend calibration measures match forecasts, so it does not establish that standings probabilities are calibrated. Fair-play criteria and deciding playoffs, including Serie A exceptions, are not simulated. Historical tables exclude disciplinary deductions and appeals; completed-season prediction exports use official positions. Top-four/bottom-three probabilities describe positions, not automatic qualification or direct relegation. In-progress fixtures are simulated from kickoff with a warning.
 
-See [PLAN.md](PLAN.md) for the next priorities.
+See [ROADMAP.md](ROADMAP.md) for the next priorities and [PLAN.md](PLAN.md) for what is implemented.

@@ -33,13 +33,19 @@ jobs:
           path: .cache
           key: http-cache-${{ github.run_id }}
           restore-keys: http-cache-
+      # Never blocks the refresh; skipped until the ODDS_API_KEY secret is set.
+      - name: Archive bookmaker odds
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python scripts/archive_odds.py --out data/odds
       - name: Run forecasts
         env:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
         run: scripts/refresh_site.sh
       - name: Commit refreshed data
         run: |
-          git add site/data
+          git add site/data data/odds
           if git diff --cached --quiet; then echo "No changes"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
