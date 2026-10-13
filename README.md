@@ -1,10 +1,23 @@
-# Football standings prediction
+# Floodlight: football forecasts
+
+**[Open Floodlight →](https://hediblk.github.io/football-predictions/)**
+
+Floodlight is a website with forecasts for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League, refreshed every morning at 05:30 UTC.
+
+- **Tables:** each club's chance of finishing in every place, with title, top-four and relegation odds and a chart of how they have moved this season. The Champions League page covers the league phase and the knockout bracket.
+- **Matches:** each day's fixtures with home, draw and away probabilities and likeliest scores, what's at stake in each game, and whether the model called past results.
+- **Clubs:** a strength ranking of every rated club on one European scale, with weekly movement and a profile per club.
+- **Model:** how the forecasts and ratings are made.
+
+This repository holds both the site (`site/`, see [Website](#website)) and the model behind it (`src/standing_prediction` and `packages/`). The rest of this README describes the model.
+
+## The model
 
 ![La Liga final-position probability heatmap](docs/laliga-forecast.png)
 
 *La Liga 2026/27, generated October 11, 2026: 73 completed fixtures, 10,000 simulations, calibrated weights, no odds.*
 
-Estimates every team's final league-position probabilities for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League. The model rates each team from past results, forecasts every remaining match, then plays out the rest of the season thousands of times and counts where each team finishes.
+The model estimates every team's final league-position probabilities. It rates each team from past results, forecasts every remaining match, then plays out the rest of the season thousands of times and counts where each team finishes.
 
 The code lives in `src/standing_prediction`; the CLI, notebook and website all call the same pipeline.
 
@@ -210,7 +223,7 @@ football-ucl --season 2026 --n-sim 10000
 
 ## Website
 
-`site/` is **Floodlight**, a static page with four tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result), **Clubs** (strength ranking and profiles) and **Model** (how the forecasts and ratings are made). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds, including the Europa and Conference League, to [data/odds](data/odds/README.md); the Champions League model reads the archived Champions League prices, and the rest are kept for model-versus-market comparisons and later tests.
+`site/` is [Floodlight](https://hediblk.github.io/football-predictions/), a static page with the four tabs described at the top. The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds, including the Europa and Conference League, to [data/odds](data/odds/README.md); the Champions League model reads the archived Champions League prices, and the rest are kept for model-versus-market comparisons and later tests.
 
 Each refresh also keeps dated snapshots in `site/data/history/<season>/`, for charts and the weekly club ranking. `<competition>.json` holds every club's title, top-four and relegation chances (Champions League: stage chances), with one point per day that brings new results; a refresh without new results updates the latest point. `clubs.json` freezes every rated club's overall, attack and defence ratings once a week, at the Monday refresh (or Tuesday's if Monday's failed), after the weekend round and the previous week's Champions League games. The Clubs tab ranks clubs on the live ratings and uses the previous Monday's freeze only for the movement arrows. `scripts/backfill_history.py` fills earlier days by rerunning the forecasts with `--as-of` at 05:30 UTC on each past day; it resumes where it stopped and keeps points the refresh added later.
 
