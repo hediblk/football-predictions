@@ -66,6 +66,7 @@ ALIASES = {
     "sbv excelsior": "excelsior", "telstar 1963": "telstar", "willem ii tilburg": "willem ii",
     "cambuur leeuwarden": "cambuur", "ado den haag": "den haag",
     "vitoria": "guimaraes", "gd estoril praia": "estoril", "estrela da amadora": "estrela", "cs maritimo": "maritimo",
+    "heracles almelo": "heracles", "rkc waalwijk": "waalwijk",
     "heart of midlothian": "hearts",
 }
 
