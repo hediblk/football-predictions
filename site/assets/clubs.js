@@ -139,7 +139,7 @@ function renderRanking(tables) {
   const since = view.since && weekDay(view.since);
   /* a strength cell: the value in bold, then its rank and movement, with a hairline meter underneath */
   const strength = (m, tag) => `<td class="ad"><b>${dec(m.v)}</b>${tag ? ` ${rankTag(m.rank)}${move(m.d, since)}` : ""}<i style="--w:${m.v}%"></i></td>`;
-  $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="mvc" title="Rating places gained or lost since last week" aria-label="Rating places gained or lost since last week">±</th><th class="club l">Club</th><th class="l">League</th>
+  $("c-rank").innerHTML = `<thead><tr><th class="rk l">#</th><th class="mvc" title="Rating places gained or lost since Monday${since ? ` ${since}` : ""}" aria-label="Rating places gained or lost since Monday${since ? ` ${since}` : ""}">±</th><th class="club l">Club</th><th class="l">League</th>
       ${sortable("rating", "Rating")}${sortable("attack", "Attack")}${sortable("defense", "Defence")}
       <th class="sec">Scores</th><th class="sec">Concedes</th><th>Now</th></tr></thead>
     <tbody>${shown.slice(0, limit).map((c, i) => {
@@ -156,6 +156,7 @@ function renderRanking(tables) {
     }).join("")}</tbody>`;
   $("c-more").hidden = limit >= shown.length;
   $("c-more").textContent = `Show all ${shown.length} clubs`;
+  $("c-rank-legend").textContent = since ? `Power ranking · arrows ▲▼ since Monday ${since}` : "Power ranking";
   $("c-rank-note").textContent = since
     ? `Live ratings, the same as on each club's page. Arrows show places gained or lost since the ranking frozen on Monday ${since}.`
     : "Live ratings, the same as on each club's page. Movement appears once a Monday ranking has been frozen.";
@@ -167,7 +168,7 @@ function renderMoves(shown) {
   $("c-moves-frame").hidden = !view.since;
   if (!view.since) return;
   const since = weekDay(view.since);
-  $("c-moves-legend").textContent = `Since Monday ${since}`;
+  $("c-moves-legend").textContent = `Risers and fallers since Monday ${since}`;
   const list = (k, sign) => shown.filter((c) => typeof view.byId[c.id][k].d === "number" && view.byId[c.id][k].d * sign > 0)
     .sort((a, b) => (view.byId[b.id][k].d - view.byId[a.id][k].d) * sign || view.byId[a.id][k].rank - view.byId[b.id][k].rank)
     .slice(0, 3).map((c) => {
