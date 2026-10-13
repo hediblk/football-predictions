@@ -282,14 +282,14 @@ The official replay (`football-ucl --evaluate`) with the final defaults, committ
 
 League averages put the Premier League 15.7 points ahead of La Liga. StatsUltra, which anchors league strength to ClubElo's long-run league averages, has 78.5 for the Premier League, 71.0 La Liga, 70.2 Bundesliga, 69.8 Serie A and 67.3 Ligue 1: a 7.5-point lead, with Ligue 1 last of the five.
 
-**The market disagrees by league.** One shift per league, fitted to 17 of the 18 archived MD3 prices, predicts the 18th far better: KL(market‖model) falls from 0.030 to 0.014, better on 14 of 18 fixtures, about three standard errors. The fitted shifts relative to the Premier League are Bundesliga +0.15, La Liga +0.07, Serie A +0.03 and Ligue 1 −0.08.
+**The market disagrees by league.** One shift per league, fitted to 17 of the 18 archived MD2 prices, predicts the 18th far better: KL(market‖model) falls from 0.030 to 0.014, better on 14 of 18 fixtures, about three standard errors. The fitted shifts relative to the Premier League are Bundesliga +0.15, La Liga +0.07, Serie A +0.03 and Ligue 1 −0.08.
 
 **Fix.**
 - Archived Champions League quotes enter the joint fit as extra rows scored by the cross-entropy of the quoted 1X2 probabilities under Dixon–Coles. Each quote weighs like ten results and decays with the same xi. Only the latest quote observed before both the origin and kickoff counts.
 - Quotes see each league's offset plus a current shift with ridge 5; results see the offset alone. The market moves a league's present level without rewriting two seasons of European results. Forecasts use the shifted offsets; the metadata keeps the results-only ones.
 - `football-ucl` reads `data/odds` by default (`--odds-archive`, `--no-market`). The replay is unchanged, since no archived prices exist before 2026/27.
 
-**Checks.** Leave-one-fixture-out on the 18 MD3 prices: KL against the held-out fixture's price.
+**Checks.** Leave-one-fixture-out on the 18 MD2 prices: KL against the held-out fixture's price.
 
 | Joint fit | LOO KL |
 | :--- | ---: |
@@ -306,6 +306,13 @@ Without shifts, the quotes mostly move the quoted clubs, so little reaches the h
 **Tested and not adopted.**
 - A per-league spread scaling domestic deviations in European games. Replay 0.9088 to 0.9073 at ridge 4 (SE 0.0013), market KL unchanged. It lifts Barcelona and Bayern but widens the gap between league averages.
 - Club ridge 8: replay −0.0014 (SE 0.0029), market KL worse (0.033).
+
+**Follow-up tests with prices on (13 October).** Leave-one-fixture-out KL against the 18 MD2 prices; replay as above.
+- Weaker shrinkage of club European effects: club ridge 8 raises KL from 0.0167 to 0.0215, ridge 4 to 0.0332. Rejected.
+- The league spread: KL 0.0167 at ridge 4 and 0.0166 at ridge 16, replay −0.0015 and −0.0006. No clear gain; it goes into the matchday-6 recheck.
+- Three seasons of history instead of two (adding 2023/24 domestic and Champions League results): replay 0.9088 to 0.9095 (+0.0008, SE 0.0005, worse in both seasons), KL 0.0167 to 0.0165 (SE 0.0005), offsets move by 0.02 at most. Rejected: under the current decay a third season carries little weight, and what it adds is stale.
+
+A one-off task re-tunes the market weight and shift ridge on 10 December, after matchday 6, scoring forecasts on results as well as prices.
 
 **Effect (13 October).**
 - Offsets relative to the Premier League, results only then current: La Liga −0.29 to −0.17, Bundesliga −0.33 to −0.19, Serie A −0.34 to −0.29, Ligue 1 −0.27 to −0.31.

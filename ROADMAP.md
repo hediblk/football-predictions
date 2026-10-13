@@ -12,7 +12,7 @@ The main fix is done (Plan D in [PLAN.md](PLAN.md)). League offsets now shrink t
 
 - **Recheck the market weight after MD6.** Archived Champions League prices now set each league's current level (Plan E), which cut the Premier League's lead over La Liga and the Bundesliga by about 40% and put La Liga above Ligue 1. The weight (10 per quote) and shift ridge (5) rest on one matchday of prices; refit them by leave-one-out on prices and score them on results once six matchdays are archived.
 - **Serie A looks low.** It sits last of the big five (57.5 against StatsUltra's 69.8); its few priced fixtures barely move it.
-- **Europa and Conference League results for 2025/26 onward.** No free source has them yet; openfootball stops at 2024/25 plus qualifiers. Qualifying rounds could still help the small leagues.
+- **Europa and Conference League data.** These are where mid-table clubs meet across leagues, so they matter for league levels. football-data.org's free tier refuses the Europa League (paid plans only) and has no Conference League; openfootball stops at 2024/25 plus qualifiers. The Odds API, already used for the archive, quotes both: archiving their 1X2 prices would add about 36 priced cross-league fixtures per round for 2 credits a day, and its scores endpoint could log results from now on for about 4 credits a day (the archive uses 6 of 500 monthly credits a day today). 2025/26 results would need another source, such as Wikipedia's match tables or a paid API.
 
 ### 2. Title-race charts
 
