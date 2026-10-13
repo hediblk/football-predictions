@@ -46,6 +46,7 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 - **Day strip:** nine days with big numerals and a game count; the chosen day is lit and underlined in amber.
 - **Call strip:** on a club page, one bar per played game; its height is the chance the model gave what happened, green when that was the pick and red when not, so it agrees with the "Called N of M" line.
 - **Rank plates:** category ranks (#1 attack, #1 defence, 1st in league) sit on a lit amber plate; top-ten ranks are amber text; the rest stay dim.
+- **Stakes:** a fixture's conditional chances for each result, with the likeliest result lit amber. They're shown only when a result swings a chance by at least 2 points.
 - **Club board:** ruled cells, not cards, with the rating as the lit number and attack/defence hairline meters.
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.

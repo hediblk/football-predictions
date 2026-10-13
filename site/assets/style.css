@@ -593,3 +593,24 @@ h3.sub + .scroll { margin-bottom: 14px; }
 .scores li.call span { color: var(--amber); font-weight: 700; }
 .scores li.off { opacity: .6; }
 .m-verdict.pick b { color: var(--amber-t); font-weight: 700; }
+
+/* ---------- stakes ---------- */
+/* a dim ruled tag on fixtures where a result moves someone's title, top-four or relegation chance */
+.m-stake { display: inline-flex; align-items: center; padding: 3px 6px 2px; border: 1px solid var(--rule); font: 800 11px/1 var(--sign); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); cursor: help; white-space: nowrap; }
+.panel .stakes { grid-column: 1 / -1; min-width: 0; }
+.stakes-table td { height: 34px; }
+.stakes-table td.l { font: 700 15px/1 var(--sign); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+.stakes-table td.l small { font: 500 11px var(--mono); letter-spacing: 0; text-transform: none; color: var(--dim); margin-left: 6px; }
+.stakes-table td.dim { color: var(--dim); }
+.stakes-table td.lit { color: var(--amber); font-weight: 700; }
+/* the club page: one row per game, with the club's chance under each result */
+.slist { display: grid; }
+.srow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 20px; padding: 10px 0; border-top: 1px solid var(--rule-2); }
+.srow:first-child { border-top: 0; }
+.s-fix { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font: 700 17px/1.1 var(--sign); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); min-width: 0; }
+.s-fix small { font: 500 11px var(--mono); letter-spacing: 0; text-transform: none; color: var(--dim); }
+.srow.own .s-fix { color: var(--ink); }
+.s-res { display: flex; flex-wrap: wrap; gap: 4px 18px; font: 500 12px/1.3 var(--mono); color: var(--dim); }
+.s-res b { font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.s-res .lit, .s-res .lit b { color: var(--amber); }
+@media (max-width: 759px) { .srow { grid-template-columns: minmax(0, 1fr); } }
