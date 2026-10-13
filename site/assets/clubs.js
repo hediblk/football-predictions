@@ -344,7 +344,7 @@ function renderStakes(club, team, leagueMatches) {
       <span class="s-res">${values.map((v, i) => `<span${i === lit ? ' class="lit"' : ""}${v == null ? ' title="Too few simulations"' : ""}>${esc(labels[i])} <b>${v == null ? "–" : pct(v)}</b></span>`).join("")}</span></div>`;
   };
   $("p-stakes").innerHTML = `<div class="slist">${rows.map(line).join("")}</div>
-    <p class="note">${esc(club.name)}'s ${metric[1]} is <b>${pct(team[metric[0]])}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games that move it by 2 points or more are listed.</p>`;
+    <p class="note">${esc(club.name)}'s ${metric[1]} is <b>${pct(team[metric[0]])}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games that move it clearly (beyond simulation noise) are listed.</p>`;
 }
 
 function renderResults(all) {

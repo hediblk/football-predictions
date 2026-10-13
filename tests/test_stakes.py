@@ -58,6 +58,17 @@ def test_a_decisive_game_moves_the_title_to_the_winner_only():
     assert set(stakes["teams"]) == {"Alpha", "Bravo"}
 
 
+def test_teams_a_fixture_does_not_touch_show_no_noise():
+    table = pd.DataFrame({"team": TEAMS, "points": [0, 0, 10, 10], "goals_for": [5, 5, 10, 10], "goals_against": [5] * 4})
+    games = [spec("Alpha", "Bravo", (0.4, 0.2, 0.4)), spec("Charlie", "Delta", (0.5, 0.0, 0.5))]
+    for seed in range(1, 6):
+        _, _, details = simulate_season_scores(games, table, n_sim=1000, seed=seed, track=[0, 1])
+        apart, decider = fixture_stakes(details["outcomes"], details["places"], TEAMS, top=2, releg_from=4)
+        # Charlie and Delta's title chances sit near 50% whatever Alpha v Bravo does: the wobble is noise.
+        assert set(apart["teams"]) == {"Alpha", "Bravo"} and set(apart["teams"]["Alpha"]) == {"releg"}
+        assert decider["teams"]["Charlie"] == {"title": [100, None, 0]} and decider["teams"]["Delta"] == {"title": [0, None, 100]}
+
+
 def test_thin_results_are_hidden_and_small_swings_dropped():
     outcomes = np.repeat([0, 1, 2], [250, 100, 250])[:, None]  # the draw has under 200 simulations
     leader = np.where(outcomes[:, 0] == 2, 1, 0)  # Alpha leads unless the away side wins

@@ -320,7 +320,7 @@ async function addStakes(panel, m, league) {
   block.className = "stakes";
   block.innerHTML = `<h4>What's at stake</h4><div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>Now</th>
     <th>If ${esc(m.home)} win</th><th>Draw</th><th>If ${esc(m.away)} win</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="note">A team's chance of the title, a top-four finish or relegation once this result is in. Only chances a result moves by 2 points or more are shown.</p>`;
+    <p class="note">A team's chance of the title, a top-four finish or relegation once this result is in. Only chances a result clearly moves (beyond simulation noise) are shown.</p>`;
   panel.append(block);
 }
 
