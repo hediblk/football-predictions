@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 
 from standing_prediction.backtest import match_metrics, position_metrics, snapshot_split
 from standing_prediction.data import FootballDataClient, standings_from_matches
+from standing_prediction.defaults import DEFAULT_FIT, DEFAULT_XG_SCALE
 from standing_prediction.ensemble import blend_probabilities
 from standing_prediction.h2h import encounter_residuals
 from standing_prediction.predict_positions import (
@@ -63,7 +64,8 @@ def tune(client, competition, seasons, cutoffs, *, xg_grid, h2h_grid, prior_seas
             client, competition, seasons, cutoffs, prior_seasons=prior_seasons, xi=xi, lambda_reg=lambda_reg,
             residuals=residuals, cache=cache):
         for pair in totals:
-            model = adjust_goal_model(dc, teams=teams, xg_strengths=xg, xg_weight=pair[0], h2h_effects=effects, h2h_weight=pair[1])
+            model = adjust_goal_model(dc, teams=teams, xg_strengths=xg, xg_weight=pair[0], xg_scale=DEFAULT_XG_SCALE,
+                                      h2h_effects=effects, h2h_weight=pair[1])
             frame = _match_frame(future, model, elo, weights)
             totals[pair][0] += match_metrics(frame)["blend_log_loss"] * len(frame)
             totals[pair][1] += len(frame)
@@ -97,7 +99,8 @@ def evaluate(client, competition, seasons, cutoffs, variants, *, prior_seasons, 
         actual_order = rank_table(actual_standings, matches, competition=competition)
         standings = standings_from_matches(train, teams=teams, competition=competition)
         for name, (xg_weight, h2h_weight) in variants.items():
-            model = adjust_goal_model(dc, teams=teams, xg_strengths=xg, xg_weight=xg_weight, h2h_effects=effects, h2h_weight=h2h_weight)
+            model = adjust_goal_model(dc, teams=teams, xg_strengths=xg, xg_weight=xg_weight, xg_scale=DEFAULT_XG_SCALE,
+                                      h2h_effects=effects, h2h_weight=h2h_weight)
             metrics = match_metrics(_match_frame(future, model, elo, weights))
             specs = build_fixture_specs(future, dc=model, elo=elo, odds=None, max_goals=10, weights=weights)
             counts, points = simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed, competition=competition,
@@ -112,7 +115,7 @@ def evaluate(client, competition, seasons, cutoffs, variants, *, prior_seasons, 
 
 def run_ablation(*, competition="PD", tune_seasons, eval_seasons, cutoffs=(5, 10, 20, 30),
                  xg_grid=(0.0, 0.25, 0.5, 0.75, 1.0), h2h_grid=(0.0, 0.05, 0.1, 0.2, 0.3),
-                 n_sim=2000, seed=7, prior_seasons=2, xi=0.003, lambda_reg=0.1, weights=None,
+                 n_sim=2000, seed=7, prior_seasons=2, xi=DEFAULT_FIT["xi"], lambda_reg=DEFAULT_FIT["lambda_reg"], weights=None,
                  h2h_seasons=DEFAULT_H2H["seasons"], out_dir=Path("out/ablation"), cache=True):
     tune_seasons, eval_seasons = sorted(set(tune_seasons)), sorted(set(eval_seasons))
     if not tune_seasons or not eval_seasons or max(tune_seasons) >= min(eval_seasons):
@@ -142,7 +145,7 @@ def run_ablation(*, competition="PD", tune_seasons, eval_seasons, cutoffs=(5, 10
         "selection": "Lowest blend match log loss on tuning seasons; weights frozen before evaluation.",
         "n_sim": n_sim, "seed": seed, "prior_seasons": prior_seasons, "xi": xi, "lambda_reg": lambda_reg, "weights": weights,
         "h2h": {**DEFAULT_H2H, "seasons": h2h_seasons, "refit_days": 28, "baseline_window_days": 730},
-        "xg_provider": "understat", "xg_coverage": {str(season): value for season, value in sorted(coverage.items())},
+        "xg_scale": DEFAULT_XG_SCALE, "xg_provider": "understat", "xg_coverage": {str(season): value for season, value in sorted(coverage.items())},
         "xg_availability": "Retrospective: Understat xG is assumed published by the end of each match's UTC day; "
                            "historical publication times are not reconstructed.",
         "odds": "Excluded; variants are compared on team models only, so market information is not controlled for.",

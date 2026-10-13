@@ -87,6 +87,20 @@ def test_adjustments_are_identity_at_zero_and_shift_rates_in_opposite_directions
     assert shifted.expected_goals("Charlie", "Delta") == dc.expected_goals("Charlie", "Delta")
 
 
+def test_xg_scale_stretches_only_the_xg_part_of_the_blend():
+    matches = round_robin("2023-08-01", seasons=2)
+    dc = fit_dixon_coles(matches)
+    xg = fit_xg_strengths(matches)
+    plain, scaled = blend_xg_strengths(dc, xg, 0.75), blend_xg_strengths(dc, xg, 0.75, scale=1.2)
+    assert blend_xg_strengths(dc, xg, 0.75, scale=1.0).attack == pytest.approx(plain.attack)
+    i = dc.team_index["Alpha"]
+    assert scaled.attack[i] == pytest.approx(0.25 * dc.attack[i] + 0.75 * 1.2 * xg.attack["Alpha"])
+    assert scaled.defense[i] == pytest.approx(0.25 * dc.defense[i] + 0.75 * 1.2 * xg.defense["Alpha"])
+    assert blend_xg_strengths(dc, xg, 0.0, scale=1.2) is dc
+    with pytest.raises(ValueError):
+        blend_xg_strengths(dc, xg, 0.75, scale=0.0)
+
+
 def test_xg_fit_excludes_matches_at_or_after_reference_date():
     matches = round_robin("2023-08-01")
     cutoff = matches["utcDate"].iloc[6]

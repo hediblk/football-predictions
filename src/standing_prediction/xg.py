@@ -165,21 +165,27 @@ def fit_xg_strengths(matches, *, reference_date=None, xi=0.003, lambda_reg=0.1, 
     )
 
 
-def blend_xg_strengths(dc, xg, weight):
+def blend_xg_strengths(dc, xg, weight, scale=1.0):
     """Blend log goal rates with xG-based rates through team strengths.
 
     Sharing the goal model's intercept and home advantage makes
     log(rate) = (1 - w) log(goal rate) + w log(xG rate) while keeping the goal scale, so
     provider differences in penalty or own-goal scope do not shift league scoring. Teams
     without xG history keep their goal-based strengths.
+
+    `scale` multiplies the xG strengths before blending. xG understates the differences
+    between teams in goals (strong sides keep beating their xG and weak sides fall short),
+    so unscaled xG pulls the best teams toward average; 1 is the plain blend.
     """
     if xg is None or weight == 0:
         return dc
     if not 0 <= weight <= 1:
         raise ValueError("xG weight must be between 0 and 1.")
+    if not np.isfinite(scale) or scale <= 0:
+        raise ValueError("xG scale must be positive.")
     attack, defense = dc.attack.copy(), dc.defense.copy()
     for team, i in dc.team_index.items():
         if team in xg.attack:
-            attack[i] = (1 - weight) * attack[i] + weight * xg.attack[team]
-            defense[i] = (1 - weight) * defense[i] + weight * xg.defense[team]
+            attack[i] = (1 - weight) * attack[i] + weight * scale * xg.attack[team]
+            defense[i] = (1 - weight) * defense[i] + weight * scale * xg.defense[team]
     return replace(dc, attack=attack, defense=defense)
