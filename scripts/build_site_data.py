@@ -5,6 +5,8 @@ Usage: python scripts/build_site_data.py [--src out/site] [--dest site/data]
 Reads `<prefix>_summary.csv`, `<prefix>_position_probs.csv`, `<prefix>_standings_snapshot.csv`,
 `<prefix>_matches_snapshot.csv`, `<prefix>_club_ratings.csv`, `<prefix>_match_forecasts.json` and
 `<prefix>_metadata.json` for each league, plus the `cl_*` files for the Champions League.
+Each fresh forecast also adds a point to `history/<season>/<slug>.json`, and the first refresh of a
+week freezes the club ratings into `history/<season>/clubs.json` (see standing_prediction.site_history).
 """
 
 import argparse
@@ -16,6 +18,7 @@ from pathlib import Path
 import pandas as pd
 
 from champions_league.identities import canonical_team
+from standing_prediction import site_history
 
 
 LEAGUES = [
@@ -114,7 +117,8 @@ def export_league(src, slug, code, name, country, zones):
     return {
         "slug": slug, "kind": "league", "code": code, "name": name, "country": country,
         "season": f"{meta['season']}/{str(meta['season'] + 1)[-2:]}",
-        "generated_at": meta["generated_at"], "data_cutoff": meta["data_cutoff"], "n_sim": meta["n_sim"],
+        "generated_at": meta["generated_at"], "as_of": meta.get("as_of", meta["generated_at"]),
+        "data_cutoff": meta["data_cutoff"], "n_sim": meta["n_sim"],
         "played_fixtures": meta["finished_fixtures"], "remaining_fixtures": meta["remaining_fixtures"],
         "zones": zones_json(zones), "teams": teams,
         "fixture_notes": [{
@@ -161,7 +165,8 @@ def export_ucl(src):
     return {
         "slug": "champions-league", "kind": "ucl", "code": "CL", "name": "Champions League", "country": "Europe",
         "season": f"{meta['season']}/{str(meta['season'] + 1)[-2:]}",
-        "generated_at": meta["generated_at"], "data_cutoff": meta["as_of"], "n_sim": meta["n_sim"],
+        "generated_at": meta["generated_at"], "as_of": meta["as_of"],
+        "data_cutoff": meta.get("data_cutoff") or meta["as_of"], "n_sim": meta["n_sim"],
         "played_fixtures": validation["finished"], "remaining_fixtures": validation["remaining"],
         "zones": zones_json(UCL_ZONES), "teams": teams,
         "bracket": {"stages": stages, "champion": label(bracket["champion"]), "champion_id": ids.get(bracket["champion"]), "note": bracket["draw_label"],
@@ -265,6 +270,47 @@ def export_clubs(src, leagues, ucl, previous=None):
     }
 
 
+def rated_clubs(src, leagues, ucl):
+    """{football-data.org id: (rating, attack, defense)} for every club in the five leagues and the
+    Champions League, from `cl_club_ratings.csv`; None without fresh ratings."""
+    path = src / "cl_club_ratings.csv"
+    if not path.exists():
+        return None
+    ratings = pd.read_csv(path).set_index("team")
+    keys = {team["id"]: canonical_team(team["full"]) for league in leagues for team in league["teams"]}
+    keys.update({team["id"]: team["key"] for team in ucl["teams"] if team["id"] not in keys})
+    return {club_id: tuple(ratings.loc[key, ["rating", "attack_rating", "defense_rating"]])
+            for club_id, key in keys.items() if club_id is not None and key in ratings.index}
+
+
+def history_path(dest, data, name):
+    return dest / "history" / site_history.season_key(data["season"]) / f"{name}.json"
+
+
+def read_json(path):
+    return json.loads(path.read_text()) if path.exists() else None
+
+
+def update_history(dest, competitions, ratings=None):
+    """Add each fresh forecast to its competition's history and freeze the week's club ratings."""
+    for data in competitions:
+        path = history_path(dest, data, data["slug"])
+        try:
+            history = site_history.add_point(read_json(path), data, data["as_of"][:10])
+        except ValueError as exc:
+            print(f"History unchanged: {exc}")
+            continue
+        write_json(path, history)
+    ucl = next((data for data in competitions if data["kind"] == "ucl"), None)
+    if ratings and ucl:
+        path = history_path(dest, ucl, "clubs")
+        history, added = site_history.freeze_week(read_json(path), ratings, as_of=ucl["as_of"], season=ucl["season"],
+                                                  cutoff=ucl["data_cutoff"])
+        if added:
+            write_json(path, history)
+            print(f"Froze the club ranking for the week of {history['weeks'][-1]['date']}")
+
+
 def write_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
@@ -274,6 +320,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--src", type=Path, default=Path("out/site"))
     parser.add_argument("--dest", type=Path, default=Path("site/data"))
+    parser.add_argument("--history", action=argparse.BooleanOptionalAction, default=True,
+                        help="Add fresh forecasts to the dated history files (default: on)")
     args = parser.parse_args(argv)
     args.dest.mkdir(parents=True, exist_ok=True)
     jobs = [(league[0], lambda league=league: export_league(args.src, *league)) for league in LEAGUES]
@@ -303,6 +351,10 @@ def main(argv=None):
     clubs_path = args.dest / "clubs.json"
     previous = json.loads(clubs_path.read_text()) if clubs_path.exists() else None
     write_json(clubs_path, export_clubs(args.src, competitions[:-1], competitions[-1], previous))
+    if args.history:
+        fresh = [data for data in competitions if data["slug"] not in kept]
+        ucl_fresh = "champions-league" not in kept
+        update_history(args.dest, fresh, rated_clubs(args.src, competitions[:-1], competitions[-1]) if ucl_fresh else None)
     index = [{key: data[key] for key in ("slug", "code", "name", "country", "season", "generated_at")} for data in competitions]
     (args.dest / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
     print(f"Wrote site data to {args.dest}" + (f"; kept previous data for {', '.join(kept)}" if kept else "")

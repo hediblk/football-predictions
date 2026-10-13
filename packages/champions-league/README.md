@@ -17,7 +17,7 @@ pip install -e . -e packages/champions-league
 football-ucl --season 2026 --n-sim 10000
 ```
 
-Open `out/cl_forecast.html` for the heatmap, projected bracket, qualification probabilities, and per-club data coverage. CSV/JSON/PNG files, a bracket PDF and dated input snapshots are exported alongside it. `--as-of 2026-10-11T00:00:00Z` fixes the forecast origin; `--odds-snapshot path.csv` optionally supplies dated quotes for specific scheduled fixtures. The default uses no odds.
+Open `out/cl_forecast.html` for the heatmap, projected bracket, qualification probabilities, and per-club data coverage. CSV/JSON/PNG files, a bracket PDF and dated input snapshots are exported alongside it. `--as-of 2026-10-11T00:00:00Z` fixes the forecast origin; `--no-match-forecasts` and `--no-sensitivity` skip the per-fixture replay and the offset-shrinkage reruns, for quick reruns at many origins; `--odds-snapshot path.csv` optionally supplies dated quotes for specific scheduled fixtures. The default uses no odds.
 
 Odds CSVs use `date` (or `commence_time`), `observed_at`, `home_team`, `away_team`, `p_home`, `p_draw`, and `p_away`. Quotes must precede kickoff, match the fixture date, be available at the origin, and be at most seven days old.
 

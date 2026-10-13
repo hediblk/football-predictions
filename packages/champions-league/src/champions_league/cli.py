@@ -16,7 +16,7 @@ from champions_league.strengths import DEFAULT_OFFSET_RIDGE
 
 def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
                  cache=True, odds_snapshot=None, inputs=None, offset_ridge=DEFAULT_OFFSET_RIDGE, sensitivity=True,
-                 odds_archive=Path("data/odds")):
+                 odds_archive=Path("data/odds"), match_forecasts=True, client=None):
     from champions_league.data import load_inputs, load_market_quotes
     from champions_league.coefficients import fetch_coefficients
     from champions_league.report import write_report
@@ -28,7 +28,8 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
     origin = pd.Timestamp(as_of) if as_of is not None else pd.Timestamp.now(tz="UTC")
     origin = origin.tz_localize("UTC") if origin.tzinfo is None else origin.tz_convert("UTC")
     season = season if season is not None else origin.year - (origin.month < 7)
-    inputs = inputs or load_inputs(season=season, as_of=origin, prior_seasons=DEFAULT_FIT["prior_seasons"], cache=cache)
+    inputs = inputs or load_inputs(season=season, as_of=origin, prior_seasons=DEFAULT_FIT["prior_seasons"], cache=cache,
+                                   client=client)
     teams = inputs.standings["team"].tolist()
     coefficients, coefficient_metadata = fetch_coefficients(season, teams, cache=cache)
     coefficients = coefficients if coefficient_metadata["complete"] else None
@@ -48,6 +49,8 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
                                  season=season, odds=odds, as_of=origin, coefficients=coefficients)
     result.metadata.update({
         "competition": "CL", "season": season, "as_of": origin.isoformat(),
+        # The latest result in the fit, across every league and cup it uses.
+        "data_cutoff": pd.to_datetime(inputs.history["utcDate"], utc=True).max().isoformat() if not inputs.history.empty else None,
         "generated_at": pd.Timestamp.now(tz="UTC").isoformat(), "n_sim": n_sim, "seed": seed,
         "weight_calibration_version": CALIBRATION_VERSION, "weights": DEFAULT_WEIGHTS,
         "xg_weight": DEFAULT_XG_WEIGHT, "xg_scale": DEFAULT_XG_SCALE, "h2h_weight": 0, "fit_settings": DEFAULT_FIT,
@@ -74,7 +77,10 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
         result.summary["prior_title_max_pct"] = alternate_titles.max(axis=1)
     write_report(result, inputs, out_dir)
     out_dir = Path(out_dir)
-    save_match_forecasts(inputs, model, out_dir, origin=origin, season=season, offset_ridge=offset_ridge, market=market)
+    if match_forecasts:
+        save_match_forecasts(inputs, model, out_dir, origin=origin, season=season, offset_ridge=offset_ridge, market=market)
+    else:
+        (out_dir / "cl_match_forecasts.json").unlink(missing_ok=True)
     save_club_ratings(inputs, model, out_dir, origin=origin)
     inputs.fixtures.to_csv(out_dir / "cl_matches_snapshot.csv", index=False)
     inputs.standings.to_csv(out_dir / "cl_standings_snapshot.csv", index=False)
@@ -144,6 +150,8 @@ def main(argv=None):
     parser.add_argument("--odds-archive", type=Path, default=Path("data/odds"),
                         help="Daily odds archive whose Champions League prices inform the strengths (default: data/odds).")
     parser.add_argument("--no-market", action="store_true", help="Fit strengths from results only, ignoring the odds archive.")
+    parser.add_argument("--no-match-forecasts", action="store_true", help="Skip the per-fixture forecasts (they refit at every match day).")
+    parser.add_argument("--no-sensitivity", action="store_true", help="Skip the league-offset shrinkage sensitivity reruns.")
     parser.add_argument("--evaluate", action="store_true", help="Replay 2024/25 and 2025/26 origins and compare international match forecasts.")
     args = parser.parse_args(argv)
     load_dotenv()
@@ -154,7 +162,8 @@ def main(argv=None):
         return
     result = run_forecast(season=args.season, as_of=args.as_of, n_sim=args.n_sim, seed=args.seed,
                           out_dir=args.out_dir, cache=not args.no_cache, odds_snapshot=args.odds_snapshot,
-                          odds_archive=None if args.no_market else args.odds_archive)
+                          odds_archive=None if args.no_market else args.odds_archive,
+                          match_forecasts=not args.no_match_forecasts, sensitivity=not args.no_sensitivity)
     favorite = result.summary["title_pct"].idxmax()
     names = result.metadata["data"].get("display_names", {})
     print(f"Title favorite: {names.get(favorite, favorite)} ({result.summary.loc[favorite, 'title_pct']:.2f}%).")

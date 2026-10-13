@@ -14,8 +14,8 @@ from dotenv import load_dotenv
 
 from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.club_ratings import club_ratings
-from standing_prediction.data import (FootballDataClient, fetch_matches, fetch_standings, fill_lagging_results,
-                                      load_fixture_overrides, resolve_fixture_statuses, validate_schedule)
+from standing_prediction.data import (RESULT_DELAY, FootballDataClient, fetch_matches, fetch_standings, fill_lagging_results,
+                                      load_fixture_overrides, resolve_fixture_statuses, rewind_season, validate_schedule)
 from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
 from standing_prediction.dixon_coles import fit_dixon_coles
 from standing_prediction.elo import fit_elo
@@ -58,6 +58,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Predict final league positions from a dated season snapshot.")
     parser.add_argument("--competition", default="PD", choices=list(COMPETITION_TO_THE_ODDS_API_SPORT))
     parser.add_argument("--season", type=int, help="Season start year; defaults to the current European season")
+    parser.add_argument("--as-of", help="UTC forecast origin (ISO timestamp) in the past: only results available then "
+                                        "(kickoff plus three hours) count, and the table is rebuilt from them")
     parser.add_argument("--n-sim", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--max-goals", type=int, default=10)
@@ -192,12 +194,17 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                    out_dir=Path("out"), weights=None, calibrate=False, calibration_seasons=None,
                    calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None,
                    xg_weight=DEFAULT_XG_WEIGHT, xg_scale=DEFAULT_XG_SCALE, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"],
-                   fixture_overrides=DEFAULT_FIXTURE_OVERRIDES, strict_fixtures=False, match_forecasts=True):
+                   fixture_overrides=DEFAULT_FIXTURE_OVERRIDES, strict_fixtures=False, match_forecasts=True, as_of=None):
+    """Forecast the final table; with `as_of`, as it would have been forecast then from today's data."""
     if n_sim < 1 or max_goals < 1 or prior_seasons < 0:
         raise ValueError("n_sim/max_goals must be positive; prior_seasons cannot be negative.")
     if not 0 <= xg_weight <= 1 or not np.isfinite(xg_scale) or xg_scale <= 0 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
         raise ValueError("xg_weight must be in [0, 1], xg_scale positive, h2h_weight finite, and h2h_seasons positive.")
-    season = _guess_season_start_year() if season is None else season
+    now = pd.Timestamp.now(tz="UTC")
+    origin = now if as_of is None else pd.to_datetime(as_of, utc=True)
+    if origin > now:
+        raise ValueError("as_of cannot be in the future.")
+    season = _guess_season_start_year(origin) if season is None else season
     client = client or FootballDataClient(use_cache=cache)
     standings = fetch_standings(client, competition=competition, season=season).sort_values("position").reset_index(drop=True)
     matches = fetch_matches(client, competition=competition, season=season, status=None)
@@ -206,13 +213,19 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     matches, filled = fill_lagging_results(matches, standings, lambda: _understat_results(competition, season, cache))
     fixture_adjustments += filled
     remaining = validate_schedule(matches, standings)
+    point_adjustments = {}
+    if as_of is not None:
+        matches, standings, point_adjustments = rewind_season(matches, standings, origin, competition=competition)
+        fixture_adjustments = [note for note in fixture_adjustments
+                               if note["kickoff"] and pd.Timestamp(note["kickoff"]) + RESULT_DELAY <= origin]
+        remaining = validate_schedule(matches, standings)
     finished = matches[matches["status"] == "FINISHED"].copy()
     # Retain current-season xG with every forecast for later prospective evaluation.
     finished = load_season_xg(finished, competition=competition, season=season, cache=cache)
     xg_coverage = {season: finished.attrs.get("xg_coverage")}
     matches[XG_COLUMNS] = finished[XG_COLUMNS]
     h2h_pairs = 0
-    cutoff = pd.Timestamp.now(tz="UTC")
+    cutoff = origin
     teams = standings["team"].tolist()
     history = pd.DataFrame()
     odds, lookup, calibrator, years = None, {}, None, []
@@ -237,7 +250,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                 odds = pd.read_csv(odds_snapshot)
             elif odds_provider != "none":
                 odds = _load_odds(competition=competition, season=season, provider=odds_provider, days=odds_days)
-        cutoff = pd.Timestamp.now(tz="UTC")
+        cutoff = pd.Timestamp.now(tz="UTC") if as_of is None else origin
         dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi,
                                         lambda_reg=lambda_reg, xg_weight=xg_weight, xg_scale=xg_scale, h2h_weight=h2h_weight,
                                         h2h_residuals=residuals)
@@ -262,10 +275,11 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     probabilities = counts / n_sim * 100
     summary = forecast_summary(probabilities, points)
     metadata = {
-        "competition": competition, "season": season, "generated_at": cutoff.isoformat(),
+        "competition": competition, "season": season, "generated_at": pd.Timestamp.now(tz="UTC").isoformat(),
+        "as_of": cutoff.isoformat(), "rewound": as_of is not None,
         "data_cutoff": finished["utcDate"].max().isoformat() if not finished.empty else None,
         "finished_fixtures": len(finished), "remaining_fixtures": len(remaining), "completed": remaining.empty,
-        "fixture_adjustments": fixture_adjustments,
+        "fixture_adjustments": fixture_adjustments, "point_adjustments": point_adjustments,
         "odds_matched": len(lookup), "odds_requested": bool(use_odds),
         "odds_provider": "snapshot" if odds_snapshot else odds_provider if use_odds else "none",
         "prior_seasons": history.attrs.get("seasons", []), "n_sim": n_sim, "seed": seed,
@@ -532,8 +546,8 @@ def _train_calibrator(client, *, competition, seasons, cutoffs, prior_seasons, x
     return train_outcome_calibrator(pd.concat(frames, ignore_index=True), use_odds_features=False)
 
 
-def _guess_season_start_year():
-    today = pd.Timestamp.now(tz="UTC")
+def _guess_season_start_year(today=None):
+    today = pd.Timestamp.now(tz="UTC") if today is None else today
     return today.year if today.month >= 7 else today.year - 1
 
 

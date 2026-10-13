@@ -177,7 +177,7 @@ cp .env.example .env   # set FOOTBALL_DATA_API_KEY; ODDS_API_KEY is optional
 football-predict --competition PD
 ```
 
-Competitions: `PL`, `PD`, `BL1`, `SA`, `FL1`. Common flags: `--n-sim`, `--seed`, `--season`, `--no-use-odds`, `--out-dir`; `--help` lists the rest.
+Competitions: `PL`, `PD`, `BL1`, `SA`, `FL1`. Common flags: `--n-sim`, `--seed`, `--season`, `--no-use-odds`, `--out-dir`; `--help` lists the rest. `--as-of 2026-09-15T05:30:00Z` reruns the forecast as it would have been made then: results count from kickoff plus three hours, later ones go back to scheduled, and the table is rebuilt from the rest with the league's tie-breaks (point deductions in today's table are carried back, since the feed does not date them).
 
 From Python:
 
@@ -211,6 +211,8 @@ football-ucl --season 2026 --n-sim 10000
 ## Website
 
 `site/` is **Floodlight**, a static page with four tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result), **Clubs** (strength ranking and profiles) and **Model** (how the forecasts and ratings are made). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds, including the Europa and Conference League, to [data/odds](data/odds/README.md); the Champions League model reads the archived Champions League prices, and the rest are kept for model-versus-market comparisons and later tests.
+
+Each refresh also keeps dated snapshots in `site/data/history/<season>/`, for charts and the weekly club ranking. `<competition>.json` holds every club's title, top-four and relegation chances (Champions League: stage chances), with one point per day that brings new results; a refresh without new results updates the latest point. `clubs.json` freezes every rated club's overall, attack and defence ratings once a week, at the Monday refresh (or Tuesday's if Monday's failed), after the weekend round and the previous week's Champions League games. `scripts/backfill_history.py` fills earlier days by rerunning the forecasts with `--as-of` at 05:30 UTC on each past day; it resumes where it stopped and keeps points the refresh added later.
 
 Club ratings come from the Champions League model, which puts every club on one European scale. A rating is the share of points a club would take off an average European top-flight side on a neutral pitch; the average is taken over every club with domestic results in the past year (about 330 clubs in 17 leagues). Leagues compare through European cup matches between clubs from different countries, with each league's current level set by archived Champions League prices, so no outside league ratings are needed. `football-ucl` writes the ratings to `cl_club_ratings.csv`.
 
