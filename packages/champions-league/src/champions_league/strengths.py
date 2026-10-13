@@ -8,7 +8,7 @@ import pandas as pd
 from scipy.optimize import minimize
 from scipy.special import gammaln
 
-from standing_prediction.defaults import DEFAULT_FIT, DEFAULT_XG_WEIGHT
+from standing_prediction.defaults import DEFAULT_FIT, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
 from standing_prediction.dixon_coles import DixonColesModel
 from standing_prediction.elo import EloModel
 from standing_prediction.xg import fit_xg_strengths
@@ -143,14 +143,15 @@ def fit_strengths(
     xi=DEFAULT_FIT["xi"],
     lambda_reg=DEFAULT_FIT["lambda_reg"],
     xg_weight=DEFAULT_XG_WEIGHT,
+    xg_scale=DEFAULT_XG_SCALE,
     league_offsets=True,
     offset_ridge=4.0,
 ):
     required = {"utcDate", "homeTeam", "awayTeam", "homeGoals", "awayGoals", "competition"}
     if missing := required - set(history.columns):
         raise ValueError(f"History is missing columns: {sorted(missing)}")
-    if (not np.isfinite([xg_weight, xi, lambda_reg, offset_ridge]).all()
-            or not 0 <= xg_weight <= 1 or xi < 0 or lambda_reg <= 0 or offset_ridge <= 0):
+    if (not np.isfinite([xg_weight, xg_scale, xi, lambda_reg, offset_ridge]).all()
+            or not 0 <= xg_weight <= 1 or xg_scale <= 0 or xi < 0 or lambda_reg <= 0 or offset_ridge <= 0):
         raise ValueError("Invalid strength-model decay, regularization or xG weight.")
     origin = pd.to_datetime(as_of, utc=True)
     if pd.isna(origin):
@@ -268,7 +269,7 @@ def fit_strengths(
     if not result.success or not np.isfinite(result.fun):
         raise RuntimeError(f"Joint European strength fit failed: {result.message}")
     intercept, home_advantage, attack, defense, offsets, rho = unpack(result.x)
-    xg_metadata = {"weight": float(xg_weight), "matches": 0, "teams": 0, "leagues": {}}
+    xg_metadata = {"weight": float(xg_weight), "scale": float(xg_scale), "matches": 0, "teams": 0, "leagues": {}}
     if xg_weight and {"home_xg", "away_xg"}.issubset(data.columns):
         for league in leagues:
             domestic = data.loc[~european & data.homeLeague.eq(league)]
@@ -281,7 +282,7 @@ def fit_strengths(
             positions = np.array([index[team] for team in observed])
             # Center the adjustment over observed clubs so missing xG keeps its goal strengths.
             for values, estimates in ((attack, xg.attack), (defense, xg.defense)):
-                adjustment = np.array([estimates[team] for team in observed]) - values[positions]
+                adjustment = xg_scale * np.array([estimates[team] for team in observed]) - values[positions]
                 values[positions] += xg_weight * (adjustment - adjustment.mean())
             xg_metadata["leagues"][league] = {"matches": xg.matches, "teams": len(observed)}
             xg_metadata["matches"] += xg.matches

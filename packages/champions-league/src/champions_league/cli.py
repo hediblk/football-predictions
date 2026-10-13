@@ -8,7 +8,7 @@ import shutil
 import pandas as pd
 from dotenv import load_dotenv
 
-from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_WEIGHT
+from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
 from standing_prediction.utils import normalize_team
 
 
@@ -45,7 +45,7 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
         "competition": "CL", "season": season, "as_of": origin.isoformat(),
         "generated_at": pd.Timestamp.now(tz="UTC").isoformat(), "n_sim": n_sim, "seed": seed,
         "weight_calibration_version": CALIBRATION_VERSION, "weights": DEFAULT_WEIGHTS,
-        "xg_weight": DEFAULT_XG_WEIGHT, "h2h_weight": 0, "fit_settings": DEFAULT_FIT,
+        "xg_weight": DEFAULT_XG_WEIGHT, "xg_scale": DEFAULT_XG_SCALE, "h2h_weight": 0, "fit_settings": DEFAULT_FIT,
         "data": inputs.metadata, "strengths": model.metadata,
         "coefficients": coefficient_metadata,
         "implementation_version": "football-champions-league/0.1.0",
@@ -95,7 +95,7 @@ def save_match_forecasts(inputs, model, out_dir, *, origin, season, offset_ridge
     records = match_forecasts(inputs, model, origin=origin, offset_ridge=offset_ridge)
     write_match_forecasts(out_dir / "cl_match_forecasts.json", records, {
         "competition": "CL", "season": season, "generated_at": origin.isoformat(), "weights": DEFAULT_WEIGHTS,
-        "xg_weight": DEFAULT_XG_WEIGHT, "odds": False, "weight_calibration_version": CALIBRATION_VERSION,
+        "xg_weight": DEFAULT_XG_WEIGHT, "xg_scale": DEFAULT_XG_SCALE, "odds": False, "weight_calibration_version": CALIBRATION_VERSION,
         "played_forecast_rule": PLAYED_FORECAST_RULE, "score_rule": "Scores and forecasts cover 90 minutes.",
         "display_names": inputs.metadata["display_names"],
     })

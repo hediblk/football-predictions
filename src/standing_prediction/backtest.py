@@ -13,7 +13,7 @@ from sklearn.metrics import log_loss
 
 from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.data import FootballDataClient, standings_from_matches, validate_schedule
-from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_XG_WEIGHT
+from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
 from standing_prediction.ensemble import blend_probabilities
 from standing_prediction.odds import match_odds
 from standing_prediction.h2h import encounter_residuals
@@ -51,15 +51,15 @@ def snapshot_split(matches, cutoff_matchday):
 
 
 def snapshot_features(matches, *, season, competition="PD", cutoff_matchday=10,
-                      history=None, xi=0.003, lambda_reg=0.1, weights=None, odds=None,
-                      xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_residuals=None):
+                      history=None, xi=DEFAULT_FIT["xi"], lambda_reg=DEFAULT_FIT["lambda_reg"], weights=None, odds=None,
+                      xg_weight=DEFAULT_XG_WEIGHT, xg_scale=DEFAULT_XG_SCALE, h2h_weight=0.0, h2h_residuals=None):
     split = snapshot_split(matches, cutoff_matchday)
     if split is None:
         return pd.DataFrame(), None, None, None
     teams, cutoff, train, future = split
     standings = standings_from_matches(train, teams=teams, competition=competition)
     dc, elo = fit_prediction_models(train, teams=teams, history=history, reference_date=cutoff, xi=xi, lambda_reg=lambda_reg,
-                                    xg_weight=xg_weight, h2h_weight=h2h_weight, h2h_residuals=h2h_residuals)
+                                    xg_weight=xg_weight, xg_scale=xg_scale, h2h_weight=h2h_weight, h2h_residuals=h2h_residuals)
     lookup = match_odds(future, odds, as_of=cutoff) if odds is not None else {}
     rows = []
     for match in future.itertuples():
@@ -119,9 +119,9 @@ def position_metrics(probabilities, points, actual_order, actual_standings):
 
 
 def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=2000,
-                 seed=7, prior_seasons=2, xi=0.003, lambda_reg=0.1,
+                 seed=7, prior_seasons=2, xi=DEFAULT_FIT["xi"], lambda_reg=DEFAULT_FIT["lambda_reg"],
                  weights=None, odds_snapshot=None, use_odds=False, out_dir=Path("out/backtests"), cache=True,
-                 xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
+                 xg_weight=DEFAULT_XG_WEIGHT, xg_scale=DEFAULT_XG_SCALE, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"]):
     if n_sim < 1 or prior_seasons < 0:
         raise ValueError("n_sim must be positive; prior_seasons cannot be negative.")
     client = FootballDataClient(use_cache=cache) if os.getenv("FOOTBALL_DATA_API_KEY") else None
@@ -151,7 +151,7 @@ def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=20
             frame, standings, future, models = snapshot_features(
                 matches, season=season, competition=competition, cutoff_matchday=cutoff_round,
                 history=history, xi=xi, lambda_reg=lambda_reg, weights=weights, odds=odds,
-                xg_weight=xg_weight, h2h_weight=h2h_weight, h2h_residuals=residuals)
+                xg_weight=xg_weight, xg_scale=xg_scale, h2h_weight=h2h_weight, h2h_residuals=residuals)
             if frame.empty:
                 continue
             dc, elo, cutoff = models
@@ -198,7 +198,7 @@ def run_backtest(*, competition="PD", seasons, cutoffs=(5, 10, 20, 30), n_sim=20
                 "n_sim": n_sim, "seed": seed, "prior_seasons": prior_seasons, "xi": xi, "lambda_reg": lambda_reg,
                 "weights": weights or DEFAULT_WEIGHTS, "odds_snapshot": str(odds_snapshot) if odds_snapshot else None,
                 "weight_calibration_version": CALIBRATION_VERSION,
-                "xg_weight": xg_weight, "h2h_weight": h2h_weight, "h2h_seasons": h2h_seasons if h2h_weight else None,
+                "xg_weight": xg_weight, "xg_scale": xg_scale, "h2h_weight": h2h_weight, "h2h_seasons": h2h_seasons if h2h_weight else None,
                 "validation": "Expanding chronological seasons; first season has no calibrated evaluation.",
                 "cutoff": "End of UTC day containing the Nth completed game (N = cutoff round × teams/2).",
                 "position_log_loss": "Finite Monte Carlo zeros clipped at 1e-12; prefer RPS and event Brier scores.",
@@ -216,13 +216,14 @@ def main(argv=None):
     parser.add_argument("--n-sim", type=int, default=2000)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--prior-seasons", type=int, default=2)
-    parser.add_argument("--xi", type=float, default=0.003)
-    parser.add_argument("--lambda-reg", type=float, default=0.1)
+    parser.add_argument("--xi", type=float, default=DEFAULT_FIT["xi"])
+    parser.add_argument("--lambda-reg", type=float, default=DEFAULT_FIT["lambda_reg"])
     parser.add_argument("--weights", help="Override the stored global main/odds/elo weights")
     parser.add_argument("--use-odds", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--odds-snapshot", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("out/backtests"))
     parser.add_argument("--xg-weight", type=float, default=DEFAULT_XG_WEIGHT)
+    parser.add_argument("--xg-scale", type=float, default=DEFAULT_XG_SCALE)
     parser.add_argument("--h2h-weight", type=float, default=0.0)
     parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)

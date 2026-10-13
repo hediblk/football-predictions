@@ -16,7 +16,7 @@ from standing_prediction.calibration import train_outcome_calibrator
 from standing_prediction.club_ratings import club_ratings
 from standing_prediction.data import (FootballDataClient, fetch_matches, fetch_standings, load_fixture_overrides,
                                       resolve_fixture_statuses, validate_schedule)
-from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_WEIGHT
+from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
 from standing_prediction.dixon_coles import fit_dixon_coles
 from standing_prediction.elo import fit_elo
 from standing_prediction.ensemble import blend_probabilities
@@ -74,6 +74,7 @@ def main(argv=None):
     parser.add_argument("--calibration-seasons", nargs="+", type=int)
     parser.add_argument("--calibration-cutoffs", "--calibration-cutoff-matchday", nargs="+", type=int, default=[5, 10, 20, 30])
     parser.add_argument("--xg-weight", type=float, default=DEFAULT_XG_WEIGHT, help="Override the stored global xG weight (0 disables)")
+    parser.add_argument("--xg-scale", type=float, default=DEFAULT_XG_SCALE, help="Override the stored scale on xG strengths before blending")
     parser.add_argument("--h2h-weight", type=float, default=0.0, help="Log-rate shift per goal of shrunk head-to-head residual (0 disables)")
     parser.add_argument("--h2h-seasons", type=int, default=DEFAULT_H2H["seasons"])
     parser.add_argument("--cache", action=argparse.BooleanOptionalAction, default=True)
@@ -143,7 +144,8 @@ def load_h2h_results(client, competition, season, *, seasons=DEFAULT_H2H["season
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
 
 
-def fit_model_components(finished, *, teams, history=None, reference_date=None, xi=0.003, lambda_reg=0.1,
+def fit_model_components(finished, *, teams, history=None, reference_date=None, xi=DEFAULT_FIT["xi"],
+                         lambda_reg=DEFAULT_FIT["lambda_reg"],
                          xg=False, h2h_residuals=None, h2h_half_life=DEFAULT_H2H["half_life_days"],
                          h2h_shrinkage=DEFAULT_H2H["shrinkage"]):
     """Fit goal, Elo and optional xG/head-to-head inputs once; weights are applied separately."""
@@ -165,20 +167,21 @@ def fit_model_components(finished, *, teams, history=None, reference_date=None, 
     return dc, elo, xg_strengths, effects
 
 
-def adjust_goal_model(dc, *, teams, xg_strengths=None, xg_weight=0.0, h2h_effects=None, h2h_weight=0.0):
-    dc = blend_xg_strengths(dc, xg_strengths, xg_weight)
+def adjust_goal_model(dc, *, teams, xg_strengths=None, xg_weight=0.0, xg_scale=1.0, h2h_effects=None, h2h_weight=0.0):
+    dc = blend_xg_strengths(dc, xg_strengths, xg_weight, xg_scale)
     shifts = h2h_shifts(teams, h2h_effects, h2h_weight)
     return replace(dc, pair_shift=shifts) if shifts else dc
 
 
-def fit_prediction_models(finished, *, teams, history=None, reference_date=None, xi=0.003, lambda_reg=0.1,
-                          xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_residuals=None,
+def fit_prediction_models(finished, *, teams, history=None, reference_date=None, xi=DEFAULT_FIT["xi"],
+                          lambda_reg=DEFAULT_FIT["lambda_reg"],
+                          xg_weight=DEFAULT_XG_WEIGHT, xg_scale=DEFAULT_XG_SCALE, h2h_weight=0.0, h2h_residuals=None,
                           h2h_half_life=DEFAULT_H2H["half_life_days"], h2h_shrinkage=DEFAULT_H2H["shrinkage"]):
     dc, elo, xg_strengths, effects = fit_model_components(
         finished, teams=teams, history=history, reference_date=reference_date, xi=xi, lambda_reg=lambda_reg,
         xg=xg_weight > 0, h2h_residuals=h2h_residuals if h2h_weight else None,
         h2h_half_life=h2h_half_life, h2h_shrinkage=h2h_shrinkage)
-    dc = adjust_goal_model(dc, teams=teams, xg_strengths=xg_strengths, xg_weight=xg_weight,
+    dc = adjust_goal_model(dc, teams=teams, xg_strengths=xg_strengths, xg_weight=xg_weight, xg_scale=xg_scale,
                            h2h_effects=effects, h2h_weight=h2h_weight)
     return dc, elo
 
@@ -188,12 +191,12 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                    odds_provider="the_odds_api", odds_days=180, odds_snapshot=None,
                    out_dir=Path("out"), weights=None, calibrate=False, calibration_seasons=None,
                    calibration_cutoffs=(5, 10, 20, 30), cache=True, client=None,
-                   xg_weight=DEFAULT_XG_WEIGHT, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"],
+                   xg_weight=DEFAULT_XG_WEIGHT, xg_scale=DEFAULT_XG_SCALE, h2h_weight=0.0, h2h_seasons=DEFAULT_H2H["seasons"],
                    fixture_overrides=DEFAULT_FIXTURE_OVERRIDES, strict_fixtures=False, match_forecasts=True):
     if n_sim < 1 or max_goals < 1 or prior_seasons < 0:
         raise ValueError("n_sim/max_goals must be positive; prior_seasons cannot be negative.")
-    if not 0 <= xg_weight <= 1 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
-        raise ValueError("xg_weight must be in [0, 1], h2h_weight finite, and h2h_seasons positive.")
+    if not 0 <= xg_weight <= 1 or not np.isfinite(xg_scale) or xg_scale <= 0 or not np.isfinite(h2h_weight) or h2h_seasons < 1:
+        raise ValueError("xg_weight must be in [0, 1], xg_scale positive, h2h_weight finite, and h2h_seasons positive.")
     season = _guess_season_start_year() if season is None else season
     client = client or FootballDataClient(use_cache=cache)
     standings = fetch_standings(client, competition=competition, season=season).sort_values("position").reset_index(drop=True)
@@ -234,7 +237,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                 odds = _load_odds(competition=competition, season=season, provider=odds_provider, days=odds_days)
         cutoff = pd.Timestamp.now(tz="UTC")
         dc, elo = fit_prediction_models(finished, teams=teams, history=history, reference_date=cutoff, xi=xi,
-                                        lambda_reg=lambda_reg, xg_weight=xg_weight, h2h_weight=h2h_weight,
+                                        lambda_reg=lambda_reg, xg_weight=xg_weight, xg_scale=xg_scale, h2h_weight=h2h_weight,
                                         h2h_residuals=residuals)
         current_models = dc, elo
         h2h_pairs = len(dc.pair_shift)
@@ -248,7 +251,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                 raise ValueError("Calibration seasons must precede the forecast season.")
             calibrator = _train_calibrator(client, competition=competition, seasons=years,
                                           cutoffs=calibration_cutoffs, prior_seasons=prior_seasons,
-                                          xi=xi, lambda_reg=lambda_reg, cache=cache, weights=weights, xg_weight=xg_weight)
+                                          xi=xi, lambda_reg=lambda_reg, cache=cache, weights=weights, xg_weight=xg_weight,
+                                          xg_scale=xg_scale)
         specs = build_fixture_specs(remaining, dc=dc, elo=elo, odds=odds, as_of=cutoff,
                                    max_goals=max_goals, weights=weights or DEFAULT_WEIGHTS, calibrator=calibrator)
         counts, points = simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed,
@@ -267,12 +271,12 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         "weights": weights or DEFAULT_WEIGHTS, "calibrated": calibrator is not None,
         "weight_calibration_version": CALIBRATION_VERSION,
         "global_defaults_overridden": bool((weights is not None and weights != DEFAULT_WEIGHTS)
-                                           or xg_weight != DEFAULT_XG_WEIGHT or h2h_weight != 0
+                                           or xg_weight != DEFAULT_XG_WEIGHT or xg_scale != DEFAULT_XG_SCALE or h2h_weight != 0
                                            or xi != DEFAULT_FIT["xi"] or lambda_reg != DEFAULT_FIT["lambda_reg"]
                                            or prior_seasons != DEFAULT_FIT["prior_seasons"]),
         "calibration_seasons": years if calibrate else [],
         "calibration_cutoffs": list(calibration_cutoffs) if calibrate else [],
-        "xg_weight": xg_weight, "xg_provider": "understat", "xg_coverage": xg_coverage,
+        "xg_weight": xg_weight, "xg_scale": xg_scale, "xg_provider": "understat", "xg_coverage": xg_coverage,
         "h2h_weight": h2h_weight, "h2h": {**DEFAULT_H2H, "seasons": h2h_seasons, "adjusted_fixtures": h2h_pairs} if h2h_weight else None,
         "tiebreak_fallback": "Random ordering only after modeled sporting criteria; fair-play and playoff matches are not modeled.",
         "uncertainty": "Point intervals reflect simulated match results, conditional on fitted team strengths.",
@@ -291,10 +295,10 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         records = season_match_forecasts(
             matches, teams=teams, history=history, current_models=current_models, cutoff=cutoff,
             weights=weights or DEFAULT_WEIGHTS, odds=odds, calibrator=calibrator, max_goals=max_goals,
-            xi=xi, lambda_reg=lambda_reg, xg_weight=xg_weight, h2h_weight=h2h_weight, h2h_residuals=residuals)
+            xi=xi, lambda_reg=lambda_reg, xg_weight=xg_weight, xg_scale=xg_scale, h2h_weight=h2h_weight, h2h_residuals=residuals)
         write_match_forecasts(forecasts_path, records, {
             "competition": competition, "season": season, "generated_at": cutoff.isoformat(),
-            "weights": weights or DEFAULT_WEIGHTS, "xg_weight": xg_weight, "calibrated": calibrator is not None,
+            "weights": weights or DEFAULT_WEIGHTS, "xg_weight": xg_weight, "xg_scale": xg_scale, "calibrated": calibrator is not None,
             "weight_calibration_version": CALIBRATION_VERSION, "played_forecast_rule": PLAYED_FORECAST_RULE,
         })
     matches.to_csv(Path(out_dir) / f"{competition.lower()}_matches_snapshot.csv", index=False)
@@ -500,7 +504,7 @@ def style_probabilities(probabilities):
 
 
 def _train_calibrator(client, *, competition, seasons, cutoffs, prior_seasons, xi, lambda_reg, cache=True, weights=None,
-                      xg_weight=DEFAULT_XG_WEIGHT):
+                      xg_weight=DEFAULT_XG_WEIGHT, xg_scale=DEFAULT_XG_SCALE):
     from standing_prediction.backtest import snapshot_features
     frames = []
     for season in sorted(set(seasons)):
@@ -510,7 +514,7 @@ def _train_calibrator(client, *, competition, seasons, cutoffs, prior_seasons, x
         for cutoff in cutoffs:
             frame, _, _, _ = snapshot_features(matches, season=season, competition=competition,
                                                cutoff_matchday=cutoff, history=history, xi=xi,
-                                               lambda_reg=lambda_reg, weights=weights, xg_weight=xg_weight)
+                                               lambda_reg=lambda_reg, weights=weights, xg_weight=xg_weight, xg_scale=xg_scale)
             if not frame.empty:
                 frames.append(frame)
     if not frames:
