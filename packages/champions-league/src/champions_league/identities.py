@@ -58,6 +58,12 @@ ALIASES = {
     "mfk dukla banska bystrica": "banska bystrica", "dukla banska bystrica": "banska bystrica",
     "vi on zlate moravce": "zlate moravce", "vi on zlate moravce vrable": "zlate moravce",
     "tatran presov": "presov", "tatran liptovsky mikulas": "liptovsky mikulas",
+    # football-data.org names for clubs the football-data.co.uk CSVs spell differently.
+    "nec": "nijmegen", "twente 65": "twente", "fortuna sittard": "for sittard", "pec zwolle": "zwolle",
+    "sbv excelsior": "excelsior", "telstar 1963": "telstar", "willem ii tilburg": "willem ii",
+    "cambuur leeuwarden": "cambuur", "ado den haag": "den haag",
+    "vitoria": "guimaraes", "gd estoril praia": "estoril", "estrela da amadora": "estrela", "cs maritimo": "maritimo",
+    "heart of midlothian": "hearts",
 }
 
 AREA_LEAGUES = {
