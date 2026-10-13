@@ -175,11 +175,27 @@ def export_ucl(src):
     }
 
 
+def match_stakes(src, prefix):
+    """The next round's `{n, teams}` stakes by match id, teams sorted by their biggest swing (empty without the file)."""
+    path = src / f"{prefix}_stakes.json"
+    if not path.exists():
+        return {}
+    ids = team_ids(pd.read_csv(src / f"{prefix}_matches_snapshot.csv"))
+    swing = lambda entry: max(max(v for v in values if v is not None) - min(v for v in values if v is not None)
+                              for key, values in entry.items() if key in site_history.LEAGUE_METRICS)
+    stakes = {}
+    for fixture in json.loads(path.read_text())["fixtures"]:
+        teams = [{"id": ids.get(team), "name": short_name(team), **entry} for team, entry in fixture["teams"].items()]
+        stakes[fixture["id"]] = {"n": fixture["n"], "teams": sorted(teams, key=swing, reverse=True)}
+    return stakes
+
+
 def export_matches(src, slug, prefix):
     """Every fixture with its forecast; played matches carry the forecast made before their match day."""
     data = json.loads((src / f"{prefix}_match_forecasts.json").read_text())
     display = data.get("display_names", {})
     name = lambda team: short_name(display.get(team, team))
+    stakes = match_stakes(src, prefix) if prefix != "cl" else {}
     matches = []
     for match in data["matches"]:
         row = {
@@ -210,6 +226,8 @@ def export_matches(src, slug, prefix):
                 row["call"] = [home, away, num(p, 4)]
             if "p_score" in match:
                 row["p_score"] = num(match["p_score"], 4)
+        if match["status"] != "FINISHED" and match["id"] in stakes:
+            row["stakes"] = stakes[match["id"]]
         matches.append(row)
     matches.sort(key=lambda row: (row["kickoff"] or "", row["id"]))
     return {"slug": slug, "generated_at": data["generated_at"], "rule": data.get("played_forecast_rule"), "matches": matches}

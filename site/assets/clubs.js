@@ -3,7 +3,7 @@ import {
   LEAGUES, compBySlug, $, esc, getJSON, setStatus, ordinal, pct, pct1, dec, verdict, sideProbs, sidePair,
   outcome, expandable, bulb, shortDate, clock, callScore, clubName,
 } from "./core.js";
-import { matchPanel, record } from "./matches.js";
+import { matchPanel, record, BIG_STAKE } from "./matches.js";
 import { spreadPanel } from "./tables.js";
 
 const RESULT = ["W", "D", "L"];
@@ -316,6 +316,7 @@ async function showProfile(club) {
   renderSeason(league, europe, uclTeam);
   renderGoals(league);
   renderNext(all);
+  renderStakes(club, team, leagueMatches);
   renderResults(all);
   renderStrength(club);
   $("p-finish").innerHTML = spreadPanel(team, zones.releg.from);
@@ -394,6 +395,37 @@ function renderNext(all) {
     : `<p class="note">No fixtures left.</p>`;
 }
 
+/* the chance this club cares about most, then the next round's games that move it most (rivals' games included) */
+function stakesMetric(team) {
+  if (team.title >= 2) return ["title", "title chance"];
+  if (team.ucl >= 3 && team.ucl <= 97) return ["ucl", "top-four chance"];
+  if (team.releg >= 2) return ["releg", "relegation chance"];
+  return null;
+}
+
+function renderStakes(club, team, leagueMatches) {
+  const metric = stakesMetric(team);
+  const range = (values) => Math.max(...values.filter((v) => v != null)) - Math.min(...values.filter((v) => v != null));
+  const rows = metric && leagueMatches
+    ? leagueMatches.matches
+      .map((m) => ({ m, values: ((m.stakes ? m.stakes.teams : []).find((t) => t.id === club.id) || {})[metric[0]] }))
+      .filter((x) => x.values && x.values.filter((v) => v != null).length > 1 && range(x.values) >= BIG_STAKE[metric[0]])
+      .sort((a, b) => range(b.values) - range(a.values)).slice(0, 5)
+    : [];
+  $("p-stakes-frame").hidden = !rows.length;
+  if (!rows.length) return;
+  const line = ({ m, values }) => {
+    const labels = [`${m.home} win`, "Draw", `${m.away} win`];
+    const lit = m.p.indexOf(Math.max(...m.p));
+    const own = m.home_id === club.id || m.away_id === club.id;
+    return `<div class="srow${own ? " own" : ""}"><span class="s-fix">${clubName(m.home_id, m.home, "inline")} <small>v</small> ${clubName(m.away_id, m.away, "inline")}
+      <small>${shortDate(m.kickoff)}${own ? " · own game" : ""}</small></span>
+      <span class="s-res">${values.map((v, i) => `<span${i === lit ? ' class="lit"' : ""}${v == null ? ' title="Too few simulations"' : ""}>${esc(labels[i])} <b>${v == null ? "–" : pct(v)}</b></span>`).join("")}</span></div>`;
+  };
+  $("p-stakes").innerHTML = `<div class="slist">${rows.map(line).join("")}</div>
+    <p class="note">${esc(club.name)}'s ${metric[1]} is <b>${pct(team[metric[0]])}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games where a result moves it by ${BIG_STAKE[metric[0]]} points or more are listed.</p>`;
+}
+
 function renderResults(all) {
   const played = all.filter((m) => m.score).reverse();
   const r = record(played);
@@ -445,5 +477,5 @@ expandable($("p-results"), ".crow", (row) => panelFor(row));
 const panelFor = (row) => {
   const m = profile.get(row.dataset.key);
   const others = new Map(clubs.clubs.filter((c) => c.id !== (m.isHome ? m.home_id : m.away_id)).map((c) => [c.id, c.slug]));
-  return matchPanel(m, others);
+  return matchPanel(m, others, m.comp);
 };

@@ -30,6 +30,7 @@ from standing_prediction.odds import (
 from standing_prediction.h2h import encounter_residuals, h2h_shifts, pair_effects
 from standing_prediction.match_forecasts import describe_match, forecast_played, match_records, write_match_forecasts
 from standing_prediction.simulate import FixtureSimulationSpec, simulate_season_scores
+from standing_prediction.stakes import fixture_stakes
 from standing_prediction.xg import XG_COLUMNS, blend_xg_strengths, fetch_understat_matches, fit_xg_strengths, load_season_xg
 from standing_prediction.utils import normalize_team
 
@@ -230,6 +231,7 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     history = pd.DataFrame()
     odds, lookup, calibrator, years = None, {}, None, []
     current_models, residuals = None, None
+    tracked, details = [], None
     if remaining.empty:
         counts = pd.DataFrame(0, index=teams, columns=range(1, len(teams) + 1))
         for row in standings.itertuples():
@@ -270,8 +272,9 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
                                           xg_scale=xg_scale)
         specs = build_fixture_specs(remaining, dc=dc, elo=elo, odds=odds, as_of=cutoff,
                                    max_goals=max_goals, weights=weights or DEFAULT_WEIGHTS, calibrator=calibrator)
-        counts, points = simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed,
-                                                played_matches=finished, competition=competition, return_details=True)
+        tracked = upcoming_fixtures(remaining, cutoff)
+        counts, points, details = simulate_season_scores(specs, standings, n_sim=n_sim, seed=seed, played_matches=finished,
+                                                         competition=competition, track=tracked)
     probabilities = counts / n_sim * 100
     summary = forecast_summary(probabilities, points)
     metadata = {
@@ -303,6 +306,13 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     ratings_path.unlink(missing_ok=True)
     if current_models is not None:
         club_ratings(current_models[0], teams).to_csv(ratings_path, index=False, float_format="%.4f")
+    stakes_path = Path(out_dir) / f"{competition.lower()}_stakes.json"
+    stakes_path.unlink(missing_ok=True)
+    if details is not None:
+        write_stakes(stakes_path, remaining.iloc[tracked], fixture_stakes(
+            details["outcomes"], details["places"], teams, top=4, releg_from=len(teams) - 2),
+            {"competition": competition, "season": season, "as_of": cutoff.isoformat(), "n_sim": n_sim, "top": 4,
+             "releg_from": len(teams) - 2})
     forecasts_path = Path(out_dir) / f"{competition.lower()}_match_forecasts.json"
     forecasts_path.unlink(missing_ok=True)
     if match_forecasts:
@@ -330,6 +340,28 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         if artifact.is_file() and ("odds_snapshot" not in artifact.name or odds is not None and not odds.empty):
             shutil.copy2(artifact, archive / artifact.name)
     return result
+
+
+def upcoming_fixtures(remaining, cutoff, days=7, fallback=10):
+    """Positions in `remaining` of the next round's fixtures: kickoffs within `days` of `cutoff`, else the earliest matchday."""
+    kickoff = pd.to_datetime(remaining["utcDate"], utc=True)
+    soon = ((kickoff > cutoff - RESULT_DELAY) & (kickoff <= cutoff + pd.Timedelta(days=days))).to_numpy()
+    if soon.any():
+        return np.flatnonzero(soon).tolist()
+    future = (kickoff > cutoff).to_numpy()
+    pool = future if future.any() else np.ones(len(remaining), bool)  # postponed games with past dates don't set the round
+    matchday = pd.to_numeric(remaining["matchday"], errors="coerce") if "matchday" in remaining else None
+    if matchday is not None and matchday[pool].notna().any():
+        return np.flatnonzero(pool & (matchday == matchday[pool].min()).to_numpy()).tolist()
+    return np.flatnonzero(pool)[np.argsort(kickoff.to_numpy()[pool], kind="stable")[:fallback]].tolist()
+
+
+def write_stakes(path, fixtures, stakes, metadata):
+    """`<prefix>_stakes.json`: for each tracked fixture with anything at stake, what each result does to the odds."""
+    rows = [{"id": int(row.id), "home": row.homeTeam, "away": row.awayTeam,
+             "utcDate": pd.Timestamp(row.utcDate).isoformat(), **stake}
+            for row, stake in zip(fixtures.itertuples(), stakes) if stake["teams"]]
+    Path(path).write_text(json.dumps({**metadata, "fixtures": rows}, ensure_ascii=False, allow_nan=False) + "\n")
 
 
 def forecast_summary(probabilities, points):

@@ -186,8 +186,14 @@ def _fixture_distribution(fixture):
 
 def simulate_season_scores(
     fixtures, standings, n_sim=3000, seed=None, *, played_matches=None,
-    competition="PD", return_details=False,
+    competition="PD", return_details=False, track=None,
 ):
+    """Simulate the rest of the season; returns the position counts (and points with `return_details`).
+
+    With `track` (fixture indices), also returns `{"outcomes", "places"}`: each tracked fixture's simulated
+    result per simulation (0 home win, 1 draw, 2 away win) and every team's finishing place (0 = champion).
+    Tracking only records; the random draws are the same.
+    """
     if isinstance(n_sim, bool) or not isinstance(n_sim, (int, np.integer)) or n_sim <= 0:
         raise ValueError("n_sim must be a positive integer.")
     teams, base_points, base_gf, base_ga = _standings_arrays(standings)
@@ -209,12 +215,16 @@ def simulate_season_scores(
         for values in _played_stats(teams, played_matches)
     ]
 
+    tracked = {fixture: k for k, fixture in enumerate(track if track is not None else [])}
+    outcomes = np.empty((n_sim, len(tracked)), np.int8)
     # Sample every simulation together; retain scorelines for league tie-breaks.
-    for home, away, scores, probabilities in prepared:
+    for f, (home, away, scores, probabilities) in enumerate(prepared):
         sample = scores[rng.choice(len(scores), size=n_sim, p=probabilities)]
         home_goals, away_goals = sample[:, 0], sample[:, 1]
         home_win, away_win = home_goals > away_goals, away_goals > home_goals
         draw = home_goals == away_goals
+        if f in tracked:
+            outcomes[:, tracked[f]] = np.where(home_win, 0, np.where(draw, 1, 2))
         home_points, away_points = 3 * home_win + draw, 3 * away_win + draw
         points[:, home] += home_points
         points[:, away] += away_points
@@ -234,11 +244,15 @@ def simulate_season_scores(
     counts = np.zeros((len(teams), len(teams)), dtype=np.int64)
     tie = rng.random(shape)
     positions = np.arange(len(teams))
+    places = np.empty(shape, np.int16)
     for i in range(n_sim):
         order = _rank_indices(
             points[i], gf[i], ga[i], hp[i], hg[i], ha[i], wins[i], away_wins[i],
             str(competition).upper(), tie[i],
         )
         counts[order, positions] += 1
+        places[i, order] = positions
     counts = pd.DataFrame(counts, index=teams, columns=np.arange(1, len(teams) + 1))
+    if track is not None:
+        return counts, points, {"outcomes": outcomes, "places": places}
     return (counts, points) if return_details else counts

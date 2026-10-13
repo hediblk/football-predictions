@@ -1,11 +1,15 @@
 // Matches view: one day's fixtures across the six competitions, with the model's call on each.
 import {
   COMPS, compBySlug, $, esc, getJSON, setStatus, clock, dayKey, parseDay, shiftDay, verdict, pick, pct1, dec,
-  expandable, bulb, outcome, callScore, clubName,
+  expandable, bulb, outcome, callScore, clubName, num, pct,
 } from "./core.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
 const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Cancelled" };
+const STAKES = [["title", "Title", "Title race"], ["ucl", "Top 4", "Top-four race"], ["releg", "Drop", "Relegation battle"]];
+/* points a result must swing a chance by before it is shown at all: title races are the point of the site,
+   while top-four and relegation chances swing widely in most games, so small swings would tag every fixture */
+export const BIG_STAKE = { title: 8, ucl: 15, releg: 15 };
 let data = null;
 let comp = "all";
 let day = null;
@@ -229,6 +233,22 @@ function verdictBadge(m) {
   return `<span class="m-verdict pick">Pick <b>${h}–${a}</b></span>`;
 }
 
+/* the chances a result moves a lot, as {team, key, word, race, values} with the biggest swing first;
+   null values are results too rare in the simulations to show */
+const spread = (values) => Math.max(...values.filter((v) => v != null)) - Math.min(...values.filter((v) => v != null));
+function stakeLines(m) {
+  const lines = (m.stakes ? m.stakes.teams : []).flatMap((t) => STAKES.filter(([key]) => t[key]).map(([key, word, race]) => ({ team: t, key, word, race, values: t[key] })));
+  return lines.filter((line) => spread(line.values) >= BIG_STAKE[line.key]).sort((a, b) => spread(b.values) - spread(a.values));
+}
+
+/* a ruled tag on fixtures where a result moves someone's title, top-four or relegation chance a lot */
+function stakeBadge(m) {
+  const [top] = stakeLines(m);
+  if (!top) return "";
+  const known = top.values.filter((v) => v != null);
+  return `<span class="m-stake" title="${esc(`${top.race}: ${top.team.name} ${num(Math.min(...known))}–${num(Math.max(...known))}%`)}">Stakes</span>`;
+}
+
 /* `when` replaces the kickoff column, e.g. with the round and date when listing one team's games */
 export function matchRow(m, slug, when = null) {
   const status = m.score ? "FT" : PENDING[m.reported || m.status] ? "–" : clock(m.kickoff);
@@ -239,12 +259,12 @@ export function matchRow(m, slug, when = null) {
     <span class="m-home${win === 0 ? " won" : ""}">${clubName(m.home_id, m.home)}</span>
     <span class="m-hs">${hs}</span><span class="m-sep">${m.score ? "–" : "v"}</span><span class="m-as">${as}</span>
     <span class="m-away${win === 2 ? " won" : ""}">${clubName(m.away_id, m.away)}</span>
-    <span class="m-foot">${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>
+    <span class="m-foot">${stakeBadge(m)}${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>
   </div>`;
 }
 
 /* expanded: likeliest scores, goal markets and the model's call; `slugs` maps team ids to club profiles */
-export function matchPanel(m, slugs = null) {
+export function matchPanel(m, slugs = null, league = null) {
   const panel = document.createElement("div");
   panel.className = "panel";
   if (!m.p) {
@@ -283,12 +303,33 @@ export function matchPanel(m, slugs = null) {
     <div><h4>Goals</h4><dl class="kv"><dt>Expected goals</dt><dd>${dec(m.exp[0])}–${dec(m.exp[1])}</dd>${xg}
       <dt>Both teams score</dt><dd>${pct1(m.btts)}</dd><dt>Over 2.5 goals</dt><dd>${pct1(m.o25)}</dd></dl></div>
     <div class="call"><h4>The call</h4>${call}${clubLinks ? `<p class="links">${clubLinks}</p>` : ""}</div>`;
+  if (league) addStakes(panel, m, league);
   return panel;
+}
+
+/* "What's at stake": each affected team's chance now and under each result, from the league file's baseline */
+async function addStakes(panel, m, league) {
+  const lines = stakeLines(m).slice(0, 6);
+  if (!lines.length) return;
+  const table = await getJSON(`${league}.json`).catch(() => null);
+  const now = new Map((table ? table.teams : []).map((t) => [t.id, t]));
+  const lit = pick(m.p);
+  const cell = (v, i) => (v == null
+    ? `<td class="dim" title="Too few simulations">–</td>`
+    : `<td${i === lit ? ' class="lit"' : ""}>${pct(v)}</td>`);
+  const rows = lines.map(({ team, key, word, values }) => `<tr><td class="l">${clubName(team.id, team.name, "inline")} <small>${word}</small></td>
+    <td class="b">${now.has(team.id) ? pct(now.get(team.id)[key]) : "–"}</td>${values.map(cell).join("")}</tr>`).join("");
+  const block = document.createElement("div");
+  block.className = "stakes";
+  block.innerHTML = `<h4>What's at stake</h4><div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>Now</th>
+    <th>If ${esc(m.home)} win</th><th>Draw</th><th>If ${esc(m.away)} win</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="note">A team's chance of the title, a top-four finish or relegation once this result is in. Only swings of ${BIG_STAKE.title} points or more in a title chance, or ${BIG_STAKE.ucl} in a top-four or relegation chance, are shown.</p>`;
+  panel.append(block);
 }
 
 expandable($("m-day"), ".mrow", (row) => {
   const file = data.comps.find((c) => c.slug === row.dataset.c).file;
-  return matchPanel(file.matches.find((m) => String(m.id) === row.dataset.id), data.slugs);
+  return matchPanel(file.matches.find((m) => String(m.id) === row.dataset.id), data.slugs, row.dataset.c);
 });
 
 /* ---------- season record ---------- */
