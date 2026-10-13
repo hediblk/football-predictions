@@ -2,7 +2,7 @@
 
 The goals are good league-winner odds and good Champions League forecasts, from single matches through to the trophy. Title outcomes are too few to tell models apart (50 league-seasons put a standard error of 0.01–0.03 on champion log loss). Model changes are therefore judged on match log loss over all seasons, with the top-three points bias, title metrics and the market as checks. [PLAN.md](PLAN.md) records what is implemented and why.
 
-Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, the daily [odds archive](data/odds/README.md), Champions League league offsets with one European club scale (Plan D), and league levels set by archived Champions League prices (Plan E).
+Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, the daily [odds archive](data/odds/README.md), Champions League league offsets with one European club scale (Plan D), league levels set by archived Champions League prices (Plan E), and past-date league reruns (`football-predict --as-of`) with dated site history in `site/data/history`, backfilled for 2026/27 and extended by every refresh.
 
 ## Next
 
@@ -16,7 +16,7 @@ The main fix is done (Plan D in [PLAN.md](PLAN.md)). League offsets now shrink t
 
 ### 2. Title-race charts
 
-Each team's title, top-four, relegation and Champions League stage odds through the season. Backfill 2026/27 by rerunning at past dates, which needs an `--as-of` option for league runs like the one `football-ucl` has. Then append a point at every refresh. This could be a chart on each competition page or its own tab.
+Each team's title, top-four, relegation and Champions League stage odds through the season. The data is in place: `site/data/history/<season>/<competition>.json` is backfilled for 2026/27 and gains a point on every day with new results. Left: the charts, on each competition page or in their own tab.
 
 ### 3. What's at stake
 
@@ -29,7 +29,7 @@ The Clubs tab already rates every club overall, in attack and in defence on one 
 - **Weekly ranking.** Freeze the ranking every Monday, after the weekend round and any midweek Champions League games, and keep each week's ranks.
 - **Movement.** Next to every rank, show places gained or dropped since the previous Monday: a green ▲ with the number, a red ▼ with the number, or a dash. Do the same for the attack and defence ranks.
 - **Attack and defence up front.** Give the offensive and defensive scores the same prominence as the overall rating, and add the week's biggest risers and fallers.
-- **Movement from the first week.** Backfill earlier Mondays by rerunning the ratings at past dates (the same `--as-of` need as the title-race charts). Otherwise arrows only appear after two Mondays.
+- **Movement from the first week.** Done: Mondays from 17 August are backfilled in `site/data/history/2026/clubs.json`, and the Monday refresh freezes each new week.
 - **Cross-league scale.** Done in Plan D: ratings come from the Champions League model on one European scale (the share of points against an average European top-flight side). Next, let the ranking include Champions League clubs from other leagues, which are already rated in `cl_club_ratings.csv`.
 - **Design.** [DESIGN.md](DESIGN.md) reserves green for called results and red for relegation or misses, so record the arrows there as a new use. As with calls, colour never stands alone: always show the arrow and the number.
 
