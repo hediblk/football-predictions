@@ -48,5 +48,6 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 - **Rank plates:** category ranks (#1 attack, #1 defence, 1st in league) sit on a lit amber plate; top-ten ranks are amber text; the rest stay dim.
 - **Club board:** ruled cells, not cards, with the rating as the lit number and attack/defence hairline meters.
 - **Movement arrows:** weekly rank changes use a green ▲ with the number of places gained or a red ▼ with the places dropped, a dim dash when unchanged and dim "new" for clubs without a previous week; colour never stands alone. This extends `--green`/`--green-t` (otherwise reserved for called results) and `--red` (relegation, misses) to rank movement.
+- **Race charts:** chances through the season as thin lines on the ruled grid. The leader is lit amber (red for relegation) and the others are ink with dash patterns, never extra hues. Names sit at the line ends.
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.
