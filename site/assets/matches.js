@@ -7,6 +7,9 @@ import {
 const OUTCOMES = ["Home win", "Draw", "Away win"];
 const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Cancelled" };
 const STAKES = [["title", "Title", "Title race"], ["ucl", "Top 4", "Top-four race"], ["releg", "Drop", "Relegation battle"]];
+/* points a result must swing a chance by before it is shown at all: title races are the point of the site,
+   while top-four and relegation chances swing widely in most games, so small swings would tag every fixture */
+export const BIG_STAKE = { title: 8, ucl: 15, releg: 15 };
 let data = null;
 let comp = "all";
 let day = null;
@@ -230,15 +233,15 @@ function verdictBadge(m) {
   return `<span class="m-verdict pick">Pick <b>${h}–${a}</b></span>`;
 }
 
-/* the chances a result can move, as {team, key, word, race, values} with the biggest swing first;
+/* the chances a result moves a lot, as {team, key, word, race, values} with the biggest swing first;
    null values are results too rare in the simulations to show */
 const spread = (values) => Math.max(...values.filter((v) => v != null)) - Math.min(...values.filter((v) => v != null));
 function stakeLines(m) {
   const lines = (m.stakes ? m.stakes.teams : []).flatMap((t) => STAKES.filter(([key]) => t[key]).map(([key, word, race]) => ({ team: t, key, word, race, values: t[key] })));
-  return lines.sort((a, b) => spread(b.values) - spread(a.values));
+  return lines.filter((line) => spread(line.values) >= BIG_STAKE[line.key]).sort((a, b) => spread(b.values) - spread(a.values));
 }
 
-/* a ruled tag on fixtures where a result moves someone's title, top-four or relegation chance */
+/* a ruled tag on fixtures where a result moves someone's title, top-four or relegation chance a lot */
 function stakeBadge(m) {
   const [top] = stakeLines(m);
   if (!top) return "";
@@ -320,7 +323,7 @@ async function addStakes(panel, m, league) {
   block.className = "stakes";
   block.innerHTML = `<h4>What's at stake</h4><div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>Now</th>
     <th>If ${esc(m.home)} win</th><th>Draw</th><th>If ${esc(m.away)} win</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="note">A team's chance of the title, a top-four finish or relegation once this result is in. Only chances a result clearly moves (beyond simulation noise) are shown.</p>`;
+    <p class="note">A team's chance of the title, a top-four finish or relegation once this result is in. Only swings of ${BIG_STAKE.title} points or more in a title chance, or ${BIG_STAKE.ucl} in a top-four or relegation chance, are shown.</p>`;
   panel.append(block);
 }
 

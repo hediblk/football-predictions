@@ -3,7 +3,7 @@ import {
   LEAGUES, compBySlug, $, esc, getJSON, setStatus, ordinal, pct, pct1, dec, verdict, sideProbs, sidePair,
   outcome, expandable, bulb, shortDate, clock, callScore, clubName,
 } from "./core.js";
-import { matchPanel, record } from "./matches.js";
+import { matchPanel, record, BIG_STAKE } from "./matches.js";
 import { spreadPanel } from "./tables.js";
 
 const RESULT = ["W", "D", "L"];
@@ -330,7 +330,7 @@ function renderStakes(club, team, leagueMatches) {
   const rows = metric && leagueMatches
     ? leagueMatches.matches
       .map((m) => ({ m, values: ((m.stakes ? m.stakes.teams : []).find((t) => t.id === club.id) || {})[metric[0]] }))
-      .filter((x) => x.values && x.values.filter((v) => v != null).length > 1)
+      .filter((x) => x.values && x.values.filter((v) => v != null).length > 1 && range(x.values) >= BIG_STAKE[metric[0]])
       .sort((a, b) => range(b.values) - range(a.values)).slice(0, 5)
     : [];
   $("p-stakes-frame").hidden = !rows.length;
@@ -344,7 +344,7 @@ function renderStakes(club, team, leagueMatches) {
       <span class="s-res">${values.map((v, i) => `<span${i === lit ? ' class="lit"' : ""}${v == null ? ' title="Too few simulations"' : ""}>${esc(labels[i])} <b>${v == null ? "–" : pct(v)}</b></span>`).join("")}</span></div>`;
   };
   $("p-stakes").innerHTML = `<div class="slist">${rows.map(line).join("")}</div>
-    <p class="note">${esc(club.name)}'s ${metric[1]} is <b>${pct(team[metric[0]])}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games that move it clearly (beyond simulation noise) are listed.</p>`;
+    <p class="note">${esc(club.name)}'s ${metric[1]} is <b>${pct(team[metric[0]])}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games where a result moves it by ${BIG_STAKE[metric[0]]} points or more are listed.</p>`;
 }
 
 function renderResults(all) {
