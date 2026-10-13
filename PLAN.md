@@ -14,6 +14,7 @@ Keep `src/standing_prediction` as the main product, with one current notebook in
 - Chronological historical snapshots and expanding-season calibration evaluation, with match, position, and event metrics. Official completed-season prediction exports bypass fitting.
 - xG and predictive head-to-head (H2H) goal-rate adjustments, a `football-ablation` command that tunes them on earlier seasons and compares variants on later ones, and tests for prior-only features. xG now uses the stored global default; H2H remains off.
 - Separately installable `packages/forecast-calibration`, with `football-calibrate`, pooled league-season weighting, chronological holdout and leave-out checks, external robustness leagues, and versioned defaults included with `standing_prediction`.
+- A calibrated xG scale and a stronger ridge, so the xG blend no longer pulls title contenders toward average (Plan C); the Champions League joint fit uses the same scale.
 
 ## xG and H2H: sources and design
 
@@ -177,6 +178,49 @@ Country offsets improve aggregate international loss, while **goals only beats t
 Mean position RPS after MD2/4/6 is **0.09170**; later league positions are already known. Across all 18 origins, stage Brier means are **0.08199 / 0.06974 / 0.04767 / 0.03891 / 0.02415** for reaching R16 / QF / SF / final / winning. These averages include stages already resolved at later origins; [per-origin metrics](docs/champions-league-evaluation-snapshots.json) retain the horizon and xG splits, alongside the [comparison report](docs/champions-league-evaluation.json). Global calibration used these domestic seasons, so the replay is retrospective rather than an independent weight-calibration holdout.
 
 Verification also covered score-period extraction, strict origin/xG timing, legal draw slots, inherited home priority, a fixed first leg, completed shootout ties, neutral venues, normalized score distributions and numerical fit gradients. Existing package tests pass (**5 passed**); no new test files were added.
+
+## Plan C: top-team compression and the xG scale (implemented 2026-10-12)
+
+**Problem.** In the calibration dataset (19,762 week-ahead top-five forecasts, 2015/16–2025/26), current top-three sides playing the rest took 2.25 points per game at home and 1.88 away. The xG blend predicted 2.15 and 1.78; goals-only Dixon–Coles predicted 2.23 and 1.87. Season backtests (five leagues, 2016/17–2025/26, after rounds 5, 10, 20 and 30) left the predicted top three 1.65 points short of their final totals on average, 2.6 after rounds 5–10. About a fifth of them finished above their 90th percentile and a twelfth below their 10th. xG strengths have about 22% less spread than goal strengths (standard deviation 0.24 vs 0.30 for attack, 0.20 vs 0.24 for defense): the best sides keep beating their xG and the weakest keep falling short, so the 0.75 blend pulled the top teams toward average.
+
+Simulating strength uncertainty was tested first and rejected for this purpose. Title favorites already won as often as forecast (77% vs 76% across 199 snapshots), and per-simulation strength noise made champion log loss worse. The too-narrow points ranges at the top came from this bias, not from missing variance.
+
+**Search.** Each origin's fitted goal and xG strengths, long-decay versions and five Elo variants were stored once per match, using the calibration dataset's data and origins and reproducing its probabilities to 1e-15. Main/Elo shares were refit on 2015/16–2023/24, with 2024/25–2025/26 held out. Separate attack and defense xG weights did not help. A long-window finishing term (goals minus xG) gained at most 0.0002, and Elo K or season regression at most 0.0005. Scaling the xG strengths before blending gained about 0.001 at every decay and ridge tried. Decay between 0.0025 and 0.004 changed loss by at most 0.0004 at the best scale, so 0.003 stays. A stronger ridge with a larger scale helped further: the ridge shrinks thinly observed teams, and the scale restores the spread of well-observed ones.
+
+| Ridge, xG scale (xG weight 0.75) | Log loss 2015/16–2023/24 | Held-out 2024/25–2025/26 | Top-3 points-per-game bias, held out |
+| :--- | ---: | ---: | ---: |
+| 0.1, 1 (previous) | 0.9817 | 0.9867 | −0.077 |
+| 0.1, 1.2 | 0.9808 | 0.9855 | −0.019 |
+| 0.3, 1.2 | 0.9804 | 0.9851 | −0.021 |
+| 1, 1.3 | 0.9799 | 0.9844 | −0.006 |
+| 2, 1.4 | 0.9798 | 0.9841 | +0.005 |
+| 4, 1.5 | 0.9798 | 0.9839 | +0.000 |
+
+Gains flatten beyond ridge 2. Over all 11 seasons, the paired improvement of scale 1.2 alone is 0.0010 (standard error 0.0003).
+
+**Season level** (against the previous defaults; 199 snapshots): with ridge 2 and scale 1.3, the setting the calibration below selected, the top-three bias falls from 1.65 to 0.54 points and expected-points error from 5.111 to 5.055 (−0.056, standard error 0.014). Scale 1.4, tied with 1.3 on match loss, takes the bias to 0.13 (error 5.054). Top-four Brier is unchanged. Champion log loss moves +0.005 to +0.006 (standard error 0.008–0.009) and title Brier 0.320 to 0.325–0.326; favorites are forecast at 79% and won 77%. Fifty league-seasons cannot separate these variants on titles, so title metrics remain a sanity check rather than the objective.
+
+**Champions League replay** (the Plan B origins and 306 matches, each variant with its own no-odds main/Elo share):
+
+| Joint model | Log loss |
+| :--- | ---: |
+| Previous (ridge 0.1, scale 1) | 0.94975 |
+| Ridge 0.1, scale 1.3 | 0.94154 |
+| Ridge 2, scale 1.3 | 0.93969 |
+| Ridge 2, scale 1.4 | **0.93778** |
+| Goals only (ridge 0.1) | 0.94526 |
+
+Scale 1.4 with ridge 2 improves on the previous model by 0.0120 (standard error 0.0046). The official replay (`football-ucl --evaluate`) with the final artifact (scale 1.3, ridge 2) gives 0.93951 for the joint model, 0.94071 for goals only and 0.97397 without offsets, and is committed in place of the Plan B files. Position RPS after MD2–6 moves from 0.0917 to 0.0913. Quarter- and semi-final Brier improve (0.0697 to 0.0667, 0.0477 to 0.0457), while round-of-16 Brier worsens slightly (0.0820 to 0.0838). The largest change is where both clubs have xG (0.9801 to 0.9720 in the official replay), the case where the unscaled blend had trailed. Only top-five clubs have xG, so unscaled xG had shrunk them relative to clubs from other leagues.
+
+**Calibration.** `football-calibrate --lambda-reg 2` rebuilt both datasets with the scale grid and wrote artifact **`global-4c0170be18f1`**: xG weight **0.75**, xG scale **1.3**, ridge **2**, and **main 84.42% / Elo 15.58%** without odds. Quoted fixtures still follow the market. Equal-league-season no-odds log loss over all 19,763 fixtures is 0.98056 (previous artifact 0.98258). The chronological check, fitted on 2015/16–2023/24 and frozen for 3,504 matches in 2024/25–2025/26, gives **0.98412** without odds, against 0.98679 for the previous artifact and 0.99249 for the legacy defaults; with pre-closing odds both equal the market (0.97100). All 16 leave-out folds kept weight 0.75 and chose scale 1.3 or 1.4; the no-odds main share ranged from 78.4% to 85.7%. The six external leagues, which have no xG and so test only the ridge and shares, improved on the previous artifact in all six, by 0.0002–0.0048.
+
+**Live effect** (same inputs, 13 October 2026, previous settings against the new artifact). Title favorites rise: Barcelona 89.4% to 92.3%, Bayern 84.0% to 90.1%, Inter 67.5% to 73.7%, Paris Saint-Germain 75.7% to 83.3%. In the Champions League, Bayern goes from 18.1% to 21.2%, Barcelona 16.5% to 21.1% and Paris Saint-Germain 16.5% to 19.5%, while Shakhtar falls from 5.3% to 2.1%, Sporting from 2.9% to 1.3% and AEK from 2.1% to 1.0%. Manchester City (2.8% to 2.3%) and Liverpool (0.7% to 0.5%) stay far below August bookmaker prices (about 15/2–9/1 and 9/1–14/1).
+
+**Remaining Champions League gap: league offsets.** Relative to the Premier League, the fitted log-rate offsets are Ligue 1 +0.09, La Liga +0.03, Bundesliga +0.02 and Serie A +0.01. Ukraine sits at −0.10, above Portugal (−0.20), on 2.9 effective European matches. European evidence comes mostly from each league's top clubs, so one club's European record (Paris Saint-Germain's) moves the offset for every club in its league. Next candidates: club-level European effects with shrinkage, or an external league-strength prior such as the Opta league ratings the Clubs tab already uses.
+
+**Code.** `blend_xg_strengths` takes a scale; the artifact stores `xg_scale` beside `xg_weight`; `football-predict`, `football-backtest` and the Champions League joint fit read it, and metadata records it. `football-calibrate` searches each positive xG weight with scales 1–1.5 and now defaults to ridge 2. Backtest and ablation defaults follow the stored decay and ridge.
+
+**Limits.** The scale is one multiplier for every team; it does not separate persistent finishing skill from noise club by club. The replay covers two tournaments, and the ridge and scale were chosen on domestic data. Timing approximations from Plan A still apply.
 
 ## Other existing priorities
 

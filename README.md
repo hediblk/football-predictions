@@ -64,7 +64,7 @@ Open `out/cl_forecast.html` for the standings, bracket, stage probabilities and 
 
 Some secondary domestic sources stop on September 19–20, and Czech 2025/26 history is missing. Sparse-country estimates are sensitive to league-strength priors; the summary includes title-probability sensitivity ranges. The official coefficients feed returned HTTP 403; unresolved simulated disciplinary ties use a seeded random fallback, and completed league phases use official ranks. Probabilities condition on fitted strengths and are not calibrated tournament confidence levels.
 
-[Historical checks](docs/champions-league-evaluation.json) cover 18 forecast origins in 2024/25–2025/26 and 306 subsequent matches. Country offsets improve aggregate match log loss over the no-offset and Elo comparisons; a goals-only fit beats the fixed xG blend in this replay. The saved global weights remain unchanged. See [per-origin metrics](docs/champions-league-evaluation-snapshots.json) and [PLAN.md](PLAN.md) for the comparisons and limits.
+[Historical checks](docs/champions-league-evaluation.json) cover 18 forecast origins in 2024/25–2025/26 and 306 subsequent matches. Country offsets improve aggregate match log loss over the no-offset and Elo comparisons. Since the xG scale (Plan C), the joint xG model also beats a goals-only fit (0.9395 vs 0.9407); before it, goals only had won. See [per-origin metrics](docs/champions-league-evaluation-snapshots.json) and [PLAN.md](PLAN.md) for the comparisons and limits.
 
 ## Inputs
 
@@ -82,7 +82,7 @@ Some secondary domestic sources stop on September 19–20, and Czech 2025/26 his
 
 Goal rates support two adjustments:
 
-- **xG** (`xg_weight`): fits time-decayed attack/defense strengths to xG and blends them with the goal-based strengths: `log(rate) = (1 − w)·log(goal rate) + w·log(xG rate)`. Its default is read from the global calibration. The goal model's intercept and home advantage are kept, so league scoring stays on the goal scale.
+- **xG** (`xg_weight`, `xg_scale`): fits time-decayed attack/defense strengths to xG and blends them with the goal-based strengths: `strength = (1 − w)·goal strength + w·s·xG strength`, for each team's attack and defense deviation from the league average. xG understates the gaps between teams: the best sides keep beating their xG and the weakest keep falling short of it, so an unscaled blend pulled title contenders toward average. Both defaults are read from the global calibration. The goal model's intercept and home advantage are kept, so league scoring stays on the goal scale.
 - **Head-to-head** (`h2h_weight`, off by default): for each pair, the recency-weighted mean of past results relative to a model fitted only on earlier matches, shrunk toward zero. The home rate is shifted up and the away rate down by `h2h_weight ×` that effect. This is separate from La Liga's head-to-head ranking rules, which always apply.
 
 ## Outputs
@@ -105,8 +105,8 @@ Use keyword arguments with `run_prediction`, or the corresponding CLI flags (`pr
 | `prior_seasons`, `xi` | `2`, `0.003` | History length and daily time decay |
 | `weights` | Stored global calibration | Log-space blend; renormalized across available components |
 | `use_odds`, `calibrate` | `True`, `False` | Optional market data and historical calibration |
-| `max_goals`, `lambda_reg` | `10`, `0.1` | Score-grid limit and model regularization |
-| `xg_weight` | Stored global calibration | Weight of xG strengths in log goal rates (0–1); `0` disables |
+| `max_goals`, `lambda_reg` | `10`, stored global calibration | Score-grid limit and model regularization |
+| `xg_weight`, `xg_scale` | Stored global calibration | Weight of xG strengths in log goal rates (0–1; `0` disables) and the multiplier on xG strengths before blending |
 | `h2h_weight`, `h2h_seasons` | `0`, `6` | Log-rate shift per goal of head-to-head residual; seasons of past meetings |
 | `match_forecasts` | `True` | Also forecast every fixture, played ones as of their match day (`--no-match-forecasts` skips it) |
 | `out_dir` | `"out"` | Output directory |
@@ -144,7 +144,7 @@ Tests: `pip install -e '.[test]'`, then `pytest`.
 
 ## Global calibration
 
-The separate [forecast-calibration package](packages/forecast-calibration/README.md) fits one set of main/odds/Elo weights and the xG weight across the top five leagues in 2015/16–2025/26. Every league-season contributes equally, and both quoted and unquoted forecasts enter the objective. The latest two seasons form a chronological holdout; leave-out folds measure stability, and six additional leagues check transfer without entering the fit.
+The separate [forecast-calibration package](packages/forecast-calibration/README.md) fits one set of main/odds/Elo weights, the xG weight and the xG scale across the top five leagues in 2015/16–2025/26, with decay 0.003 and ridge 2. Every league-season contributes equally, and both quoted and unquoted forecasts enter the objective. The latest two seasons form a chronological holdout; leave-out folds measure stability, and six additional leagues check transfer without entering the fit.
 
 Forecasts read `src/standing_prediction/calibrated_weights.json`, included in the installed package, and record its version in metadata. They do not refit these defaults per league, season or forecast. To explicitly rebuild and version them:
 
@@ -153,7 +153,7 @@ pip install -e . -e packages/forecast-calibration
 football-calibrate --weights-out src/standing_prediction/calibrated_weights.json
 ```
 
-Historical quote times and xG availability are approximated and labeled in the artifact. Backtests using these defaults on calibration seasons are retrospective; use the artifact's chronological holdout for the held-out comparison. Use `--weights main=0.35,odds=0.55,elo=0.10 --xg-weight 0` to reproduce the previous baseline.
+Historical quote times and xG availability are approximated and labeled in the artifact. Backtests using these defaults on calibration seasons are retrospective; use the artifact's chronological holdout for the held-out comparison. Use `--weights main=0.35,odds=0.55,elo=0.10 --xg-weight 0 --lambda-reg 0.1` to reproduce the legacy baseline, and `--weights main=0.8174,odds=0,elo=0.1826 --xg-scale 1 --lambda-reg 0.1` for the previous calibration (`global-8c8185b60bc9`) without odds. [PLAN.md](PLAN.md) (Plan C) explains why the scale and ridge changed.
 
 ## Limits
 
