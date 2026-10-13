@@ -17,7 +17,7 @@ from standing_prediction.club_ratings import club_ratings
 from standing_prediction.data import (RESULT_DELAY, FootballDataClient, fetch_matches, fetch_standings, fill_lagging_results,
                                       load_fixture_overrides, resolve_fixture_statuses, rewind_season, validate_schedule)
 from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAULT_WEIGHTS, DEFAULT_XG_SCALE, DEFAULT_XG_WEIGHT
-from standing_prediction.dixon_coles import fit_dixon_coles
+from standing_prediction.dixon_coles import fit_dixon_coles, outcome_probs_from_matrix
 from standing_prediction.elo import fit_elo
 from standing_prediction.ensemble import blend_probabilities
 from standing_prediction.odds import (
@@ -241,13 +241,11 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     else:
         history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
         xg_coverage.update(history.attrs.get("xg_coverage", {}))
-        residuals = None
         if h2h_weight:
             h2h_results = pd.concat([load_h2h_results(client, competition, season, seasons=h2h_seasons, cache=cache), finished],
                                     ignore_index=True)
             residuals = encounter_residuals(h2h_results, xi=xi, lambda_reg=lambda_reg)
-        odds = None
-        if use_odds and not remaining.empty:
+        if use_odds:
             if odds_snapshot is not None:
                 odds = pd.read_csv(odds_snapshot)
             elif odds_provider != "none":
@@ -261,7 +259,6 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         lookup = match_odds(remaining, odds, as_of=cutoff) if odds is not None else {}
         LOG.info("Odds coverage: %s/%s remaining fixtures.", len(lookup), len(remaining))
 
-        calibrator = None
         if calibrate:
             years = calibration_seasons or list(range(season - 3, season))
             if any(year >= season for year in years):
@@ -401,11 +398,11 @@ def build_fixture_specs(remaining, *, dc, elo, odds, max_goals, weights, calibra
     specs = []
     for row in remaining.itertuples():
         home, away = str(row.homeTeam), str(row.awayTeam)
-        p_dc = dc.match_outcome_probs(home, away, max_goals=max_goals)
+        _, matrix = dc.score_matrix(home, away, max_goals=max_goals)
+        p_dc = outcome_probs_from_matrix(matrix)
         p_elo = elo.predict_probs(home, away)
         p_odds = lookup.get((home, away))
         p = predict_outcome_probs(p_dc, p_elo, p_odds, weights=weights, calibrator=calibrator)
-        _, matrix = dc.score_matrix(home, away, max_goals=max_goals)
         conditionals = tuple(_conditional_probs(matrix.reshape(-1), mask) for mask in masks)
         specs.append(FixtureSimulationSpec(home, away, *p, scorelines, conditionals))
     return specs
@@ -417,9 +414,9 @@ def fixture_forecasts(fixtures, *, dc, elo, forecast_at, weights, odds=None, cal
     forecasts = []
     for row in fixtures.itertuples():
         home, away = str(row.homeTeam), str(row.awayTeam)
-        p = predict_outcome_probs(dc.match_outcome_probs(home, away, max_goals=max_goals), elo.predict_probs(home, away),
-                                  lookup.get((home, away)), weights=weights, calibrator=calibrator)
         _, matrix = dc.score_matrix(home, away, max_goals=max_goals)
+        p = predict_outcome_probs(outcome_probs_from_matrix(matrix), elo.predict_probs(home, away),
+                                  lookup.get((home, away)), weights=weights, calibrator=calibrator)
         score = (row.homeGoals, row.awayGoals) if row.status == "FINISHED" else None
         forecasts.append({"forecast_at": pd.Timestamp(forecast_at).isoformat(), **describe_match(matrix, p, score=score)})
     return forecasts

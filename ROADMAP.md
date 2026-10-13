@@ -4,6 +4,8 @@ The goals are good league-winner odds and good Champions League forecasts, from 
 
 Recently done: the calibrated xG scale and ridge 2 (Plan C), filling results football-data.org lags on from Understat, the daily [odds archive](data/odds/README.md), Champions League league offsets with one European club scale (Plan D), league levels set by archived Champions League prices (Plan E), and past-date league reruns (`football-predict --as-of`) with dated site history in `site/data/history`, backfilled for 2026/27 and extended by every refresh, which feeds the title-race charts on each competition page, what's at stake for the next round's games (Matches and club pages) and the Clubs tab's weekly power ranking with movement arrows.
 
+The site/model boundary is also checked: offline numerical regressions, exporter tests, a published-data contract, and validation of the exact revision deployed. The model and site keep their existing folders and separate CI workflows; automated browser checks are outside this scope. See [ADR 0001](docs/adr/0001-site-model-boundary.md).
+
 ## Next
 
 ### 1. Champions League league offsets: follow-ups
@@ -30,18 +32,13 @@ The track record in proper scores (log loss, RPS, Brier) against always backing 
 
 Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. A player dataset with ratings for whole squads would give every player a prior, including clubs outside the top five leagues where we have the least data. Check each source's terms before republishing its data on the site. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
 
-### 5. Separate the site and the model
+### 5. Site browser checks
 
-The site and the model share one repository and meet only through `scripts/build_site_data.py`, which turns model outputs into `site/data`. Nothing checks either side today: the 72 tests in `tests/` run only by hand, a push to `site/**` redeploys without running anything, and a model change is first exercised by the next daily refresh. Goal: either side can change without breaking the other.
-
-- **Model CI.** Run `pytest` on every pull request and push to `main` that touches `src/`, `packages/`, `scripts/` or `tests/`. Add a regression test that runs a fixed-seed forecast on frozen fixture data, with no API calls, and fails if probabilities move beyond a tolerance, so a site change can never shift the numbers unnoticed.
-- **A data contract.** Write a schema for each file in `site/data` and test that `build_site_data.py` output matches it. The site reads only those files, so a model change that keeps the schema cannot break the site.
-- **Site checks.** Load the site against sample data in a headless browser and fail on console errors or an empty tab, on every change to `site/**`.
-- **Layout.** Keep one repository, with the model and site in clearly separate folders and their own workflows and path filters. Two repositories would mean pushing the daily data from one into the other for little gain while one person works on both; revisit if the site gets its own contributors.
-- **Rename.** Rename the repository after the site (for example `floodlight`). GitHub redirects git remotes, but not the Pages address, so the site would move to `hediblk.github.io/floodlight/` and old links would break unless a custom domain is set up first.
+Load the site against sample data in a headless browser and fail on console errors or an empty tab, on every change to `site/**`. The data contract checks the JSON, not the JavaScript that renders it ([ADR 0001](docs/adr/0001-site-model-boundary.md)).
 
 ## Parked
 
+- **Repository rename:** deferred. GitHub redirects remotes but not the Pages address; preserve existing links or set up a custom domain before renaming.
 - **Elo K and season regression:** at most 0.0005 log loss in the Plan C search.
 - **Non-penalty xG:** npxG, npxGA and PPDA are already in the cached Understat responses, so it is cheap to test. Penalty frequency is partly a team trait, so model it rather than drop it.
 - **Promoted teams and preseason priors:** second divisions (E1, SP2, D2, I2, F2) with a division offset. This matters for early-season tables, not title races.

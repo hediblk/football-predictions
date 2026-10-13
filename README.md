@@ -210,6 +210,17 @@ Other commands:
 - `pytest` (after `pip install -e '.[test]'`).
 - Notebook: `pip install -e '.[notebook]'`, then open `notebooks/laliga_prediction.ipynb`.
 
+For the pinned CI environment, use Python 3.12 and install both model packages:
+
+```bash
+python -m pip install -r requirements-lock.txt
+python -m pip install -c requirements-lock.txt -e '.[test]' -e packages/champions-league
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q
+python scripts/validate_site_data.py --data site/data
+```
+
+Model/shared changes run the offline test suite; site/shared changes validate published data. Daily refresh stages fresh and retained files together before validation, and deployment checks out and validates the exact revision uploaded to Pages. Numerical baseline updates are deliberate; see [numerical protection](docs/numerical-protection.md) and the [data contract](docs/site-data-contract.md).
+
 ## Champions League
 
 ![Champions League league-phase position probabilities](docs/champions-league-forecast.png)
@@ -253,4 +264,4 @@ Every adjustment is logged and listed in the forecast metadata.
 - Fair-play tie-breakers and deciding playoffs are not simulated.
 - "Top four" and "bottom three" are positions, not qualification or relegation.
 
-See [ROADMAP.md](ROADMAP.md) for what is next and [PLAN.md](PLAN.md) for design history.
+See [ROADMAP.md](ROADMAP.md) for what is next, [PLAN.md](PLAN.md) for model design history, and [CONTEXT.md](CONTEXT.md) for terminology. Architectural decisions live in [docs/adr/](docs/adr/), including the accepted [site/model boundary](docs/adr/0001-site-model-boundary.md).

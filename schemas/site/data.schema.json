@@ -1,0 +1,499 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "string": {"type":"string","minLength":1},
+    "slug": {"type":"string","pattern":"^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "competitionSlug": {"enum":["premier-league","la-liga","bundesliga","serie-a","ligue-1","champions-league"]},
+    "leagueSlug": {"enum":["premier-league","la-liga","bundesliga","serie-a","ligue-1"]},
+    "season": {"type":"string","pattern":"^[0-9]{4}/[0-9]{2}$"},
+    "timestamp": {"type":"string","format":"date-time"},
+    "date": {"type":"string","format":"date"},
+    "id": {"anyOf":[{"type":"integer","minimum":1},{"type":"null"}]},
+    "probability": {"type":"number","minimum":0,"maximum":1},
+    "percentage": {"type":"number","minimum":0,"maximum":100},
+    "nullablePercentage": {"anyOf":[{"$ref":"#/$defs/percentage"},{"type":"null"}]},
+    "identity": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref":"#/$defs/id"},
+        "slug": {"$ref":"#/$defs/slug"},
+        "name": {"$ref":"#/$defs/string"},
+        "full": {"$ref":"#/$defs/string"}
+      },
+      "required": ["id","slug","name","full"]
+    },
+    "indexEntry": {
+      "type": "object",
+      "properties": {
+        "slug": {"$ref":"#/$defs/competitionSlug"},
+        "code": {"$ref":"#/$defs/string"},
+        "name": {"$ref":"#/$defs/string"},
+        "country": {"$ref":"#/$defs/string"},
+        "season": {"$ref":"#/$defs/season"},
+        "generated_at": {"$ref":"#/$defs/timestamp"}
+      },
+      "required": ["slug","code","name","country","season","generated_at"]
+    },
+    "index": {"type":"array","items":{"$ref":"#/$defs/indexEntry"},"minItems":1},
+    "zone": {
+      "type": "object",
+      "properties": {
+        "key": {"$ref":"#/$defs/slug"},
+        "label": {"$ref":"#/$defs/string"},
+        "from": {"type":"integer","minimum":1},
+        "to": {"type":"integer","minimum":1}
+      },
+      "required": ["key","label","from","to"]
+    },
+    "competition": {
+      "type": "object",
+      "properties": {
+        "slug": {"$ref":"#/$defs/competitionSlug"},
+        "kind": {"enum":["league","ucl"]},
+        "code": {"$ref":"#/$defs/string"},
+        "name": {"$ref":"#/$defs/string"},
+        "country": {"$ref":"#/$defs/string"},
+        "season": {"$ref":"#/$defs/season"},
+        "generated_at": {"$ref":"#/$defs/timestamp"},
+        "as_of": {"$ref":"#/$defs/timestamp"},
+        "data_cutoff": {"anyOf":[{"$ref":"#/$defs/timestamp"},{"type":"null"}]},
+        "n_sim": {"type":"integer","minimum":1},
+        "played_fixtures": {"type":"integer","minimum":0},
+        "remaining_fixtures": {"type":"integer","minimum":0},
+        "zones": {"type":"array","items":{"$ref":"#/$defs/zone"},"minItems":1}
+      },
+      "required": [
+        "slug",
+        "kind",
+        "code",
+        "name",
+        "country",
+        "season",
+        "generated_at",
+        "as_of",
+        "data_cutoff",
+        "n_sim",
+        "played_fixtures",
+        "remaining_fixtures",
+        "zones"
+      ]
+    },
+    "team": {
+      "allOf": [
+        {"$ref":"#/$defs/identity"},
+        {
+          "type": "object",
+          "properties": {
+            "position": {"type":"integer","minimum":1},
+            "played": {"type":"integer","minimum":0},
+            "points": {"type":"integer"},
+            "gd": {"type":"integer"},
+            "xpts": {"type":"number"},
+            "p10": {"type":"integer"},
+            "p90": {"type":"integer"},
+            "xpos": {"type":"number","minimum":1},
+            "title": {"$ref":"#/$defs/percentage"},
+            "probs": {"type":"array","items":{"$ref":"#/$defs/percentage"},"minItems":1}
+          },
+          "required": ["position","played","points","gd","xpts","p10","p90","xpos","title","probs"]
+        }
+      ]
+    },
+    "leagueTeam": {
+      "allOf": [
+        {"$ref":"#/$defs/team"},
+        {
+          "type": "object",
+          "properties": {
+            "ucl": {"$ref":"#/$defs/percentage"},
+            "europe": {"$ref":"#/$defs/percentage"},
+            "releg": {"$ref":"#/$defs/percentage"}
+          },
+          "required": ["ucl","europe","releg"]
+        }
+      ]
+    },
+    "uclTeam": {
+      "allOf": [
+        {"$ref":"#/$defs/team"},
+        {
+          "type": "object",
+          "properties": {
+            "key": {"$ref":"#/$defs/string"},
+            "r16": {"$ref":"#/$defs/percentage"},
+            "playoff": {"$ref":"#/$defs/percentage"},
+            "out": {"$ref":"#/$defs/percentage"},
+            "stages": {
+              "type": "object",
+              "properties": {
+                "round16": {"$ref":"#/$defs/percentage"},
+                "quarterfinal": {"$ref":"#/$defs/percentage"},
+                "semifinal": {"$ref":"#/$defs/percentage"},
+                "final": {"$ref":"#/$defs/percentage"}
+              },
+              "required": ["round16","quarterfinal","semifinal","final"]
+            }
+          },
+          "required": ["key","r16","playoff","out","stages"]
+        }
+      ]
+    },
+    "fixtureNote": {
+      "type": "object",
+      "properties": {
+        "home": {"$ref":"#/$defs/string"},
+        "away": {"$ref":"#/$defs/string"},
+        "kickoff": {"anyOf":[{"$ref":"#/$defs/timestamp"},{"type":"null"}]},
+        "reported_status": {"$ref":"#/$defs/string"},
+        "used_status": {"$ref":"#/$defs/string"},
+        "score": {"anyOf":[{"$ref":"#/$defs/string"},{"type":"null"}]},
+        "reason": {"$ref":"#/$defs/string"}
+      },
+      "required": ["home","away","kickoff","reported_status","used_status","score","reason"]
+    },
+    "tie": {
+      "type": "object",
+      "properties": {
+        "team1": {"$ref":"#/$defs/string"},
+        "team2": {"$ref":"#/$defs/string"},
+        "winner": {"$ref":"#/$defs/string"},
+        "team1_id": {"$ref":"#/$defs/id"},
+        "team2_id": {"$ref":"#/$defs/id"},
+        "winner_id": {"$ref":"#/$defs/id"},
+        "advance": {"type":"number","minimum":50,"maximum":100},
+        "observed": {"type":"boolean"}
+      },
+      "required": ["team1","team2","winner","team1_id","team2_id","winner_id","advance","observed"]
+    },
+    "bracket": {
+      "type": "object",
+      "properties": {
+        "stages": {
+          "type": "object",
+          "properties": {
+            "playoffs": {"type":"array","items":{"$ref":"#/$defs/tie"},"minItems":8,"maxItems":8},
+            "round16": {"type":"array","items":{"$ref":"#/$defs/tie"},"minItems":8,"maxItems":8},
+            "quarterfinal": {"type":"array","items":{"$ref":"#/$defs/tie"},"minItems":4,"maxItems":4},
+            "semifinal": {"type":"array","items":{"$ref":"#/$defs/tie"},"minItems":2,"maxItems":2},
+            "final": {"type":"array","items":{"$ref":"#/$defs/tie"},"minItems":1,"maxItems":1}
+          },
+          "required": ["playoffs","round16","quarterfinal","semifinal","final"]
+        },
+        "champion": {"$ref":"#/$defs/string"},
+        "champion_id": {"$ref":"#/$defs/id"},
+        "note": {"$ref":"#/$defs/string"},
+        "seeds": {"type":"array","items":{"$ref":"#/$defs/string"},"minItems":0}
+      },
+      "required": ["stages","champion","champion_id","note"]
+    },
+    "league": {
+      "allOf": [
+        {"$ref":"#/$defs/competition"},
+        {
+          "type": "object",
+          "properties": {
+            "kind": {"const":"league"},
+            "teams": {"type":"array","items":{"$ref":"#/$defs/leagueTeam"},"minItems":1},
+            "fixture_notes": {"type":"array","items":{"$ref":"#/$defs/fixtureNote"},"minItems":0}
+          },
+          "required": ["teams"]
+        }
+      ]
+    },
+    "ucl": {
+      "allOf": [
+        {"$ref":"#/$defs/competition"},
+        {
+          "type": "object",
+          "properties": {
+            "kind": {"const":"ucl"},
+            "slug": {"const":"champions-league"},
+            "data_cutoff": {"$ref":"#/$defs/timestamp"},
+            "teams": {"type":"array","items":{"$ref":"#/$defs/uclTeam"},"minItems":36,"maxItems":36},
+            "bracket": {"$ref":"#/$defs/bracket"}
+          },
+          "required": ["kind","slug","data_cutoff","teams","bracket"]
+        }
+      ]
+    },
+    "score": {
+      "type": "array",
+      "prefixItems": [{"type":"integer","minimum":0},{"type":"integer","minimum":0}],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "goalPair": {
+      "type": "array",
+      "prefixItems": [{"type":"number","minimum":0},{"type":"number","minimum":0}],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "scoreProbability": {
+      "type": "array",
+      "prefixItems": [{"type":"integer","minimum":0},{"type":"integer","minimum":0},{"$ref":"#/$defs/probability"}],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "stakesTeam": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref":"#/$defs/id"},
+        "name": {"$ref":"#/$defs/string"},
+        "title": {
+          "type": "array",
+          "prefixItems": [
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"}
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "ucl": {
+          "type": "array",
+          "prefixItems": [
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"}
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "releg": {
+          "type": "array",
+          "prefixItems": [
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"}
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        }
+      },
+      "required": ["id","name"]
+    },
+    "stakes": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "array",
+          "prefixItems": [{"type":"integer","minimum":0},{"type":"integer","minimum":0},{"type":"integer","minimum":0}],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "teams": {"type":"array","items":{"$ref":"#/$defs/stakesTeam"},"minItems":1}
+      },
+      "required": ["n","teams"]
+    },
+    "match": {
+      "type": "object",
+      "properties": {
+        "id": {"type":"integer","minimum":1},
+        "kickoff": {"$ref":"#/$defs/timestamp"},
+        "status": {"$ref":"#/$defs/string"},
+        "md": {"anyOf":[{"type":"integer","minimum":1},{"type":"null"}]},
+        "home": {"$ref":"#/$defs/string"},
+        "away": {"$ref":"#/$defs/string"},
+        "home_id": {"$ref":"#/$defs/id"},
+        "away_id": {"$ref":"#/$defs/id"},
+        "score": {"$ref":"#/$defs/score"},
+        "xg": {"$ref":"#/$defs/goalPair"},
+        "p": {
+          "type": "array",
+          "prefixItems": [{"$ref":"#/$defs/probability"},{"$ref":"#/$defs/probability"},{"$ref":"#/$defs/probability"}],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "exp": {"$ref":"#/$defs/goalPair"},
+        "top": {"type":"array","items":{"$ref":"#/$defs/scoreProbability"},"minItems":1},
+        "btts": {"$ref":"#/$defs/probability"},
+        "o25": {"$ref":"#/$defs/probability"},
+        "at": {"$ref":"#/$defs/timestamp"},
+        "call": {"$ref":"#/$defs/scoreProbability"},
+        "p_score": {"$ref":"#/$defs/probability"},
+        "reported": {"$ref":"#/$defs/string"},
+        "stage": {"$ref":"#/$defs/string"},
+        "neutral": {"type":"boolean"},
+        "stakes": {"$ref":"#/$defs/stakes"}
+      },
+      "required": ["id","kickoff","status","md","home","away","home_id","away_id"],
+      "allOf": [
+        {"if":{"required":["p"]},"then":{"required":["exp","top","btts","o25","at"]}},
+        {
+          "if": {"properties":{"status":{"const":"FINISHED"}},"required":["status"]},
+          "then": {"required":["score"]}
+        }
+      ]
+    },
+    "matches": {
+      "type": "object",
+      "properties": {
+        "slug": {"$ref":"#/$defs/competitionSlug"},
+        "generated_at": {"$ref":"#/$defs/timestamp"},
+        "rule": {"anyOf":[{"$ref":"#/$defs/string"},{"type":"null"}]},
+        "matches": {"type":"array","items":{"$ref":"#/$defs/match"},"minItems":0}
+      },
+      "required": ["slug","generated_at","rule","matches"],
+      "allOf": [
+        {
+          "if": {"properties":{"slug":{"const":"champions-league"}}},
+          "then": {"properties":{"matches":{"minItems":1}}}
+        }
+      ]
+    },
+    "club": {
+      "allOf": [
+        {"$ref":"#/$defs/identity"},
+        {
+          "type": "object",
+          "properties": {
+            "rating": {"$ref":"#/$defs/percentage"},
+            "attack": {"$ref":"#/$defs/percentage"},
+            "defense": {"$ref":"#/$defs/percentage"},
+            "home": {"$ref":"#/$defs/percentage"},
+            "away": {"$ref":"#/$defs/percentage"},
+            "league_rating": {"$ref":"#/$defs/percentage"},
+            "rating_rank": {"type":"integer","minimum":1},
+            "attack_rank": {"type":"integer","minimum":1},
+            "defense_rank": {"type":"integer","minimum":1},
+            "league_rank": {"type":"integer","minimum":1},
+            "league": {"$ref":"#/$defs/leagueSlug"},
+            "ucl": {"type":"boolean"},
+            "gf": {"type":"number","minimum":0},
+            "ga": {"type":"number","minimum":0}
+          },
+          "required": [
+            "rating",
+            "attack",
+            "defense",
+            "home",
+            "away",
+            "league_rating",
+            "rating_rank",
+            "attack_rank",
+            "defense_rank",
+            "league_rank",
+            "league",
+            "ucl",
+            "gf",
+            "ga"
+          ]
+        }
+      ]
+    },
+    "clubs": {
+      "type": "object",
+      "properties": {
+        "generated_at": {"$ref":"#/$defs/timestamp"},
+        "season": {"$ref":"#/$defs/season"},
+        "scale": {
+          "type": "object",
+          "properties": {
+            "reference": {"$ref":"#/$defs/string"},
+            "clubs": {"type":"integer","minimum":1},
+            "leagues": {"type":"integer","minimum":1}
+          },
+          "required": ["reference","clubs","leagues"]
+        },
+        "league_averages": {
+          "type": "object",
+          "properties": {
+            "premier-league": {"$ref":"#/$defs/percentage"},
+            "la-liga": {"$ref":"#/$defs/percentage"},
+            "bundesliga": {"$ref":"#/$defs/percentage"},
+            "serie-a": {"$ref":"#/$defs/percentage"},
+            "ligue-1": {"$ref":"#/$defs/percentage"}
+          },
+          "required": ["premier-league","la-liga","bundesliga","serie-a","ligue-1"]
+        },
+        "featured": {"type":"array","items":{"type":"integer","minimum":1},"minItems":0},
+        "clubs": {"type":"array","items":{"$ref":"#/$defs/club"},"minItems":1}
+      },
+      "required": ["generated_at","season","scale","league_averages","featured","clubs"]
+    },
+    "crest": {
+      "type": "object",
+      "properties": {
+        "name": {"$ref":"#/$defs/string"},
+        "source": {"type":"string","format":"uri"},
+        "path": {"type":"string","pattern":"^assets/crests/[a-zA-Z0-9_-]+\\.(svg|png)$"},
+        "width": {"type":"integer","minimum":1},
+        "height": {"type":"integer","minimum":1}
+      },
+      "required": ["name","source","path"],
+      "allOf": [{"if":{"properties":{"path":{"pattern":"\\.png$"}}},"then":{"required":["width","height"]}}]
+    },
+    "crests": {
+      "type": "object",
+      "propertyNames": {"pattern":"^[1-9][0-9]*$"},
+      "additionalProperties": {"$ref":"#/$defs/crest"}
+    },
+    "historyTeam": {
+      "type": "object",
+      "properties": {
+        "id": {"anyOf":[{"type":"integer","minimum":1},{"$ref":"#/$defs/slug"}]},
+        "name": {"$ref":"#/$defs/string"},
+        "title": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "ucl": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "releg": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "top8": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "top24": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "last16": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "qf": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "sf": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0},
+        "final": {"type":"array","items":{"$ref":"#/$defs/nullablePercentage"},"minItems":0}
+      },
+      "required": ["id","name"]
+    },
+    "history": {
+      "type": "object",
+      "properties": {
+        "slug": {"$ref":"#/$defs/competitionSlug"},
+        "season": {"$ref":"#/$defs/season"},
+        "metrics": {"type":"array"},
+        "dates": {"type":"array","items":{"$ref":"#/$defs/date"},"minItems":0},
+        "cutoff": {"anyOf":[{"$ref":"#/$defs/timestamp"},{"type":"null"}]},
+        "teams": {"type":"array","items":{"$ref":"#/$defs/historyTeam"},"minItems":0}
+      },
+      "required": ["slug","season","metrics","dates","cutoff","teams"],
+      "allOf": [
+        {
+          "if": {"properties":{"slug":{"const":"champions-league"}}},
+          "then": {"properties":{"metrics":{"const":["top8","top24","last16","qf","sf","final","title"]}}},
+          "else": {"properties":{"metrics":{"const":["title","ucl","releg"]}}}
+        }
+      ]
+    },
+    "week": {
+      "type": "object",
+      "properties": {
+        "date": {"$ref":"#/$defs/date"},
+        "cutoff": {"anyOf":[{"$ref":"#/$defs/timestamp"},{"type":"null"}]},
+        "clubs": {
+          "type": "object",
+          "propertyNames": {"pattern":"^[1-9][0-9]*$"},
+          "additionalProperties": {
+            "type": "array",
+            "prefixItems": [
+              {"$ref":"#/$defs/nullablePercentage"},
+              {"$ref":"#/$defs/nullablePercentage"},
+              {"$ref":"#/$defs/nullablePercentage"}
+            ],
+            "minItems": 3,
+            "maxItems": 3
+          }
+        }
+      },
+      "required": ["date","cutoff","clubs"]
+    },
+    "club_history": {
+      "type": "object",
+      "properties": {
+        "season": {"$ref":"#/$defs/season"},
+        "fields": {"const":["rating","attack","defense"]},
+        "weeks": {"type":"array","items":{"$ref":"#/$defs/week"},"minItems":0}
+      },
+      "required": ["season","fields","weeks"]
+    }
+  }
+}

@@ -38,11 +38,14 @@ def match_forecasts(inputs, model, *, origin, offset_ridge=DEFAULT_OFFSET_RIDGE,
     played = fixtures[[_score(row) is not None for row in fixtures.to_dict("records")]]
     upcoming = fixtures.drop(index=played.index)
     forecasts = dict(zip(upcoming.index, fixture_forecasts(model, upcoming, origin)))
+    xg_available_at = None
+    if not played.empty:
+        xg_available_at = pd.to_datetime(inputs.history["utcDate"], utc=True).dt.normalize() + pd.Timedelta(days=1)
 
     def fit(day):
         history = inputs.history.copy()
         # Mirror the live rule: a result's xG is only known from the next UTC day.
-        unknown = pd.to_datetime(history["utcDate"], utc=True).dt.normalize() + pd.Timedelta(days=1) >= day
+        unknown = xg_available_at >= day
         history.loc[unknown, [column for column in ("home_xg", "away_xg") if column in history]] = np.nan
         return fit_strengths(history, teams=teams, team_leagues=inputs.team_leagues, as_of=day, offset_ridge=offset_ridge,
                              market=market)

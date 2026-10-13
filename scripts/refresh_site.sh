@@ -2,7 +2,7 @@
 # Rerun every forecast shown on the website, then rebuild site/data.
 # Requires FOOTBALL_DATA_API_KEY in .env (or the environment) and both packages installed:
 #   pip install -e . -e packages/champions-league
-# Exits nonzero only when every forecast failed; a failed competition keeps its last published data.
+# A failed competition keeps its last published data; all-fail or invalid exports fail the refresh.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 OUT=out/site
@@ -13,22 +13,40 @@ warn() {
   if [[ -n "${GITHUB_ACTIONS:-}" ]]; then echo "::warning::$1"; else echo "WARNING: $1" >&2; fi
 }
 
+clear_outputs() {
+  rm -f "$OUT/$1"_{summary,position_probs,standings_snapshot,matches_snapshot,club_ratings}.csv \
+    "$OUT/$1"_{forecast,metadata,match_forecasts,stakes}.json
+}
+
 failed=()
 for competition in PL PD BL1 SA FL1; do
   echo "== $competition"
   # Remove stale outputs so a failed run can't republish an old forecast as new.
   prefix=$(echo "$competition" | tr '[:upper:]' '[:lower:]')
-  rm -f "$OUT/$prefix"_{summary,position_probs,standings_snapshot,matches_snapshot,club_ratings}.csv "$OUT/$prefix"_{metadata,match_forecasts,stakes}.json
-  football-predict --competition "$competition" --n-sim "$N_SIM" --no-use-odds --out-dir "$OUT" || failed+=("$competition")
+  clear_outputs "$prefix" || exit 1
+  if ! football-predict --competition "$competition" --n-sim "$N_SIM" --no-use-odds --out-dir "$OUT"; then
+    clear_outputs "$prefix" || exit 1
+    failed+=("$competition")
+  fi
   sleep 15  # football-data.org free tier allows 10 requests per minute
 done
 echo "== UCL"
 sleep 45
-rm -f "$OUT"/cl_{forecast,metadata,match_forecasts}.json "$OUT"/cl_{standings_snapshot,matches_snapshot,club_ratings}.csv
-football-ucl --n-sim "$N_SIM" --out-dir "$OUT" || failed+=(UCL)
+clear_outputs cl || exit 1
+if ! football-ucl --n-sim "$N_SIM" --out-dir "$OUT"; then
+  clear_outputs cl || exit 1
+  failed+=(UCL)
+fi
 
-python scripts/build_site_data.py --src "$OUT" --dest site/data || exit 1
 if ((${#failed[@]})); then
   warn "Forecast failed for ${failed[*]}; the site keeps their previous data."
 fi
-((${#failed[@]} < 6))
+if ((${#failed[@]} == 6)); then exit 1; fi
+
+# Validate fresh and retained data together before replacing the published files.
+candidate=$(mktemp -d) || exit 1
+trap 'rm -rf "$candidate"' EXIT
+cp -R site/data "$candidate/data" || exit 1
+python scripts/build_site_data.py --src "$OUT" --dest "$candidate/data" || exit 1
+python scripts/validate_site_data.py --data "$candidate/data" --site site || exit 1
+cp -R "$candidate/data/." site/data || exit 1
