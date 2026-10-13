@@ -255,6 +255,7 @@ The official replay (`football-ucl --evaluate`) with the final defaults, committ
 - Position RPS after MD2–6: 0.0837 (Plan C: 0.0913).
 - Brier improves for round of 16 (0.0838 to 0.0766), quarter-finals (0.0667 to 0.0661) and final (0.0392 to 0.0345).
 - Brier worsens slightly for semi-finals (0.0457 to 0.0475) and title (0.0241 to 0.0252), on two tournaments.
+- Rerun on 13 October after 13 Dutch and Portuguese clubs stopped being split between two provider names, which had counted about 136 domestic results twice in each replay season: 0.90862 joint, 0.92999 without offsets, 0.91566 goals only, position RPS 0.0837. The committed files are the rerun.
 
 **Fitted scale (13 October).** Offsets relative to the Premier League: Ligue 1 −0.26, La Liga −0.30, Bundesliga −0.35, Serie A −0.35, Portugal −0.58, Netherlands −0.70; the typical league sits at −0.65. The largest club effects are Paris Saint-Germain +0.16, Bayern +0.09, Atlético and Real Madrid +0.07, and Manchester City and Villarreal −0.12.
 

@@ -9,49 +9,49 @@
   "snapshots": 18,
   "matches": 306,
   "match_log_loss": {
-    "joint": 0.9087649539018204,
-    "without_offsets": 0.9303370769138211,
-    "goals_only": 0.9157349732754776,
-    "elo": 0.9901635220487109
+    "joint": 0.9086179236274569,
+    "without_offsets": 0.9299927481233248,
+    "goals_only": 0.915656335663679,
+    "elo": 0.9899938351056202
   },
   "match_log_loss_by_xg": {
     "False": {
-      "joint": 0.8953467314590395,
-      "without_offsets": 0.9273938476469956,
-      "goals_only": 0.8916122193838429,
-      "elo": 0.9913573363033131
+      "joint": 0.8949379056774609,
+      "without_offsets": 0.9267586029863302,
+      "goals_only": 0.8912801006052757,
+      "elo": 0.9911141566337393
     },
     "True": {
-      "joint": 0.9276772516755035,
-      "without_offsets": 0.9344854079276935,
-      "goals_only": 0.9497347602566002,
-      "elo": 0.988480901957579
+      "joint": 0.9278992087695768,
+      "without_offsets": 0.9345511101668055,
+      "goals_only": 0.9500133913759168,
+      "elo": 0.9884147992510277
     }
   },
   "tournament_metrics": {
-    "position_rps": 0.027887552711640215,
-    "playoffs_brier": 0.06728166589506174,
-    "round16_brier": 0.07662039506172841,
-    "quarterfinal_brier": 0.06614134259259259,
-    "semifinal_brier": 0.04749185725308642,
-    "final_brier": 0.0345162600308642,
-    "title_brier": 0.025170753858024694,
-    "position_rps_xg_True": 0.028940463474025974,
-    "playoffs_brier_xg_True": 0.07471566603535355,
-    "round16_brier_xg_True": 0.07258665025252525,
-    "quarterfinal_brier_xg_True": 0.09617930239898989,
-    "semifinal_brier_xg_True": 0.07676264709595959,
-    "final_brier_xg_True": 0.05625358648989899,
-    "title_brier_xg_True": 0.04112658775252524,
-    "position_rps_xg_False": 0.026232978656462586,
-    "playoffs_brier_xg_False": 0.05559966567460317,
-    "round16_brier_xg_False": 0.08295913690476191,
-    "quarterfinal_brier_xg_False": 0.018938834325396826,
-    "semifinal_brier_xg_False": 0.001494901785714286,
-    "final_brier_xg_False": 0.0003576041666666666,
-    "title_brier_xg_False": 9.730059523809526e-05
+    "position_rps": 0.02788527894620811,
+    "playoffs_brier": 0.06725744521604939,
+    "round16_brier": 0.0765343526234568,
+    "quarterfinal_brier": 0.06587944907407407,
+    "semifinal_brier": 0.04691602546296296,
+    "final_brier": 0.03469748070987654,
+    "title_brier": 0.025309744598765435,
+    "position_rps_xg_True": 0.02892375405844156,
+    "playoffs_brier_xg_True": 0.07462572916666667,
+    "round16_brier_xg_True": 0.07255479356060607,
+    "quarterfinal_brier_xg_True": 0.0958402077020202,
+    "semifinal_brier_xg_True": 0.07591287247474748,
+    "final_brier_xg_True": 0.056589222222222214,
+    "title_brier_xg_True": 0.041367587121212114,
+    "position_rps_xg_False": 0.026253389484126984,
+    "playoffs_brier_xg_False": 0.05567871329365079,
+    "round16_brier_xg_False": 0.08278794543650794,
+    "quarterfinal_brier_xg_False": 0.018798256944444446,
+    "semifinal_brier_xg_False": 0.0013495515873015876,
+    "final_brier_xg_False": 0.0002961726190476191,
+    "title_brier_xg_False": 7.59920634920635e-05
   },
-  "position_rps_after_MD2_MD4_MD6": 0.08366265813492063,
+  "position_rps_after_MD2_MD4_MD6": 0.08365583683862433,
   "tournament_averaging": "All replay origins, including completed league phases with known positions and already-resolved knockout stages; see per-snapshot metrics for comparisons at equal horizons.",
   "limitations": "Retrospective replay with the fixed globally calibrated artifact, which includes these domestic seasons. Publication times and historical draw availability are approximated. Two tournament seasons do not establish calibrated title probabilities."
 }

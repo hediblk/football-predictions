@@ -123,6 +123,63 @@ def _domestic(league, season, cache):
     return data
 
 
+def repeated_fixtures(matches):
+    """Results a club has within a day of another in the same competition.
+
+    No club plays twice in a day, so each row is a fixture counted twice, usually because two sources
+    name the opponent differently.
+    """
+    games = pd.concat([matches[["competition", side, "utcDate"]].set_axis(["competition", "team", "utcDate"], axis=1)
+                       for side in ("homeTeam", "awayTeam")], ignore_index=True)
+    games["day"] = games["utcDate"].dt.normalize()
+    games = games.sort_values(["competition", "team", "day"])
+    repeated = games.groupby(["competition", "team"])["day"].diff().le(pd.Timedelta(days=1))
+    return games.loc[repeated, ["competition", "team", "utcDate"]].reset_index(drop=True)
+
+
+def api_aliases(csv, api, *, window=pd.Timedelta(days=2)):
+    """API club names missing from the season's CSV, mapped to the CSV club with the same fixtures.
+
+    A fixture is in both sources when it has the same score and the same opponent on the other side within
+    `window`. A name maps only if all its matched fixtures point to one CSV club that no API club already uses.
+    """
+    csv_clubs, api_clubs = set(csv["homeTeam"]) | set(csv["awayTeam"]), set(api["homeTeam"]) | set(api["awayTeam"])
+    found = {}
+    for match in api.itertuples(index=False):
+        near = csv[(csv["utcDate"] - match.utcDate).abs().le(window)
+                   & csv["homeGoals"].eq(match.homeGoals) & csv["awayGoals"].eq(match.awayGoals)]
+        for side, other in [("homeTeam", "awayTeam"), ("awayTeam", "homeTeam")]:
+            name = getattr(match, side)
+            if name not in csv_clubs:
+                found.setdefault(name, set()).update(near.loc[near[other].eq(getattr(match, other)), side])
+    pairs = {name: clubs.pop() for name, clubs in found.items() if len(clubs) == 1}
+    targets = list(pairs.values())
+    return {name: club for name, club in pairs.items() if club not in api_clubs and targets.count(club) == 1}
+
+
+def merge_refresh(csv, api):
+    """A season's CSV results refreshed with API results, each fixture counted once.
+
+    API clubs the CSV spells differently take the CSV name (`api_aliases`), API rows replace the CSV rows of
+    the same fixtures and their score wins a disagreement. Raises ValueError if a club still has two results
+    within a day. Returns the merged results, the renamed API clubs and the score disagreements.
+    """
+    renamed = api_aliases(csv, api)
+    api = api.assign(homeTeam=api["homeTeam"].replace(renamed), awayTeam=api["awayTeam"].replace(renamed))
+    overlap, disagreements = pd.Series(False, index=csv.index), []
+    for match in api.itertuples(index=False):
+        same = csv["homeTeam"].eq(match.homeTeam) & csv["awayTeam"].eq(match.awayTeam) & (csv["utcDate"] - match.utcDate).abs().le(pd.Timedelta(days=2))
+        if same.any() and not csv.loc[same, ["homeGoals", "awayGoals"]].eq([match.homeGoals, match.awayGoals]).all().all():
+            disagreements.append({"home": match.homeTeam, "away": match.awayTeam, "date": match.utcDate.isoformat()})
+        overlap |= same
+    merged = pd.concat([csv.loc[~overlap], api], ignore_index=True)
+    repeated = repeated_fixtures(merged)
+    if not repeated.empty:
+        raise ValueError(f"CSV and API results repeat {len(repeated)} games of {sorted(set(repeated['team']))}; "
+                         "an opponent is probably named differently by the two sources.")
+    return merged, renamed, disagreements
+
+
 def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=None):
     if not 0 <= prior_seasons <= 2:
         raise ValueError("prior_seasons must be between 0 and 2.")
@@ -181,31 +238,28 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
                 continue
             api["competition"] = api["homeLeague"] = api["awayLeague"] = league
             api["source"] = f"https://api.football-data.org/v4/competitions/{code}/matches"
+            current = [data for data in domestic_frames if not data.empty and data["competition"].iloc[0] == league and data["season"].iloc[0] == season]
+            if current:
+                csv = current[0]
+                merged, renamed, disagreements = merge_refresh(csv, api)
+                domestic_frames = [data for data in domestic_frames if data is not csv]
+            else:
+                merged, renamed, disagreements = api, {}, []
+            if renamed:
+                LOG.warning("Matched football-data.org %s names to CSV clubs by fixture: %s; add them to identities.ALIASES", league, renamed)
             for match in payload["matches"]:
                 for side in ["homeTeam", "awayTeam"]:
                     name = canonical_team(match[side]["name"])
+                    name = renamed.get(name, name)
                     team_leagues[name] = league
                     display_names.setdefault(name, match[side]["name"])
-            current = [data for data in domestic_frames if not data.empty and data["competition"].iloc[0] == league and data["season"].iloc[0] == season]
-            disagreements = []
-            if current:
-                csv = current[0]
-                overlap = pd.Series(False, index=csv.index)
-                for match in api.itertuples(index=False):
-                    same = csv["homeTeam"].eq(match.homeTeam) & csv["awayTeam"].eq(match.awayTeam) & (csv["utcDate"] - match.utcDate).abs().le(pd.Timedelta(days=2))
-                    if same.any() and not csv.loc[same, ["homeGoals", "awayGoals"]].eq([match.homeGoals, match.awayGoals]).all().all():
-                        disagreements.append({"home": match.homeTeam, "away": match.awayTeam, "date": match.utcDate.isoformat()})
-                    overlap |= same
-                merged = pd.concat([csv.loc[~overlap], api], ignore_index=True)
-                domestic_frames = [data for data in domestic_frames if data is not csv]
-            else:
-                merged = api
             if league in {"PL", "PD", "BL1", "SA", "FL1"}:
                 merged = load_season_xg(merged, competition=league, season=season, cache=cache)
             domestic_frames.append(merged)
             source_audits.append({"competition": league, "season": season, "source": api["source"].iloc[0],
                                   "matches": len(api), "latest_result": api["utcDate"].max().isoformat(),
-                                  "csv_score_disagreements_overridden": disagreements, "xg": merged.attrs.get("xg_coverage")})
+                                  "csv_score_disagreements_overridden": disagreements,
+                                  "api_names_matched_by_fixture": renamed, "xg": merged.attrs.get("xg_coverage")})
         except (KeyError, ValueError, RuntimeError, OSError) as exc:
             errors.append({"competition": league, "season": season, "source": "football-data.org domestic refresh", "error": str(exc)})
             LOG.warning("Current domestic API refresh unavailable: %s (%s)", league, exc)
