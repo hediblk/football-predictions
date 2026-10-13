@@ -201,7 +201,7 @@ Other commands:
 
 ![Champions League league-phase position probabilities](docs/champions-league-forecast.png)
 
-A separate package forecasts the 36-team league phase and the knockout bracket. It fits one model across domestic and European results, with country offsets to compare leagues. See the [Champions League README](packages/champions-league/README.md).
+A separate package forecasts the 36-team league phase and the knockout bracket. It fits one model across domestic and European results, with country offsets to compare leagues; offsets with little European evidence shrink toward a typical league level, and archived bookmaker prices for Champions League games set each league's current level. See the [Champions League README](packages/champions-league/README.md).
 
 ```bash
 pip install -e . -e packages/champions-league
@@ -210,9 +210,9 @@ football-ucl --season 2026 --n-sim 10000
 
 ## Website
 
-`site/` is **Floodlight**, a static page with four tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result), **Clubs** (strength ranking and profiles) and **Model** (how the forecasts and ratings are made). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds to [data/odds](data/odds/README.md) for future model-versus-market comparisons.
+`site/` is **Floodlight**, a static page with four tabs: **Tables** (standings forecasts), **Matches** (daily fixtures with probabilities, and whether the model called each result), **Clubs** (strength ranking and profiles) and **Model** (how the forecasts and ratings are made). The [site workflow](.github/workflows/site.yml) reruns all six forecasts daily at 05:30 UTC, commits `site/data` and redeploys GitHub Pages. It also archives daily bookmaker odds to [data/odds](data/odds/README.md); the Champions League model reads the archived Champions League prices, and the rest are kept for model-versus-market comparisons.
 
-Club ratings are scaled across leagues by each league's average team rating in the [Opta Power Rankings](https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true), relative to the Premier League. Update `LEAGUE_STRENGTH` in `scripts/build_site_data.py` occasionally.
+Club ratings come from the Champions League model, which puts every club on one European scale. A rating is the share of points a club would take off an average European top-flight side on a neutral pitch; the average is taken over every club with domestic results in the past year (about 330 clubs in 17 leagues). Leagues compare through European cup matches between clubs from different countries, with each league's current level set by archived Champions League prices, so no outside league ratings are needed. `football-ucl` writes the ratings to `cl_club_ratings.csv`.
 
 Refresh by hand and preview:
 

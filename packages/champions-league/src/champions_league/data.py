@@ -3,11 +3,13 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 import logging
+from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
 
 from standing_prediction.data import FootballDataClient, STANDING_COLUMNS, fetch_standings, standings_from_matches
+from standing_prediction.utils import normalize_team
 from standing_prediction.xg import load_season_xg
 
 from champions_league.identities import AREA_LEAGUES, canonical_team
@@ -292,3 +294,29 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
         "domestic_reconciliation": "Slovak, Ukrainian and Azerbaijani official tables checked against parsed played and goal totals; discrepancies reported per source. Czech pinned schedules have incomplete 2025/26 coverage.",
     }
     return UCLInputs(fixtures.reset_index(drop=True), standings.reset_index(drop=True), history, team_leagues, pd.DataFrame(rows), metadata)
+
+
+def load_market_quotes(season, teams, *, fixtures=None, archive=Path("data/odds"), competitions=("CL",)):
+    """Archived bookmaker 1X2 quotes (data/odds, see its README) under the model's club names.
+
+    Returns None when the season has no archive. Clubs match on normalized names; `fixtures` supplies the
+    neutral-venue flag for relocated home matches. The strength fit keeps only quotes observed before
+    both its origin and kickoff.
+    """
+    frames = [pd.read_csv(path).assign(competition=code) for code in competitions
+              if (path := Path(archive) / str(season) / f"{code}.csv").exists()]
+    if not frames:
+        return None
+    raw = pd.concat(frames, ignore_index=True)
+    lookup = {normalize_team(team): team for team in teams}
+    name = lambda value: lookup.get(normalize_team(canonical_team(value)), canonical_team(value))
+    quotes = pd.DataFrame({
+        "competition": raw["competition"], "homeTeam": raw["home_team"].map(name), "awayTeam": raw["away_team"].map(name),
+        "p_home": raw["p_home_book"], "p_draw": raw["p_draw_book"], "p_away": raw["p_away_book"],
+        "observed_at": raw["observed_at"], "commence_time": raw["commence_time"],
+    })
+    if fixtures is not None and "neutral" in fixtures:
+        neutral = {(home, away): bool(flag) for home, away, flag in
+                   zip(fixtures["homeTeam"], fixtures["awayTeam"], fixtures["neutral"].fillna(False))}
+        quotes["neutral"] = [neutral.get(pair, False) for pair in zip(quotes["homeTeam"], quotes["awayTeam"])]
+    return quotes

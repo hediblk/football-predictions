@@ -52,7 +52,7 @@ async function showIndex() {
   $("c-hero").innerHTML = `
     <div class="who">
       <h1><a href="#clubs/${best.slug}">${clubName(best.id, best.name, "hero")}</a></h1>
-      <p class="caption">The strongest club in Europe's top five leagues: it would take <b>${Math.round(best.rating)}%</b> of the points off an average side ·
+      <p class="caption">The strongest club in Europe's top five leagues: it would take <b>${Math.round(best.rating)}%</b> of the points off an average European top-flight side ·
         best attack <b>${clubName(topAttack.id, topAttack.name, "inline")} ${dec(topAttack.attack)}</b> · best defence <b>${clubName(topDefense.id, topDefense.name, "inline")} ${dec(topDefense.defense)}</b> · ${list.length} clubs rated</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${best.name}: rating ${dec(best.rating)}`)}">${Math.round(best.rating)}<sup>%</sup></div>`;
@@ -219,7 +219,7 @@ async function showProfile(club) {
     <div class="who">
       <h1>${clubName(club.id, club.name, "hero")}</h1>
       <p class="caption">${ordinal(team.position)} in ${esc(comp.label)} · <b>${team.points}</b> pts from ${team.played} (W${wdl[0]} D${wdl[1]} L${wdl[2]})
-        · the big number is its strength, <b>#${club.rating_rank}</b> of ${clubs.clubs.length}: the share of points it would take off an average side</p>
+        · the big number is its strength, <b>#${club.rating_rank}</b> of ${clubs.clubs.length}: the share of points it would take off an average European top-flight side</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${club.name}: rating ${dec(club.rating)}`)}">${Math.round(club.rating)}<sup>%</sup></div>`;
 
@@ -354,10 +354,10 @@ function renderStrength(club) {
       <span class="note">${note}</span></div>`;
   $("p-strength").innerHTML = `<div class="gauges">
       ${meter("Overall", club.rating, club.rating_rank, `#${club.league_rank} of ${members} in ${esc(leagueName(club.league))}`)}
-      ${meter("Attack", club.attack, club.attack_rank, `Scores ${dec(club.gf, 2)} a game against an average ${esc(leagueName(club.league))} side`)}
+      ${meter("Attack", club.attack, club.attack_rank, `Scores ${dec(club.gf, 2)} a game against an average European top-flight side`)}
       ${meter("Defence", club.defense, club.defense_rank, `Concedes ${dec(club.ga, 2)} a game against the same side`)}
     </div>
-    <p class="note">Share of points against an average side on a neutral pitch: <b>${dec(club.home)}</b> at home, <b>${dec(club.away)}</b> away. Within ${esc(leagueName(club.league))} the club rates ${dec(club.league_rating)}; the league factor ${clubs.league_factors[club.league].toFixed(2)} puts it on the five-league scale. The tick on each bar is the ${n}-club average.</p>`;
+    <p class="note">Share of points against an average European top-flight side: <b>${dec(club.home)}</b> at home, <b>${dec(club.away)}</b> away. Against an average ${esc(leagueName(club.league))} side it would take ${dec(club.league_rating)}%. The tick on each bar is the ${n}-club average.</p>`;
 }
 
 expandable($("p-next"), ".crow", (row) => panelFor(row));

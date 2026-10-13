@@ -9,7 +9,7 @@ from standing_prediction.defaults import DEFAULT_WEIGHTS
 from standing_prediction.ensemble import blend_probabilities
 from standing_prediction.match_forecasts import describe_match, forecast_played, match_records
 
-from champions_league.strengths import fit_strengths
+from champions_league.strengths import DEFAULT_OFFSET_RIDGE, fit_strengths
 from champions_league.tournament import _neutral, _score
 
 FIXTURE_COLUMNS = ["id", "utcDate", "stage", "matchday", "status", "homeTeam", "awayTeam", "homeTeamId", "awayTeamId",
@@ -31,7 +31,7 @@ def fixture_forecasts(model, fixtures, forecast_at, max_goals=10):
     return forecasts
 
 
-def match_forecasts(inputs, model, *, origin, offset_ridge=4.0):
+def match_forecasts(inputs, model, *, origin, offset_ridge=DEFAULT_OFFSET_RIDGE, market=None):
     """Every known fixture's forecast: unplayed ones from `model`, played ones refitted as of their match day."""
     fixtures = inputs.fixtures
     teams = inputs.standings["team"].tolist()
@@ -44,7 +44,8 @@ def match_forecasts(inputs, model, *, origin, offset_ridge=4.0):
         # Mirror the live rule: a result's xG is only known from the next UTC day.
         unknown = pd.to_datetime(history["utcDate"], utc=True).dt.normalize() + pd.Timedelta(days=1) >= day
         history.loc[unknown, [column for column in ("home_xg", "away_xg") if column in history]] = np.nan
-        return fit_strengths(history, teams=teams, team_leagues=inputs.team_leagues, as_of=day, offset_ridge=offset_ridge)
+        return fit_strengths(history, teams=teams, team_leagues=inputs.team_leagues, as_of=day, offset_ridge=offset_ridge,
+                             market=market)
 
     forecasts.update(forecast_played(played, fit, fixture_forecasts))
     return match_records(fixtures, forecasts, FIXTURE_COLUMNS)

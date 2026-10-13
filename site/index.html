@@ -185,7 +185,7 @@
       <legend>Champions League</legend>
       <dl>
         <dt>One fit</dt>
-        <dd>Domestic and European results from every entrant's league feed a single goal model. Country offsets put leagues on a common scale, and European games get their own scoring and home baselines.</dd>
+        <dd>Domestic and European results from every entrant's league feed a single goal model. Country offsets put leagues on a common scale, and European games get their own scoring and home baselines. Bookmaker prices for upcoming Champions League games set each league's current level, since two seasons of European results can lag behind.</dd>
         <dt>League phase</dt>
         <dd>All 144 fixtures are played out and ranked with UEFA's tie-breakers, including opponents' combined points.</dd>
         <dt>Knockouts</dt>
@@ -197,11 +197,11 @@
       <legend>Club ratings</legend>
       <dl>
         <dt>Rating</dt>
-        <dd>The share of the points a club would take off an average side on a neutral pitch, from the same match model that drives the forecasts.</dd>
+        <dd>The share of the points a club would take off an average European top-flight side on a neutral pitch, from the model behind the Champions League forecasts: domestic and European results, goals and expected goals, recent games counting more.</dd>
         <dt>Attack, defence</dt>
-        <dd>Attack rates a club as if its defence were exactly as good as its attack, and defence the reverse, so all three numbers share one scale. Scores and Concedes are goals per game against an average side from the club's own league.</dd>
+        <dd>Attack rates a club as if its defence were exactly as good as its attack, and defence the reverse, so all three numbers share one scale. Scores and Concedes are goals per game against that average side.</dd>
         <dt>Across leagues</dt>
-        <dd>Each league's ratings are scaled by its average team rating in the Opta Power Rankings, relative to the Premier League: <span id="c-factors">loading</span> (12 Oct 2026).</dd>
+        <dd>Leagues are compared through matches between clubs from different countries in the European cups; a league with few such matches is assumed to be a typical European league until results say otherwise. Bookmaker prices for upcoming Champions League games then set each league's current level. The average side is the mean of <span id="c-pool">every club with domestic results in the past year</span>. League averages on this scale: <span id="c-factors">loading</span>.</dd>
       </dl>
     </fieldset>
 
@@ -237,7 +237,6 @@
       <a href="https://www.football-data.org/">football-data.org <small>results, fixtures</small></a>
       <a href="https://www.football-data.co.uk/">football-data.co.uk <small>past seasons</small></a>
       <a href="https://understat.com/">Understat <small>expected goals</small></a>
-      <a href="https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true">Opta Power Rankings <small>league strength</small></a>
     </nav>
   </div>
 </footer>
