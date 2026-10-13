@@ -1,4 +1,4 @@
-"""Append today's bookmaker 1X2 odds for every site competition to the dated archive.
+"""Append today's bookmaker 1X2 odds for the site competitions and the European cups to the dated archive.
 
 Usage: python scripts/archive_odds.py [--out data/odds] [--regions eu] [--force]
 
@@ -18,7 +18,9 @@ from dotenv import load_dotenv
 from standing_prediction.odds import the_odds_api_snapshot
 from standing_prediction.predict_positions import COMPETITION_TO_THE_ODDS_API_SPORT
 
-SPORTS = {**COMPETITION_TO_THE_ODDS_API_SPORT, "CL": "soccer_uefa_champs_league"}
+# Europa and Conference League prices add cross-league fixtures between mid-table clubs (ROADMAP, item 1).
+SPORTS = {**COMPETITION_TO_THE_ODDS_API_SPORT, "CL": "soccer_uefa_champs_league",
+          "EL": "soccer_uefa_europa_league", "ECL": "soccer_uefa_europa_conference_league"}
 
 
 def main(argv=None):
