@@ -28,6 +28,9 @@ ALIASES = {
     "olympiakos piraeus": "olympiakos", "olympiacos": "olympiakos", "olympiacos piraeus": "olympiakos",
     "rangers": "rangers", "glasgow rangers": "rangers", "celtic glasgow": "celtic",
     "dinamo zagreb": "dinamo zagreb", "gnk dinamo zagreb": "dinamo zagreb",
+    # The Odds API's Europa and Conference League names.
+    "nec nijmegen": "nijmegen", "twente enschede": "twente", "sk brann": "brann", "sint truiden": "st truiden",
+    "copenhagen": "kobenhavn", "kairat": "fk kairat", "omonoia": "omonia nikosia", "fk borac banja luka": "borac banja luka",
     "crvena zvezda": "red star belgrade", "fk crvena zvezda": "red star belgrade",
     "red bull salzburg": "salzburg", "rb salzburg": "salzburg",
     "rb salzburg salzburg": "salzburg", "sturm graz": "sturm graz", "sk sturm graz": "sturm graz",
