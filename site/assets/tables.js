@@ -28,7 +28,7 @@ async function loadClubSlugs() {
 
 function render(data) {
   const ucl = data.kind === "ucl";
-  document.title = `${data.name} forecast ${data.season} · Final Table`;
+  document.title = `${data.name} forecast ${data.season} · Floodlight`;
   setStatus(data.generated_at, data.data_cutoff);
   renderHero(data);
   renderRaces(data);

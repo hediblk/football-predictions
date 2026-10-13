@@ -39,7 +39,7 @@ async function load() {
 }
 
 export async function showMatches(param) {
-  document.title = "Matches · Final Table";
+  document.title = "Matches · Floodlight";
   try {
     await load();
   } catch (err) {

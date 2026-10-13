@@ -1,4 +1,4 @@
-# Final Table — design DNA
+# Floodlight — design DNA
 
 Chosen from four dealt directions (design-for-ai dealer, project `final-table-football-forecasts`, 2026-10-11, hand 3). Dark only, by request.
 
@@ -39,7 +39,9 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 
 - **Club crests:** full-colour original artwork beside club names; 18 px inline, 24 px in rows and brackets, 36 px on cards, 80 px in heroes (64 px on phones). Preserve proportions and keep the club name visible. Use published light or outlined variants for dark artwork; keep crest containers transparent. Charts keep their dots, with crests in hover details; native dropdown options remain text with a crest beside the selected club.
 
-- **Section tabs** (Tables, Matches, Clubs) sit beside the logo; the competition row appears only under Tables.
+- **Logo:** the favicon's 3×3 bulb grid (five lit, four off) beside the Floodlight wordmark, in the header and the footer.
+- **Section tabs** (Tables, Matches, Clubs, Model) sit beside the logo; the competition row appears only under Tables. Methodology lives only on Model; other views link to it.
+- **Footer:** brand, Project links (Model, GitHub, roadmap) and Data links to every provider, above the model-run time.
 - **Outcome bulbs:** a match's home/draw/away chances are three small bulbs whose brightness is the chance; the brightest is the model's pick, and a ruled box marks what actually happened.
 - **Day strip:** nine days with big numerals and a game count; the chosen day is lit and underlined in amber.
 - **Call strip:** on a club page, one bar per played game; its height is the chance the model gave what happened, green when that was the pick and red when not, so it agrees with the "Called N of M" line.

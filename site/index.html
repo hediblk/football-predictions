@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Final Table · Football Forecasts</title>
-<meta name="description" content="Simulated final tables, match-by-match forecasts and club strength ratings for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League.">
+<title>Floodlight · Football forecasts</title>
+<meta name="description" content="Floodlight: simulated final tables, match-by-match forecasts and club strength ratings for the Premier League, La Liga, Bundesliga, Serie A, Ligue 1 and the Champions League.">
 <meta name="theme-color" content="#131312">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23131312'/%3E%3Cg fill='%23eaa85e'%3E%3Ccircle cx='4' cy='4' r='1.6'/%3E%3Ccircle cx='8' cy='4' r='1.6'/%3E%3Ccircle cx='12' cy='4' r='1.6'/%3E%3Ccircle cx='12' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='12' r='1.6'/%3E%3C/g%3E%3Cg fill='%233f3b36'%3E%3Ccircle cx='4' cy='8' r='1.6'/%3E%3Ccircle cx='8' cy='8' r='1.6'/%3E%3Ccircle cx='4' cy='12' r='1.6'/%3E%3Ccircle cx='12' cy='12' r='1.6'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,11 +15,12 @@
 <body>
 <header class="top">
   <div class="top-in">
-    <a class="logo" href="#">Final Table</a>
+    <a class="logo" href="#" aria-label="Floodlight, home"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><g class="on"><circle cx="4" cy="4" r="1.6"/><circle cx="8" cy="4" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="12" cy="8" r="1.6"/><circle cx="8" cy="12" r="1.6"/></g><g class="off"><circle cx="4" cy="8" r="1.6"/><circle cx="8" cy="8" r="1.6"/><circle cx="4" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/></g></svg>Floodlight</a>
     <nav class="tabs" id="tabs" aria-label="Sections">
       <a href="#la-liga" data-view="tables">Tables</a>
       <a href="#matches" data-view="matches">Matches</a>
       <a href="#clubs" data-view="clubs">Clubs</a>
+      <a href="#model" data-view="model">Model</a>
     </nav>
     <div class="status">
       <span class="lamp" id="lamp" aria-hidden="true"></span>
@@ -63,17 +64,7 @@
       <div class="scroll"><div class="bracket" id="bracket"></div></div>
     </fieldset>
 
-    <fieldset class="frame method">
-      <legend>How it works</legend>
-      <dl>
-        <dt>Match model</dt>
-        <dd>A time-weighted Dixon–Coles goal model, blended with Elo ratings and expected-goals strengths, prices every remaining fixture.</dd>
-        <dt>Simulation</dt>
-        <dd>Every remaining scoreline is drawn 10,000 times and each table is ranked with its competition's tie-break rules. Every percentage is a share of those simulated seasons.</dd>
-        <dt>Ranges</dt>
-        <dd>Point ranges cover the middle 80% of outcomes (10th to 90th percentile). They show match-to-match luck, not doubt about the team ratings themselves.</dd>
-      </dl>
-    </fieldset>
+    <p class="more-link"><a href="#model">How the forecasts are made →</a></p>
   </div>
 
   <div id="view-matches" hidden>
@@ -111,17 +102,7 @@
         <div class="scatter" id="c-scatter"></div>
         <p class="note" id="c-scatter-note"></p>
       </fieldset>
-      <fieldset class="frame method">
-        <legend>How the ratings work</legend>
-        <dl>
-          <dt>Rating</dt>
-          <dd>The share of the points a club would take off an average side on a neutral pitch, from the same match model that drives the forecasts: goals and expected goals, recent games counting more.</dd>
-          <dt>Attack, defence</dt>
-          <dd>Attack rates a club as if its defence were exactly as good as its attack, and defence the reverse, so all three numbers share one scale. Scores and Concedes are goals per game against an average side from the club's own league.</dd>
-          <dt>Across leagues</dt>
-          <dd>Each league's ratings are scaled by its average team rating in the Opta Power Rankings, relative to the Premier League: <span id="c-factors"></span> (12 Oct 2026).</dd>
-        </dl>
-      </fieldset>
+      <p class="more-link"><a href="#model/ratings">How the ratings are made →</a></p>
     </div>
 
     <div id="club-profile" hidden>
@@ -141,11 +122,124 @@
       <fieldset class="frame"><legend>Where they finish</legend><div id="p-finish"></div></fieldset>
     </div>
   </div>
+  <div id="view-model" hidden>
+    <fieldset class="frame hero">
+      <legend>The model</legend>
+      <div class="hero-in">
+        <div class="who">
+          <h1>How the forecasts are made</h1>
+          <p class="caption">Rate every team from past results and expected goals, price each remaining match, then play the rest of the season out <b>10,000 times</b>. Every percentage on this site is a share of those simulated seasons.</p>
+        </div>
+        <div class="numeral" role="img" aria-label="10,000 simulations">10K</div>
+      </div>
+    </fieldset>
+
+    <fieldset class="frame">
+      <legend>Three steps</legend>
+      <ol class="steps">
+        <li>
+          <h2><span>01</span>Rate the teams</h2>
+          <p>A Dixon–Coles goal model fits each team's attack and defence from its goals, counting recent matches more: a game a year old weighs about a third as much as last weekend's. A quarter of that strength comes from real goals and three quarters from the same model fitted to expected goals (xG), which is steadier over a few games. An Elo rating tracks results alone.</p>
+        </li>
+        <li>
+          <h2><span>02</span>Price every match</h2>
+          <p>Both models give home, draw and away chances for each remaining fixture. They are blended in log space, 84% Dixon–Coles and 16% Elo, and the goal model supplies the likely scorelines within each result.</p>
+        </li>
+        <li>
+          <h2><span>03</span>Play out the season</h2>
+          <p>Each simulated season draws a result and a score for every fixture left, adds up points and goals, and ranks the table with the competition's own tie-breakers (La Liga, for one, settles level points on head-to-head). Ten thousand seasons give the chance of every finishing place.</p>
+        </li>
+      </ol>
+    </fieldset>
+
+    <fieldset class="frame">
+      <legend>The blend</legend>
+      <div class="weights">
+        <div class="w-group">
+          <h3>Team strength</h3>
+          <div class="w-row"><span>Expected goals</span><i style="--w:75%"></i><b>75%</b></div>
+          <div class="w-row"><span>Goals</span><i style="--w:25%"></i><b>25%</b></div>
+        </div>
+        <div class="w-group">
+          <h3>Match chances</h3>
+          <div class="w-row"><span>Dixon–Coles</span><i style="--w:84.4%"></i><b>84%</b></div>
+          <div class="w-row"><span>Elo</span><i style="--w:15.6%"></i><b>16%</b></div>
+        </div>
+      </div>
+      <p class="note">One fit across the top five leagues, 2015/16 to 2025/26, chose these weights; the daily forecasts never refit them. xG strengths are stretched by 1.3 because xG understates the gap between strong and weak sides. Bookmaker odds are archived but not used.</p>
+    </fieldset>
+
+    <fieldset class="frame method">
+      <legend>Reading the numbers</legend>
+      <dl>
+        <dt>Ranges</dt>
+        <dd>Point ranges cover the middle 80% of simulated seasons (10th to 90th percentile). They show match-to-match luck, not doubt about the ratings themselves.</dd>
+        <dt>Zones</dt>
+        <dd>Title, Europe and Down are finishing places. Real European spots also depend on cup winners, and deciding play-offs are not simulated.</dd>
+        <dt>Track record</dt>
+        <dd>Every played match is forecast at 00:00 UTC on its match day from earlier results only, so the record on <a href="#matches">Matches</a> never peeks at the result. A call is right when the model's likeliest outcome happens.</dd>
+      </dl>
+    </fieldset>
+
+    <fieldset class="frame method">
+      <legend>Champions League</legend>
+      <dl>
+        <dt>One fit</dt>
+        <dd>Domestic and European results from every entrant's league feed a single goal model. Country offsets put leagues on a common scale, and European games get their own scoring and home baselines.</dd>
+        <dt>League phase</dt>
+        <dd>All 144 fixtures are played out and ranked with UEFA's tie-breakers, including opponents' combined points.</dd>
+        <dt>Knockouts</dt>
+        <dd>Draws follow the fixed bracket and seeding. Extra time runs at a third of the second leg's scoring rate and shoot-outs are a coin toss. The projected bracket is one illustrative path; title chances average every simulated draw.</dd>
+      </dl>
+    </fieldset>
+
+    <fieldset class="frame method" id="ratings">
+      <legend>Club ratings</legend>
+      <dl>
+        <dt>Rating</dt>
+        <dd>The share of the points a club would take off an average side on a neutral pitch, from the same match model that drives the forecasts.</dd>
+        <dt>Attack, defence</dt>
+        <dd>Attack rates a club as if its defence were exactly as good as its attack, and defence the reverse, so all three numbers share one scale. Scores and Concedes are goals per game against an average side from the club's own league.</dd>
+        <dt>Across leagues</dt>
+        <dd>Each league's ratings are scaled by its average team rating in the Opta Power Rankings, relative to the Premier League: <span id="c-factors">loading</span> (12 Oct 2026).</dd>
+      </dl>
+    </fieldset>
+
+    <fieldset class="frame method">
+      <legend>Limits</legend>
+      <dl>
+        <dt>Fixed ratings</dt>
+        <dd>Chances assume today's ratings are right. Transfers, injuries and managerial changes only show up once they change results.</dd>
+        <dt>Calibration</dt>
+        <dd>Weights were tuned on single matches, not on final standings.</dd>
+        <dt>Data gaps</dt>
+        <dd>Cancelled fixtures are played as if rescheduled. Expected goals cover only the top five leagues, so Champions League sides from elsewhere are rated on goals.</dd>
+      </dl>
+    </fieldset>
+  </div>
 </main>
 
 <footer class="foot">
-  <span>Final Table · results from football-data.org · xG from Understat · league strength from Opta Power Rankings</span>
-  <span id="foot-updated"></span>
+  <div class="foot-in">
+    <div class="foot-brand">
+      <a class="logo" href="#"><svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><g class="on"><circle cx="4" cy="4" r="1.6"/><circle cx="8" cy="4" r="1.6"/><circle cx="12" cy="4" r="1.6"/><circle cx="12" cy="8" r="1.6"/><circle cx="8" cy="12" r="1.6"/></g><g class="off"><circle cx="4" cy="8" r="1.6"/><circle cx="8" cy="8" r="1.6"/><circle cx="4" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/></g></svg>Floodlight</a>
+      <p>Football forecasts, refreshed daily at 05:30 UTC.</p>
+      <p id="foot-updated"></p>
+    </div>
+    <nav class="foot-col" aria-label="Project">
+      <h2>Project</h2>
+      <a href="#model">The model</a>
+      <a href="https://github.com/hediblk/football-predictions">Source on GitHub</a>
+      <a href="https://github.com/hediblk/football-predictions/blob/main/ROADMAP.md">Roadmap</a>
+    </nav>
+    <nav class="foot-col" aria-label="Data">
+      <h2>Data</h2>
+      <a href="https://www.football-data.org/">football-data.org <small>results, fixtures</small></a>
+      <a href="https://www.football-data.co.uk/">football-data.co.uk <small>past seasons</small></a>
+      <a href="https://understat.com/">Understat <small>expected goals</small></a>
+      <a href="https://dataviz.theanalyst.com/opta-power-rankings/?leagueRankings=true">Opta Power Rankings <small>league strength</small></a>
+    </nav>
+  </div>
 </footer>
 
 <div class="tip" id="tip" role="tooltip" hidden></div>

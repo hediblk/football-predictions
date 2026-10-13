@@ -1,17 +1,18 @@
-// Router: #<competition> (tables), #matches[/YYYY-MM-DD], #clubs[/<club>].
+// Router: #<competition> (tables), #matches[/YYYY-MM-DD], #clubs[/<club>], #model[/<section>].
 import { COMPS, $, loadCrests } from "./core.js";
 import { showTables } from "./tables.js";
 import { showMatches } from "./matches.js";
 import { showClubs } from "./clubs.js";
+import { showModel } from "./model.js";
 
-const VIEWS = ["tables", "matches", "clubs"];
+const VIEWS = ["tables", "matches", "clubs", "model"];
 let lastComp = COMPS[0].slug;
 let lastView = null;
 let lastArg = null;
 
 function route() {
   const [head = "", arg = ""] = location.hash.slice(1).split("/");
-  const view = head === "matches" || head === "clubs" ? head : "tables";
+  const view = VIEWS.includes(head) && head !== "tables" ? head : "tables";
   if (view === "tables") lastComp = COMPS.some((c) => c.slug === head) ? head : COMPS[0].slug;
   for (const v of VIEWS) $(`view-${v}`).hidden = v !== view;
   $("tabs").querySelectorAll("a").forEach((a) => a.setAttribute("aria-current", String(a.dataset.view === view)));
@@ -19,12 +20,13 @@ function route() {
   $("subnav").hidden = view !== "tables";
   if (view === "tables") renderSubnav();
   // A new view or club starts at the top; stepping through match days keeps the place.
-  if (view !== lastView || (view === "clubs" && arg !== lastArg)) window.scrollTo(0, 0);
+  if (view !== lastView || ((view === "clubs" || view === "model") && arg !== lastArg)) window.scrollTo(0, 0);
   lastView = view;
   lastArg = arg;
   if (view === "tables") showTables(lastComp);
   else if (view === "matches") showMatches(arg);
-  else showClubs(arg);
+  else if (view === "clubs") showClubs(arg);
+  else showModel(arg);
 }
 
 function renderSubnav() {
