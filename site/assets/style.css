@@ -594,6 +594,51 @@ h3.sub + .scroll { margin-bottom: 14px; }
 .scores li.off { opacity: .6; }
 .m-verdict.pick b { color: var(--amber-t); font-weight: 700; }
 
+/* ---------- weekly ranking ---------- */
+.mv { display: inline; margin-left: 4px; font: 500 11px/1 var(--mono); white-space: nowrap; }
+.mv b { font-weight: 700; margin-left: 1px; }
+.mv.up { color: var(--green-t); }
+.mv.down { color: var(--red); }
+.mv.flat, .mv.new { color: var(--dim); }
+.rank th.mvc, .rank td.mvc { width: 44px; padding-left: 0; padding-right: 8px; text-align: left; }
+.rank td.mvc .mv { margin-left: 0; }
+.rank td.ad { vertical-align: middle; color: var(--ink); }
+.rank td.ad b { font-weight: 700; }
+.rank td.ad i { display: block; height: 3px; margin: 5px 0 0 auto; width: 64px; background: linear-gradient(to right, var(--ink-2) var(--w), var(--bulb-off) var(--w)); }
+.rank .sec { color: var(--dim); }
+.moves { display: grid; grid-template-columns: 1fr; gap: 18px 28px; margin-top: 4px; }
+.moves h3 { margin: 0 0 8px; font: 800 13px/1 var(--sign); letter-spacing: .18em; text-transform: uppercase; color: var(--ink-2); }
+.moves h4 { margin: 10px 0 6px; font: 500 11px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
+.moves ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.moves li { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+.moves li a { color: inherit; text-decoration: none; min-width: 0; font: 700 15px/1 var(--sign); letter-spacing: .06em; text-transform: uppercase; }
+.moves li a:hover { color: var(--amber); }
+.moves li .mv { margin-left: auto; }
+.moves li small { color: var(--dim); font: 500 11px/1 var(--mono); min-width: 28px; text-align: right; }
+.moves li.empty { color: var(--dim); font-size: 11.5px; }
+@media (min-width: 720px) {
+  .moves { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---------- race charts ---------- */
+.race-chart > svg { width: 100%; height: auto; display: block; max-width: 760px; }
+.race-chart .grid { stroke: var(--rule-2); stroke-width: 1; }
+.race-chart .tick { fill: var(--dim); font: 500 10px var(--mono); }
+.race-chart .ln path { fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-linejoin: round; }
+.race-chart .ln.first path { stroke: var(--tone, var(--amber)); stroke-width: 2.5; }
+.race-chart .ln circle { fill: var(--ink-2); }
+.race-chart .ln.first circle { fill: var(--tone, var(--amber)); }
+.race-chart .lead-ln { stroke: var(--rule); stroke-width: 1; }
+.race-chart .end-lbl { fill: var(--ink-2); font: 500 11px var(--mono); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.race-chart .end-lbl.first { fill: var(--tone-t, var(--amber-t)); font-weight: 700; }
+.race-chart .xhair { stroke: var(--rule); stroke-width: 1; pointer-events: none; }
+.race-chart .hov circle { fill: var(--ink-2); stroke: var(--bg); stroke-width: 2; pointer-events: none; }
+.race-chart .hov circle.first { fill: var(--tone, var(--amber)); }
+.race-chart .hit { fill: transparent; touch-action: pan-y; }
+.race-legend { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--ink-2); font-size: 11.5px; }
+.race-legend li { display: inline-flex; align-items: center; gap: 7px; }
+.race-legend li.first b { color: var(--tone-t, var(--amber-t)); }
+
 /* ---------- stakes ---------- */
 /* a dim ruled tag on fixtures where a result moves someone's title, top-four or relegation chance */
 .m-stake { display: inline-flex; align-items: center; padding: 3px 6px 2px; border: 1px solid var(--rule); font: 800 11px/1 var(--sign); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); cursor: help; white-space: nowrap; }

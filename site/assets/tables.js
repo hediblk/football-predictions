@@ -1,6 +1,7 @@
 // Tables view: the projected final table for one competition.
 import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus, clubName } from "./core.js";
 import { showRounds } from "./rounds.js";
+import { showRace } from "./race.js";
 
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
 let clubSlugs = new Set();
@@ -32,6 +33,7 @@ function render(data) {
   setStatus(data.generated_at, data.data_cutoff);
   renderHero(data);
   renderRaces(data);
+  showRace(data);
   renderTable(data);
   $("rounds-frame").hidden = !ucl;
   $("ko-frame").hidden = !ucl;

@@ -39,6 +39,8 @@
 
     <section class="races" id="races" aria-label="Races"></section>
 
+    <fieldset class="frame" id="race-frame" hidden><legend>The race so far</legend><div class="chips" id="race-chips" role="group" aria-label="Race"></div><div class="race-chart" id="race-chart"></div><p class="note" id="race-note"></p></fieldset>
+
     <fieldset class="frame" id="rounds-frame" hidden>
       <legend>Fixtures · round by round</legend>
       <div class="round-nav" id="round-nav"></div>
@@ -96,7 +98,9 @@
         <div class="chips" id="c-chips" role="group" aria-label="League"></div>
         <div class="scroll"><table class="board rank" id="c-rank"></table></div>
         <button type="button" class="more-btn" id="c-more">Show all</button>
+        <p class="note" id="c-rank-note"></p>
       </fieldset>
+      <fieldset class="frame" id="c-moves-frame" hidden><legend id="c-moves-legend">This week</legend><div class="moves" id="c-moves"></div></fieldset>
       <fieldset class="frame">
         <legend>Attack against defence</legend>
         <div class="scatter" id="c-scatter"></div>
