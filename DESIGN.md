@@ -29,11 +29,11 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 --amber:   #eaa85e;  /* the lit accent */
 --amber-t: #d7af86;  /* amber text on dark, 8.7:1 */
 --red:     #e1524f;  /* relegation / elimination bulb; a missed call */
---green:   #5ad664;  /* a called result: lamp only */
+--green:   #5ad664;  /* a called result, or a rank gained: lamp / arrow */
 --green-t: #88cb8a;  /* "Called" text */
 ```
 
-`--green` came from the same generator (`--seed 145`, accent steps 9 and 11) and only marks a called result. Calls always pair a lamp with a word (Called, Missed, Exact), never colour alone.
+`--green` came from the same generator (`--seed 145`, accent steps 9 and 11); it marks a called result and, with `--green-t`, a rank gained. Calls always pair a lamp with a word (Called, Missed, Exact), never colour alone.
 
 ## Components added with Matches and Clubs
 
@@ -47,5 +47,6 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 - **Call strip:** on a club page, one bar per played game; its height is the chance the model gave what happened, green when that was the pick and red when not, so it agrees with the "Called N of M" line.
 - **Rank plates:** category ranks (#1 attack, #1 defence, 1st in league) sit on a lit amber plate; top-ten ranks are amber text; the rest stay dim.
 - **Club board:** ruled cells, not cards, with the rating as the lit number and attack/defence hairline meters.
+- **Movement arrows:** weekly rank changes use a green ▲ with the number of places gained or a red ▼ with the places dropped, a dim dash when unchanged and dim "new" for clubs without a previous week; colour never stands alone. This extends `--green`/`--green-t` (otherwise reserved for called results) and `--red` (relegation, misses) to rank movement.
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.
