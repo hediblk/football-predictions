@@ -1,6 +1,6 @@
 # Odds archive
 
-Daily bookmaker 1X2 prices, appended by `scripts/archive_odds.py` during the site refresh (see the [README](../../README.md)). One CSV per competition and season: `<season>/<code>.csv`, with `<season>` the July-based start year and `<code>` one of `PL`, `PD`, `BL1`, `SA`, `FL1`, `CL`. Rows are only ever appended.
+Daily bookmaker 1X2 prices, appended by `scripts/archive_odds.py` during the site refresh (see the [README](../../README.md)). One CSV per competition and season: `<season>/<code>.csv`, with `<season>` the July-based start year and `<code>` one of `PL`, `PD`, `BL1`, `SA`, `FL1`, `CL`, `EL` (Europa League, from 13 October 2026) and `ECL` (Conference League, same date). Each competition costs one The Odds API credit per day, eight in all out of 500 a month. Rows are only ever appended.
 
 Each row is one fixture as quoted at one fetch, from [The Odds API](https://the-odds-api.com/) region `eu`:
 
