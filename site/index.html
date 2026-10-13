@@ -39,8 +39,6 @@
 
     <section class="races" id="races" aria-label="Races"></section>
 
-    <fieldset class="frame" id="race-frame" hidden><legend>The race so far</legend><div class="chips" id="race-chips" role="group" aria-label="Race"></div><div class="race-chart" id="race-chart"></div><p class="note" id="race-note"></p></fieldset>
-
     <fieldset class="frame" id="rounds-frame" hidden>
       <legend>Fixtures · round by round</legend>
       <div class="round-nav" id="round-nav"></div>
@@ -54,16 +52,18 @@
       <p class="note" id="table-note"></p>
     </fieldset>
 
-    <fieldset class="frame" id="ko-frame" hidden>
-      <legend>Road to the final</legend>
-      <p class="note top-note">Chance of reaching each round across every simulated league phase and draw. Sixteen likeliest winners.</p>
-      <div class="scroll"><table class="board ko" id="ko-table"></table></div>
-    </fieldset>
+    <fieldset class="frame" id="race-frame" hidden><legend>The race so far</legend><div class="chips" id="race-chips" role="group" aria-label="Race"></div><div class="race-chart" id="race-chart"></div><p class="note" id="race-note"></p></fieldset>
 
     <fieldset class="frame" id="bracket-frame" hidden>
       <legend>Projected bracket</legend>
       <p class="note top-note" id="bracket-note"></p>
       <div class="scroll"><div class="bracket" id="bracket"></div></div>
+    </fieldset>
+
+    <fieldset class="frame" id="ko-frame" hidden>
+      <legend>Road to the final</legend>
+      <p class="note top-note">Chance of reaching each round across every simulated league phase and draw. Sixteen likeliest winners.</p>
+      <div class="scroll"><table class="board ko" id="ko-table"></table></div>
     </fieldset>
 
     <p class="more-link"><a href="#model">How the forecasts are made →</a></p>
