@@ -33,7 +33,7 @@ export async function showClubs(slug) {
 
 const leagueName = (slug) => compBySlug[slug].label;
 /* a category rank: #1 lit, top ten warm, the rest dim */
-const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top" : ""}${cls}">#${rank}</${tag}>`;
+const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top10" : ""}${cls}">#${rank}</${tag}>`;
 const leagueTables = () => Promise.all(LEAGUES.map((l) => getJSON(`${l.slug}.json`).catch(() => null)));
 const rowFor = (tables, club) => {
   const table = tables.find((t) => t && t.slug === club.league);

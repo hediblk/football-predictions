@@ -569,7 +569,7 @@ h3.sub + .scroll { margin-bottom: 14px; }
 
 /* category ranks: #1 is a lit plate, the top ten warm, the rest dim */
 .crk { color: var(--dim); font-size: 10px; }
-.crk.top { color: var(--amber-t); }
+.crk.top10 { color: var(--amber-t); }
 .crk.first { color: var(--bg); background: var(--amber); font-weight: 700; padding: 1px 4px; }
 .cell .crk { font-size: 11px; }
 
