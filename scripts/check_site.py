@@ -4,7 +4,7 @@
 #
 # Serves the directory on a local port with the data it ships, stops the browser clock at the newest forecast so
 # "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages,
-# an upcoming and a finished match page and the model page, at desktop and phone widths, expanding a match (which must
+# an upcoming match page, finished ones in After and Before mode, and the model page, at desktop and phone widths, expanding a match (which must
 # link its match page) and a table row. Any console error, uncaught
 # exception, failed same-origin request or missing content fails the check. Other origins (web fonts) get empty
 # responses, so the check runs offline. Needs `pip install playwright` and `python -m playwright install chromium`.
@@ -22,6 +22,8 @@ from playwright.sync_api import sync_playwright
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
 TABLE = ["#hero-in h1", "#table tbody tr.row"]
 MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
+# A finished fixture opens in After mode; pressing Before must bring back the pre-game forecast.
+AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr"]
 VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 375, "height": 844}}
 BROKEN = ["No signal", "could not be loaded", "unavailable right now"]
 
@@ -66,12 +68,17 @@ def routes(data):
             found.append((f"#matches/{match['kickoff'][:10]}", ["#m-day .mrow"],
                           [f'#m-day .mrow[data-c="{slug}"][data-id="{match["id"]}"]'],
                           f'#m-day .panel .call .dim:has-text("{label}")'))
-    # Match pages: the next forecast fixture (one with stakes if there is one) and the latest finished league game.
+    # Match pages: the next forecast fixture (one with stakes if there is one), then in After mode the latest finished
+    # league game, Champions League game and published fixture.
     ahead = sorted((f for f in fixtures if "p" in f[1] and "score" not in f[1] and f[1]["kickoff"] >= origin), key=lambda f: f[1]["kickoff"])
-    done = sorted((f for f in fixtures if "p" in f[1] and "score" in f[1] and f[0] != "champions-league"), key=lambda f: f[1]["kickoff"])
-    for slug, match in [next((f for f in ahead if f[1].get("stakes")), ahead[0] if ahead else None), done[-1] if done else None]:
-        if match:
-            found.append((f"#match/{slug}/{match['id']}", MATCH, [], None))
+    upcoming = next((f for f in ahead if f[1].get("stakes")), ahead[0] if ahead else None)
+    if upcoming:
+        found.append((f"#match/{upcoming[0]}/{upcoming[1]['id']}", MATCH, [], None))
+    done = sorted((f for f in fixtures if "p" in f[1] and "score" in f[1]), key=lambda f: f[1]["kickoff"])
+    finished = [next((f for f in reversed(done) if test(f)), None) for test in
+                (lambda f: f[0] != "champions-league", lambda f: f[0] == "champions-league", lambda f: f[1].get("published"))]
+    for slug, fixture_id in dict.fromkeys((f[0], f[1]["id"]) for f in finished if f):
+        found.append((f"#match/{slug}/{fixture_id}", AFTER, ["#view-match .mp-modes [data-mode=before]"], "#view-match .mp-fc .scores li"))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:

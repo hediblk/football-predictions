@@ -735,3 +735,20 @@ a.cs { color: inherit; text-decoration: none; }
   .srow .s-res { grid-column: 1; }
   .srow .c-go { grid-column: 2; grid-row: 1 / span 2; }
 }
+/* match page after full time: After · Before chips, the forecast against the result, what it changed */
+.mp-modes { margin-top: 18px; }
+.mp-said { margin: 12px 0 0; max-width: 36ch; text-align: right; color: var(--ink-2); font-size: 12px; line-height: 1.5; }
+.mp-line { margin: 0 0 8px; max-width: 90ch; color: var(--ink-2); font-size: 12.5px; line-height: 1.6; }
+.mp-line b { color: var(--ink); }
+.mp-line + .scroll { margin-top: 14px; }
+.mp-after h4 { margin: 26px 0 10px; font: 800 12px/1 var(--sign); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.mp-after h4:first-of-type { margin-top: 4px; }
+.mp-chances td .mv, .mp-after .mp-sides .mv { margin-left: 2px; }
+@media (max-width: 699px) {
+  .mp-said { text-align: left; }
+  .mp-chances th, .mp-chances td { padding: 0 4px; }
+  .mp-chances thead th { padding-bottom: 12px; }
+  .mp-chances td { height: 44px; }
+  .mp-chances td.l { padding-left: 0; }
+  .mp-chances td.l small { display: block; margin: 4px 0 0; }
+}
