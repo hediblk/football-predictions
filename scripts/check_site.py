@@ -82,12 +82,29 @@ def routes(data):
     for slug, fixture_id in dict.fromkeys((f[0], f[1]["id"]) for f in finished if f):
         found.append((f"#match/{slug}/{fixture_id}", AFTER, ["#view-match .mp-modes [data-mode=before]"], "#view-match .mp-fc .scores li"))
     # The latest finished league game with a shot file, opening its shot list.
-    def shots(slug, match):
+    def detail(slug, match):
         path = data / f"match/{json.loads((data / f'{slug}.json').read_text())['season'][:4]}/{slug}/{match['id']}.json"
-        return path.exists() and bool(json.loads(path.read_text()).get("shots"))
-    charted = next((f for f in reversed(done) if f[0] != "champions-league" and shots(*f)), None)
+        return json.loads(path.read_text()) if path.exists() else {}
+    charted = next((f for f in reversed(done) if f[0] != "champions-league" and detail(*f).get("shots")), None)
     if charted:
         found.append((f"#match/{charted[0]}/{charted[1]['id']}", CHANCES, ["#view-match .mp-list summary"], "#view-match .mp-list[open] tbody tr"))
+    # ESPN adds the paired board in both competitions, marks on the xG line or a no-shots ruler,
+    # and a collapsed timeline that can reveal substitutions.
+    for ucl in (False, True):
+        game = next((f for f in reversed(done) if (f[0] == "champions-league") == ucl and detail(*f).get("box")), None)
+        if not game:
+            continue
+        slug, match = game
+        extra = detail(*game)
+        selectors = AFTER + ["#view-match .mp-stats .mp-stat-row"]
+        if extra.get("events"):
+            selectors.append("#view-match .mp-full:not([open])")
+            if not extra.get("shots"):
+                selectors.append("#view-match .mp-ruler")
+            elif any(e["type"] == "red" for e in extra["events"]):
+                selectors.append("#view-match .mp-xgline rect.card")
+        found.append((f"#match/{slug}/{match['id']}", selectors,
+                      ["#view-match .mp-full summary"], "#view-match .mp-full[open] tbody tr"))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
@@ -119,12 +136,16 @@ def visit(context, url, origin, selectors, rows, opened):
             problems.append(f"empty: nothing matches {selector}")
     text = page.locator("main").inner_text()
     problems += [f"shows {phrase!r}" for phrase in BROKEN if phrase in text]
+    if page.locator(".mp-stat-row").count() > 10:
+        problems.append("Match stats has more than ten rows")
     row = next((page.locator(selector).first for selector in rows if page.locator(selector).count()), None)
     if row:
         row.click()
         page.wait_for_load_state("networkidle")
         if not page.locator(opened).count():
             problems.append(f"clicking a row did not open {opened}")
+        if page.locator(".mp-modes [data-mode=before][aria-pressed=true]").count() and page.locator(".mp-stats").count():
+            problems.append("Match stats is visible in Before mode")
     page.close()
     return problems
 

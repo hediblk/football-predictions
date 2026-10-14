@@ -818,3 +818,35 @@ table.mp-stand { min-width: 460px; }
   #sc-charts { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .sc-frame svg text { font-size: 18px; }
 }
+
+/* Task 12 · ESPN match statistics and timeline */
+.mp-stat-teams { display: flex; justify-content: space-between; gap: 18px; margin: 0 0 14px; font-size: 12px; }
+.mp-stat-teams > span:last-child { text-align: right; }
+.mp-stat-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 126px minmax(0, 1fr) 44px; align-items: center; gap: 8px; min-height: 34px; border-top: 1px solid var(--rule-2); font-size: 12px; color: var(--ink-2); }
+.mp-stat-value:last-child { text-align: right; }
+.mp-stat-value b { color: var(--ink); font-weight: 700; }
+.mp-stat-label { text-align: center; color: var(--dim); font-size: 11px; }
+.mp-stat-bar { display: flex; height: 4px; background: var(--rule-2); }
+.mp-stat-bar.home { justify-content: flex-end; }
+.mp-stat-bar i { display: block; height: 4px; background: var(--ink-2); }
+.mp-stat-bar.away i { background: repeating-linear-gradient(to right, var(--ink-2) 0 5px, transparent 5px 8px); }
+.mp-full table { min-width: 520px; }
+.mp-full td:last-child { white-space: normal; }
+.mp-ruler { position: relative; margin: 10px 14px 0; height: 90px; font-size: 10px; }
+.mp-ruler-rail { position: absolute; top: 34px; left: 0; right: 0; border-top: 1px solid var(--rule); }
+.mp-ruler-tick { position: absolute; top: 66px; transform: translateX(-50%); color: var(--dim); }
+.mp-ruler-tick::before { content: ''; position: absolute; height: 4px; border-left: 1px solid var(--rule); top: -6px; left: 50%; }
+.mp-event { position: absolute; transform: translateX(-50%); white-space: nowrap; font-size: 12px; }
+.mp-event.h { top: 10px; }
+.mp-event.a { top: 38px; }
+.mp-event.goal { color: var(--amber-t); }
+.mp-event.card { color: var(--ink); }
+.mp-moments { list-style: none; margin: 14px 0; padding: 0; font-size: 11px; color: var(--ink-2); line-height: 1.7; }
+.mp-moments li { border-top: 1px solid var(--rule-2); padding: 5px 0; }
+.mp-xgline .card { fill: var(--ink); stroke: var(--bg); stroke-width: 1.5; }
+.mp-xgline .card-label { fill: var(--ink); }
+@media (max-width: 599px) {
+  .mp-stat-row { grid-template-columns: 38px minmax(0, 1fr) 100px minmax(0, 1fr) 38px; gap: 4px; font-size: 11px; }
+  .mp-stat-label { font-size: 10px; }
+  .mp-stat-teams { font-size: 11px; }
+}

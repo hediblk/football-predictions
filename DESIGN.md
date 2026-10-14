@@ -60,6 +60,12 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.
 
+## Task 12 · Match stats and timeline
+
+Finished match pages add "Match stats" in After mode when ESPN detail is available. At most ten rows place home values on the left and away values on the right, with a centred metric label and paired hairline bars on the same scale within each row. Home bars are solid ink and away bars dashed; the larger number is bold. Percentages retain their units and absent pairs hide their row.
+
+On the existing xG timeline, ESPN goals replace the fallback Understat markers and red cards add an ink card glyph with an R label. Goals keep amber bulbs and minute/scorer labels; cards use shape and text without another hue. Without shots, including Champions League games, a compact ruled minute line puts home events above and away events below, with goal bulbs, Y/R card glyphs and a short minute/name list for goals and dismissals. The chart's spoken label and Full timeline provide the text equivalent. The native "Full timeline" details starts collapsed and is the only place substitutions appear (player on ← player off). Before mode and expanded match rows keep their existing presentation. The footer credits "ESPN · match statistics".
+
 ## Task 8 · Scorecard
 
 Matches replaces the season record with “Scorecard · this season”: a ruled board with Competition, Played, amber Log loss, signed model-minus-frequency baseline, Brier, Called hit rate and Published share. A lower model score gets a green ▲ paired with its signed value. The board scrolls horizontally on phones. One note explains lower scores, the 1.099 uniform guess and the combined cohort, followed by “Calibration and the rolling record →”.

@@ -126,12 +126,20 @@ def fetch_events(src, data_dir, cache_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch finished domestic shots once, without changing forecasts.")
+    parser = argparse.ArgumentParser(description="Fetch finished match detail once, without changing forecasts.")
     parser.add_argument("--src", type=Path, default=Path("out/site"))
     parser.add_argument("--data", type=Path, default=Path("site/data"))
     parser.add_argument("--cache", type=Path, default=Path(".cache/understat/matches"))
+    parser.add_argument("--espn-cache", type=Path, default=Path(".cache/espn/matches"))
+    parser.add_argument("--provider", choices=("all", "understat", "espn"), default="all")
     args = parser.parse_args()
-    fetch_events(args.src, args.data, args.cache)
+    if args.provider != "espn":
+        fetch_events(args.src, args.data, args.cache)
+    if args.provider != "understat":
+        from fetch_espn_events import fetch_espn_events
+        if args.provider == "all":
+            time.sleep(1)
+        fetch_espn_events(args.src, args.data, args.espn_cache)
 
 
 if __name__ == "__main__":
