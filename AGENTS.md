@@ -36,7 +36,7 @@ The site is plain HTML, CSS and JavaScript. Model outputs reach the site through
 | `data/odds/` | Committed, dated bookmaker observations; see its README |
 | `tests/` | Existing pytest suite for model behavior, timing, identities and exports |
 | `docs/` | Forecast examples, evaluation reports, protection specifications and architectural decisions |
-| `.github/workflows/site.yml` | Daily refresh at 05:30 UTC and GitHub Pages deployment |
+| `.github/workflows/site.yml` | Daily refresh at 01:17 UTC and GitHub Pages deployment |
 
 ## Where to start
 

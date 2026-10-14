@@ -2,8 +2,8 @@ name: Refresh and deploy site
 
 on:
   schedule:
-    # Daily at 05:30 UTC, after the previous evening's European matches.
-    - cron: "30 5 * * *"
+    # Daily at 01:17 UTC (off the busy :00/:30 slots), after the previous evening's European matches.
+    - cron: "17 1 * * *"
   workflow_dispatch:
   push:
     branches: [main]
