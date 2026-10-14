@@ -234,7 +234,7 @@ export function spreadPanel(t, dropFrom, extra = "") {
       <dt>Most likely</dt><dd>${ordinal(mode)} (${pct(max)})</dd>
       <dt>Average finish</dt><dd>${t.xpos.toFixed(1)}</dd>
     </dl>
-    <div class="segs" role="img" aria-label="${esc(`${t.name}: chance of each finishing place`)}">${bars}</div>
+    <div class="segs${many ? " many" : ""}" role="img" aria-label="${esc(`${t.name}: chance of each finishing place`)}">${bars}</div>
     ${extra}
   </div>`;
 }
