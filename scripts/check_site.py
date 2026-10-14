@@ -154,8 +154,8 @@ def visit(context, url, origin, selectors, rows, opened):
     limit = 13 if page.locator(".mp-running").count() else 10
     if page.locator(".mp-stat-row").count() > limit:
         problems.append(f"Match stats has more than {limit} rows")
-    if page.locator(".mp-where").count() and page.evaluate("document.documentElement.scrollWidth > innerWidth"):
-        problems.append("UEFA match page scrolls horizontally")
+    if page.evaluate("document.documentElement.scrollWidth > innerWidth"):
+        problems.append("page scrolls horizontally")
     row = next((page.locator(selector).first for selector in rows if page.locator(selector).count()), None)
     if row:
         row.click()
