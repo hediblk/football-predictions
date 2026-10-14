@@ -12,7 +12,7 @@ let lastView = null;
 let lastArg = null;
 
 function route() {
-  const [head = "", arg = "", sub = ""] = location.hash.slice(1).split("/");
+  const [head = "", arg = "", sub = "", extra = ""] = location.hash.slice(1).split("/");
   const view = VIEWS.includes(head) && head !== "tables" ? head : "tables";
   if (view === "tables") lastComp = COMPS.some((c) => c.slug === head) ? head : COMPS[0].slug;
   for (const v of VIEWS) $(`view-${v}`).hidden = v !== view;
@@ -23,14 +23,14 @@ function route() {
   $("subnav").hidden = view !== "tables";
   if (view === "tables") renderSubnav();
   // A new view, club or fixture starts at the top; stepping through match days keeps the place.
-  const key = `${arg}/${sub}`;
+  const key = `${arg}/${sub}/${extra}`;
   if (view !== lastView || (["clubs", "model", "match"].includes(view) && key !== lastArg)) window.scrollTo(0, 0);
   lastView = view;
   lastArg = key;
   if (view === "tables") showTables(lastComp);
   else if (view === "matches") showMatches(arg);
   else if (view === "match") showMatch(arg, sub);
-  else if (view === "clubs") showClubs(arg);
+  else if (view === "clubs") showClubs(arg, sub === "vs" ? extra : "");
   else showModel(arg);
 }
 
