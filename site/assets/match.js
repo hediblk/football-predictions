@@ -180,9 +180,10 @@ function chances(m, comp) {
     // a playing club's settled races (under 1% or over 99% either side) say nothing
     if (!always && (Math.max(a, b) < 1 || Math.min(a, b) > 99)) return;
     seen.add(`${id}/${key}`);
-    const d = a - b;
+    // the change between the whole percentages shown, so the arrow agrees with the two columns
+    const d = Math.round(a) - Math.round(b);
     const good = key === "releg" ? d < 0 : d > 0;
-    const size = Math.round(Math.abs(d));
+    const size = Math.abs(d);
     const change = Math.abs(d) < NOISE ? `<span class="mv flat" title="Less than ${NOISE} points">–</span>`
       : `<span class="mv ${good ? "up" : "down"}" aria-label="${d > 0 ? "up" : "down"} ${size} points">${d > 0 ? "▲" : "▼"}<b>${size}</b></span>`;
     rows.push(`<tr><td class="l">${clubName(id, name, "inline")} <small>${word}</small></td><td>${pct(b)}</td><td class="b">${pct(a)}</td><td>${change}</td></tr>`);
