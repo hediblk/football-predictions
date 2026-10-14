@@ -20,7 +20,9 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
-TABLE = ["#hero-in h1", "#table tbody tr.row"]
+TABLE = ["#hero-in h1", "#table tbody tr.row",
+         # Race movers: a mover or the "no change" line; hidden without a frozen Monday before this week to compare with.
+         "#race-moves li, #race-moves[hidden]"]
 MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
 # A finished fixture opens in After mode; pressing Before must bring back the pre-game forecast.
 AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr"]

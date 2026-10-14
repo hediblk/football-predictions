@@ -1,13 +1,17 @@
 // Title-race charts: each contender's chances through the season, from the daily history files.
 import { $, esc, pct, getJSON, clubName, clubCrest } from "./core.js";
+import { stakeNow } from "./matches.js";
+import { baseWeek } from "./clubs.js";
 
-const UCL_METRICS = [["top8", "Top 8"], ["last16", "Last 16"], ["qf", "Quarter-finals"], ["sf", "Semi-finals"], ["final", "Final"], ["title", "Winner"]];
+const UCL_METRICS = [["top8", "Top 8"], ["top24", "Top 24"], ["last16", "Last 16"], ["qf", "Quarter-finals"], ["sf", "Semi-finals"], ["final", "Final"], ["title", "Winner"]];
 const DASHES = ["", "4 3", "1 3", "6 2 1 2", "2 2"];
 const MAX_LINES = 6;
+const MOVE = 3, MAX_MOVERS = 5; // movers: changes of at least 3 points (the series are whole percentages), five at most
+const STAGES = { last16: "round16", qf: "quarterfinal", sf: "semifinal", final: "final" };
 const WIDE = new Set(["title", "final", "sf"]); // judged by their peak; the rest by where they stand now
 const choice = {}; // chosen metric per competition kind
 let token = 0;
-let state = null; // { data, hist } of the chart on screen
+let state = null; // { data, hist, base } of the chart on screen
 
 const dayOf = (iso) => Date.parse(`${iso}T00:00:00Z`);
 const fmt = (iso, opts) => new Date(dayOf(iso)).toLocaleDateString("en-GB", { ...opts, timeZone: "UTC" }).replace("Sept", "Sep");
@@ -16,18 +20,55 @@ const last = (vals) => { for (let i = vals.length - 1; i >= 0; i--) if (vals[i] 
 export async function showRace(data) {
   const mine = ++token;
   const frame = $("race-frame");
-  let hist;
+  const season = data.season.split("/")[0];
+  let hist, weeks;
   try {
-    hist = await getJSON(`history/${data.season.split("/")[0]}/${data.slug}.json`);
+    [hist, weeks] = await Promise.all([getJSON(`history/${season}/${data.slug}.json`), getJSON(`history/${season}/clubs.json`).catch(() => null)]);
   } catch {
     if (mine === token) { frame.hidden = true; state = null; }
     return;
   }
   if (mine !== token) return;
   if (!hist.dates || hist.dates.length < 2) { frame.hidden = true; state = null; return; }
-  state = { data, hist };
+  state = { data, hist, base: baseline(data, hist, weeks) };
   frame.hidden = false;
   draw();
+}
+
+/* The Clubs ranking arrows' baseline: the Monday frozen before this run's week, and the history point on the last
+   date before it. None without such a Monday or point. */
+function baseline(data, hist, weeks) {
+  const monday = baseWeek(weeks, data.generated_at)?.date;
+  const i = monday ? hist.dates.findLastIndex((d) => d < monday) : -1;
+  return i < 0 ? null : { monday, i };
+}
+
+/* a club's chance now, from the competition file, in whole points (history points are rounded the same way) */
+const nowOf = (t, key) => Math.round(STAGES[key] ? t.stages[STAGES[key]] : stakeNow(t, key));
+
+/* the biggest changes since the baseline for one race, clubs that didn't play included */
+function renderMovers(key) {
+  const el = $("race-moves"), { data, hist, base } = state;
+  el.hidden = !base;
+  if (!base) return;
+  const since = `Monday ${fmt(base.monday, { day: "numeric", month: "short" })}`;
+  const teams = new Map(data.teams.map((t) => [t.id ?? t.slug, t]));
+  const rows = hist.teams.flatMap((h) => {
+    const t = teams.get(h.id), was = h[key]?.[base.i];
+    if (!t || was == null) return [];
+    const before = Math.round(was), now = nowOf(t, key);
+    return Math.abs(now - before) >= MOVE ? [{ t, before, now, d: now - before }] : [];
+  }).sort((a, b) => Math.abs(b.d) - Math.abs(a.d) || b.now - a.now).slice(0, MAX_MOVERS);
+  const scale = Math.max(10, ...rows.map((r) => Math.abs(r.d)));
+  const items = rows.map(({ t, before, now, d }) => {
+    const good = (d > 0) !== (key === "releg"); // a rising relegation chance is bad news
+    const label = `${d > 0 ? "up" : "down"} ${Math.abs(d)} points since ${since}`;
+    const name = t.slug ? `<a href="#clubs/${t.slug}">${clubName(t.id, t.name)}</a>` : clubName(t.id, t.name);
+    return `<li>${name}<small>${pct(before)} → ${pct(now)}</small>
+      <span class="dv ${d > 0 ? "gain" : "loss"} ${good ? "good" : "bad"}" style="--w:${(Math.abs(d) / scale) * 50}%" aria-hidden="true"><i></i></span>
+      <span class="mv ${good ? "up" : "down"}" aria-label="${label}" title="${label}">${d > 0 ? "▲" : "▼"}<b>${d > 0 ? "+" : "−"}${Math.abs(d)}</b></span></li>`;
+  }).join("") || `<li class="empty">No change of ${MOVE} points or more since ${since}.</li>`;
+  el.innerHTML = `<section><h3>Movers since ${since}</h3><ol>${items}</ol></section>`;
 }
 
 function metricsFor({ data, hist }) {
@@ -53,11 +94,15 @@ function draw() {
   const key = metrics.some(([k]) => k === choice[data.kind]) ? choice[data.kind] : "title";
   const label = metrics.find(([k]) => k === key)[1];
   $("race-chips").innerHTML = metrics.map(([k, text]) => `<button type="button" class="chip" data-metric="${k}" aria-pressed="${k === key}">${esc(text)}</button>`).join("");
+  renderMovers(key);
 
   const rows = pickTeams(hist.teams, key);
   const first = fmt(hist.dates[0], { day: "numeric", month: "short" });
   const runs = ucl ? "simulated tournaments" : "simulated seasons";
-  $("race-note").textContent = `One point per day with new results, from ${first}. Chances are shares of 10,000 ${runs}, as forecast that day. The table above lists the current values.`;
+  // a faint rule at the movers' baseline Monday, when it falls inside the chart
+  const baseMs = state.base ? dayOf(state.base.monday) : NaN;
+  const baseOn = baseMs > dayOf(hist.dates[0]) && baseMs <= dayOf(hist.dates.at(-1));
+  $("race-note").textContent = `One point per day with new results, from ${first}. Chances are shares of 10,000 ${runs}, as forecast that day.${baseOn ? ` The faint vertical line marks Monday ${fmt(state.base.monday, { day: "numeric", month: "short" })}.` : ""} The table above lists the current values.`;
   if (!rows.length) { $("race-chart").innerHTML = `<p class="note">Nobody has been in this race yet.</p>`; return; }
 
   const tone = key === "releg" ? "var(--red)" : "var(--amber)";
@@ -120,7 +165,7 @@ function draw() {
   const aria = `${label} chances since ${first}: ${now}. The table above lists the current values.`;
   $("race-chart").style.cssText = `--tone:${tone};--tone-t:${key === "releg" ? tone : "var(--amber-t)"}`;
   $("race-chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(aria)}">
-    ${grid}${axis.join("")}${lines}${labels}
+    ${grid}${axis.join("")}${baseOn ? `<line class="base-ln" x1="${x(baseMs)}" x2="${x(baseMs)}" y1="${pad.t}" y2="${H - pad.b}"/>` : ""}${lines}${labels}
     <line class="xhair" y1="${pad.t}" y2="${H - pad.b}" hidden/><g class="hov"></g>${hits}</svg>`
     + (phone ? `<ul class="race-legend">${rows.map((r, i) => `<li class="${i ? "" : "first"}"><svg width="22" height="8" aria-hidden="true"><line x1="0" x2="22" y1="4" y2="4" stroke="${i ? "var(--ink-2)" : tone}" stroke-width="${i ? 1.5 : 2.5}" ${i ? `stroke-dasharray="${DASHES[(i - 1) % DASHES.length]}"` : ""}/></svg>${clubCrest(r.t.id, "inline")}<span>${esc(r.t.name)}</span> <b>${pct(r.now)}</b></li>`).join("")}</ul>` : "");
 
