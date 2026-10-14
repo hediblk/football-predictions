@@ -20,7 +20,9 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
-TABLE = ["#hero-in h1", "#table tbody tr.row"]
+TABLE = ["#hero-in h1", "#table tbody tr.row",
+         # Race movers: a mover or the "no change" line; hidden without a frozen Monday before this week to compare with.
+         "#race-moves li, #race-moves[hidden]"]
 MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
 # A finished fixture opens in After mode; pressing Before must bring back the pre-game forecast.
 AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr"]
@@ -50,7 +52,9 @@ def routes(data):
     origin = max(entry["generated_at"] for entry in index)
     found = [(f"#{slug}", TABLE + (["#rounds .mrow", "#bracket .tie", "#ko-table tbody tr"] if slug == "champions-league" else []),
               ["#table tr.row"], "#table tr.detail") for slug in COMPETITIONS]
-    found += [("#matches", ["#m-day .day-head", "#m-record-table tbody tr"], [], None),
+    # "Games that matter" is hidden when no fixture in the next seven days passes the stakes bar; open a row if shown.
+    found += [("#matches", ["#m-day .day-head", "#m-record-table tbody tr"], ["#m-matter:not([hidden]) .mrow"],
+               "#m-matter .panel a[href^='#match/']"),
               ("#clubs", ["#c-hero h1", "#c-board .cell", "#c-rank tbody tr", "#c-scatter svg"], [], None),
               ("#model/ratings", ["#c-factors b"], [], None)]
     # The first day from the forecast on with fixtures, opening a game with something at stake if there is one.

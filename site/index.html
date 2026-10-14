@@ -52,7 +52,7 @@
       <p class="note" id="table-note"></p>
     </fieldset>
 
-    <fieldset class="frame" id="race-frame" hidden><legend>The race so far</legend><div class="chips" id="race-chips" role="group" aria-label="Race"></div><div class="race-chart" id="race-chart"></div><p class="note" id="race-note"></p></fieldset>
+    <fieldset class="frame" id="race-frame" hidden><legend>The race so far</legend><div class="chips" id="race-chips" role="group" aria-label="Race"></div><div class="moves race-moves" id="race-moves" hidden></div><div class="race-chart" id="race-chart"></div><p class="note" id="race-note"></p></fieldset>
 
     <fieldset class="frame" id="bracket-frame" hidden>
       <legend>Projected bracket</legend>
@@ -74,6 +74,10 @@
       <legend>Matches</legend>
       <div class="days" id="days"></div>
       <div class="chips" id="m-chips" role="group" aria-label="Competition"></div>
+    </fieldset>
+    <fieldset class="frame" id="m-matter" hidden>
+      <legend>Games that matter · next 7 days</legend>
+      <div class="mlist by-team matter" id="m-matter-list"></div>
     </fieldset>
     <div id="m-day" aria-live="polite"></div>
     <fieldset class="frame" id="m-scorecard" hidden>
