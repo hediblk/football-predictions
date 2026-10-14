@@ -13,8 +13,10 @@ const STAKES = {
 };
 const stakeKinds = (slug) => STAKES[slug === "champions-league" ? "ucl" : "league"];
 /* points a result must swing a chance by before it is shown at all: title races are the point of the site,
-   while place races swing widely in most games, so small swings would tag every fixture */
-export const BIG_STAKE = { title: 8, ucl: 15, releg: 15, top8: 15, top24: 15 };
+   while place races swing widely in most games, so small swings would tag every fixture. A Champions League
+   game is an eighth of the league phase, so it moves someone's top-eight or top-24 chance by 25 points or more
+   almost every time; its bar is higher still. */
+export const BIG_STAKE = { title: 8, ucl: 15, releg: 15, top8: 30, top24: 30 };
 /* a club's chance today from its competition table, for a stakes metric */
 export const stakeNow = (t, key) => (key === "top8" ? t.r16 : key === "top24" ? t.r16 + t.playoff : t[key]);
 let data = null;
