@@ -75,12 +75,13 @@ const mondayOf = (iso) => {
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
   return d.toISOString().slice(0, 10);
 };
+/* the last Monday frozen before the week holding `iso`: the baseline for weekly movement here and in the race movers */
+export const baseWeek = (history, iso) => (history?.weeks || []).filter((w) => w.date < mondayOf(iso)).at(-1);
 /* The ranking shows the live clubs.json values and ranks, the same numbers as the hero, the profiles and the scatter.
    Arrows compare each live rank with the last Monday frozen before this week, so a Monday refresh still shows the
    week's movement. With no earlier Monday there are no arrows; a club missing from it is "new". */
 function weeklyView(history) {
-  const monday = mondayOf(clubs.generated_at);
-  const base = (history?.weeks || []).filter((w) => w.date < monday).at(-1);
+  const base = baseWeek(history, clubs.generated_at);
   const prev = weekRanks(base, clubs.clubs.map((c) => c.id));
   const byId = {};
   for (const c of clubs.clubs) {
