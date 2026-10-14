@@ -44,6 +44,7 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 - **Section tabs** (Tables, Matches, Clubs, Model) sit beside the logo; the competition row appears only under Tables. Methodology lives only on Model; other views link to it.
 - **Footer:** brand, Project links (Model, GitHub, roadmap) and Data links to every provider, above the model-run time.
 - **Outcome bulbs:** a match's home/draw/away chances are three small bulbs whose brightness is the chance; the brightest is the model's pick, and a ruled box marks what actually happened.
+- **Forecast origin:** the dim line in a finished match's "The call" block names a saved pre-kickoff forecast as "Published before kickoff", with the model run's UTC time and date. Otherwise it says "Reconstructed", using results before 00:00 UTC on match day.
 - **Day strip:** nine days with big numerals and a game count; the chosen day is lit and underlined in amber.
 - **Call strip:** on a club page, one bar per played game; its height is the chance the model gave what happened, green when that was the pick and red when not, so it agrees with the "Called N of M" line.
 - **Rank plates:** category ranks (#1 attack, #1 defence, 1st in league) sit on a lit amber plate; top-ten ranks are amber text; the rest stay dim.
