@@ -112,6 +112,51 @@ export function verdict(m) {
 export const sideProbs = (m, home) => (home ? m.p : [m.p[2], m.p[1], m.p[0]]);
 export const sidePair = (pair, home) => (home ? pair : [pair[1], pair[0]]);
 
+/* ---------- recent form ---------- */
+/* Every club's finished games in all six competitions, oldest first:
+   { id -> [{ k: kickoff, r: 0 win | 1 draw | 2 loss, h: at home, o: opponent id, gf, ga, tip }] } */
+const results = new Map();
+let formLoaded = null;
+export function loadForm() {
+  formLoaded ||= Promise.all(COMPS.map((c) => getJSON(`matches/${c.slug}.json`).catch(() => null))).then((files) => {
+    results.clear();
+    const add = (id, m, h) => {
+      const o = outcome(m.score);
+      const [gf, ga] = sidePair(m.score, h);
+      const r = h ? o : 2 - o;
+      if (!results.has(id)) results.set(id, []);
+      results.get(id).push({ k: m.kickoff, r, h, o: h ? m.away_id : m.home_id, gf, ga,
+        tip: `${["Win", "Draw", "Loss"][r]} ${gf}–${ga} ${h ? "v" : "at"} ${esc(h ? m.away : m.home)} · ${shortDate(m.kickoff)}` });
+    };
+    for (const f of files) for (const m of f ? f.matches : []) if (m.score) { add(m.home_id, m, true); add(m.away_id, m, false); }
+    for (const list of results.values()) list.sort((a, b) => a.k.localeCompare(b.k));
+  });
+  return formLoaded;
+}
+/* a club's finished games before `before` (default: now), oldest first; `home` limits to home (true) or away (false) games */
+const played = (id, before = "9999", home) => (results.get(id) || []).filter((x) => x.k < before && (home == null || x.h === home));
+/* the last `n` results as tiny dots; empty until loadForm() has run */
+export function formDots(id, before, n = 5, home) {
+  const last = played(id, before, home).slice(-n);
+  if (!last.length) return "";
+  return `<span class="fdots" role="img" aria-label="Last ${last.length}: ${last.map((x) => "WDL"[x.r]).join(" ")}">${last.map((x) => `<i class="r${x.r}" data-tip="${x.tip}"></i>`).join("")}</span>`;
+}
+/* points from the last five games, to sort by form */
+export const formPoints = (id) => played(id).slice(-5).reduce((t, x) => t + [3, 1, 0][x.r], 0);
+/* a run worth noting (three or more games), e.g. "Unbeaten in 8"; empty otherwise */
+export function streak(id, before) {
+  const list = played(id, before).reverse();
+  const run = (ok) => { const i = list.findIndex((x) => !ok(x)); return i < 0 ? list.length : i; };
+  const won = run((x) => x.r === 0), lost = run((x) => x.r === 2), unbeaten = run((x) => x.r !== 2), winless = run((x) => x.r !== 0);
+  if (won >= 3) return `Won ${won} straight`;
+  if (lost >= 3) return `Lost ${lost} straight`;
+  if (unbeaten >= 4) return `Unbeaten in ${unbeaten}`;
+  if (winless >= 4) return `Winless in ${winless}`;
+  return "";
+}
+/* the last `n` meetings of two clubs before `before`, newest first, as [home, away] results from `a`'s side */
+export const meetings = (a, b, before, n = 5) => played(a, before).filter((x) => x.o === b).slice(-n).reverse();
+
 /* ---------- refresh status ---------- */
 function lastScheduledRun(now) {
   const run = new Date(now);

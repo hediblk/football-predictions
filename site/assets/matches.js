@@ -1,7 +1,7 @@
 // Matches view: one day's fixtures across the six competitions, with the model's call on each.
 import {
-  COMPS, compBySlug, $, esc, getJSON, setStatus, clock, dayKey, parseDay, shiftDay, verdict, pick, pct1, dec,
-  expandable, bulb, outcome, callScore, clubName, num, pct,
+  COMPS, compBySlug, $, esc, getJSON, setStatus, clock, shortDate, dayKey, parseDay, shiftDay, verdict, pick, pct1, dec,
+  expandable, bulb, outcome, callScore, clubName, num, pct, loadForm, formDots, streak, meetings,
 } from "./core.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
@@ -59,6 +59,7 @@ export async function showMatches(param) {
     $("m-day").innerHTML = `<p class="note">Matches could not be loaded (${esc(err.message)}).</p>`;
     return;
   }
+  await loadForm().catch(() => {});
   setStatus(data.latest.generated_at);
   const next = /^\d{4}-\d{2}-\d{2}$/.test(param || "") ? param : dayKey(new Date());
   // Moving to another day slides the strip and the fixtures across; a finished drag slides on from where it let go.
@@ -265,9 +266,9 @@ export function matchRow(m, slug, when = null) {
   const win = m.score ? outcome(m.score) : -1;
   return `<div class="mrow" role="button" tabindex="0" aria-expanded="false" data-c="${slug}" data-id="${m.id}">
     <span class="m-when">${when ? when(status) : status}</span>
-    <span class="m-home${win === 0 ? " won" : ""}">${clubName(m.home_id, m.home)}</span>
+    <span class="m-home${win === 0 ? " won" : ""}">${clubName(m.home_id, m.home)}${formDots(m.home_id, m.kickoff)}</span>
     <span class="m-hs">${hs}</span><span class="m-sep">${m.score ? "–" : "v"}</span><span class="m-as">${as}</span>
-    <span class="m-away${win === 2 ? " won" : ""}">${clubName(m.away_id, m.away)}</span>
+    <span class="m-away${win === 2 ? " won" : ""}">${clubName(m.away_id, m.away)}${formDots(m.away_id, m.kickoff)}</span>
     <span class="m-foot">${stakeBadge(m, slug)}${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>
   </div>`;
 }
@@ -307,7 +308,18 @@ export function matchPanel(m, slugs = null, league = null) {
   const clubLinks = slugs ? [[m.home_id, m.home], [m.away_id, m.away]]
     .filter(([id]) => slugs.has(id))
     .map(([id, name]) => `<a class="more" href="#clubs/${slugs.get(id)}">${clubName(id, name, "inline")} →</a>`).join("") : "";
-  panel.innerHTML = `
+  const form = (id, name) => {
+    const dots = formDots(id, m.kickoff);
+    const run = streak(id, m.kickoff);
+    return dots ? `<span class="pform">${clubName(id, name, "inline")}${dots}${run ? `<small>${run}</small>` : ""}</span>` : "";
+  };
+  const formRow = form(m.home_id, m.home) + form(m.away_id, m.away);
+  const past = meetings(m.home_id, m.away_id, m.kickoff);
+  const h2h = past.length ? `<div class="pforms h2h"><h4>Head to head</h4>${past.map((x) => {
+    const [hs, as] = x.h ? [x.gf, x.ga] : [x.ga, x.gf];
+    return `<span class="pform"><small>${shortDate(x.k)}</small>${esc(x.h ? m.home : m.away)} <b>${hs}–${as}</b> ${esc(x.h ? m.away : m.home)}</span>`;
+  }).join("")}</div>` : "";
+  panel.innerHTML = `${formRow ? `<div class="pforms"><h4>Form</h4>${formRow}</div>` : ""}${h2h}
     <div><h4>Likeliest scores</h4><ol class="scores">${scores}</ol>${spread}</div>
     <div><h4>Goals</h4><dl class="kv"><dt>Expected goals</dt><dd>${dec(m.exp[0])}–${dec(m.exp[1])}</dd>${xg}
       <dt>Both teams score</dt><dd>${pct1(m.btts)}</dd><dt>Over 2.5 goals</dt><dd>${pct1(m.o25)}</dd></dl></div>
