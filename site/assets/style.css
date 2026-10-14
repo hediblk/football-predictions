@@ -818,3 +818,8 @@ table.mp-stand { min-width: 460px; }
   #sc-charts { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .sc-frame svg text { font-size: 18px; }
 }
+
+/* Task 5 · Games that matter: up to three match rows (the by-team grid, with the competition and day in the
+   kickoff column) and one dim swing line under each */
+.matter.by-team { margin-top: 0; }
+.matter .m-swing { grid-column: 2 / -1; margin-top: 6px; font: 500 12px/1.4 var(--mono); color: var(--dim); }

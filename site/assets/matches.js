@@ -26,6 +26,7 @@ let comp = "all";
 let day = null;
 let slide = null;
 let dragOffset = 0;
+let matterShown = false;
 
 async function load() {
   if (data) return data;
@@ -70,6 +71,7 @@ export async function showMatches(param) {
   day = next;
   render();
   slide = null;
+  if (!matterShown) { matterShown = true; await renderMatter(); }
 }
 
 const daysBetween = (a, b) => Math.round((parseDay(b) - parseDay(a)) / 864e5);
@@ -261,8 +263,9 @@ function stakeBadge(m, slug) {
   return `<span class="m-stake" title="${esc(`${top.race}: ${top.team.name} ${num(Math.min(...known))}–${num(Math.max(...known))}%`)}">Stakes</span>`;
 }
 
-/* `when` replaces the kickoff column, e.g. with the round and date when listing one team's games */
-export function matchRow(m, slug, when = null) {
+/* `when` replaces the kickoff column, e.g. with the round and date when listing one team's games; `note` is a
+   line under the row */
+export function matchRow(m, slug, when = null, note = "") {
   const status = m.score ? "FT" : PENDING[m.reported || m.status] ? "–" : clock(m.kickoff);
   const [hs, as] = m.score || ["", ""];
   const win = m.score ? outcome(m.score) : -1;
@@ -271,7 +274,7 @@ export function matchRow(m, slug, when = null) {
     <span class="m-home${win === 0 ? " won" : ""}">${clubName(m.home_id, m.home)}${formDots(m.home_id, m.kickoff)}</span>
     <span class="m-hs">${hs}</span><span class="m-sep">${m.score ? "–" : "v"}</span><span class="m-as">${as}</span>
     <span class="m-away${win === 2 ? " won" : ""}">${clubName(m.away_id, m.away)}${formDots(m.away_id, m.kickoff)}</span>
-    <span class="m-foot">${stakeBadge(m, slug)}${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>
+    <span class="m-foot">${stakeBadge(m, slug)}${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>${note}
   </div>`;
 }
 
@@ -369,10 +372,45 @@ export async function stakesTable(m, league, past = null) {
       : `A team's chance of the title, a top-four finish or relegation once this result is in. Only swings of ${BIG_STAKE.title} points or more in a title chance, or ${BIG_STAKE.ucl} in a top-four or relegation chance, are shown.`}${past ? ` As saved before kickoff: “Before” is the chance at the refresh of ${esc(past.day)}, and the result that happened is lit.` : ""}</p>`;
 }
 
-expandable($("m-day"), ".mrow", (row) => {
+const openRow = (row) => {
   const file = data.comps.find((c) => c.slug === row.dataset.c).file;
   return matchPanel(file.matches.find((m) => String(m.id) === row.dataset.id), data.slugs, row.dataset.c);
-});
+};
+expandable($("m-day"), ".mrow", openRow);
+expandable($("m-matter-list"), ".mrow", openRow);
+
+/* ---------- games that matter ---------- */
+/* Across every competition, the unplayed fixtures of the next seven days whose result swings a shown stakes line
+   the most (highest minus lowest of the three conditional chances), earlier kickoff first on a tie. */
+async function renderMatter() {
+  const now = Date.now();
+  const games = data.comps.flatMap(({ slug, file }) => file.matches
+    .filter((m) => !m.score && !PENDING[m.reported || m.status] && new Date(m.kickoff) > now && new Date(m.kickoff) <= now + 7 * 864e5)
+    .map((m) => ({ slug, m, line: stakeLines(m, slug)[0] }))
+    .filter((x) => x.line))
+    .sort((a, b) => spread(b.line.values) - spread(a.line.values) || a.m.kickoff.localeCompare(b.m.kickoff))
+    .slice(0, 3);
+  if (!games.length) return;
+  const tables = new Map(await Promise.all([...new Set(games.map((x) => x.slug))]
+    .map(async (slug) => [slug, await getJSON(`${slug}.json`).catch(() => null)])));
+  $("m-matter-list").innerHTML = games.map(({ slug, m, line }) => {
+    const c = compBySlug[slug];
+    const when = (status) => `<b>${c.short}</b><br>${esc(new Date(m.kickoff).toLocaleDateString("en-GB", { weekday: "short", day: "numeric" }))}<br>${status}`;
+    return matchRow(m, slug, when, swingLine(m, line, tables.get(slug)));
+  }).join("");
+  $("m-matter").hidden = false;
+}
+
+/* "Title: Barcelona 93% → 84% if they lose.": the chance now, and under the result that moves it furthest */
+function swingLine(m, { team, key, word, values }, table) {
+  const row = table && team.id != null ? table.teams.find((t) => t.id === team.id) : null;
+  const from = row ? stakeNow(row, key) : values[pick(m.p)];
+  const to = [0, 1, 2].filter((i) => values[i] != null).reduce((a, b) => (Math.abs(values[b] - from) > Math.abs(values[a] - from) ? b : a));
+  const side = team.id != null ? [m.home_id, m.away_id].indexOf(team.id) : [m.home, m.away].indexOf(team.name);
+  const result = side < 0 ? [`if ${m.home} win`, "with a draw", `if ${m.away} win`][to]
+    : to === 1 ? "if they draw" : to === 2 * side ? "if they win" : "if they lose";
+  return `<span class="m-swing">${esc(`${word}: ${team.name} ${pct(from)} → ${pct(values[to])} ${result}.`)}</span>`;
+}
 
 /* ---------- season record ---------- */
 export function record(matches) {
