@@ -3,8 +3,9 @@
 # Usage: python scripts/check_site.py [--site site]
 #
 # Serves the directory on a local port with the data it ships, stops the browser clock at the newest forecast so
-# "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages
-# and the model page, at desktop and phone widths, expanding a match and a table row. Any console error, uncaught
+# "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages,
+# an upcoming and a finished match page and the model page, at desktop and phone widths, expanding a match (which must
+# link its match page) and a table row. Any console error, uncaught
 # exception, failed same-origin request or missing content fails the check. Other origins (web fonts) get empty
 # responses, so the check runs offline. Needs `pip install playwright` and `python -m playwright install chromium`.
 
@@ -20,6 +21,7 @@ from playwright.sync_api import sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
 TABLE = ["#hero-in h1", "#table tbody tr.row"]
+MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
 VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 375, "height": 844}}
 BROKEN = ["No signal", "could not be loaded", "unavailable right now"]
 
@@ -48,14 +50,15 @@ def routes(data):
               ("#clubs", ["#c-hero h1", "#c-board .cell", "#c-rank tbody tr", "#c-scatter svg"], [], None),
               ("#model/ratings", ["#c-factors b"], [], None)]
     # The first day from the forecast on with fixtures, opening a game with something at stake if there is one.
-    days = sorted({match["kickoff"][:10] for slug in COMPETITIONS if (data / f"matches/{slug}.json").exists()
-                   for match in json.loads((data / f"matches/{slug}.json").read_text())["matches"]})
+    fixtures = [(slug, match) for slug in COMPETITIONS if (data / f"matches/{slug}.json").exists()
+                for match in json.loads((data / f"matches/{slug}.json").read_text())["matches"]]
+    days = sorted({match["kickoff"][:10] for _, match in fixtures})
     if days:
         day = next((d for d in days if d >= origin[:10]), days[-1])
-        found.append((f"#matches/{day}", ["#m-day .mrow"], ["#m-day .mrow:has(.m-stake)", "#m-day .mrow"], "#m-day .panel"))
+        found.append((f"#matches/{day}", ["#m-day .mrow"], ["#m-day .mrow:has(.m-stake)", "#m-day .mrow"], "#m-day .panel a[href^='#match/']"))
+    # A finished game with a reconstructed forecast and one with a published receipt, checking the origin label.
     for published in (False, True):
-        played = next(((slug, match) for slug in COMPETITIONS if (data / f"matches/{slug}.json").exists()
-                       for match in json.loads((data / f"matches/{slug}.json").read_text())["matches"]
+        played = next(((slug, match) for slug, match in fixtures
                        if match.get("score") and match.get("p") and bool(match.get("published")) == published), None)
         if played:
             slug, match = played
@@ -63,10 +66,16 @@ def routes(data):
             found.append((f"#matches/{match['kickoff'][:10]}", ["#m-day .mrow"],
                           [f'#m-day .mrow[data-c="{slug}"][data-id="{match["id"]}"]'],
                           f'#m-day .panel .call .dim:has-text("{label}")'))
+    # Match pages: the next forecast fixture (one with stakes if there is one) and the latest finished league game.
+    ahead = sorted((f for f in fixtures if "p" in f[1] and "score" not in f[1] and f[1]["kickoff"] >= origin), key=lambda f: f[1]["kickoff"])
+    done = sorted((f for f in fixtures if "p" in f[1] and "score" in f[1] and f[0] != "champions-league"), key=lambda f: f[1]["kickoff"])
+    for slug, match in [next((f for f in ahead if f[1].get("stakes")), ahead[0] if ahead else None), done[-1] if done else None]:
+        if match:
+            found.append((f"#match/{slug}/{match['id']}", MATCH, [], None))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
-            found.append((f"#clubs/{club['slug']}", ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det"], [], None))
+            found.append((f"#clubs/{club['slug']}", ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go"], [], None))
     return origin, found
 
 

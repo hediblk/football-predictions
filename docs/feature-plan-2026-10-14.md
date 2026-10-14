@@ -67,7 +67,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | Task | Source | Wave | Depends on | Size | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1. Published forecast receipts | Foundation | A | none | M | [PR #31](https://github.com/hediblk/football-predictions/pull/31) |
-| 2. Match page: route and pre-game mode | Phase 1 | A | none | L | To do |
+| 2. Match page: route and pre-game mode | Phase 1 | A | none | L | [PR #30](https://github.com/hediblk/football-predictions/pull/30) |
 | 3. Weekly race movers | Addition 2 | A | none | S | To do |
 | 4. Rating history and club comparison | Addition 5 | A | none | M | To do |
 | 5. Games that matter | Addition 6 | A | none | S | To do |

@@ -134,7 +134,7 @@ export function loadForm() {
   return formLoaded;
 }
 /* a club's finished games before `before` (default: now), oldest first; `home` limits to home (true) or away (false) games */
-const played = (id, before = "9999", home) => (results.get(id) || []).filter((x) => x.k < before && (home == null || x.h === home));
+export const played = (id, before = "9999", home) => (results.get(id) || []).filter((x) => x.k < before && (home == null || x.h === home));
 /* the last `n` results as tiny dots; empty until loadForm() has run */
 export function formDots(id, before, n = 5, home) {
   const last = played(id, before, home).slice(-n);

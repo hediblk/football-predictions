@@ -5,7 +5,7 @@ import {
 } from "./core.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
-const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Cancelled" };
+export const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Cancelled" };
 /* the chances a fixture's stakes track: league title, top four and drop; Champions League winner, top eight and top 24 */
 const STAKES = {
   league: [["title", "Title", "Title race"], ["ucl", "Top 4", "Top-four race"], ["releg", "Drop", "Relegation battle"]],
@@ -205,7 +205,7 @@ function renderDay() {
   }
 }
 
-function stageLabel(c, rows) {
+export function stageLabel(c, rows) {
   const md = [...new Set(rows.map((x) => x.m.md).filter(Boolean))];
   const stage = rows[0].m.stage;
   if (stage && stage !== "LEAGUE_STAGE") return `${c.label} · ${stage.replace(/_/g, " ").toLowerCase().replace(/^\w/, (s) => s.toUpperCase())}`;
@@ -221,7 +221,7 @@ function nearby() {
   return `<p class="jump">${[before && link(before, "← Previous:"), after && link(after, "Next:")].filter(Boolean).join(" · ")}</p>`;
 }
 
-function probCells(m, labels = ["H", "D", "A"]) {
+export function probCells(m, labels = ["H", "D", "A"]) {
   if (!m.p) return `<span class="m-probs none">No forecast</span>`;
   const top = Math.max(...m.p);
   const actual = m.score ? outcome(m.score) : -1;
@@ -273,14 +273,9 @@ export function matchRow(m, slug, when = null) {
   </div>`;
 }
 
-/* expanded: likeliest scores, goal markets and the model's call; `slugs` maps team ids to club profiles */
-export function matchPanel(m, slugs = null, league = null) {
-  const panel = document.createElement("div");
-  panel.className = "panel";
-  if (!m.p) {
-    panel.innerHTML = `<p class="note">No forecast for this fixture.</p>`;
-    return panel;
-  }
+/* a forecast fixture's likeliest scores, goal markets and the model's call, as three blocks shared by the
+   expanded row and the match page; `links` closes the call block */
+export function forecastBlocks(m, links = "") {
   const v = verdict(m);
   const fav = pick(m.p);
   const [ch, ca] = callScore(m);
@@ -306,9 +301,25 @@ export function matchPanel(m, slugs = null, league = null) {
   } else {
     call = `<p>Pick: <b>${OUTCOMES[fav].toLowerCase()}, ${ch}–${ca}</b> (${pct1(m.p[fav])} for the result).</p><p class="dim">Forecast from the model run of ${origin} UTC.</p>`;
   }
+  return `<div><h4>Likeliest scores</h4><ol class="scores">${scores}</ol>${spread}</div>
+    <div><h4>Goals</h4><dl class="kv"><dt>Expected goals</dt><dd>${dec(m.exp[0])}–${dec(m.exp[1])}</dd>${xg}
+      <dt>Both teams score</dt><dd>${pct1(m.btts)}</dd><dt>Over 2.5 goals</dt><dd>${pct1(m.o25)}</dd></dl></div>
+    <div class="call"><h4>The call</h4>${call}${links ? `<p class="links">${links}</p>` : ""}</div>`;
+}
+
+/* expanded: form, recent meetings and the forecast; `slugs` maps team ids to club profiles, `league` is the
+   competition slug, which also links the match page */
+export function matchPanel(m, slugs = null, league = null) {
+  const panel = document.createElement("div");
+  panel.className = "panel";
   const clubLinks = slugs ? [[m.home_id, m.home], [m.away_id, m.away]]
     .filter(([id]) => slugs.has(id))
     .map(([id, name]) => `<a class="more" href="#clubs/${slugs.get(id)}">${clubName(id, name, "inline")} →</a>`).join("") : "";
+  const links = (league ? `<a class="more" href="#match/${league}/${m.id}">Match page →</a>` : "") + clubLinks;
+  if (!m.p) {
+    panel.innerHTML = `<p class="note">No forecast for this fixture.</p>${links ? `<p class="links">${links}</p>` : ""}`;
+    return panel;
+  }
   const form = (id, name) => {
     const dots = formDots(id, m.kickoff);
     const run = streak(id, m.kickoff);
@@ -320,19 +331,25 @@ export function matchPanel(m, slugs = null, league = null) {
     const [hs, as] = x.h ? [x.gf, x.ga] : [x.ga, x.gf];
     return `<span class="pform"><small>${shortDate(x.k)}</small>${esc(x.h ? m.home : m.away)} <b>${hs}–${as}</b> ${esc(x.h ? m.away : m.home)}</span>`;
   }).join("")}</div>` : "";
-  panel.innerHTML = `${formRow ? `<div class="pforms"><h4>Form</h4>${formRow}</div>` : ""}${h2h}
-    <div><h4>Likeliest scores</h4><ol class="scores">${scores}</ol>${spread}</div>
-    <div><h4>Goals</h4><dl class="kv"><dt>Expected goals</dt><dd>${dec(m.exp[0])}–${dec(m.exp[1])}</dd>${xg}
-      <dt>Both teams score</dt><dd>${pct1(m.btts)}</dd><dt>Over 2.5 goals</dt><dd>${pct1(m.o25)}</dd></dl></div>
-    <div class="call"><h4>The call</h4>${call}${clubLinks ? `<p class="links">${clubLinks}</p>` : ""}</div>`;
+  panel.innerHTML = `${formRow ? `<div class="pforms"><h4>Form</h4>${formRow}</div>` : ""}${h2h}${forecastBlocks(m, links)}`;
   if (league) addStakes(panel, m, league);
   return panel;
 }
 
-/* "What's at stake": each affected team's chance now and under each result, from the league file's baseline */
 async function addStakes(panel, m, league) {
+  const html = await stakesTable(m, league);
+  if (!html) return;
+  const block = document.createElement("div");
+  block.className = "stakes";
+  block.innerHTML = `<h4>What's at stake</h4>${html}`;
+  panel.append(block);
+}
+
+/* "What's at stake": each affected team's chance now and under each result, from the league file's baseline;
+   empty when no result swings a chance past the bar */
+export async function stakesTable(m, league) {
   const lines = stakeLines(m, league).slice(0, 6);
-  if (!lines.length) return;
+  if (!lines.length) return "";
   const table = await getJSON(`${league}.json`).catch(() => null);
   const now = new Map((table ? table.teams : []).map((t) => [t.id, t]));
   const lit = pick(m.p);
@@ -341,14 +358,11 @@ async function addStakes(panel, m, league) {
     : `<td${i === lit ? ' class="lit"' : ""}>${pct(v)}</td>`);
   const rows = lines.map(({ team, key, word, values }) => `<tr><td class="l">${clubName(team.id, team.name, "inline")} <small>${word}</small></td>
     <td class="b">${now.has(team.id) ? pct(stakeNow(now.get(team.id), key)) : "–"}</td>${values.map(cell).join("")}</tr>`).join("");
-  const block = document.createElement("div");
-  block.className = "stakes";
-  block.innerHTML = `<h4>What's at stake</h4><div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>Now</th>
+  return `<div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>Now</th>
     <th>If ${esc(m.home)} win</th><th>Draw</th><th>If ${esc(m.away)} win</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="note">${league === "champions-league"
       ? `A club's chance of winning the trophy, or of a top-eight or top-24 league-phase finish, once this result is in. Only swings of ${BIG_STAKE.title} points or more in a trophy chance, or ${BIG_STAKE.top8} in a top-eight or top-24 chance, are shown.`
       : `A team's chance of the title, a top-four finish or relegation once this result is in. Only swings of ${BIG_STAKE.title} points or more in a title chance, or ${BIG_STAKE.ucl} in a top-four or relegation chance, are shown.`}</p>`;
-  panel.append(block);
 }
 
 expandable($("m-day"), ".mrow", (row) => {
