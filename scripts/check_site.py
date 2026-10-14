@@ -20,7 +20,7 @@ from playwright.sync_api import sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
 TABLE = ["#hero-in h1", "#table tbody tr.row"]
-VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 390, "height": 844}}
+VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 375, "height": 844}}
 BROKEN = ["No signal", "could not be loaded", "unavailable right now"]
 
 
@@ -53,6 +53,16 @@ def routes(data):
     if days:
         day = next((d for d in days if d >= origin[:10]), days[-1])
         found.append((f"#matches/{day}", ["#m-day .mrow"], ["#m-day .mrow:has(.m-stake)", "#m-day .mrow"], "#m-day .panel"))
+    for published in (False, True):
+        played = next(((slug, match) for slug in COMPETITIONS if (data / f"matches/{slug}.json").exists()
+                       for match in json.loads((data / f"matches/{slug}.json").read_text())["matches"]
+                       if match.get("score") and match.get("p") and bool(match.get("published")) == published), None)
+        if played:
+            slug, match = played
+            label = "Published before kickoff" if published else "Reconstructed:"
+            found.append((f"#matches/{match['kickoff'][:10]}", ["#m-day .mrow"],
+                          [f'#m-day .mrow[data-c="{slug}"][data-id="{match["id"]}"]'],
+                          f'#m-day .panel .call .dim:has-text("{label}")'))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:

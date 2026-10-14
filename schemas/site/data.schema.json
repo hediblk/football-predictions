@@ -334,6 +334,7 @@
         "reported": {"$ref":"#/$defs/string"},
         "stage": {"$ref":"#/$defs/string"},
         "neutral": {"type":"boolean"},
+        "published": {"type":"boolean"},
         "stakes": {"$ref":"#/$defs/stakes"}
       },
       "required": ["id","kickoff","status","md","home","away","home_id","away_id"],
@@ -344,6 +345,34 @@
           "then": {"required":["score"]}
         }
       ]
+    },
+    "forecastReceipt": {
+      "type": "object",
+      "properties": {
+        "kickoff": {"$ref":"#/$defs/timestamp"},
+        "generated_at": {"$ref":"#/$defs/timestamp"},
+        "p": {"$ref":"#/$defs/match/properties/p"},
+        "exp": {"$ref":"#/$defs/goalPair"},
+        "top": {"type":"array","items":{"$ref":"#/$defs/scoreProbability"},"minItems":1},
+        "call": {"$ref":"#/$defs/scoreProbability"},
+        "btts": {"$ref":"#/$defs/probability"},
+        "o25": {"$ref":"#/$defs/probability"},
+        "stakes": {"$ref":"#/$defs/stakes"}
+      },
+      "required": ["kickoff","generated_at","p","exp","top","call","btts","o25"]
+    },
+    "forecast_receipts": {
+      "type": "object",
+      "properties": {
+        "slug": {"$ref":"#/$defs/competitionSlug"},
+        "season": {"$ref":"#/$defs/season"},
+        "fixtures": {
+          "type": "object",
+          "propertyNames": {"pattern":"^[1-9][0-9]*$"},
+          "additionalProperties": {"$ref":"#/$defs/forecastReceipt"}
+        }
+      },
+      "required": ["slug","season","fixtures"]
     },
     "matches": {
       "type": "object",

@@ -38,6 +38,7 @@ UCL_ZONES = [("r16", "Round of 16", 1, 8), ("playoff", "Knockout play-offs", 9, 
 UCL_STAGES = ["round16", "quarterfinal", "semifinal", "final"]
 # What's at stake: domestic title/top-four/relegation, Champions League top eight/top 24/winner.
 STAKE_METRICS = ("title", "ucl", "releg", "top8", "top24")
+FORECAST_FIELDS = ("p", "exp", "top", "call", "btts", "o25", "stakes")
 # The Champions League model's league codes, for clubs from outside the five leagues.
 COUNTRIES = {code: area for area, code in AREA_LEAGUES.items()}
 COUNTRY_CODES = {code: short for short, code in COUNTRY_LEAGUES.items()}
@@ -195,8 +196,7 @@ def match_stakes(src, prefix, name=short_name):
     return stakes
 
 
-def export_matches(src, slug, prefix):
-    """Every fixture with its forecast; played matches carry the forecast made before their match day."""
+def export_matches(src, slug, prefix, receipts=None):
     data = json.loads((src / f"{prefix}_match_forecasts.json").read_text())
     display = data.get("display_names", {})
     name = lambda team: short_name(display.get(team, team))
@@ -233,9 +233,20 @@ def export_matches(src, slug, prefix):
                 row["p_score"] = num(match["p_score"], 4)
         if match["status"] != "FINISHED" and match["id"] in stakes:
             row["stakes"] = stakes[match["id"]]
+        receipt = (receipts or {}).get(str(match["id"]))
+        if match["status"] == "FINISHED" and receipt:
+            for key in (*FORECAST_FIELDS, "p_score"):
+                row.pop(key, None)
+            row.update({key: receipt[key] for key in FORECAST_FIELDS if key in receipt})
+            row.update(at=receipt["generated_at"], published=True)
+            for home, away, p in [*receipt["top"], *([receipt["call"]] if "call" in receipt else [])]:
+                if row["score"] == [home, away]:
+                    row["p_score"] = p
+                    break
         matches.append(row)
     matches.sort(key=lambda row: (row["kickoff"] or "", row["id"]))
-    return {"slug": slug, "generated_at": data["generated_at"], "rule": data.get("played_forecast_rule"), "matches": matches}
+    rule = "Finished fixtures use published forecasts saved before kickoff where available; otherwise reconstructed forecasts as of 00:00 UTC on match day, from results before then."
+    return {"slug": slug, "generated_at": data["generated_at"], "rule": rule, "matches": matches}
 
 
 def club_entry(team, row, league, ucl):
@@ -332,6 +343,33 @@ def read_json(path):
     return json.loads(path.read_text()) if path.exists() else None
 
 
+def publish_matches(src, dest, competition, prefix):
+    slug = competition["slug"]
+    path = history_path(dest, competition, f"forecasts/{slug}")
+    history = read_json(path) or {"slug": slug, "season": competition["season"], "fixtures": {}}
+    receipts = history["fixtures"]
+    data = export_matches(src, slug, prefix, receipts)
+    now = pd.Timestamp.now(tz="UTC")
+    generated = pd.Timestamp(competition["generated_at"])
+    changed = False
+    for match in data["matches"]:
+        previous = receipts.get(str(match["id"]))
+        if previous and pd.Timestamp(previous["kickoff"]) <= now:
+            continue
+        if match["status"] == "FINISHED" or "p" not in match or pd.Timestamp(match["kickoff"]) <= max(now, generated):
+            continue
+        receipt = {
+            "kickoff": match["kickoff"], "generated_at": competition["generated_at"],
+            **{key: match[key] for key in FORECAST_FIELDS if key in match},
+        }
+        if receipt != previous:
+            receipts[str(match["id"])] = receipt
+            changed = True
+    if changed:
+        write_json(path, history)
+    return data
+
+
 def update_history(dest, competitions, ratings=None):
     """Add each fresh forecast to its competition's history and freeze the week's club ratings."""
     for data in competitions:
@@ -362,18 +400,20 @@ def main(argv=None):
     parser.add_argument("--src", type=Path, default=Path("out/site"))
     parser.add_argument("--dest", type=Path, default=Path("site/data"))
     parser.add_argument("--history", action=argparse.BooleanOptionalAction, default=True,
-                        help="Add fresh forecasts to the dated history files (default: on)")
+                        help="Add season history points and weekly ratings (default: on; match receipts are always saved)")
     args = parser.parse_args(argv)
     args.dest.mkdir(parents=True, exist_ok=True)
     jobs = [(league[0], lambda league=league: export_league(args.src, *league)) for league in LEAGUES]
     jobs.append(("champions-league", lambda: export_ucl(args.src)))
-    jobs += [(f"matches/{league[0]}", lambda league=league: export_matches(args.src, league[0], league[1].lower()))
+    jobs += [(f"matches/{league[0]}", lambda league=league: publish_matches(args.src, args.dest, exports[league[0]], league[1].lower()))
              for league in LEAGUES]
-    jobs.append(("matches/champions-league", lambda: export_matches(args.src, "champions-league", "cl")))
+    jobs.append(("matches/champions-league", lambda: publish_matches(args.src, args.dest, exports["champions-league"], "cl")))
     exports, kept, missing = {}, [], []
     for slug, export in jobs:
         path = args.dest / f"{slug}.json"
         try:
+            if slug.startswith("matches/") and slug.split("/")[1] in kept:
+                raise FileNotFoundError(slug)
             data = export()
         except FileNotFoundError:
             # No fresh outputs (e.g. the forecast run failed): keep the last published file.

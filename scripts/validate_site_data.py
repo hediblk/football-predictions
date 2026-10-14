@@ -1,7 +1,7 @@
 import argparse
 import json
 import math
-from datetime import date
+from datetime import date, datetime
 from functools import lru_cache
 from pathlib import Path
 
@@ -128,19 +128,34 @@ def validate_bracket(data):
             "invalid bracket seeds")
 
 
+def validate_forecast(match, label):
+    if "p" in match:
+        close(sum(match["p"]), 1, 0.0002, f"{label}: outcome probability sum")
+        scores = [score[2] for score in match["top"]]
+        require(scores == sorted(scores, reverse=True), f"{label}: unsorted top scores")
+    if "stakes" in match:
+        unique(match["stakes"]["teams"], "id")
+        require(all(any(key in team for key in STAKE_METRICS)
+                    for team in match["stakes"]["teams"]), "stakes team has no tracked metric")
+
+
 def validate_matches(data):
     unique(data["matches"], "id")
     for match in data["matches"]:
         require(match["home_id"] is None or match["home_id"] != match["away_id"],
                 f"match {match['id']}: club plays itself")
-        if "p" in match:
-            close(sum(match["p"]), 1, 0.0002, f"match {match['id']}: outcome probability sum")
-            scores = [score[2] for score in match["top"]]
-            require(scores == sorted(scores, reverse=True), f"match {match['id']}: unsorted top scores")
-        if "stakes" in match:
-            unique(match["stakes"]["teams"], "id")
-            require(all(any(key in team for key in STAKE_METRICS)
-                        for team in match["stakes"]["teams"]), "stakes team has no tracked metric")
+        validate_forecast(match, f"match {match['id']}")
+        if match.get("published"):
+            require(match["status"] == "FINISHED" and "p" in match, "published match must have a finished forecast")
+            require(datetime.fromisoformat(match["at"]) < datetime.fromisoformat(match["kickoff"]),
+                    f"match {match['id']}: published forecast must precede kickoff")
+
+
+def validate_forecast_receipts(data):
+    for fixture_id, receipt in data["fixtures"].items():
+        validate_forecast(receipt, f"receipt {fixture_id}")
+        require(datetime.fromisoformat(receipt["generated_at"]) < datetime.fromisoformat(receipt["kickoff"]),
+                f"receipt {fixture_id}: generated_at must precede kickoff")
 
 
 def validate_clubs(data):
@@ -193,6 +208,8 @@ def validate_payload(data, family):
         unique(data, "slug")
     elif family == "matches":
         validate_matches(data)
+    elif family == "forecast_receipts":
+        validate_forecast_receipts(data)
     elif family == "clubs":
         validate_clubs(data)
     elif family == "history":
@@ -215,6 +232,9 @@ def file_family(path):
             return "club_history"
         if path.stem in COMPETITIONS:
             return "history"
+    if (len(parts) == 4 and parts[0] == "history" and parts[1].isdigit()
+            and parts[2] == "forecasts" and path.stem in COMPETITIONS):
+        return "forecast_receipts"
     raise ValueError("unknown JSON file family")
 
 
@@ -232,7 +252,7 @@ def validate_site_data(data_dir, *, site_dir=None):
             family = file_family(relative)
             data = json.loads(path.read_text(), parse_constant=reject_constant)
             validate_payload(data, family)
-            if family in ("league", "ucl", "matches", "history"):
+            if family in ("league", "ucl", "matches", "history", "forecast_receipts"):
                 require(data["slug"] == path.stem, "slug differs from filename")
             if family in ("league", "ucl"):
                 require(data["code"] == COMPETITIONS[path.stem], "competition code differs from slug")

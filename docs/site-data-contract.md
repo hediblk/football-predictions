@@ -24,6 +24,7 @@ Contract validation guarantees that published data conforms to these rules. It c
 | `crests.json` | Object keyed by decimal-string provider IDs. Entries contain `name, source, path`, with dimensions for PNGs. Published crest paths refer to local site assets. A missing crest entry leaves the club name usable. |
 | `history/<season>/<competition>.json` | `slug, season, metrics, dates, cutoff, teams`. Each team has one series per metric, with entries aligned to `dates`. Domestic metrics are `title,ucl,releg`; UCL metrics are `top8,top24,last16,qf,sf,final,title`. |
 | `history/<season>/clubs.json` | `season, fields, weeks`; each week has a Monday `date`, nullable result `cutoff`, and club-ID-string keys mapped to rating tuples. `fields` is currently `rating,attack,defense`. |
+| `history/<season>/forecasts/<competition>.json` | `slug, season, fixtures`, keyed by positive decimal-string fixture IDs. Receipts contain `kickoff, generated_at, p, exp, top, call, btts, o25` and optional `stakes`, copied at published precision. Missing files or receipts mean no published forecast was saved. |
 
 Common competition metadata is `slug, kind, code, name, country, season, generated_at, as_of, data_cutoff, n_sim, played_fixtures, remaining_fixtures`. Zone entries contain `key, label, from, to`, with inclusive one-based position bounds.
 
@@ -60,10 +61,12 @@ The representative UCL bracket is illustrative. Its champion need not have the l
 - Competition history uses a numeric club ID, or the club slug when the ID is unavailable. Weekly club history contains numeric provider IDs serialized as object keys. Preserve these identity rules rather than treating names as stable keys.
 - Match `md`, domestic `data_cutoff`, history cutoffs, and history series entries can be null. Preserve null instead of substituting zero or an empty string.
 - Predictions can be absent. If `p` exists, require its full companion group: `exp, top, btts, o25, at`. `call` supports older optional data; `p_score` applies when an observed score is available. `xg, reported, stage, neutral, stakes` are conditional fields.
+- Optional match `published` is a boolean. Finished fixtures with `published: true` use the receipt's forecast fields and its run `generated_at` as `at`; fixtures without a receipt retain reconstructed forecasts and omit the flag. For published fixtures, `p_score` is included only when the actual score occurs in the saved `top` or `call`; it never comes from a reconstructed forecast.
 - A `FINISHED` fixture requires an integer home/away score pair. Forecast fields on finished fixtures describe the prior forecast, not a post-result prediction. Unknown provider status strings are not automatically malformed; retain existing status interpretation.
 - Parse timestamps with an explicit timezone and dates as calendar dates. `generated_at`, forecast origin `as_of`, and result `data_cutoff` are distinct. Match-file `generated_at` currently represents forecast origin; table generation time represents execution time.
 - Domestic result cutoff covers current-season completed results. UCL cutoff covers training results across leagues, and its exporter substitutes `as_of` when a result cutoff is unavailable.
 - Do not require every forecast time to precede kickoff: an unplayed postponed/cancelled fixture can retain an old kickoff while receiving a new forecast. Pre-match timing protection belongs to completed-match forecast tests.
+- Receipt `generated_at` is the competition run's execution timestamp, distinct from the match-file forecast origin. It must strictly precede the saved kickoff. Only fresh competition exports save receipts, for unplayed fixtures with a forecast whose kickoff is after both the run and the build time. Before kickoff a receipt can be replaced; after its saved kickoff it is immutable, even if a later feed reschedules the fixture. Retained competitions write nothing. There is no historical backfill.
 
 ## Consistency checks
 
@@ -79,6 +82,7 @@ Within each competition:
 Within matches and history:
 
 - Match outcome triples sum to one; a present `top` is nonempty, finite, and sorted by probability. Pair/tuple lengths and units are fixed. Stakes counts are nonnegative integer triples; metric triples preserve nulls and known percentage ranges.
+- Receipts obey the same forecast probability, scoreline and stakes checks. Published finished fixtures must have a forecast with `at` strictly before kickoff. Receipt filenames and season directories must agree with their `slug` and `season`.
 - History dates strictly increase and each metric series has exactly `len(dates)` entries. Week dates strictly increase and represent Mondays; missing days and weeks are valid. The history season's start year matches its directory (`2026/27` → `history/2026/`), while older-season members may differ from today's clubs.
 - Published club ranking numbers form the relevant rank sequences; overall list order agrees with overall rank. Featured IDs reference available ranked clubs. Crest paths, where declared, resolve to the published assets.
 
