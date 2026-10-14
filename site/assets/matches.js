@@ -11,7 +11,7 @@ const STAKES = {
   league: [["title", "Title", "Title race"], ["ucl", "Top 4", "Top-four race"], ["releg", "Drop", "Relegation battle"]],
   ucl: [["title", "Winner", "Trophy race"], ["top8", "Top 8", "Top-eight race"], ["top24", "Top 24", "Top-24 race"]],
 };
-const stakeKinds = (slug) => STAKES[slug === "champions-league" ? "ucl" : "league"];
+export const stakeKinds = (slug) => STAKES[slug === "champions-league" ? "ucl" : "league"];
 /* points a result must swing a chance by before it is shown at all: title races are the point of the site,
    while place races swing widely in most games, so small swings would tag every fixture. A Champions League
    game is an eighth of the league phase, so it moves someone's top-eight or top-24 chance by 25 points or more
@@ -246,7 +246,7 @@ function verdictBadge(m) {
 /* the chances a result moves a lot, as {team, key, word, race, values} with the biggest swing first;
    null values are results too rare in the simulations to show */
 const spread = (values) => Math.max(...values.filter((v) => v != null)) - Math.min(...values.filter((v) => v != null));
-function stakeLines(m, slug) {
+export function stakeLines(m, slug) {
   const lines = (m.stakes ? m.stakes.teams : []).flatMap((t) => stakeKinds(slug).filter(([key]) => t[key]).map(([key, word, race]) => ({ team: t, key, word, race, values: t[key] })));
   return lines.filter((line) => spread(line.values) >= BIG_STAKE[line.key]).sort((a, b) => spread(b.values) - spread(a.values));
 }
@@ -346,23 +346,25 @@ async function addStakes(panel, m, league) {
 }
 
 /* "What's at stake": each affected team's chance now and under each result, from the league file's baseline;
-   empty when no result swings a chance past the bar */
-export async function stakesTable(m, league) {
+   empty when no result swings a chance past the bar. After full time, `past` = { day, before(id, key) } shows it
+   as saved before kickoff: the chance from the last refresh before the game, with the result that happened lit. */
+export async function stakesTable(m, league, past = null) {
   const lines = stakeLines(m, league).slice(0, 6);
   if (!lines.length) return "";
-  const table = await getJSON(`${league}.json`).catch(() => null);
+  const table = past ? null : await getJSON(`${league}.json`).catch(() => null);
   const now = new Map((table ? table.teams : []).map((t) => [t.id, t]));
-  const lit = pick(m.p);
+  const base = (id, key) => (past ? past.before(id, key) : now.has(id) ? stakeNow(now.get(id), key) : null);
+  const lit = past ? outcome(m.score) : pick(m.p);
   const cell = (v, i) => (v == null
     ? `<td class="dim" title="Too few simulations">–</td>`
     : `<td${i === lit ? ' class="lit"' : ""}>${pct(v)}</td>`);
   const rows = lines.map(({ team, key, word, values }) => `<tr><td class="l">${clubName(team.id, team.name, "inline")} <small>${word}</small></td>
-    <td class="b">${now.has(team.id) ? pct(stakeNow(now.get(team.id), key)) : "–"}</td>${values.map(cell).join("")}</tr>`).join("");
-  return `<div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>Now</th>
+    <td class="b">${base(team.id, key) == null ? "–" : pct(base(team.id, key))}</td>${values.map(cell).join("")}</tr>`).join("");
+  return `<div class="scroll"><table class="board stakes-table"><thead><tr><th class="l"></th><th>${past ? "Before" : "Now"}</th>
     <th>If ${esc(m.home)} win</th><th>Draw</th><th>If ${esc(m.away)} win</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="note">${league === "champions-league"
       ? `A club's chance of winning the trophy, or of a top-eight or top-24 league-phase finish, once this result is in. Only swings of ${BIG_STAKE.title} points or more in a trophy chance, or ${BIG_STAKE.top8} in a top-eight or top-24 chance, are shown.`
-      : `A team's chance of the title, a top-four finish or relegation once this result is in. Only swings of ${BIG_STAKE.title} points or more in a title chance, or ${BIG_STAKE.ucl} in a top-four or relegation chance, are shown.`}</p>`;
+      : `A team's chance of the title, a top-four finish or relegation once this result is in. Only swings of ${BIG_STAKE.title} points or more in a title chance, or ${BIG_STAKE.ucl} in a top-four or relegation chance, are shown.`}${past ? ` As saved before kickoff: “Before” is the chance at the refresh of ${esc(past.day)}, and the result that happened is lit.` : ""}</p>`;
 }
 
 expandable($("m-day"), ".mrow", (row) => {

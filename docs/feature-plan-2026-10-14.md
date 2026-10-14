@@ -71,7 +71,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | 3. Weekly race movers | Addition 2 | A | none | S | To do |
 | 4. Rating history and club comparison | Addition 5 | A | none | M | To do |
 | 5. Games that matter | Addition 6 | A | none | S | To do |
-| 6. Match page: post-game mode | Phase 1 | B | 2 (uses 1 when merged) | M | To do |
+| 6. Match page: post-game mode | Phase 1 | B | 2 (uses 1 when merged) | M | [PR #32](https://github.com/hediblk/football-predictions/pull/32) |
 | 7. Who's beating the model | Addition 4 | B | none (uses 1 when merged) | M | To do |
 | 8. Scorecard core | Addition 1 | B | 1 | L | To do |
 | 9. Match notes: streaks, head-to-head, records | Phase 1 | B | 2 | L | To do |
