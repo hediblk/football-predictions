@@ -871,6 +871,49 @@
       },
       "required": ["slug","season","fixtures"]
     },
+    "matchNote": {
+      "type": "object",
+      "properties": {
+        "kind": {"enum":["winning","unbeaten","winless","scoring","clean_sheet","head_to_head","record","upset"]},
+        "text": {"$ref":"#/$defs/string"}
+      },
+      "required": ["kind","text"]
+    },
+    "lastMeeting": {
+      "type": "object",
+      "properties": {
+        "date": {"$ref":"#/$defs/date"},
+        "venue": {"$ref":"#/$defs/string"},
+        "home": {"$ref":"#/$defs/string"},
+        "away": {"$ref":"#/$defs/string"},
+        "score": {"$ref":"#/$defs/goalPair"}
+      },
+      "required": ["date","venue","home","away","score"]
+    },
+    "fixtureNotes": {
+      "type": "object",
+      "properties": {
+        "pre": {"type":"array","items":{"$ref":"#/$defs/matchNote"},"maxItems":8},
+        "post": {"type":"array","items":{"$ref":"#/$defs/matchNote"},"maxItems":8},
+        "meetings": {"type":"array","items":{"$ref":"#/$defs/lastMeeting"},"maxItems":6}
+      },
+      "required": ["pre","post","meetings"]
+    },
+    "notes": {
+      "type": "object",
+      "properties": {
+        "generated_at": {"$ref":"#/$defs/timestamp"},
+        "as_of": {"$ref":"#/$defs/timestamp"},
+        "first_season": {"$ref":"#/$defs/season"},
+        "seasons": {"type":"array","items":{"$ref":"#/$defs/season"},"minItems":1,"uniqueItems":true},
+        "fixtures": {
+          "type":"object",
+          "propertyNames":{"pattern":"^[1-9][0-9]*$"},
+          "additionalProperties":{"$ref":"#/$defs/fixtureNotes"}
+        }
+      },
+      "required": ["generated_at","as_of","first_season","seasons","fixtures"]
+    },
     "matches": {
       "type": "object",
       "properties": {

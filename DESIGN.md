@@ -62,6 +62,10 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.
 
+## Task 9 · Match notes
+
+Each match page has one ruled “Notes” frame. Before mode labels it “On the line” and shows up to four fixed-template facts per side, led by a small lit amber bulb, followed by the six latest meeting score chips when available. Each chip exposes its UTC date and home venue on hover, focus, or tap. After mode labels the same frame “What it meant” and shows only notes about streaks extended or ended, a qualifying venue win, or a new season record. A dim line names the first season covered by the loaded result history. Empty note and meeting lists hide the frame. The notes use mono text, no new colour or motion, and load only on the match page.
+
 ## Task 12 · Match stats and timeline
 
 Finished match pages add "Match stats" in After mode when ESPN detail is available. It opens like a broadcast scoreboard: both clubs with 36 px crests, the final score between them, and under each club its scorers (surname and minutes, "pen" or "og" tagged) and red cards, each led by its event icon. Possession follows as one full-width split bar with the two percentages at its ends. Below, up to nine rows place home values on the left and away values on the right around a centred label: shots, on target, corners, saves, pass accuracy, fouls, offsides and cards, plus Understat xG when the league has it. Each bar is that side's share of the pair, growing out from the label. The better figure in each row is lit: its value sits on an amber plate and its bar is amber, the other side dim; more is better except fouls, offsides and cards, where fewer is; a tie lights neither. The plate's shape and a spoken "(better)" mean colour never stands alone. Percentages keep their units and absent pairs hide their row.

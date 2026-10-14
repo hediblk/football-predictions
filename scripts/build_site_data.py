@@ -252,6 +252,296 @@ def export_matches(src, slug, prefix, receipts=None):
     return {"slug": slug, "generated_at": data["generated_at"], "rule": rule, "matches": matches}
 
 
+NOTE_STREAKS = {
+    "winning": lambda gf, ga: gf > ga,
+    "unbeaten": lambda gf, ga: gf >= ga,
+    "winless": lambda gf, ga: gf <= ga,
+    "scoring": lambda gf, ga: gf > 0,
+    "clean_sheet": lambda gf, ga: ga == 0,
+}
+
+
+def note_result(row, season, *, display_home=None, display_away=None, forecast=None, current=False):
+    kickoff = pd.to_datetime(row.get("utcDate"), errors="coerce", utc=True)
+    home_goals, away_goals = row.get("homeGoals"), row.get("awayGoals")
+    if current and row.get("score"):
+        home_goals, away_goals = row["score"]
+    if pd.isna(kickoff) or pd.isna(home_goals) or pd.isna(away_goals):
+        return None
+    if current and row.get("status") != "FINISHED":
+        return None
+    home, away = str(row["homeTeam"]), str(row["awayTeam"])
+    available = row.get("available_at")
+    if available is None or pd.isna(available):
+        available = kickoff + pd.Timedelta(hours=3)
+        if not current:
+            local = kickoff.tz_convert("Europe/London")
+            if local.hour == 0 and local.minute == 0:
+                available = (local.normalize() + pd.DateOffset(days=1)).tz_convert("UTC")
+    return {
+        "kickoff": kickoff, "available_at": pd.to_datetime(available, utc=True), "season": int(season),
+        "home": display_home or short_name(home), "away": display_away or short_name(away),
+        "home_key": canonical_team(home), "away_key": canonical_team(away),
+        "hg": int(home_goals), "ag": int(away_goals), "p": (forecast or {}).get("p"),
+        "forecast_at": (forecast or {}).get("at"),
+    }
+
+
+def note_results(src, competition, match_file):
+    season = int(competition["season"].split("/")[0])
+    prefix = competition["code"].lower()
+    current = pd.read_csv(src / f"{prefix}_matches_snapshot.csv")
+    exported = {str(match["id"]): match for match in match_file["matches"]}
+    results, years = [], []
+    for row in current.to_dict("records"):
+        forecast = exported.get(str(row.get("id")), {})
+        item = note_result(row, season, display_home=forecast.get("home"), display_away=forecast.get("away"),
+                           forecast=forecast, current=True)
+        if item:
+            results.append(item)
+    if competition["kind"] == "league":
+        from standing_prediction.predict_positions import DEFAULT_H2H, load_season_results
+
+        for year in range(season - DEFAULT_H2H["seasons"] - 2, season):
+            try:
+                history = load_season_results(None, competition["code"], year, cache=True)
+            except (KeyError, OSError, RuntimeError, ValueError) as exc:
+                print(f"Match notes: {competition['slug']} history {year} unavailable ({type(exc).__name__})")
+                continue
+            count = 0
+            for row in history.to_dict("records"):
+                item = note_result(row, year)
+                if item:
+                    results.append(item)
+                    count += 1
+            if count:
+                years.append(year)
+    else:
+        from champions_league.data import fetch_ucl_fixtures
+        from standing_prediction.data import FootballDataClient
+
+        try:
+            client = FootballDataClient()
+        except ValueError as exc:
+            print(f"Match notes: Champions League history unavailable ({type(exc).__name__})")
+        else:
+            for year in range(max(2023, season - 2), season):
+                try:
+                    history = fetch_ucl_fixtures(client, season=year)
+                except (KeyError, OSError, RuntimeError, ValueError) as exc:
+                    print(f"Match notes: Champions League history {year} unavailable ({type(exc).__name__})")
+                    continue
+                count = 0
+                for row in history.to_dict("records"):
+                    item = note_result(row, year)
+                    if item:
+                        results.append(item)
+                        count += 1
+                if count:
+                    years.append(year)
+    if any(match.get("score") for match in match_file["matches"]):
+        years.append(season)
+    return sorted(results, key=lambda row: (row["kickoff"], row["home_key"], row["away_key"])), sorted(set(years or [season]))
+
+
+def note_streak_length(results, team, scope, predicate):
+    games = [row for row in results if (row["home_key"] == team or row["away_key"] == team)
+             and (scope == "overall" or (scope == "home" and row["home_key"] == team)
+                  or (scope == "away" and row["away_key"] == team))]
+    length = 0
+    for row in reversed(games):
+        gf, ga = (row["hg"], row["ag"]) if row["home_key"] == team else (row["ag"], row["hg"])
+        if not predicate(gf, ga):
+            break
+        length += 1
+    return length
+
+
+def note_actual_probability(row):
+    if not row.get("p") or row.get("forecast_at") is None:
+        return None
+    if pd.to_datetime(row["forecast_at"], utc=True) >= row["kickoff"]:
+        return None
+    outcome = 0 if row["hg"] > row["ag"] else 2 if row["hg"] < row["ag"] else 1
+    return float(row["p"][outcome])
+
+
+def note_record_text(row):
+    return f"{row['home']} {row['hg']}–{row['ag']} {row['away']}"
+
+
+def fixture_note_data(fixture, results, season, first_season, competition_name):
+    kickoff = pd.to_datetime(fixture["kickoff"], utc=True)
+    home_key, away_key = canonical_team(fixture["home"]), canonical_team(fixture["away"])
+    competition_phrase = {"Premier League": "the Premier League", "Bundesliga": "the Bundesliga",
+                         "Champions League": "the Champions League"}.get(competition_name, competition_name)
+    before = [row for row in results if row["kickoff"] < kickoff and row["available_at"] < kickoff]
+    meetings = sorted((row for row in before if {row["home_key"], row["away_key"]} == {home_key, away_key}),
+                      key=lambda row: row["kickoff"], reverse=True)[:6]
+    sides = [("home", fixture["home"], home_key, "home"), ("away", fixture["away"], away_key, "away")]
+    pre, post = {"home": [], "away": []}, {"home": [], "away": []}
+
+    def add(target, side, kind, rank, text):
+        target[side].append((rank, kind, text))
+
+    for side, name, team, venue_scope in sides:
+        for scope in ("overall", venue_scope):
+            where = " at home" if scope == "home" else " away" if scope == "away" else ""
+            for kind, predicate in NOTE_STREAKS.items():
+                length = note_streak_length(before, team, scope, predicate)
+                if length < 5:
+                    continue
+                if kind == "winning":
+                    text = f"{name} have won {length} straight matches{where} in {competition_phrase}."
+                elif kind == "unbeaten":
+                    text = f"{name} are unbeaten in {length} matches{where} in {competition_phrase}."
+                elif kind == "winless":
+                    text = f"{name} have gone {length} matches{where} without a win in {competition_phrase}."
+                elif kind == "scoring":
+                    text = f"{name} have scored in {length} straight matches{where} in {competition_phrase}."
+                else:
+                    text = f"{name} have kept {length} straight clean sheets{where} in {competition_phrase}."
+                add(pre, side, kind, length, text)
+
+    if len(meetings) >= 3:
+        home_wins = sum(row["hg"] > row["ag"] if row["home_key"] == home_key else row["ag"] > row["hg"]
+                        for row in meetings)
+        away_wins = sum(row["hg"] > row["ag"] if row["home_key"] == away_key else row["ag"] > row["hg"]
+                        for row in meetings)
+        draws = len(meetings) - home_wins - away_wins
+        add(pre, "home", "head_to_head", len(meetings),
+            f"In the last {len(meetings)} meetings, {fixture['home']} have won {home_wins}, "
+            f"{fixture['away']} {away_wins}; {draws} were drawn.")
+
+    season_rows = [row for row in before if row["season"] == season]
+    decisive = [row for row in season_rows if row["hg"] != row["ag"]]
+    biggest_win = max(decisive, key=lambda row: abs(row["hg"] - row["ag"]), default=None)
+    most_goals = max(season_rows, key=lambda row: row["hg"] + row["ag"], default=None)
+    upsets = [(note_actual_probability(row), row) for row in season_rows]
+    upsets = [(chance, row) for chance, row in upsets if chance is not None]
+    biggest_upset = min(upsets, key=lambda item: item[0], default=None)
+    for side, name, team, _ in sides:
+        if biggest_win and team in (biggest_win["home_key"], biggest_win["away_key"]):
+            winner = biggest_win["home"] if biggest_win["hg"] > biggest_win["ag"] else biggest_win["away"]
+            if canonical_team(winner) == team:
+                margin = abs(biggest_win["hg"] - biggest_win["ag"])
+                add(pre, side, "record", margin,
+                    f"{name}'s biggest win in {competition_phrase} this season is {note_record_text(biggest_win)}.")
+        if most_goals and team in (most_goals["home_key"], most_goals["away_key"]):
+            total = most_goals["hg"] + most_goals["ag"]
+            add(pre, side, "record", total,
+                f"{name} featured in the highest-scoring {competition_name} match this season: "
+                f"{note_record_text(most_goals)} ({total} goals).")
+        if biggest_upset and team in (biggest_upset[1]["home_key"], biggest_upset[1]["away_key"]):
+            chance, result = biggest_upset
+            add(pre, side, "upset", round((1 - chance) * 1000),
+                f"{name} featured in the biggest upset in {competition_phrase} this season: "
+                f"{note_record_text(result)} (the model gave the result {chance:.1%}).")
+
+    def selected(target):
+        chosen = [note for side in ("home", "away")
+                  for note in sorted(target[side], key=lambda item: (-item[0], item[1], item[2]))[:4]]
+        chosen.sort(key=lambda item: (-item[0], item[1], item[2]))
+        return [{"kind": kind, "text": text} for _, kind, text in chosen]
+
+    score = fixture.get("score")
+    finished = bool(score and fixture.get("status") == "FINISHED")
+    if finished:
+        focal = {
+            "kickoff": kickoff, "available_at": kickoff + pd.Timedelta(hours=3), "season": season,
+            "home": fixture["home"], "away": fixture["away"], "home_key": home_key, "away_key": away_key,
+            "hg": int(score[0]), "ag": int(score[1]), "p": fixture.get("p"), "forecast_at": fixture.get("at"),
+        }
+        after = [*before, focal]
+        for side, name, team, venue_scope in sides:
+            for scope in ("overall", venue_scope):
+                current_for, current_against = ((focal["hg"], focal["ag"]) if team == home_key
+                                                else (focal["ag"], focal["hg"]))
+                if (scope == "home" and team != home_key) or (scope == "away" and team != away_key):
+                    continue
+                for kind, predicate in NOTE_STREAKS.items():
+                    prior_length = note_streak_length(before, team, scope, predicate)
+                    current_matches = predicate(current_for, current_against)
+                    if current_matches:
+                        length = note_streak_length(after, team, scope, predicate)
+                        if length >= 5 and length > prior_length:
+                            label = "clean-sheet" if kind == "clean_sheet" else kind
+                            add(post, side, kind, length,
+                                f"{name}'s {length - 1}-match {label} run was extended to {length}{' at home' if scope == 'home' else ' away' if scope == 'away' else ''}.")
+                    elif prior_length >= 5:
+                        label = "clean-sheet" if kind == "clean_sheet" else kind
+                        add(post, side, kind, prior_length,
+                            f"{name}'s {prior_length}-match {label} run ended{' at home' if scope == 'home' else ' away' if scope == 'away' else ''}.")
+
+        winner_key = home_key if score[0] > score[1] else away_key if score[1] > score[0] else None
+        if winner_key is not None and not fixture.get("neutral"):
+            winner_side = "home" if winner_key == home_key else "away"
+            venue_wins = sorted((row for row in before if row["home_key"] == home_key and row["away_key"] == away_key
+                                 and ((winner_side == "home" and row["hg"] > row["ag"])
+                                      or (winner_side == "away" and row["ag"] > row["hg"]))),
+                                key=lambda row: row["kickoff"], reverse=True)
+            last_win_year = venue_wins[0]["season"] if venue_wins else None
+            gap = season - (last_win_year if last_win_year is not None else first_season)
+            if gap >= 3:
+                since = _season_label(last_win_year if last_win_year is not None else first_season)
+                winner = fixture[winner_side]
+                text = (f"First home win for {winner} over {fixture['away']} since {since}." if winner_side == "home"
+                        else f"First {winner} win at {fixture['home']} since {since}.")
+                if last_win_year is None:
+                    text = f"First {winner} win at {fixture['home']} in our records since {since}."
+                add(post, winner_side, "head_to_head", gap, text)
+
+        prior_season = [row for row in before if row["season"] == season]
+        prior_margin = max((abs(row["hg"] - row["ag"]) for row in prior_season if row["hg"] != row["ag"]), default=0)
+        margin, total = abs(score[0] - score[1]), sum(score)
+        prior_total = max((row["hg"] + row["ag"] for row in prior_season), default=-1)
+        result_text = note_record_text(focal)
+        outcome_side = "home" if score[0] >= score[1] else "away"
+        if margin and margin > prior_margin:
+            add(post, outcome_side, "record", margin,
+                f"New biggest win in {competition_phrase} this season: {result_text} ({margin} goals).")
+        if total > prior_total:
+            for side, _, _, _ in sides:
+                add(post, side, "record", total,
+                    f"Highest-scoring {competition_name} match this season: {result_text} ({total} goals).")
+        chance = note_actual_probability(focal)
+        prior_upsets = [note_actual_probability(row) for row in prior_season]
+        prior_upsets = [value for value in prior_upsets if value is not None]
+        if chance is not None and chance < min(prior_upsets, default=float("inf")):
+            for side in ("home", "away") if score[0] == score[1] else (outcome_side,):
+                add(post, side, "upset", round((1 - chance) * 1000),
+                    f"Biggest upset in {competition_phrase} this season: {result_text} (the model gave the result {chance:.1%}).")
+
+    meetings_json = [{
+        "date": row["kickoff"].date().isoformat(), "venue": row["home"], "home": row["home"], "away": row["away"],
+        "score": [row["hg"], row["ag"]],
+    } for row in meetings]
+    return {"pre": selected(pre), "post": selected(post), "meetings": meetings_json}
+
+
+def _season_label(year):
+    return f"{year}/{str(year + 1)[-2:]}"
+
+
+def export_match_notes(src, competition, match_file):
+    results, seasons = note_results(src, competition, match_file)
+    as_of = pd.to_datetime(competition["as_of"], utc=True)
+    first_season = seasons[0]
+    competition_name = competition["name"]
+    fixtures = {}
+    season = int(competition["season"].split("/")[0])
+    for fixture in match_file["matches"]:
+        kickoff = pd.to_datetime(fixture.get("kickoff"), errors="coerce", utc=True)
+        if pd.isna(kickoff) or not (as_of - pd.Timedelta(days=14) <= kickoff <= as_of + pd.Timedelta(days=14)):
+            continue
+        fixtures[str(fixture["id"])] = fixture_note_data(fixture, results, season, first_season, competition_name)
+    return {
+        "generated_at": competition["generated_at"], "as_of": competition["as_of"],
+        "first_season": _season_label(first_season), "seasons": [_season_label(year) for year in seasons],
+        "fixtures": fixtures,
+    }
+
+
 def club_entry(team, row, league, ucl):
     return {
         "id": team["id"], "slug": team["slug"], "name": team["name"], "full": team["full"],
@@ -439,6 +729,16 @@ def main(argv=None):
         fresh = [data for data in competitions if data["slug"] not in kept]
         ucl_fresh = "champions-league" not in kept
         update_history(args.dest, fresh, rated_clubs(args.src, competitions[:-1], competitions[-1]) if ucl_fresh else None)
+    for competition in competitions:
+        slug = competition["slug"]
+        if slug in kept or f"matches/{slug}" in kept or f"matches/{slug}" not in exports:
+            continue
+        try:
+            notes = export_match_notes(args.src, competition, exports[f"matches/{slug}"])
+        except (FileNotFoundError, OSError, ValueError) as exc:
+            print(f"Match notes unavailable for {slug} ({type(exc).__name__}); kept previous notes")
+            continue
+        write_json(args.dest / "notes" / f"{slug}.json", notes)
     previous_scorecard = read_json(args.dest / "scorecard.json") or {"competitions": {}}
     records = {}
     for competition in competitions:

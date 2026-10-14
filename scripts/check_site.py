@@ -74,17 +74,35 @@ def routes(data):
             found.append((f"#matches/{match['kickoff'][:10]}", ["#m-day .mrow"],
                           [f'#m-day .mrow[data-c="{slug}"][data-id="{match["id"]}"]'],
                           f'#m-day .panel .call .dim:has-text("{label}")'))
+    def note_entry(slug, match):
+        path = data / f"notes/{slug}.json"
+        if not path.exists():
+            return None
+        return json.loads(path.read_text()).get("fixtures", {}).get(str(match["id"]))
+
     # Match pages: the next forecast fixture (one with stakes if there is one), then in After mode the latest finished
-    # league game, Champions League game and published fixture.
+    # league game, Champions League game and published fixture. When notes are published, check their rendered frame.
     ahead = sorted((f for f in fixtures if "p" in f[1] and "score" not in f[1] and f[1]["kickoff"] >= origin), key=lambda f: f[1]["kickoff"])
     upcoming = next((f for f in ahead if f[1].get("stakes")), ahead[0] if ahead else None)
     if upcoming:
-        found.append((f"#match/{upcoming[0]}/{upcoming[1]['id']}", MATCH, [], None))
+        slug, match = upcoming
+        notes = note_entry(slug, match)
+        selectors = MATCH + (["#view-match .mp-notes h4:has-text('On the line')"]
+                             if notes and (notes.get("pre") or notes.get("meetings")) else [])
+        found.append((f"#match/{slug}/{match['id']}", selectors, [], None))
     done = sorted((f for f in fixtures if "p" in f[1] and "score" in f[1]), key=lambda f: f[1]["kickoff"])
     finished = [next((f for f in reversed(done) if test(f)), None) for test in
                 (lambda f: f[0] != "champions-league", lambda f: f[0] == "champions-league", lambda f: f[1].get("published"))]
     for slug, fixture_id in dict.fromkeys((f[0], f[1]["id"]) for f in finished if f):
-        found.append((f"#match/{slug}/{fixture_id}", AFTER, ["#view-match .mp-modes [data-mode=before]"], "#view-match .mp-fc .scores li"))
+        match = next(row for c, row in fixtures if c == slug and row["id"] == fixture_id)
+        notes = note_entry(slug, match)
+        selectors = AFTER + (["#view-match .mp-notes h4:has-text('What it meant')"] if notes and notes.get("post") else [])
+        before_checks = ["#view-match .mp-fc .scores li"]
+        if notes and (notes.get("pre") or notes.get("meetings")):
+            before_checks.append("#view-match .mp-notes h4:has-text('On the line')")
+        if notes and notes.get("meetings"):
+            before_checks.append("#view-match .mp-meeting-chips .mp-meeting")
+        found.append((f"#match/{slug}/{fixture_id}", selectors, ["#view-match .mp-modes [data-mode=before]"], before_checks))
     # The latest finished league game with a shot file, opening its shot list.
     def detail(slug, match):
         path = data / f"match/{json.loads((data / f'{slug}.json').read_text())['season'][:4]}/{slug}/{match['id']}.json"
@@ -137,7 +155,7 @@ def visit(context, url, origin, selectors, rows, opened):
     problems = []
     page = context.new_page()
     # A missing per-match file is a documented state (that source has no data), so its 404 is not a failure.
-    optional = lambda url: "/data/match/" in url
+    optional = lambda url: "/data/match/" in url or "/data/notes/" in url
     page.on("console", lambda msg: msg.type == "error" and not optional(msg.location.get("url", ""))
             and problems.append(f"console: {msg.text}"))
     page.on("pageerror", lambda exc: problems.append(f"exception: {exc}"))
@@ -160,8 +178,10 @@ def visit(context, url, origin, selectors, rows, opened):
     if row:
         row.click()
         page.wait_for_load_state("networkidle")
-        if not page.locator(opened).count():
-            problems.append(f"clicking a row did not open {opened}")
+        opened_checks = opened if isinstance(opened, list) else [opened]
+        for selector in opened_checks:
+            if not page.locator(selector).count():
+                problems.append(f"clicking a row did not open {selector}")
         if page.locator(".mp-modes [data-mode=before][aria-pressed=true]").count() and page.locator(".mp-stats, .mp-where").count():
             problems.append("Post-match stats are visible in Before mode")
     page.close()
