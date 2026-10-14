@@ -306,7 +306,8 @@ function heatImage(grid) {
   const palette = document.createElement("canvas");
   palette.width = 256; palette.height = 1;
   const colors = palette.getContext("2d"), gradient = colors.createLinearGradient(0, 0, 255, 0);
-  gradient.addColorStop(0, "#16803c"); gradient.addColorStop(.5, "#f4db49"); gradient.addColorStop(1, "#e3342f");
+  const css = getComputedStyle(document.documentElement), stop = (name) => css.getPropertyValue(name).trim();
+  gradient.addColorStop(0, stop("--heat-lo")); gradient.addColorStop(.5, stop("--heat-mid")); gradient.addColorStop(1, stop("--heat-hi"));
   colors.fillStyle = gradient; colors.fillRect(0, 0, 256, 1);
   const ramp = colors.getImageData(0, 0, 256, 1).data, peak = Math.max(...grid);
   // Interpolate activity before applying colour; the last source row is four metres tall.
@@ -335,32 +336,40 @@ function wherePlayed(m) {
   const players = data.physical[side].players;
   const selected = heat.players.find((p) => String(p.id) === page.heatPlayer);
   const grid = selected ? selected.grid : heat.team;
-  const club = side === "h" ? m.home : m.away;
+  const club = side === "h" ? m.home : m.away, crest = (s) => clubName(s === "h" ? m.home_id : m.away_id, s === "h" ? m.home : m.away, "inline");
   const name = selected ? players.find((p) => p.id === selected.id).player : club;
-  const total = grid.reduce((a, b) => a + b, 0), peak = Math.max(...grid);
+  const total = grid.reduce((a, b) => a + b, 0);
   const thirds = [0, 0, 0];
   grid.forEach((value, i) => { thirds[Math.floor(i % 21 / 7)] += value; });
   if (side === "a") thirds.reverse();
-  const summary = `${name}: ${thirds.map((n, i) => `${dec(n / total * 100, 0)}% in the ${["defensive", "middle", "attacking"][i]} third`).join(", ")}.`;
+  const share = (n) => `${dec(n / total * 100, 0)}%`;
+  const summary = `${name}: ${thirds.map((n, i) => `${share(n)} in the ${["defensive", "middle", "attacking"][i]} third`).join(", ")}.`;
   const positions = data.positions?.[side] || [];
   const cells = grid.map((n, i) => `<rect class="heat-cell" x="${i % 21 * 5}" y="${Math.floor(i / 21) * 5}" width="5" height="${i >= 273 ? 4 : 5}"><title>${dec(n / total * 100, 2)}% of activity in this cell</title></rect>`).join("");
-  const dots = page.positions ? positions.map((p) => `<g class="heat-starter"><title>${esc(`#${p.number} ${p.player}: average position`)}</title>
+  const dots = page.positions ? positions.map((p) => `<g class="heat-starter${selected ? (p.id === selected.id ? " on" : " off") : ""}"><title>${esc(`#${p.number} ${p.player}: average position`)}</title>
     <circle cx="${p.x * 105}" cy="${p.y * 69}" r="2.8"/><text x="${p.x * 105}" y="${p.y * 69}" dy=".35em">${p.number}</text></g>`).join("") : "";
-  const pitch = `<g class="pitch"><rect x="0" y="0" width="105" height="69"/><path d="M52.5 0V69M0 14.5H16.5V54.5H0M105 14.5H88.5V54.5H105"/><circle cx="52.5" cy="34.5" r="9.15"/></g>`;
   const options = heat.players.map((p) => {
     const person = players.find((row) => row.id === p.id);
-    return `<option value="${p.id}"${selected?.id === p.id ? " selected" : ""}>${esc(person.player)} · ${dec(person.minutes, 0)} min</option>`;
+    return `<option value="${p.id}"${selected?.id === p.id ? " selected" : ""}>${esc(person.player)} · ${dec(person.minutes, 0)}′</option>`;
   }).join("");
+  const sides = ["h", "a"].map((s) => `<button type="button" class="chip" data-heat-side="${s}" aria-pressed="${side === s}">${crest(s)}</button>`).join("");
+  const toggle = positions.length ? `<button type="button" class="chip" id="mp-heat-positions" aria-pressed="${page.positions}">Positions</button>` : "";
+  const dir = side === "h" ? `<span>${crest("h")} attacking →</span>` : `<span></span><span>← ${crest("a")} attacking</span>`;
+  const list = positions.length ? `<details class="mp-list"><summary>Starters' average positions</summary><div class="scroll"><table class="board">
+    <thead><tr><th>#</th><th class="l">Player</th><th>Across</th><th>Down</th></tr></thead>
+    <tbody>${positions.map((p) => `<tr><td>${p.number}</td><td class="l">${esc(p.player)}</td><td>${dec(p.x * 100, 0)}%</td><td>${dec(p.y * 100, 0)}%</td></tr>`).join("")}</tbody></table></div></details>` : "";
   return `<fieldset class="frame mp-after mp-where"><legend>Where they played</legend>
-    <div class="mp-heat-controls"><div class="chips" role="group" aria-label="Activity map side">${[["h", "Home"], ["a", "Away"]].map(([s, label]) =>
-      `<button type="button" class="chip" data-heat-side="${s}" aria-pressed="${side === s}">${label}</button>`).join("")}</div>
-      <label>Player <select id="mp-heat-player"><option value="">Whole team</option>${options}</select></label>
-      ${positions.length ? `<label><input id="mp-heat-positions" type="checkbox"${page.positions ? " checked" : ""}> Average positions</label>` : ""}</div>
-    <div class="mp-pitch mp-heat-pitch"><svg viewBox="-3 -3 111 75" role="img" aria-label="${esc(`UEFA heatmap: green is less activity, yellow is intermediate, red is more activity. ${summary} ${club} attacking ${side === "h" ? "right" : "left"}. ${page.positions ? "Numbered dots show starters' average positions, listed below." : "Average positions hidden."}`)}"><image class="heat-surface" href="${heatImage(grid)}" x="0" y="0" width="105" height="69"/>${cells}${pitch}${dots}</svg></div>
-    <div class="mp-heat-scale" aria-label="Activity scale: green at zero, yellow halfway, red at the busiest cell"><span>Less activity</span><i aria-hidden="true"></i><span>More activity</span></div>
-    <p class="note mp-heat-caption">${esc(summary)} ${esc(club)} ${side === "h" ? "→" : "←"}. Green → yellow → red shows less → more activity, relative to this map's busiest cell (${dec(peak / total * 100, 2)}% of activity). The surface is smoothed; hover gives the original cell's share. Player maps cover at least 30 minutes.</p>
-    ${positions.length ? `<details class="mp-heat-list"><summary>Starters' average positions</summary><ul>${positions.map((p) => `<li>#${p.number} ${esc(p.player)} · ${dec(p.x * 100, 0)}% from the left, ${dec(p.y * 100, 0)}% from the top</li>`).join("")}</ul></details>` : ""}
-    <p class="note">UEFA · match data. Activity includes play with and without the ball; these are average locations, not the starting formation.</p>
+    <div class="mp-heat-bar">
+      <div class="mp-heat-sides" role="group" aria-label="Side">${sides}</div>
+      <label class="chip-select${selected ? " on" : ""}"><span class="vh">Player</span><select id="mp-heat-player"><option value="">Whole team</option>${options}</select></label>
+      ${toggle}
+    </div>
+    <div class="mp-pitch mp-heat-pitch"><svg viewBox="-2 -2 109 73" role="img" aria-label="${esc(`Activity map, green for less and red for more activity. ${summary} ${club} attacking ${side === "h" ? "right" : "left"}.${dots ? " Numbered dots are the starters' average positions, listed below." : ""}`)}"><image class="heat-surface" href="${heatImage(grid)}" x="0" y="0" width="105" height="69"/>${cells}<g class="pitch">${pitchLines(69)}</g>${dots}</svg>
+      <p class="mp-dir">${dir}</p></div>
+    <p class="mp-key"><span>Less<i class="k heat"></i>More activity</span>${dots ? `<span><i class="k pos"></i>Starter's average position</span>` : ""}</p>
+    <p class="mp-key"><span>Thirds</span>${thirds.map((n, i) => `<span>${["Defensive", "Middle", "Attacking"][i]} <b>${share(n)}</b></span>`).join("")}</p>
+    ${list}
+    <p class="note">${esc(name)}'s activity with and without the ball, relative to the busiest cell; the surface is smoothed and hovering a cell gives its own share. Player maps need 30 minutes. Positions are average locations, not the formation. UEFA · match data.</p>
   </fieldset>`;
 }
 
@@ -370,17 +379,21 @@ function updateHeat(focus) {
 }
 
 $("view-match").addEventListener("click", (e) => {
+  if (!page) return;
   const button = e.target.closest("[data-heat-side]");
-  if (!button || !page) return;
-  page.heatSide = button.dataset.heatSide;
-  page.heatPlayer = "";
-  updateHeat(`[data-heat-side="${page.heatSide}"]`);
+  if (button) {
+    page.heatSide = button.dataset.heatSide;
+    page.heatPlayer = "";
+    updateHeat(`[data-heat-side="${page.heatSide}"]`);
+  } else if (e.target.closest("#mp-heat-positions")) {
+    page.positions = !page.positions;
+    updateHeat("#mp-heat-positions");
+  }
 });
 $("view-match").addEventListener("change", (e) => {
-  if (e.target.id === "mp-heat-player") page.heatPlayer = e.target.value;
-  else if (e.target.id === "mp-heat-positions") page.positions = e.target.checked;
-  else return;
-  updateHeat(`#${e.target.id}`);
+  if (e.target.id !== "mp-heat-player") return;
+  page.heatPlayer = e.target.value;
+  updateHeat("#mp-heat-player");
 });
 
 function statRow(pair, label, percent, lead, digits = percent ? 1 : 0, unit = "") {
@@ -475,6 +488,19 @@ function xgLines(shots, m) {
   });
 }
 
+/* pitch markings on a 105 × h pitch, shared by the shot map and the activity map */
+function pitchLines(h) {
+  const c = h / 2;
+  const end = (x0, d) => {
+    const box = (depth, half) => `<path d="M${x0} ${c - half}H${x0 + d * depth}V${c + half}H${x0}"/>`;
+    const dy = Math.sqrt(9.15 ** 2 - 5.5 ** 2);
+    return box(16.5, 20.16) + box(5.5, 9.16) + `<circle class="spot" cx="${x0 + d * 11}" cy="${c}" r=".35"/>`
+      + `<path d="M${x0 + d * 16.5} ${(c - dy).toFixed(2)}A9.15 9.15 0 0 ${d > 0 ? 1 : 0} ${x0 + d * 16.5} ${(c + dy).toFixed(2)}"/>`
+      + `<rect x="${d > 0 ? -1.6 : 105}" y="${c - 3.66}" width="1.6" height="7.32"/>`;
+  };
+  return `<rect x="0" y="0" width="105" height="${h}"/><path d="M52.5 0V${h}"/><circle cx="52.5" cy="${c}" r="9.15"/><circle class="spot" cx="52.5" cy="${c}" r=".35"/>${end(0, 1)}${end(105, -1)}`;
+}
+
 function shotReport(m) {
   const data = page.shots;
   if (!data) return "";
@@ -484,14 +510,7 @@ function shotReport(m) {
   const chances = shots.filter((s) => !own(s));
 
   // the pitch: 105 × 68, home shooting right, away mirrored to shoot left
-  const end = (x0, d) => {
-    const box = (depth, half) => `<path d="M${x0} ${34 - half}H${x0 + d * depth}V${34 + half}H${x0}"/>`;
-    const dy = Math.sqrt(9.15 ** 2 - 5.5 ** 2).toFixed(2);
-    return box(16.5, 20.16) + box(5.5, 9.16) + `<circle class="spot" cx="${x0 + d * 11}" cy="34" r=".35"/>`
-      + `<path d="M${x0 + d * 16.5} ${(34 - dy).toFixed(2)}A9.15 9.15 0 0 ${d > 0 ? 1 : 0} ${x0 + d * 16.5} ${(34 + +dy).toFixed(2)}"/>`
-      + `<rect x="${d > 0 ? -1.6 : 105}" y="30.34" width="1.6" height="7.32"/>`;
-  };
-  const lines = `<rect x="0" y="0" width="105" height="68"/><path d="M52.5 0V68"/><circle cx="52.5" cy="34" r="9.15"/><circle class="spot" cx="52.5" cy="34" r=".35"/>${end(0, 1)}${end(105, -1)}`;
+  const lines = pitchLines(68);
   const kind = (s) => (s[5] === "Goal" ? "goal" : s[5] === "SavedShot" ? "saved" : "off");
   const tip = (s) => esc(`<b>${esc(s[8])}</b> · ${esc(names[s[1]])}<br>${minute(s)} · <b>${dec(s[4], 2)}</b> xG · ${esc(word(s[6]))}<br>${esc(word(s[5]))}, ${esc(word(s[7]).toLowerCase())}${s[9] ? ` · assist ${esc(s[9])}` : ""}`);
   // biggest chances first so small ones stay on top; goals last of all

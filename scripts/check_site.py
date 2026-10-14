@@ -118,7 +118,7 @@ def routes(data):
             "#view-match .mp-running .mp-stat-row:has-text('Sprints')",
             "#view-match .mp-running .mp-stat-row:has-text('Top speed')",
             "#view-match .mp-where .heat-surface", "#view-match .mp-where .heat-starter",
-            "#view-match #mp-heat-player option", "#view-match .mp-heat-caption"],
+            "#view-match #mp-heat-player option", "#view-match #mp-heat-positions[aria-pressed=true]", "#view-match .mp-where .mp-dir"],
             ["#view-match [data-heat-side=a]"], "#view-match [data-heat-side=a][aria-pressed=true]"))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
