@@ -358,18 +358,21 @@ function drawXg() {
   const path = (steps) => `M${x(0)} ${y(0)}${steps.map((s) => `H${x(s.t).toFixed(1)}V${y(s.v).toFixed(1)}`).join("")}H${x(last)}`;
   const at = (steps, t) => steps.reduce((v, s) => (s.t <= t ? s.v : v), 0);
 
-  // goals (and own goals, for the side they counted for) as bulbs on that side's line, labels pushed clear of each other
-  const placed = [];
-  const goals = shots.filter((s) => s[5] === "Goal" || own(s)).map((s) => {
+  // goals (and own goals, for the side they counted for) as bulbs on that side's line, labels pushed clear of
+  // each other and of every bulb
+  const scorers = shots.filter((s) => s[5] === "Goal" || own(s)).map((s) => {
     const side = own(s) ? other(s[1]) : s[1];
-    const [cx, cy] = [x(s[0]), y(at(lines[side === "h" ? 0 : 1], s[0]))];
+    return { s, side, cx: x(s[0]), cy: y(at(lines[side === "h" ? 0 : 1], s[0])) };
+  });
+  const placed = scorers.map(({ cx, cy }) => ({ x0: cx - 5, x1: cx + 5, y0: cy - 5, y1: cy + 5 }));
+  const goals = scorers.map(({ s, side, cx, cy }) => {
     const text = `${minute(s)} ${surname(s[8])}${own(s) ? " (og)" : ""}`;
     const width = text.length * 6.2;
     const right = cx + 6 + width > x(last);
     const x0 = right ? cx - 6 - width : cx + 6;
     let ly = cy - 7;
-    while (placed.some((p) => x0 < p.x1 && x0 + width > p.x0 && Math.abs(p.y - ly) < 11)) ly -= 11;
-    placed.push({ x0, x1: x0 + width, y: ly });
+    while (placed.some((p) => x0 < p.x1 && x0 + width > p.x0 && ly - 9 < p.y1 && ly + 2 > p.y0)) ly -= 11;
+    placed.push({ x0, x1: x0 + width, y0: ly - 9, y1: ly + 2 });
     const tipText = esc(`<b>${esc(s[8])}</b>${own(s) ? " (own goal)" : ""} · ${minute(s)}<br>Goal for ${esc(side === "h" ? m.home : m.away)}${own(s) ? "" : ` · ${dec(s[4], 2)} xG`}`);
     return { side, label: `${minute(s)} ${s[8]}${own(s) ? " (own goal)" : ""}`,
       svg: `<g data-tip="${tipText}"><circle class="goal" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4.5"/><text class="glbl" x="${(right ? cx - 6 : cx + 6).toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${right ? "end" : "start"}">${esc(text)}</text></g>` };
