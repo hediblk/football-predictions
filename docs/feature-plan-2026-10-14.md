@@ -72,7 +72,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | 4. Rating history and club comparison | Addition 5 | A | none | M | To do |
 | 5. Games that matter | Addition 6 | A | none | S | [PR #36](https://github.com/hediblk/football-predictions/pull/36) |
 | 6. Match page: post-game mode | Phase 1 | B | 2 (uses 1 when merged) | M | [PR #32](https://github.com/hediblk/football-predictions/pull/32) |
-| 7. Who's beating the model | Addition 4 | B | none (uses 1 when merged) | M | To do |
+| 7. Who's beating the model | Addition 4 | B | none (uses 1 when merged) | M | [PR #45](https://github.com/hediblk/football-predictions/pull/45) |
 | 8. Scorecard core | Addition 1 | B | 1 | L | [PR #35](https://github.com/hediblk/football-predictions/pull/35) |
 | 9. Match notes: streaks, head-to-head, records | Phase 1 | B | 2 | L | To do |
 | 10. Understat shot ingestion | Phase 2 | B | none | M | [PR #33](https://github.com/hediblk/football-predictions/pull/33) |
