@@ -346,6 +346,67 @@
         }
       ]
     },
+    "shot": {
+      "type": "array",
+      "prefixItems": [
+        {"type":"integer","minimum":0}, {"enum":["h","a"]},
+        {"$ref":"#/$defs/probability"}, {"$ref":"#/$defs/probability"}, {"$ref":"#/$defs/probability"},
+        {"$ref":"#/$defs/string"}, {"$ref":"#/$defs/string"}, {"$ref":"#/$defs/string"}, {"$ref":"#/$defs/string"},
+        {"anyOf":[{"$ref":"#/$defs/string"},{"type":"null"}]}
+      ],
+      "minItems": 10,
+      "maxItems": 10
+    },
+    "matchPlayer": {
+      "type": "object",
+      "properties": {
+        "id": {"type":"integer","minimum":1},
+        "player": {"$ref":"#/$defs/string"},
+        "minutes": {"type":"integer","minimum":0},
+        "position": {"$ref":"#/$defs/string"},
+        "shots": {"type":"integer","minimum":0},
+        "goals": {"type":"integer","minimum":0},
+        "own_goals": {"type":"integer","minimum":0},
+        "xg": {"type":"number","minimum":0},
+        "xa": {"type":"number","minimum":0},
+        "key_passes": {"type":"integer","minimum":0},
+        "yellow": {"type":"integer","minimum":0},
+        "red": {"type":"integer","minimum":0}
+      },
+      "required": ["id","player","minutes","position","shots","goals","own_goals","xg","xa","key_passes","yellow","red"]
+    },
+    "match_events": {
+      "type": "object",
+      "properties": {
+        "id": {"type":"integer","minimum":1},
+        "competition": {"$ref":"#/$defs/competitionSlug"},
+        "kickoff": {"$ref":"#/$defs/timestamp"},
+        "sources": {
+          "type": "object",
+          "properties": {
+            "understat": {
+              "type": "object",
+              "properties": {
+                "id": {"type":"integer","minimum":1},
+                "fetched_at": {"$ref":"#/$defs/timestamp"}
+              },
+              "required": ["id","fetched_at"]
+            }
+          }
+        },
+        "shots": {"type":"array","items":{"$ref":"#/$defs/shot"}},
+        "players": {
+          "type": "object",
+          "properties": {
+            "h": {"type":"array","items":{"$ref":"#/$defs/matchPlayer"}},
+            "a": {"type":"array","items":{"$ref":"#/$defs/matchPlayer"}}
+          },
+          "required": ["h","a"]
+        },
+        "retro": {"type":"array","items":{"$ref":"#/$defs/probability"},"minItems":3,"maxItems":3}
+      },
+      "required": ["id","competition","kickoff","sources"]
+    },
     "forecastReceipt": {
       "type": "object",
       "properties": {

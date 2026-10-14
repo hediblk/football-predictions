@@ -48,5 +48,6 @@ candidate=$(mktemp -d) || exit 1
 trap 'rm -rf "$candidate"' EXIT
 cp -R site/data "$candidate/data" || exit 1
 python scripts/build_site_data.py --src "$OUT" --dest "$candidate/data" || exit 1
+python scripts/fetch_match_events.py --src "$OUT" --data "$candidate/data" || warn "Match event ingestion failed; forecasts are still published."
 python scripts/validate_site_data.py --data "$candidate/data" --site site || exit 1
 cp -R "$candidate/data/." site/data || exit 1

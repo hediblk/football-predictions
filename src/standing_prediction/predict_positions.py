@@ -43,7 +43,7 @@ COMPETITION_TO_THE_ODDS_API_SPORT = {
     "SA": "soccer_italy_serie_a", "FL1": "soccer_france_ligue_one",
 }
 MATCH_FORECAST_COLUMNS = ["id", "utcDate", "matchday", "status", "reported_status", "homeTeam", "awayTeam",
-                          "homeTeamId", "awayTeamId", "homeGoals", "awayGoals", *XG_COLUMNS]
+                          "homeTeamId", "awayTeamId", "homeGoals", "awayGoals", "understat_id", *XG_COLUMNS]
 PLAYED_FORECAST_RULE = "Played matches are forecast from models fitted at 00:00 UTC on match day, using only earlier results."
 
 
@@ -225,6 +225,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     finished = load_season_xg(finished, competition=competition, season=season, cache=cache)
     xg_coverage = {season: finished.attrs.get("xg_coverage")}
     matches[XG_COLUMNS] = finished[XG_COLUMNS]
+    if "understat_id" in finished:
+        matches["understat_id"] = finished["understat_id"]
     h2h_pairs = 0
     cutoff = origin
     teams = standings["team"].tolist()
