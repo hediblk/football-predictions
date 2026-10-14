@@ -38,7 +38,7 @@ const clubShort = (c) => (c.league ? compBySlug[c.league].short : c.country_code
 /* the ranking's filter: every club, one league, or the Champions League field */
 const inFilter = (c) => leagueFilter === "all" || c.league === leagueFilter || (leagueFilter === "champions-league" && c.ucl);
 /* a category rank: #1 lit, top ten warm, the rest dim */
-const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top10" : ""}${cls}">#${rank}</${tag}>`;
+export const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top10" : ""}${cls}">#${rank}</${tag}>`;
 const leagueTables = () => Promise.all(LEAGUES.map((l) => getJSON(`${l.slug}.json`).catch(() => null)));
 const rowFor = (tables, club) => {
   const table = tables.find((t) => t && t.slug === club.league);
@@ -403,8 +403,11 @@ function clubRow(m) {
   return `<div class="crow" role="button" tabindex="0" aria-expanded="false" data-key="${m.comp}:${m.id}">
     <span class="c-when">${when}</span><span class="c-comp">${esc(compBySlug[m.comp].short)}</span>
     <span class="c-opp"><small>${m.isHome ? "v" : "at"}</small> ${clubName(m.isHome ? m.away_id : m.home_id, opp)}${tough}</span>
-    <span class="c-score">${score}</span>${cells}${badge}</div>`;
+    <span class="c-score">${score}</span>${cells}${badge}${matchLink(m)}</div>`;
 }
+
+/* a dim arrow at a game row's right end, straight to its match page; the rest of the row still expands */
+const matchLink = (m) => `<a class="c-go" href="#match/${m.comp}/${m.id}" aria-label="${esc(`Match page: ${m.home} v ${m.away}`)}">→</a>`;
 
 function renderNext(all) {
   const ahead = all.filter((m) => !m.score).slice(0, 6);
@@ -430,7 +433,7 @@ const STAKE_WORDS = {
 function renderStakes(club, groups) {
   const range = (values) => Math.max(...values.filter((v) => v != null)) - Math.min(...values.filter((v) => v != null));
   const rowsFor = (file, key) => file.matches
-    .map((m) => ({ m, values: ((m.stakes ? m.stakes.teams : []).find((t) => t.id === club.id) || {})[key] }))
+    .map((m) => ({ m: { ...m, comp: file.slug }, values: ((m.stakes ? m.stakes.teams : []).find((t) => t.id === club.id) || {})[key] }))
     .filter((x) => x.values && x.values.filter((v) => v != null).length > 1 && range(x.values) >= BIG_STAKE[key])
     .sort((a, b) => range(b.values) - range(a.values)).slice(0, 5);
   const blocks = groups.flatMap((g) => {
@@ -445,7 +448,7 @@ function renderStakes(club, groups) {
     const own = m.home_id === club.id || m.away_id === club.id;
     return `<div class="srow${own ? " own" : ""}"><span class="s-fix">${clubName(m.home_id, m.home, "inline")} <small>v</small> ${clubName(m.away_id, m.away, "inline")}
       <small>${shortDate(m.kickoff)}${own ? " · own game" : ""}</small></span>
-      <span class="s-res">${values.map((v, i) => `<span${i === lit ? ' class="lit"' : ""}${v == null ? ' title="Too few simulations"' : ""}>${esc(labels[i])} <b>${v == null ? "–" : pct(v)}</b></span>`).join("")}</span></div>`;
+      <span class="s-res">${values.map((v, i) => `<span${i === lit ? ' class="lit"' : ""}${v == null ? ' title="Too few simulations"' : ""}>${esc(labels[i])} <b>${v == null ? "–" : pct(v)}</b></span>`).join("")}</span>${matchLink(m)}</div>`;
   };
   $("p-stakes").innerHTML = blocks.map((b) => `${blocks.length > 1 ? `<h3 class="dgroup">${esc(b.label)}</h3>` : ""}<div class="slist">${b.rows.map(line).join("")}</div>
     <p class="note">${esc(club.name)}'s ${b.words[b.key]} is <b>${pct(stakeNow(b.team, b.key))}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games where a result moves it by ${BIG_STAKE[b.key]} points or more are listed.</p>`).join("");
@@ -463,7 +466,8 @@ function renderResults(all) {
     : `<p class="note">No games played yet.</p>`;
 }
 
-/* one bar per game, oldest first: its height is the chance the model gave what happened, lit green when it was the pick */
+/* one bar per game, oldest first: its height is the chance the model gave what happened, lit green when it was the
+   pick; each bar links to its match page */
 function callStrip(games) {
   const rows = games.filter((m) => m.p);
   if (rows.length < 2) return "";
@@ -471,11 +475,13 @@ function callStrip(games) {
     const v = verdict(m);
     const r = sideResult(m);
     const [gf, ga] = sidePair(m.score, m.isHome);
-    const tip = `${RESULT_WORD[r]} ${gf}–${ga} ${m.isHome ? "v" : "at"} ${clubName(m.isHome ? m.away_id : m.home_id, m.isHome ? m.away : m.home, "inline")} · ${shortDate(m.kickoff)}<br>`
+    const opp = m.isHome ? m.away : m.home;
+    const tip = `${RESULT_WORD[r]} ${gf}–${ga} ${m.isHome ? "v" : "at"} ${clubName(m.isHome ? m.away_id : m.home_id, opp, "inline")} · ${shortDate(m.kickoff)}<br>`
       + `${v.hit ? "Called" : "Missed"}: the model gave it <b>${pct1(v.given)}</b>`;
-    return `<span class="cs ${v.hit ? "hit" : "miss"}" data-tip="${esc(tip)}" tabindex="0"><i style="height:${Math.round(v.given * 100)}%"></i><b>${RESULT[r]}</b></span>`;
+    const label = `${RESULT_WORD[r]} ${gf}–${ga} ${m.isHome ? "v" : "at"} ${opp}, ${shortDate(m.kickoff)}: ${v.hit ? "called" : "missed"}, the model gave it ${pct1(v.given)}. Match page`;
+    return `<a class="cs ${v.hit ? "hit" : "miss"}" href="#match/${m.comp}/${m.id}" data-tip="${esc(tip)}" aria-label="${esc(label)}"><i style="height:${Math.round(v.given * 100)}%"></i><b>${RESULT[r]}</b></a>`;
   }).join("");
-  return `<div class="callstrip" role="img" aria-label="Chance the model gave each actual result">
+  return `<div class="callstrip" role="group" aria-label="Chance the model gave each actual result">
     <span class="cs-axis"><em>100%</em><em>50%</em><em>0</em></span><div class="cs-bars">${bars}</div></div>
     <p class="key"><span><i class="k-lamp hit"></i>Called: the result was the model's pick</span><span><i class="k-lamp miss"></i>Missed</span><span>Bar height: chance it gave what happened</span></p>`;
 }
