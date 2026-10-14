@@ -4,7 +4,7 @@
 #
 # Serves the directory on a local port with the data it ships, stops the browser clock at the newest forecast so
 # "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages,
-# an upcoming match page, finished ones in After and Before mode, and the model page, at desktop and phone widths, expanding a match (which must
+# an upcoming match page, finished ones in After and Before mode (one with a shot report), and the model page, at desktop and phone widths, expanding a match (which must
 # link its match page) and a table row. Any console error, uncaught
 # exception, failed same-origin request or missing content fails the check. Other origins (web fonts) get empty
 # responses, so the check runs offline. Needs `pip install playwright` and `python -m playwright install chromium`.
@@ -24,6 +24,8 @@ TABLE = ["#hero-in h1", "#table tbody tr.row"]
 MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
 # A finished fixture opens in After mode; pressing Before must bring back the pre-game forecast.
 AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr"]
+# A finished league game with Understat shots adds "Chances": the shot map, the xG timeline and an openable shot list.
+CHANCES = AFTER + ["#view-match .mp-shots .mp-pitch circle.shot", "#view-match .mp-xgline svg path.xh"]
 VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 375, "height": 844}}
 BROKEN = ["No signal", "could not be loaded", "unavailable right now"]
 
@@ -79,6 +81,13 @@ def routes(data):
                 (lambda f: f[0] != "champions-league", lambda f: f[0] == "champions-league", lambda f: f[1].get("published"))]
     for slug, fixture_id in dict.fromkeys((f[0], f[1]["id"]) for f in finished if f):
         found.append((f"#match/{slug}/{fixture_id}", AFTER, ["#view-match .mp-modes [data-mode=before]"], "#view-match .mp-fc .scores li"))
+    # The latest finished league game with a shot file, opening its shot list.
+    def shots(slug, match):
+        path = data / f"match/{json.loads((data / f'{slug}.json').read_text())['season'][:4]}/{slug}/{match['id']}.json"
+        return path.exists() and bool(json.loads(path.read_text()).get("shots"))
+    charted = next((f for f in reversed(done) if f[0] != "champions-league" and shots(*f)), None)
+    if charted:
+        found.append((f"#match/{charted[0]}/{charted[1]['id']}", CHANCES, ["#view-match .mp-list summary"], "#view-match .mp-list[open] tbody tr"))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
@@ -89,10 +98,14 @@ def routes(data):
 def visit(context, url, origin, selectors, rows, opened):
     problems = []
     page = context.new_page()
-    page.on("console", lambda msg: msg.type == "error" and problems.append(f"console: {msg.text}"))
+    # A missing per-match file is a documented state (that source has no data), so its 404 is not a failure.
+    optional = lambda url: "/data/match/" in url
+    page.on("console", lambda msg: msg.type == "error" and not optional(msg.location.get("url", ""))
+            and problems.append(f"console: {msg.text}"))
     page.on("pageerror", lambda exc: problems.append(f"exception: {exc}"))
     page.on("requestfailed", lambda req: problems.append(f"request failed: {req.url}"))
-    page.on("response", lambda res: res.status >= 400 and problems.append(f"HTTP {res.status}: {res.url}"))
+    page.on("response", lambda res: res.status >= 400 and not (res.status == 404 and optional(res.url))
+            and problems.append(f"HTTP {res.status}: {res.url}"))
     page.clock.set_fixed_time(datetime.fromisoformat(origin))
     page.goto(url, wait_until="networkidle")
     for selector in selectors:

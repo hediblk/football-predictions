@@ -752,3 +752,46 @@ a.cs { color: inherit; text-decoration: none; }
   .mp-chances td.l { padding-left: 0; }
   .mp-chances td.l small { display: block; margin: 4px 0 0; }
 }
+
+/* ---------- match page: chances (Understat shots) ---------- */
+/* the shot map: one pitch in rule lines, home shooting right; circle area is xG */
+.mp-pitch { max-width: 640px; }
+.mp-pitch svg { display: block; width: 100%; height: auto; background: var(--panel); }
+.mp-pitch .pitch * { fill: none; stroke: var(--rule); stroke-width: .3; }
+.mp-pitch .pitch .spot { fill: var(--rule); stroke: none; }
+.mp-pitch .shot { stroke-width: .35; }
+.mp-pitch .shot.goal { fill: var(--amber); stroke: var(--bg); }
+.mp-pitch .shot.saved { fill: var(--ink-2); stroke: var(--bg); }
+.mp-pitch .shot.off { fill: none; stroke: var(--ink-2); }
+.mp-pitch .hit { fill: transparent; }
+.mp-pitch g[data-tip]:hover .shot.off { stroke: var(--ink); }
+.mp-dir { display: flex; justify-content: space-between; gap: 12px; margin: 8px 0 0; color: var(--dim); font-size: 11.5px; }
+.mp-key { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; margin: 10px 0 0; color: var(--dim); font-size: 11px; }
+.mp-key > span { display: inline-flex; align-items: center; gap: 7px; }
+.mp-key b { color: var(--ink); font-weight: 700; }
+.mp-key .k { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+.mp-key .k.goal { background: var(--amber); }
+.mp-key .k.saved { background: var(--ink-2); }
+.mp-key .k.off { border: 1px solid var(--ink-2); }
+.mp-list { margin: 14px 0 0; }
+.mp-list summary { cursor: pointer; width: fit-content; font: 800 12px/1 var(--sign); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.mp-list summary:hover { color: var(--amber-t); }
+.mp-list .scroll { margin-top: 10px; }
+.mp-list td { height: 32px; }
+.mp-list tr.lit td { color: var(--amber-t); }
+/* the cumulative xG timeline: ink step lines, away dashed, goals as amber bulbs */
+.mp-xgline { margin-top: 8px; }
+.mp-xgline svg { display: block; width: 100%; max-width: 760px; height: auto; }
+.mp-xgline .grid { stroke: var(--rule-2); stroke-width: 1; }
+.mp-xgline .tick { fill: var(--dim); font: 500 10px var(--mono); }
+.mp-xgline path, .mp-key line { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.mp-xgline path.xa, .mp-key line.xa { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 5 3; }
+.mp-xgline .goal { fill: var(--amber); stroke: var(--bg); stroke-width: 2; }
+.mp-xgline .glbl { fill: var(--amber-t); font: 500 10.5px var(--mono); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.mp-xgline .end { fill: var(--ink); font: 700 11px var(--mono); }
+.mp-xgline .end.away { fill: var(--ink-2); }
+/* after-the-fact chances: plain numbers, never bulbs */
+.mp-retro { display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 0; color: var(--ink-2); font-size: 12.5px; }
+.mp-retro b { color: var(--ink); font-weight: 700; margin-right: 4px; }
+.mp-stand td b { color: var(--ink); font-weight: 700; }
+table.mp-stand { min-width: 460px; }
