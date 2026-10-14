@@ -77,7 +77,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | 9. Match notes: streaks, head-to-head, records | Phase 1 | B | 2 | L | To do |
 | 10. Understat shot ingestion | Phase 2 | B | none | M | [PR #33](https://github.com/hediblk/football-predictions/pull/33) |
 | 11. Shot report on the match page | Phase 2 | C | 6, 10 | M | [PR #34](https://github.com/hediblk/football-predictions/pull/34) |
-| 12. ESPN box score and timeline | Phase 3 | C | 6 | L | To do |
+| 12. ESPN box score and timeline | Phase 3 | C | 6 | L | [PR #38](https://github.com/hediblk/football-predictions/pull/38) |
 | 13. UEFA running data and heatmaps (Champions League) | Phase 3 | C | 6 | L | To do |
 | 14. Scorecard: market comparison | Addition 1 | D | 8, plus enough archived odds | M | To do |
 
