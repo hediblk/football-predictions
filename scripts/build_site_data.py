@@ -430,7 +430,7 @@ def fixture_note_data(fixture, results, season, first_season, competition_name):
         if most_goals and team in (most_goals["home_key"], most_goals["away_key"]):
             total = most_goals["hg"] + most_goals["ag"]
             add(pre, side, "record", total,
-                f"{name} featured in the highest-scoring {competition_name} match this season: "
+                f"{name} featured in one of the highest-scoring {competition_name} matches this season: "
                 f"{note_record_text(most_goals)} ({total} goals).")
         if biggest_upset and team in (biggest_upset[1]["home_key"], biggest_upset[1]["away_key"]):
             chance, result = biggest_upset
