@@ -1,9 +1,9 @@
-// Clubs view: a strength ranking for the five leagues and a profile for every club.
+// Clubs view: a strength ranking for the five leagues and the Champions League, and a profile for every club.
 import {
   LEAGUES, compBySlug, $, esc, getJSON, setStatus, ordinal, pct, pct1, dec, verdict, sideProbs, sidePair,
   outcome, expandable, bulb, shortDate, clock, callScore, clubName,
 } from "./core.js";
-import { matchPanel, record, BIG_STAKE } from "./matches.js";
+import { matchPanel, record, BIG_STAKE, stakeNow } from "./matches.js";
 import { spreadPanel } from "./tables.js";
 
 const RESULT = ["W", "D", "L"];
@@ -32,6 +32,11 @@ export async function showClubs(slug) {
 }
 
 const leagueName = (slug) => compBySlug[slug].label;
+/* Champions League clubs from outside the five leagues have no league here, only their country */
+const clubLeague = (c) => (c.league ? leagueName(c.league) : c.country);
+const clubShort = (c) => (c.league ? compBySlug[c.league].short : c.country_code);
+/* the ranking's filter: every club, one league, or the Champions League field */
+const inFilter = (c) => leagueFilter === "all" || c.league === leagueFilter || (leagueFilter === "champions-league" && c.ucl);
 /* a category rank: #1 lit, top ten warm, the rest dim */
 const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top10" : ""}${cls}">#${rank}</${tag}>`;
 const leagueTables = () => Promise.all(LEAGUES.map((l) => getJSON(`${l.slug}.json`).catch(() => null)));
@@ -105,7 +110,7 @@ async function showIndex() {
   $("c-hero").innerHTML = `
     <div class="who">
       <h1><a href="#clubs/${best.slug}">${clubName(best.id, best.name, "hero")}</a></h1>
-      <p class="caption">The strongest club in Europe's top five leagues: it would take <b>${Math.round(best.rating)}%</b> of the points off an average European top-flight side ·
+      <p class="caption">The strongest club in the five leagues and the Champions League: it would take <b>${Math.round(best.rating)}%</b> of the points off an average European top-flight side ·
         best attack <b>${clubName(topAttack.id, topAttack.name, "inline")} ${dec(topAttack.attack)}</b> · best defence <b>${clubName(topDefense.id, topDefense.name, "inline")} ${dec(topDefense.defense)}</b> · ${list.length} clubs rated</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${best.name}: rating ${dec(best.rating)}`)}">${Math.round(best.rating)}<sup>%</sup></div>`;
@@ -129,10 +134,10 @@ async function showIndex() {
 }
 
 function renderRanking() {
-  const chips = [{ slug: "all", label: "All leagues" }, ...LEAGUES];
+  const chips = [{ slug: "all", label: "All leagues" }, ...LEAGUES, compBySlug["champions-league"]];
   $("c-chips").innerHTML = chips.map((l) => `<button type="button" class="chip" data-league="${l.slug}" aria-pressed="${leagueFilter === l.slug}">${esc(l.label)}</button>`).join("");
   const w = (c) => view.byId[c.id];
-  const shown = clubs.clubs.filter((c) => leagueFilter === "all" || c.league === leagueFilter)
+  const shown = clubs.clubs.filter(inFilter)
     .sort((a, b) => w(b)[sortKey].v - w(a)[sortKey].v || w(a)[sortKey].rank - w(b)[sortKey].rank || a.rating_rank - b.rating_rank);
   const limit = showAll || leagueFilter !== "all" ? shown.length : 25;
   const sortable = (key, label) => `<th aria-sort="${sortKey === key ? "descending" : "none"}"><button type="button" data-sort="${key}">${label}${sortKey === key ? " ▾" : ""}</button></th>`;
@@ -148,7 +153,7 @@ function renderRanking() {
         <td class="rk l">${String(i + 1).padStart(2, "0")}</td>
         <td class="mvc">${move(m.rating.d, since)}</td>
         <td class="club l"><a href="#clubs/${c.slug}">${clubName(c.id, c.name)}</a></td>
-        <td class="l lg">${esc(compBySlug[c.league].short)}</td>
+        <td class="l lg">${esc(clubShort(c))}</td>
         ${strength(m.rating)}${strength(m.attack, true)}${strength(m.defense, true)}
         <td class="sec">${dec(c.gf, 2)}</td><td class="sec">${dec(c.ga, 2)}</td></tr>`;
     }).join("")}</tbody>`;
@@ -200,7 +205,7 @@ $("c-more").addEventListener("click", () => {
 /* attack against defence: one dot per club, the featured (or filtered) clubs lit and named where they fit */
 function renderScatter() {
   const all = clubs.clubs;
-  const lit = leagueFilter === "all" ? new Set(clubs.featured) : new Set(all.filter((c) => c.league === leagueFilter).map((c) => c.id));
+  const lit = new Set(leagueFilter === "all" ? clubs.featured : all.filter(inFilter).map((c) => c.id));
   // Drawn at the container's width so text stays legible on phones.
   const W = Math.round(Math.min(640, Math.max(300, $("c-scatter").clientWidth || 640)));
   const H = Math.round(Math.max(300, W * 0.66)), pad = { l: 40, r: 12, t: 16, b: 40 };
@@ -208,7 +213,8 @@ function renderScatter() {
   const lo = Math.floor(Math.min(...xs, ...ys) / 10) * 10, hi = Math.ceil(Math.max(...xs, ...ys) / 10) * 10;
   const x = (v) => pad.l + ((v - lo) / (hi - lo)) * (W - pad.l - pad.r);
   const y = (v) => H - pad.b - ((v - lo) / (hi - lo)) * (H - pad.t - pad.b);
-  const mean = (k) => all.reduce((sum, c) => sum + c[k], 0) / all.length;
+  const five = all.filter((c) => c.league);
+  const mean = (k) => five.reduce((sum, c) => sum + c[k], 0) / five.length;
   const ticks = [];
   for (let v = lo; v <= hi; v += 10) {
     ticks.push(`<line class="grid" x1="${x(v)}" x2="${x(v)}" y1="${pad.t}" y2="${H - pad.b}"/><text class="tick" x="${x(v)}" y="${H - pad.b + 16}" text-anchor="middle">${v}</text>`);
@@ -250,7 +256,7 @@ function renderScatter() {
   const order = [...all].sort((a, b) => lit.has(a.id) - lit.has(b.id));
   const dots = order.map((c) => {
     const on = lit.has(c.id);
-    const tip = `${clubName(c.id, c.name, "inline")} · ${esc(leagueName(c.league))}<br>Attack <b>${dec(c.attack)}</b> · Defence <b>${dec(c.defense)}</b> · Rating <b>${dec(c.rating)}</b>`;
+    const tip = `${clubName(c.id, c.name, "inline")} · ${esc(clubLeague(c))}<br>Attack <b>${dec(c.attack)}</b> · Defence <b>${dec(c.defense)}</b> · Rating <b>${dec(c.rating)}</b>`;
     return `<a href="#clubs/${c.slug}" class="pt${on ? " on" : ""}" data-tip="${esc(tip)}" tabindex="-1">
       <circle class="hit" cx="${x(c.attack)}" cy="${y(c.defense)}" r="12"/><circle class="dot" cx="${x(c.attack)}" cy="${y(c.defense)}" r="${on ? 5 : 3.5}"/></a>`;
   }).join("");
@@ -271,60 +277,69 @@ function renderScatter() {
 /* ---------- profile ---------- */
 async function showProfile(club) {
   document.title = `${club.name} · Floodlight`;
-  const comp = compBySlug[club.league];
+  // A club from outside the five leagues has no league table here: its page follows its Champions League season.
+  const domestic = Boolean(club.league);
+  const comp = compBySlug[club.league || "champions-league"];
   const [table, leagueMatches, ucl, uclMatches] = await Promise.all([
-    getJSON(`${club.league}.json`),
-    getJSON(`matches/${club.league}.json`).catch(() => null),
-    club.ucl ? getJSON("champions-league.json").catch(() => null) : null,
+    domestic ? getJSON(`${club.league}.json`) : null,
+    domestic ? getJSON(`matches/${club.league}.json`).catch(() => null) : null,
+    club.ucl ? getJSON("champions-league.json").catch((err) => { if (domestic) return null; throw err; }) : null,
     club.ucl ? getJSON("matches/champions-league.json").catch(() => null) : null,
   ]);
-  const team = table.teams.find((t) => t.id === club.id);
+  const uclTeam = ucl ? ucl.teams.find((t) => t.id === club.id) : null;
+  const team = domestic ? table.teams.find((t) => t.id === club.id) : uclTeam;
   const mine = (file, slug) => (file ? file.matches : [])
     .filter((m) => m.home_id === club.id || m.away_id === club.id)
     .map((m) => ({ ...m, comp: slug, isHome: m.home_id === club.id }));
-  const league = mine(leagueMatches, club.league);
+  const league = domestic ? mine(leagueMatches, club.league) : [];
   const europe = mine(uclMatches, "champions-league");
+  const main = domestic ? league : europe;
   const all = [...league, ...europe].sort((a, b) => a.kickoff.localeCompare(b.kickoff));
   profile = new Map(all.map((m) => [`${m.comp}:${m.id}`, m]));
-  const uclTeam = ucl ? ucl.teams.find((t) => t.id === club.id) : null;
 
   // Hero: rating as the lit number, the season in the caption.
-  const leaguePlayed = league.filter((m) => m.score);
   const wdl = [0, 0, 0];
-  for (const m of leaguePlayed) wdl[sideResult(m)]++;
-  $("p-legend").textContent = `${comp.label} · ${table.season} · Strength`;
+  for (const m of main.filter((x) => x.score)) wdl[sideResult(m)]++;
+  const where = domestic ? `${ordinal(team.position)} in ${esc(comp.label)}` : `${esc(club.country)} · ${ordinal(team.position)} in the Champions League league phase`;
+  $("p-legend").textContent = `${comp.label} · ${(table || ucl).season} · Strength`;
   $("p-hero").innerHTML = `
     <div class="who">
       <h1>${clubName(club.id, club.name, "hero")}</h1>
-      <p class="caption">${ordinal(team.position)} in ${esc(comp.label)} · <b>${team.points}</b> pts from ${team.played} (W${wdl[0]} D${wdl[1]} L${wdl[2]})
+      <p class="caption">${where} · <b>${team.points}</b> pts from ${team.played} (W${wdl[0]} D${wdl[1]} L${wdl[2]})
         · the big number is its strength, <b>#${club.rating_rank}</b> of ${clubs.clubs.length}: the share of points it would take off an average European top-flight side</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${club.name}: rating ${dec(club.rating)}`)}">${Math.round(club.rating)}<sup>%</sup></div>`;
 
   // Outlook tiles.
-  const zones = Object.fromEntries(table.zones.map((z) => [z.key, z]));
-  const tiles = [
-    ["Projected points", Math.round(team.xpts), `80% range ${team.p10}–${team.p90}`],
-    ["Title", pct(team.title), "finish first"],
-    [`Top ${zones.ucl.to}`, pct(team.ucl), "Champions League places"],
-  ];
-  if (team.releg >= 1) tiles.push(["Relegation", pct(team.releg), `${ordinal(zones.releg.from)} or lower`]);
-  if (uclTeam) tiles.push(["Wins the UCL", pct(uclTeam.title), `Top 8 ${pct(uclTeam.r16)} · final ${pct(uclTeam.stages.final)}`]);
+  const zones = Object.fromEntries((table || ucl).zones.map((z) => [z.key, z]));
+  const tiles = [["Projected points", Math.round(team.xpts), `80% range ${team.p10}–${team.p90}`]];
+  if (domestic) {
+    tiles.push(["Title", pct(team.title), "finish first"], [`Top ${zones.ucl.to}`, pct(team.ucl), "Champions League places"]);
+    if (team.releg >= 1) tiles.push(["Relegation", pct(team.releg), `${ordinal(zones.releg.from)} or lower`]);
+    if (uclTeam) tiles.push(["Wins the UCL", pct(uclTeam.title), `Top 8 ${pct(uclTeam.r16)} · final ${pct(uclTeam.stages.final)}`]);
+  } else {
+    tiles.push(["Top 8", pct(team.r16), "straight to the last 16"], ["Top 24", pct(stakeNow(team, "top24")), "into the knockouts"],
+      ["Wins the UCL", pct(team.title), `reaches the final ${pct(team.stages.final)}`]);
+  }
   $("p-tiles").innerHTML = tiles.map(([label, value, sub]) => `<div class="tile"><h2>${label}</h2><b>${value}</b><span>${sub}</span></div>`).join("");
 
-  renderSeason(league, europe, uclTeam);
-  renderGoals(league);
+  renderSeason(main, domestic ? "League" : "Champions League", domestic ? europe : [], uclTeam);
+  renderGoals(main, domestic ? "League games" : "Champions League games");
   renderNext(all);
-  renderStakes(club, team, leagueMatches);
+  renderStakes(club, [
+    domestic && leagueMatches && { label: comp.label, team, file: leagueMatches, keys: [leagueMetric(team)].filter(Boolean), words: STAKE_WORDS.league },
+    uclTeam && uclMatches && { label: "Champions League", team: uclTeam, file: uclMatches, keys: ["top8", "top24", "title"], words: STAKE_WORDS.ucl },
+  ].filter(Boolean));
   renderResults(all);
   renderStrength(club);
-  $("p-finish").innerHTML = spreadPanel(team, zones.releg.from);
+  $("p-finish").innerHTML = spreadPanel(team, (domestic ? zones.releg : zones.out).from);
 }
 
 /* points, goals and xG from the club's side of a played match */
 const sideResult = (m) => { const o = outcome(m.score); return m.isHome ? o : 2 - o; };
 
-function renderSeason(league, europe, uclTeam) {
+/* `main` is the competition the page follows (its league, or the Champions League), `europe` any games besides */
+function renderSeason(main, label, europe, uclTeam) {
   const split = (rows) => {
     const s = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, xg: 0, xga: 0, xgn: 0, pts: 0 };
     for (const m of rows.filter((r) => r.score)) {
@@ -335,11 +350,11 @@ function renderSeason(league, europe, uclTeam) {
     }
     return s;
   };
-  const line = (label, s) => `<tr><td class="l">${label}</td><td>${s.p}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
+  const line = (name, s) => `<tr><td class="l">${name}</td><td>${s.p}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
     <td class="b">${s.gf}</td><td>${s.ga}</td><td>${s.xgn ? dec(s.xg) : "–"}</td><td>${s.xgn ? dec(s.xga) : "–"}</td><td class="b">${s.pts}</td></tr>`;
-  const rows = [["Home", split(league.filter((m) => m.isHome))], ["Away", split(league.filter((m) => !m.isHome))], ["League", split(league)]];
+  const rows = [["Home", split(main.filter((m) => m.isHome))], ["Away", split(main.filter((m) => !m.isHome))], [label, split(main)]];
   if (europe.some((m) => m.score)) rows.push(["Champions League", split(europe)]);
-  const form = [...league, ...europe].filter((m) => m.score).sort((a, b) => b.kickoff.localeCompare(a.kickoff)).slice(0, 6).reverse();
+  const form = [...main, ...europe].filter((m) => m.score).sort((a, b) => b.kickoff.localeCompare(a.kickoff)).slice(0, 6).reverse();
   const lamps = form.map((m) => {
     const r = sideResult(m);
     const [gf, ga] = sidePair(m.score, m.isHome);
@@ -347,13 +362,13 @@ function renderSeason(league, europe, uclTeam) {
     return `<span class="form r${r}" data-tip="${esc(tip)}" tabindex="0">${RESULT[r]}</span>`;
   }).join("");
   $("p-season").innerHTML = `<div class="scroll"><table class="board stats"><thead><tr><th class="l"></th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>xG</th><th>xGA</th><th>Pts</th></tr></thead>
-    <tbody>${rows.map(([label, s]) => line(label, s)).join("")}</tbody></table></div>
+    <tbody>${rows.map(([name, s]) => line(name, s)).join("")}</tbody></table></div>
     <p class="formline"><span class="lbl">Form</span>${lamps || "No games yet"}<span class="lbl">oldest → latest</span></p>
     ${uclTeam ? `<p class="note">Champions League league phase: ${ordinal(uclTeam.position)} on ${uclTeam.points} pts after ${uclTeam.played}.</p>` : ""}`;
 }
 
-/* goals and xG per league game against what the model expects in the games left */
-function renderGoals(league) {
+/* goals and xG per game in the competition the page follows, against what the model expects in the games left */
+function renderGoals(league, label) {
   const per = (rows, f, i, home) => (rows.length ? rows.reduce((t, m) => t + sidePair(m[f], home)[i], 0) / rows.length : null);
   const line = (label, home, i) => {
     const played = league.filter((m) => m.score && m.isHome === home);
@@ -365,7 +380,7 @@ function renderGoals(league) {
   $("p-goals").innerHTML = `<div class="scroll"><table class="board stats">
     <thead><tr><th class="l">Per game</th><th>Goals</th><th>xG</th><th>Model, next ${left}</th></tr></thead>
     <tbody>${line("Scored at home", true, 0)}${line("Scored away", false, 0)}${line("Conceded at home", true, 1)}${line("Conceded away", false, 1)}</tbody></table></div>
-    <p class="note">League games. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>`;
+    <p class="note">${label}. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>`;
 }
 
 function clubRow(m) {
@@ -394,25 +409,32 @@ function renderNext(all) {
     : `<p class="note">No fixtures left.</p>`;
 }
 
-/* the chance this club cares about most, then the next round's games that move it most (rivals' games included) */
-function stakesMetric(team) {
-  if (team.title >= 2) return ["title", "title chance"];
-  if (team.ucl >= 3 && team.ucl <= 97) return ["ucl", "top-four chance"];
-  if (team.releg >= 2) return ["releg", "relegation chance"];
+/* the league chance this club cares about most; the next round's games that move it most are listed (rivals' games included) */
+function leagueMetric(team) {
+  if (team.title >= 2) return "title";
+  if (team.ucl >= 3 && team.ucl <= 97) return "ucl";
+  if (team.releg >= 2) return "releg";
   return null;
 }
+const STAKE_WORDS = {
+  league: { title: "title chance", ucl: "top-four chance", releg: "relegation chance" },
+  ucl: { title: "chance of winning the Champions League", top8: "top-eight chance", top24: "top-24 chance" },
+};
 
-function renderStakes(club, team, leagueMatches) {
-  const metric = stakesMetric(team);
+/* `groups`: per competition, the club's table row, its fixtures file and the chances to try in order (the
+   Champions League takes the first one a game moves enough: one league-phase game rarely moves the trophy) */
+function renderStakes(club, groups) {
   const range = (values) => Math.max(...values.filter((v) => v != null)) - Math.min(...values.filter((v) => v != null));
-  const rows = metric && leagueMatches
-    ? leagueMatches.matches
-      .map((m) => ({ m, values: ((m.stakes ? m.stakes.teams : []).find((t) => t.id === club.id) || {})[metric[0]] }))
-      .filter((x) => x.values && x.values.filter((v) => v != null).length > 1 && range(x.values) >= BIG_STAKE[metric[0]])
-      .sort((a, b) => range(b.values) - range(a.values)).slice(0, 5)
-    : [];
-  $("p-stakes-frame").hidden = !rows.length;
-  if (!rows.length) return;
+  const rowsFor = (file, key) => file.matches
+    .map((m) => ({ m, values: ((m.stakes ? m.stakes.teams : []).find((t) => t.id === club.id) || {})[key] }))
+    .filter((x) => x.values && x.values.filter((v) => v != null).length > 1 && range(x.values) >= BIG_STAKE[key])
+    .sort((a, b) => range(b.values) - range(a.values)).slice(0, 5);
+  const blocks = groups.flatMap((g) => {
+    const key = g.keys.find((k) => rowsFor(g.file, k).length);
+    return key ? [{ ...g, key, rows: rowsFor(g.file, key) }] : [];
+  });
+  $("p-stakes-frame").hidden = !blocks.length;
+  if (!blocks.length) return;
   const line = ({ m, values }) => {
     const labels = [`${m.home} win`, "Draw", `${m.away} win`];
     const lit = m.p.indexOf(Math.max(...m.p));
@@ -421,8 +443,8 @@ function renderStakes(club, team, leagueMatches) {
       <small>${shortDate(m.kickoff)}${own ? " · own game" : ""}</small></span>
       <span class="s-res">${values.map((v, i) => `<span${i === lit ? ' class="lit"' : ""}${v == null ? ' title="Too few simulations"' : ""}>${esc(labels[i])} <b>${v == null ? "–" : pct(v)}</b></span>`).join("")}</span></div>`;
   };
-  $("p-stakes").innerHTML = `<div class="slist">${rows.map(line).join("")}</div>
-    <p class="note">${esc(club.name)}'s ${metric[1]} is <b>${pct(team[metric[0]])}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games where a result moves it by ${BIG_STAKE[metric[0]]} points or more are listed.</p>`;
+  $("p-stakes").innerHTML = blocks.map((b) => `${blocks.length > 1 ? `<h3 class="dgroup">${esc(b.label)}</h3>` : ""}<div class="slist">${b.rows.map(line).join("")}</div>
+    <p class="note">${esc(club.name)}'s ${b.words[b.key]} is <b>${pct(stakeNow(b.team, b.key))}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games where a result moves it by ${BIG_STAKE[b.key]} points or more are listed.</p>`).join("");
 }
 
 function renderResults(all) {
@@ -458,16 +480,20 @@ function renderStrength(club) {
   const n = clubs.clubs.length;
   const avg = clubs.clubs.reduce((s, c) => s + c.rating, 0) / n;
   const members = clubs.clubs.filter((c) => c.league === club.league).length;
+  const field = clubs.clubs.filter((c) => c.ucl);
+  const place = club.league ? `#${club.league_rank} of ${members} in ${esc(leagueName(club.league))}`
+    : `#${field.indexOf(club) + 1} of the ${field.length} Champions League clubs`;
+  const home = club.league ? `an average ${esc(leagueName(club.league))} side` : `an average side in ${esc(club.country)}'s top flight`;
   const meter = (label, value, rank, note) => `<div class="gauge">
       <h3>${label}</h3><b>${dec(value)}</b><span class="rank">${rankTag(rank, "span")} of ${n}</span>
       <span class="meter big"><i style="width:${value}%"></i><em style="left:${avg}%" title="Average club"></em></span>
       <span class="note">${note}</span></div>`;
   $("p-strength").innerHTML = `<div class="gauges">
-      ${meter("Overall", club.rating, club.rating_rank, `#${club.league_rank} of ${members} in ${esc(leagueName(club.league))}`)}
+      ${meter("Overall", club.rating, club.rating_rank, place)}
       ${meter("Attack", club.attack, club.attack_rank, `Scores ${dec(club.gf, 2)} a game against an average European top-flight side`)}
       ${meter("Defence", club.defense, club.defense_rank, `Concedes ${dec(club.ga, 2)} a game against the same side`)}
     </div>
-    <p class="note">Share of points against an average European top-flight side: <b>${dec(club.home)}</b> at home, <b>${dec(club.away)}</b> away. Against an average ${esc(leagueName(club.league))} side it would take ${dec(club.league_rating)}%. The tick on each bar is the ${n}-club average.</p>`;
+    <p class="note">Share of points against an average European top-flight side: <b>${dec(club.home)}</b> at home, <b>${dec(club.away)}</b> away. Against ${home} it would take ${dec(club.league_rating)}%. The tick on each bar is the ${n}-club average.</p>`;
 }
 
 expandable($("p-next"), ".crow", (row) => panelFor(row));

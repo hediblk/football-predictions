@@ -15,6 +15,7 @@ COMPETITIONS = {
 }
 STAGES = {"round16": 16, "quarterfinal": 8, "semifinal": 4, "final": 2}
 INDEX_FIELDS = ("slug", "code", "name", "country", "season", "generated_at")
+STAKE_METRICS = ("title", "ucl", "releg", "top8", "top24")
 
 
 def require(condition, message):
@@ -138,7 +139,7 @@ def validate_matches(data):
             require(scores == sorted(scores, reverse=True), f"match {match['id']}: unsorted top scores")
         if "stakes" in match:
             unique(match["stakes"]["teams"], "id")
-            require(all(any(key in team for key in ("title", "ucl", "releg"))
+            require(all(any(key in team for key in STAKE_METRICS)
                         for team in match["stakes"]["teams"]), "stakes team has no tracked metric")
 
 
@@ -154,7 +155,7 @@ def validate_clubs(data):
         require(values == sorted(values, reverse=True), f"{field} ranks contradict ratings")
     require([club["rating_rank"] for club in clubs] == list(range(1, len(clubs) + 1)),
             "clubs are not ordered by overall rank")
-    for league in set(club["league"] for club in clubs):
+    for league in set(club["league"] for club in clubs) - {None}:
         members = sorted((club for club in clubs if club["league"] == league), key=lambda club: club["league_rank"])
         require([club["league_rank"] for club in members] == list(range(1, len(members) + 1)),
                 f"invalid {league} rank sequence")
@@ -249,7 +250,7 @@ def validate_site_data(data_dir, *, site_dir=None):
     if "index.json" in files and {entry["slug"] for entry in files["index.json"]} != set(COMPETITIONS):
         errors.append("index.json: competition set differs from required tables")
     for club in files.get("clubs.json", {}).get("clubs", []):
-        if f"{club['league']}.json" not in files:
+        if club["league"] is not None and f"{club['league']}.json" not in files:
             errors.append(f"clubs.json: unresolved league {club['league']}")
     for crest in files.get("crests.json", {}).values():
         if not (site_dir / crest["path"]).is_file():

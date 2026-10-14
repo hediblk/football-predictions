@@ -27,6 +27,9 @@ class TournamentResult:
     metadata: dict
     league_orders: np.ndarray
     league_points: np.ndarray
+    # With `track`: each tracked fixture's result per simulation (0 home win, 1 draw, 2 away win), every club's
+    # league-phase place (0 = first) and the winner's index, for what's at stake.
+    tracked: dict | None = None
 
 
 def _stage(value):
@@ -412,7 +415,9 @@ def _representative(order, cache, observed, quotes, seed, season, title_favorite
 
 
 def simulate_tournament(fixtures, standings, model, *, n_sim=10000, seed=7, season=2026,
-                        coefficients=None, odds=None, as_of=None):
+                        coefficients=None, odds=None, as_of=None, track=None):
+    # `track` (fixture index labels) records those league-phase results for `TournamentResult.tracked`;
+    # recording draws nothing, so the forecast is unchanged.
     if isinstance(n_sim, bool) or not isinstance(n_sim, (int, np.integer)) or n_sim <= 0:
         raise ValueError("n_sim must be a positive integer.")
     fixtures = fixtures.copy()
@@ -440,7 +445,9 @@ def simulate_tournament(fixtures, standings, model, *, n_sim=10000, seed=7, seas
                 match = match_odds(pd.DataFrame([row]), odds, as_of=cutoff)
                 if match:
                     quotes[_fixture_key(row)] = match[(row["homeTeam"], row["awayTeam"])]
-    for row in league.to_dict("records"):
+    tracked = {label: k for k, label in enumerate(track if track is not None else [])}
+    outcomes = np.zeros((n_sim, len(tracked)), np.int8)
+    for label, row in zip(league.index, league.to_dict("records")):
         h, a = cache.indices[row["homeTeam"]], cache.indices[row["awayTeam"]]
         opponents[h, a] = opponents[a, h] = 1
         score = _score(row)
@@ -451,6 +458,8 @@ def simulate_tournament(fixtures, standings, model, *, n_sim=10000, seed=7, seas
         else:
             hg, ag = [np.full(n_sim, value, dtype=int) for value in score]
         hw, aw, draw = hg > ag, ag > hg, hg == ag
+        if label in tracked:
+            outcomes[:, tracked[label]] = np.where(hw, 0, np.where(draw, 1, 2))
         points[:, h] += 3 * hw + draw
         points[:, a] += 3 * aw + draw
         gf[:, h] += hg
@@ -523,5 +532,8 @@ def simulate_tournament(fixtures, standings, model, *, n_sim=10000, seed=7, seas
                                    "Future draws sample only permitted UEFA slots; official fixtures fix published pairings and venues.",
                                    "Probabilities condition on fitted strengths; Monte Carlo errors exclude model uncertainty."]}
     probabilities.index.name = "team"
+    details = None
+    if track is not None:
+        details = {"outcomes": outcomes, "places": np.argsort(orders, axis=1), "champions": winners[:, 0]}
     return TournamentResult(probabilities, summary.sort_values("expected_position"), bracket,
-                            metadata, orders, points)
+                            metadata, orders, points, details)

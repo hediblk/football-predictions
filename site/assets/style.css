@@ -658,4 +658,5 @@ h3.sub + .scroll { margin-bottom: 14px; }
 .s-res { display: flex; flex-wrap: wrap; gap: 4px 18px; font: 500 12px/1.3 var(--mono); color: var(--dim); }
 .s-res b { font-weight: 700; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .s-res .lit, .s-res .lit b { color: var(--amber); }
+#p-stakes h3.dgroup:first-child { margin-top: 0; }
 @media (max-width: 759px) { .srow { grid-template-columns: minmax(0, 1fr); } }

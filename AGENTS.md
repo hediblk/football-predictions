@@ -30,6 +30,7 @@ The site is plain HTML, CSS and JavaScript. Model outputs reach the site through
 | `scripts/refresh_site.sh` | Refreshes all published competitions and rebuilds site data |
 | `scripts/archive_odds.py` | Appends dated bookmaker quotes to the odds archive |
 | `scripts/backfill_history.py` | Replays past forecast origins to fill site history |
+| `scripts/check_site.py`, `scripts/stamp_assets.py` | Headless browser check of every site view; asset URL versioning at deploy |
 | `site/index.html`, `site/assets/` | Website markup, styles, behavior and assets |
 | `site/data/` | Published forecast JSON and historical site snapshots |
 | `data/odds/` | Committed, dated bookmaker observations; see its README |
@@ -93,6 +94,7 @@ Run the existing offline suite from the repository root:
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q -p no:cacheprovider
 PYTHONDONTWRITEBYTECODE=1 python scripts/validate_site_data.py --data site/data
+PYTHONDONTWRITEBYTECODE=1 python scripts/check_site.py --site site  # after: python -m playwright install chromium
 ```
 
 For documentation-only changes, check the diff, links and command accuracy; rerunning numerical models is unnecessary.
@@ -108,7 +110,7 @@ PYTHONDONTWRITEBYTECODE=1 python3 -m http.server -d site 8000
 
 Live forecasts need `FOOTBALL_DATA_API_KEY`; odds collection needs `ODDS_API_KEY` or the supported fallback `ODDS_DATA_API_KEY`. Calibration, backfills, evaluation runs and `scripts/refresh_site.sh` may be slow, use network quotas and write many files. Run them when relevant to the task, not as a default smoke check.
 
-Model/shared changes run the offline pytest suite; site/shared changes validate published data. Refresh and deployment validate the complete dataset and publish the exact checked revision. Check the actual CI results before claiming verification.
+Model/shared changes run the offline pytest suite; site/shared changes validate published data and run the browser check. Refresh and deployment validate the complete dataset and publish the exact checked revision. Check the actual CI results before claiming verification.
 
 ## Finishing work
 
