@@ -381,14 +381,16 @@ expandable($("m-matter-list"), ".mrow", openRow);
 
 /* ---------- games that matter ---------- */
 /* Across every competition, the unplayed fixtures of the next seven days whose result swings a shown stakes line
-   the most (highest minus lowest of the three conditional chances), earlier kickoff first on a tie. */
+   the most, as a multiple of that race's BIG_STAKE bar (so a title swing can outrank a bigger Champions League
+   top-24 one), earlier kickoff first on a tie. */
+const weight = (line) => spread(line.values) / BIG_STAKE[line.key];
 async function renderMatter() {
   const now = Date.now();
   const games = data.comps.flatMap(({ slug, file }) => file.matches
     .filter((m) => !m.score && !PENDING[m.reported || m.status] && new Date(m.kickoff) > now && new Date(m.kickoff) <= now + 7 * 864e5)
-    .map((m) => ({ slug, m, line: stakeLines(m, slug)[0] }))
+    .map((m) => ({ slug, m, line: stakeLines(m, slug).reduce((a, b) => (!a || weight(b) > weight(a) ? b : a), null) }))
     .filter((x) => x.line))
-    .sort((a, b) => spread(b.line.values) - spread(a.line.values) || a.m.kickoff.localeCompare(b.m.kickoff))
+    .sort((a, b) => weight(b.line) - weight(a.line) || a.m.kickoff.localeCompare(b.m.kickoff))
     .slice(0, 3);
   if (!games.length) return;
   const tables = new Map(await Promise.all([...new Set(games.map((x) => x.slug))]

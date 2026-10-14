@@ -215,7 +215,7 @@ Tasks in the same wave can run in parallel. **Merge Task 1 first.** Every day wi
 
 - Client side, from the matches files' `stakes`.
 - Candidates: fixtures in the next seven days with at least one stakes line passing `BIG_STAKE`.
-- Importance: the largest spread (highest minus lowest of the three conditional values) in any shown line. Ties go to the earlier kickoff.
+- Importance: the largest spread (highest minus lowest of the three conditional values) in any shown line, divided by that line's `BIG_STAKE` bar so league and Champions League races compare fairly. Ties go to the earlier kickoff.
 
 **UI** (Matches view):
 
