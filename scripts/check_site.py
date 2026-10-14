@@ -93,7 +93,7 @@ def routes(data):
     if charted:
         found.append((f"#match/{charted[0]}/{charted[1]['id']}", CHANCES, ["#view-match .mp-list summary"], "#view-match .mp-list[open] tbody tr"))
     # ESPN adds the paired board in both competitions, marks on the xG line or a no-shots ruler,
-    # and a collapsed timeline that can reveal substitutions.
+    # and the event feed with substitutions.
     for ucl in (False, True):
         game = next((f for f in reversed(done) if (f[0] == "champions-league") == ucl and detail(*f).get("box")), None)
         if not game:
@@ -102,13 +102,12 @@ def routes(data):
         extra = detail(*game)
         selectors = AFTER + ["#view-match .mp-stats .mp-stat-row"]
         if extra.get("events"):
-            selectors.append("#view-match .mp-full:not([open])")
+            selectors.append("#view-match .mp-feed .mp-feed-row")
             if not extra.get("shots"):
                 selectors.append("#view-match .mp-ruler")
             elif any(e["type"] == "red" for e in extra["events"]):
                 selectors.append("#view-match .mp-xgline rect.card")
-        found.append((f"#match/{slug}/{match['id']}", selectors,
-                      ["#view-match .mp-full summary"], "#view-match .mp-full[open] tbody tr"))
+        found.append((f"#match/{slug}/{match['id']}", selectors, [], None))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
