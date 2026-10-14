@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 import shutil
 
+import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 
@@ -45,8 +46,10 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
             source = f"{side}_team" if f"{side}_team" in odds else f"{side}_norm"
             if source in odds:
                 odds[f"{side}_norm"] = odds[source].map(lambda name: normalize_team(canonical_team(name)))
+    upcoming = next_round(inputs.fixtures, origin)
     result = simulate_tournament(inputs.fixtures, inputs.standings, model, n_sim=n_sim, seed=seed,
-                                 season=season, odds=odds, as_of=origin, coefficients=coefficients)
+                                 season=season, odds=odds, as_of=origin, coefficients=coefficients,
+                                 track=upcoming.index.tolist())
     result.metadata.update({
         "competition": "CL", "season": season, "as_of": origin.isoformat(),
         # The latest result in the fit, across every league and cup it uses.
@@ -82,6 +85,7 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
     else:
         (out_dir / "cl_match_forecasts.json").unlink(missing_ok=True)
     save_club_ratings(inputs, model, out_dir, origin=origin)
+    save_stakes(result, upcoming, teams, out_dir, origin=origin, season=season, n_sim=n_sim)
     inputs.fixtures.to_csv(out_dir / "cl_matches_snapshot.csv", index=False)
     inputs.standings.to_csv(out_dir / "cl_standings_snapshot.csv", index=False)
     inputs.history.to_csv(out_dir / "cl_history_snapshot.csv", index=False)
@@ -97,6 +101,32 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
         if path.is_file():
             shutil.copy2(path, archive / path.name)
     return result
+
+
+# The next league-phase round's unplayed fixtures, chosen as the domestic forecasts choose theirs, for what's at stake.
+def next_round(fixtures, origin):
+    from champions_league.tournament import _score, _stage
+    from standing_prediction.predict_positions import upcoming_fixtures
+
+    league = fixtures.loc[fixtures["stage"].map(_stage).eq("league")]
+    kickoff = pd.to_datetime(league["utcDate"], utc=True)
+    unplayed = league.loc[kickoff.ge(origin).to_numpy() | np.array([_score(row) is None for row in league.to_dict("records")], bool)]
+    return unplayed.iloc[upcoming_fixtures(unplayed, origin)] if len(unplayed) else unplayed
+
+
+# `cl_stakes.json`: how each result of the next round moves every club's top-eight, top-24 and winner chances.
+def save_stakes(result, fixtures, teams, out_dir, *, origin, season, n_sim):
+    from standing_prediction.predict_positions import write_stakes
+    from standing_prediction.stakes import event_stakes
+
+    path = Path(out_dir) / "cl_stakes.json"
+    path.unlink(missing_ok=True)
+    if result.tracked is None or fixtures.empty:
+        return
+    places, champions = result.tracked["places"], result.tracked["champions"]
+    events = {"top8": places < 8, "top24": places < 24, "title": champions[:, None] == np.arange(len(teams))}
+    write_stakes(path, fixtures, event_stakes(result.tracked["outcomes"], events, teams),
+                 {"competition": "CL", "season": season, "as_of": origin.isoformat(), "n_sim": n_sim, "metrics": list(events)})
 
 
 def save_club_ratings(inputs, model, out_dir, *, origin):

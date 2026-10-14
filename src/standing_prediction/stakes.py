@@ -26,6 +26,11 @@ def fixture_stakes(outcomes, places, teams, *, top, releg_from, min_swing=MIN_SW
     and a team only if it keeps one; a result with fewer than MIN_SIMS simulations is None.
     """
     events = {"title": places == 0, "ucl": places < top, "releg": places >= releg_from - 1}
+    return event_stakes(outcomes, events, teams, min_swing=min_swing)
+
+
+# `fixture_stakes` for any chances: `events` maps each metric to a (n_sim, n_teams) boolean array.
+def event_stakes(outcomes, events, teams, *, min_swing=MIN_SWING):
     stakes = []
     for f in range(outcomes.shape[1]):
         masks = [outcomes[:, f] == o for o in range(3)]

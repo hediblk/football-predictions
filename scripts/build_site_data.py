@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from champions_league.identities import canonical_team
+from champions_league.identities import AREA_LEAGUES, COUNTRY_LEAGUES, canonical_team
 from standing_prediction import site_history
 
 
@@ -36,6 +36,11 @@ LEAGUES = [
 ]
 UCL_ZONES = [("r16", "Round of 16", 1, 8), ("playoff", "Knockout play-offs", 9, 24), ("out", "Eliminated", 25, 36)]
 UCL_STAGES = ["round16", "quarterfinal", "semifinal", "final"]
+# What's at stake: domestic title/top-four/relegation, Champions League top eight/top 24/winner.
+STAKE_METRICS = ("title", "ucl", "releg", "top8", "top24")
+# The Champions League model's league codes, for clubs from outside the five leagues.
+COUNTRIES = {code: area for area, code in AREA_LEAGUES.items()}
+COUNTRY_CODES = {code: short for short, code in COUNTRY_LEAGUES.items()}
 
 SHORT_NAMES = {
     "Brighton & Hove Albion FC": "Brighton", "Tottenham Hotspur FC": "Tottenham", "AFC Bournemouth": "Bournemouth",
@@ -175,17 +180,17 @@ def export_ucl(src):
     }
 
 
-def match_stakes(src, prefix):
+def match_stakes(src, prefix, name=short_name):
     """The next round's `{n, teams}` stakes by match id, teams sorted by their biggest swing (empty without the file)."""
     path = src / f"{prefix}_stakes.json"
     if not path.exists():
         return {}
     ids = team_ids(pd.read_csv(src / f"{prefix}_matches_snapshot.csv"))
     swing = lambda entry: max(max(v for v in values if v is not None) - min(v for v in values if v is not None)
-                              for key, values in entry.items() if key in site_history.LEAGUE_METRICS)
+                              for key, values in entry.items() if key in STAKE_METRICS)
     stakes = {}
     for fixture in json.loads(path.read_text())["fixtures"]:
-        teams = [{"id": ids.get(team), "name": short_name(team), **entry} for team, entry in fixture["teams"].items()]
+        teams = [{"id": ids.get(team), "name": name(team), **entry} for team, entry in fixture["teams"].items()]
         stakes[fixture["id"]] = {"n": fixture["n"], "teams": sorted(teams, key=swing, reverse=True)}
     return stakes
 
@@ -195,7 +200,7 @@ def export_matches(src, slug, prefix):
     data = json.loads((src / f"{prefix}_match_forecasts.json").read_text())
     display = data.get("display_names", {})
     name = lambda team: short_name(display.get(team, team))
-    stakes = match_stakes(src, prefix) if prefix != "cl" else {}
+    stakes = match_stakes(src, prefix, name)
     matches = []
     for match in data["matches"]:
         row = {
@@ -233,12 +238,24 @@ def export_matches(src, slug, prefix):
     return {"slug": slug, "generated_at": data["generated_at"], "rule": data.get("played_forecast_rule"), "matches": matches}
 
 
+def club_entry(team, row, league, ucl):
+    return {
+        "id": team["id"], "slug": team["slug"], "name": team["name"], "full": team["full"],
+        "league": league, "ucl": ucl,
+        "rating": num(row["rating"], 1), "attack": num(row["attack_rating"], 1),
+        "defense": num(row["defense_rating"], 1), "home": num(row["home_rating"], 1),
+        "away": num(row["away_rating"], 1), "league_rating": num(row["league_rating"], 1),
+        "gf": num(row["goals_for"]), "ga": num(row["goals_against"]),
+    }
+
+
 def export_clubs(src, leagues, ucl, previous=None):
     """Club ratings on one European scale from the Champions League joint model, with ranks.
 
     Ratings are shares of points against an average European top-flight club (`cl_club_ratings.csv`),
-    so leagues compare through the model's league offsets. Without fresh ratings the previous file is
-    kept; a club missing from them keeps its previous entry.
+    so leagues compare through the model's league offsets. Every club in the five leagues is ranked, plus the
+    Champions League clubs from elsewhere (`league` null, with their country). Without fresh ratings the previous
+    file is kept; a club missing from them keeps its previous entry.
     """
     path = src / "cl_club_ratings.csv"
     if not path.exists():
@@ -258,15 +275,21 @@ def export_clubs(src, leagues, ucl, previous=None):
                 if team["id"] in earlier:
                     clubs.append(earlier[team["id"]])
                 continue
-            row = ratings.loc[key]
-            clubs.append({
-                "id": team["id"], "slug": team["slug"], "name": team["name"], "full": team["full"],
-                "league": league["slug"], "ucl": team["id"] in in_ucl,
-                "rating": num(row["rating"], 1), "attack": num(row["attack_rating"], 1),
-                "defense": num(row["defense_rating"], 1), "home": num(row["home_rating"], 1),
-                "away": num(row["away_rating"], 1), "league_rating": num(row["league_rating"], 1),
-                "gf": num(row["goals_for"]), "ga": num(row["goals_against"]),
-            })
+            clubs.append(club_entry(team, ratings.loc[key], league["slug"], team["id"] in in_ucl))
+    domestic = {team["id"] for league in leagues for team in league["teams"]}
+    for team in ucl["teams"]:
+        if team["id"] in domestic:
+            continue
+        if team["key"] not in ratings.index:
+            missing.append(team["name"])
+            if team["id"] in earlier:
+                clubs.append(earlier[team["id"]])
+            continue
+        row = ratings.loc[team["key"]]
+        code = str(row["league"])
+        country = COUNTRIES.get(code, code.removeprefix("country:"))
+        clubs.append({**club_entry(team, row, None, True), "country": country,
+                      "country_code": COUNTRY_CODES.get(code, country[:3].upper()), "league_rank": None})
     for field in ("rating", "attack", "defense"):
         for rank, club in enumerate(sorted(clubs, key=lambda club: -club[field]), start=1):
             club[f"{field}_rank"] = rank

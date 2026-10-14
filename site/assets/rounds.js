@@ -142,5 +142,5 @@ $("round-nav").addEventListener("change", (e) => {
 
 expandable($("rounds"), ".mrow", (row) => {
   const m = rounds.flatMap((r) => r.matches).find((x) => String(x.id) === row.dataset.id);
-  return matchPanel(m, slugs);
+  return matchPanel(m, slugs, "champions-league");
 });

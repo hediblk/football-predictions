@@ -268,6 +268,26 @@
           ],
           "minItems": 3,
           "maxItems": 3
+        },
+        "top8": {
+          "type": "array",
+          "prefixItems": [
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"}
+          ],
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "top24": {
+          "type": "array",
+          "prefixItems": [
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"},
+            {"$ref":"#/$defs/nullablePercentage"}
+          ],
+          "minItems": 3,
+          "maxItems": 3
         }
       },
       "required": ["id","name"]
@@ -356,8 +376,10 @@
             "rating_rank": {"type":"integer","minimum":1},
             "attack_rank": {"type":"integer","minimum":1},
             "defense_rank": {"type":"integer","minimum":1},
-            "league_rank": {"type":"integer","minimum":1},
-            "league": {"$ref":"#/$defs/leagueSlug"},
+            "league_rank": {"anyOf":[{"type":"integer","minimum":1},{"type":"null"}]},
+            "league": {"anyOf":[{"$ref":"#/$defs/leagueSlug"},{"type":"null"}]},
+            "country": {"$ref":"#/$defs/string"},
+            "country_code": {"$ref":"#/$defs/string"},
             "ucl": {"type":"boolean"},
             "gf": {"type":"number","minimum":0},
             "ga": {"type":"number","minimum":0}
@@ -378,6 +400,11 @@
             "gf",
             "ga"
           ]
+        },
+        {
+          "if": {"properties":{"league":{"type":"null"}},"required":["league"]},
+          "then": {"required":["country","country_code"],"properties":{"league_rank":{"type":"null"},"ucl":{"const":true}}},
+          "else": {"properties":{"league_rank":{"type":"integer"}}}
         }
       ]
     },

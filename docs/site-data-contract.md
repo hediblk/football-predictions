@@ -1,6 +1,6 @@
 # Published site data contract
 
-Implemented by the shared [JSON schema](../schemas/site/data.schema.json), [validator](../scripts/validate_site_data.py), and [exporter/contract tests](../tests/test_site_contract.py). [ADR 0001](adr/0001-site-model-boundary.md) records the boundary decision. [Numerical protection](numerical-protection.md) covers forecasting behavior before export.
+Implemented by the shared [JSON schema](../schemas/site/data.schema.json), [validator](../scripts/validate_site_data.py), and [exporter/contract tests](../tests/test_site_contract.py). [ADR 0001](adr/0001-site-model-boundary.md) records the boundary decision and [ADR 0002](adr/0002-site-browser-checks.md) the browser checks. [Numerical protection](numerical-protection.md) covers forecasting behavior before export.
 
 Run `python scripts/validate_site_data.py --data site/data` to validate the current site. For a staged dataset, pass `--data <candidate-directory> --site site` so crest references resolve against the real site assets. Failures exit nonzero and identify the affected file or field. Run the focused tests with `PYTHONDONTWRITEBYTECODE=1 python -m pytest -q tests/test_site_contract.py tests/test_refresh_site.py`.
 
@@ -10,7 +10,7 @@ Run `python scripts/validate_site_data.py --data site/data` to validate the curr
 
 Machine-readable schemas should be the authority for required fields, types, nullability, and tuple shapes. This document is the authority for football meanings, units, consistency rules, and compatibility policy. Use a small shared validator for relationships schemas cannot express. A new JSON family needs an explicit schema mapping before publication; avoid one schema copied for every competition.
 
-Contract validation guarantees that published data conforms to these rules. It cannot guarantee JavaScript imports, rendering, interactions, or layout. Browser automation is excluded from item 5 by scope agreement; those frontend changes receive manual review.
+Contract validation guarantees that published data conforms to these rules. It cannot guarantee JavaScript imports, rendering, interactions, or layout; the [browser checks](adr/0002-site-browser-checks.md) load every view from the same data, and layout still receives manual review.
 
 ## File families
 
@@ -20,7 +20,7 @@ Contract validation guarantees that published data conforms to these rules. It c
 | `<competition>.json`, domestic | Common metadata; `kind: league`; zones and nonempty teams. Each team has identity, current position/played/points/goal difference, expected final points/position, point quantiles, position probabilities, title chance, and declared zone chances. Fixture-adjustment notes may be absent in older data. |
 | `champions-league.json` | Common metadata; `kind: ucl`; 36 teams with canonical `key`, league-phase position probabilities, `r16, playoff, out`, progression `stages`, and the representative `bracket`. |
 | `matches/<competition>.json` | `slug, generated_at, rule, matches`. `rule` can be null. Fixtures carry `id, kickoff, status, md, home, away, home_id, away_id`, with conditional scores, forecasts, xG, and stakes. A present UCL fixture file must not have an empty list: its round view requires fixtures. |
-| `clubs.json` | `generated_at, season, scale, league_averages, featured, clubs`; nonempty ranked clubs with identity, domestic league, UCL participation, ratings, expected goals against the reference opponent, and overall/attack/defense/domestic ranks. |
+| `clubs.json` | `generated_at, season, scale, league_averages, featured, clubs`; nonempty ranked clubs with identity, domestic league, UCL participation, ratings, expected goals against the reference opponent, and overall/attack/defense/domestic ranks. Champions League clubs from outside the five leagues have a null `league` and `league_rank`, with `country` and a three-letter `country_code`. |
 | `crests.json` | Object keyed by decimal-string provider IDs. Entries contain `name, source, path`, with dimensions for PNGs. Published crest paths refer to local site assets. A missing crest entry leaves the club name usable. |
 | `history/<season>/<competition>.json` | `slug, season, metrics, dates, cutoff, teams`. Each team has one series per metric, with entries aligned to `dates`. Domestic metrics are `title,ucl,releg`; UCL metrics are `top8,top24,last16,qf,sf,final,title`. |
 | `history/<season>/clubs.json` | `season, fields, weeks`; each week has a Monday `date`, nullable result `cutoff`, and club-ID-string keys mapped to rating tuples. `fields` is currently `rating,attack,defense`. |
@@ -44,7 +44,7 @@ Required current competition tables, index, and club rankings must exist and be 
 | Match `score, xg, exp` | `[home, away]` goals, observed xG, or expected goals respectively |
 | Match `top` / `call` | Tuples `[home goals, away goals, probability]`, probability on 0–1 scale; `top` ordered by descending probability |
 | Match `btts, o25, p_score` | Both-teams-score, over-2.5-goals, and observed-score probabilities on 0–1 scale |
-| Stakes `n` and each metric array | `[match home win, draw, match away win]`; `n` is simulation counts and metric entries are percentages or null |
+| Stakes `n` and each metric array | `[match home win, draw, match away win]`; `n` is simulation counts and metric entries are percentages or null. Domestic metrics are `title, ucl, releg` (as in the table); UCL metrics are `top8, top24` (league-phase places 1–8 and 1–24) and `title` (wins the trophy) |
 | Club rating fields | `rating, attack, defense, home, away, league_rating` on a 0–100 expected-points-share scale; these are not title chances |
 | Club `gf, ga` | Expected goals against the reference opponent |
 | Weekly club tuple | Rating values in `fields` order, currently `[rating, attack, defense]` |
@@ -82,7 +82,7 @@ Within matches and history:
 - History dates strictly increase and each metric series has exactly `len(dates)` entries. Week dates strictly increase and represent Mondays; missing days and weeks are valid. The history season's start year matches its directory (`2026/27` → `history/2026/`), while older-season members may differ from today's clubs.
 - Published club ranking numbers form the relevant rank sequences; overall list order agrees with overall rank. Featured IDs reference available ranked clubs. Crest paths, where declared, resolve to the published assets.
 
-Across files, each index entry agrees with its table's identity and generation metadata. Club league slugs and required file references resolve. Do not require universal membership or equal timestamps/seasons between independently retained tables, matches, ratings, and history. `scale.clubs` describes the model's reference population, not the length of the published clubs array; UCL clubs can exist in weekly history without appearing in the domestic ranking.
+Across files, each index entry agrees with its table's identity and generation metadata. Nonnull club league slugs and required file references resolve. Do not require universal membership or equal timestamps/seasons between independently retained tables, matches, ratings, and history. `scale.clubs` describes the model's reference population, not the length of the published clubs array; the ranking holds the five leagues' clubs and the current UCL field, and weekly history can hold clubs that have since left both.
 
 ## Rounding budgets
 
@@ -108,7 +108,7 @@ During refresh, assemble fresh exports and retained files into a candidate datas
 
 Site-only publication validates the data shipped with that revision. Deploy the exact immutable artifact that passed validation: a later checkout of moving `main` is a different candidate and needs validation again. Daily bot commits do not trigger other workflows, so refresh must invoke the same gate explicitly. No provider access is needed for PR checks or data validation.
 
-Old but valid data is not structurally invalid. Treat freshness separately from schema validity; the current global updated indicator uses the newest competition and can conceal an older retained competition. Changing that display is outside item 5.
+Old but valid data is not structurally invalid. Treat freshness separately from schema validity; the current global updated indicator uses the newest competition and can conceal an older retained competition.
 
 ## Compatibility and changes
 
@@ -116,4 +116,4 @@ Allow additive fields so compatible exporter additions do not force a site updat
 
 A breaking change must update schemas, exporter, affected consumers, fixtures, and documentation in the same review. Migrate retained data and older histories or provide a deliberate compatibility path; relying on the next successful model refresh leaves old files exposed. Start with one current contract rather than maintaining several parallel versions.
 
-Until browser checks are introduced separately, passing this gate means data is valid under this contract. It does not mean every static site's JavaScript route or interaction works.
+Passing this gate means data is valid under this contract. The browser checks then show that every view renders from it without script errors; neither proves the numbers are right.

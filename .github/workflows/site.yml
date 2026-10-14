@@ -91,9 +91,15 @@ jobs:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: requirements-lock.txt
-      - run: python -m pip install -c requirements-lock.txt jsonschema rfc3339-validator rfc3986-validator
+      - run: python -m pip install -c requirements-lock.txt jsonschema rfc3339-validator rfc3986-validator playwright
       - name: Validate the exact site revision being deployed
         run: python scripts/validate_site_data.py --data site/data
+      # Versioned script and style URLs, so browsers never run cached code against the new files.
+      - run: python scripts/stamp_assets.py site
+      - name: Load every view of the build in headless Chromium
+        run: |
+          python -m playwright install --with-deps chromium
+          python scripts/check_site.py --site site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
