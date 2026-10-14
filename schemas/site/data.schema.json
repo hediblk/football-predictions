@@ -706,6 +706,23 @@
       },
       "required": ["id","player","minutes","position","shots","goals","own_goals","xg","xa","key_passes","yellow","red"]
     },
+    "matchEvent": {
+      "type": "object",
+      "properties": {
+        "minute": {"type":"integer","minimum":0},
+        "clock": {"type":"string","pattern":"^[0-9]+(\\+[0-9]+)?$"},
+        "type": {"enum":["goal","own_goal","penalty_goal","missed_penalty","yellow","red","substitution"]},
+        "side": {"enum":["h","a"]},
+        "players": {"type":"array","items":{"$ref":"#/$defs/string"},"minItems":1}
+      },
+      "required": ["minute","clock","type","side","players"]
+    },
+    "statPair": {
+      "type":"array","items":{"type":"integer","minimum":0},"minItems":2,"maxItems":2
+    },
+    "percentPair": {
+      "type":"array","items":{"type":"number","minimum":0,"maximum":100},"minItems":2,"maxItems":2
+    },
     "match_events": {
       "type": "object",
       "properties": {
@@ -715,6 +732,15 @@
         "sources": {
           "type": "object",
           "properties": {
+            "espn": {
+              "type": "object",
+              "properties": {
+                "id": {"type":"integer","minimum":1},
+                "fetched_at": {"$ref":"#/$defs/timestamp"},
+                "score": {"$ref":"#/$defs/goalPair"}
+              },
+              "required": ["id","fetched_at","score"]
+            },
             "understat": {
               "type": "object",
               "properties": {
@@ -725,6 +751,23 @@
             }
           }
         },
+        "box": {
+          "type": "object",
+          "properties": {
+            "possession": {"$ref":"#/$defs/percentPair"},
+            "shots": {"$ref":"#/$defs/statPair"},
+            "shots_on_target": {"$ref":"#/$defs/statPair"},
+            "corners": {"$ref":"#/$defs/statPair"},
+            "fouls": {"$ref":"#/$defs/statPair"},
+            "offsides": {"$ref":"#/$defs/statPair"},
+            "saves": {"$ref":"#/$defs/statPair"},
+            "pass_accuracy": {"$ref":"#/$defs/percentPair"},
+            "yellow": {"$ref":"#/$defs/statPair"},
+            "red": {"$ref":"#/$defs/statPair"}
+          },
+          "minProperties": 1
+        },
+        "events": {"type":"array","items":{"$ref":"#/$defs/matchEvent"}},
         "shots": {"type":"array","items":{"$ref":"#/$defs/shot"}},
         "players": {
           "type": "object",

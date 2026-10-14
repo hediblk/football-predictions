@@ -167,6 +167,34 @@ def validate_match_events(data, fixture=None, *, consistency=True):
     if understat:
         require(datetime.fromisoformat(understat["fetched_at"]) >= datetime.fromisoformat(data["kickoff"]),
                 "Understat data fetched before kickoff")
+    espn = data["sources"].get("espn")
+    if espn:
+        require(datetime.fromisoformat(espn["fetched_at"]) >= datetime.fromisoformat(data["kickoff"]),
+                "ESPN data fetched before kickoff")
+    if "box" in data or "events" in data:
+        require(espn is not None, "ESPN detail requires its source")
+    if "box" in data:
+        box = data["box"]
+        if "possession" in box:
+            close(sum(box["possession"]), 100, 0.2, "possession sum")
+        if "shots" in box and "shots_on_target" in box:
+            require(all(a <= b for a, b in zip(box["shots_on_target"], box["shots"])),
+                    "shots on target exceed shots")
+    if "events" in data:
+        events = data["events"]
+        minutes = [event["minute"] for event in events]
+        require(minutes == sorted(minutes), "ESPN events are not ordered by minute")
+        require(all(event["minute"] == sum(map(int, event["clock"].split("+"))) for event in events),
+                "ESPN minute differs from displayed clock")
+        if espn:
+            goals = [0, 0]
+            for event in events:
+                if event["type"] in ("goal", "penalty_goal", "own_goal"):
+                    side = event["side"]
+                    if event["type"] == "own_goal":
+                        side = "a" if side == "h" else "h"
+                    goals[0 if side == "h" else 1] += 1
+            require(goals == espn["score"], "ESPN timeline goals differ from checked final score")
     if "players" in data:
         for side in ("h", "a"):
             unique(data["players"][side], "id")
@@ -175,6 +203,8 @@ def validate_match_events(data, fixture=None, *, consistency=True):
     require(data["id"] == fixture["id"] and data["kickoff"] == fixture["kickoff"],
             "match event identity differs from fixture")
     require(fixture["status"] == "FINISHED", "match events require a finished fixture")
+    if consistency and espn:
+        require(espn["score"] == fixture["score"], "ESPN final score differs from fixture")
     if not consistency or "shots" not in data:
         return
     require("xg" in fixture, "shot consistency requires published match xg")
