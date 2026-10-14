@@ -79,3 +79,13 @@ The Model view's “Track record” frame is reached by `#model/scorecard` withi
 ## Task 5 · Games that matter
 
 Matches has a "Games that matter · next 7 days" frame between the day strip and the chosen day's fixtures. It covers every competition whatever the chips say, and lists up to three unplayed fixtures from the next seven days that have a Stakes tag, ranked by their biggest shown swing (highest minus lowest of the three conditional chances) as a multiple of that race's Stakes bar, so an 8-point title bar and a 30-point Champions League bar count alike; an earlier kickoff wins a tie. Rows are ordinary match rows that expand into the usual panel; the kickoff column shows the competition code, the day and the time. One dim mono line under each row gives the swing as the chance now and under the result that moves it furthest, e.g. "Title: Barcelona 93% → 84% if they lose." The bars are the existing Stakes bars. The frame is hidden when no fixture qualifies. No new colours or motion.
+
+## Task 13 · UEFA running data and activity maps
+
+Finished Champions League match pages add Distance (km), Sprints and Top speed (km/h) to the existing Match stats frame. They use the paired bars with units at the ends; neither side is marked better for running activity. The existing ten-row limit expands by these three rows only for UEFA pages.
+
+One new frame, "Where they played", follows Match stats in After mode when UEFA heat data exists. Its full pitch uses the existing `--rule` lines on `--panel`, with 21×14 amber bulbs on `--bulb-off`: brightness is a cell's activity share relative to the busiest cell of the selected map. Home · Away chips select the side, and a labelled native Player select offers Whole team and players who played at least 30 minutes. The selected side attacks right for home and left for away. A native Average positions checkbox shows or hides ink-outlined numbered starter dots over the map; hover names the player. The dots are observed averages, not the lineup's formation. No new colour or motion.
+
+A caption and the SVG's spoken label give the selected club/player and defensive, middle and attacking-third activity shares. Each bulb's native tooltip gives its share, and an expandable starter list names shirt numbers and average coordinates. Controls wrap and the map scales at 375 px. Side changes reset to Whole team; map changes keep keyboard focus on the control. Before mode and fixtures without UEFA data hide the frame. The footer credits "UEFA · match data".
+
+Own-goal timeline labels name both the scorer's club and the beneficiary, e.g. "53' Own goal · Renato Veiga (Villarreal), for Dortmund". The feed states the same relationship, while the ruler marker and running score stay on the side the goal counted for.

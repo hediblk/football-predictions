@@ -51,13 +51,13 @@ export async function showMatch(slug, id) {
   setStatus(file.generated_at);
   const slugs = new Map((clubs ? clubs.clubs : []).map((c) => [c.id, c.slug]));
   page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly, mode: post ? "after" : "before",
-    detail: events, shots: events && events.shots && events.shots.length ? events : null };
+    heatSide: "h", heatPlayer: "", positions: true, detail: events, shots: events && events.shots && events.shots.length ? events : null };
   render();
 }
 
 function render() {
   const { m, comp, slugs, stakes, table, clubs, files } = page;
-  $("view-match").innerHTML = hero(m, comp, slugs) + (page.mode === "after" ? against(m, comp, page.file) + shotReport(m) + matchStats(m) + changed(m, comp)
+  $("view-match").innerHTML = hero(m, comp, slugs) + (page.mode === "after" ? against(m, comp, page.file) + shotReport(m) + matchStats(m) + wherePlayed(m) + changed(m, comp)
     : (m.p ? `<fieldset class="frame"><legend>${m.score ? "The forecast before kickoff" : "The forecast"}</legend><div class="panel mp-fc">${forecastBlocks(m)}</div></fieldset>` : "")
       + (stakes ? `<fieldset class="frame"><legend>What's at stake</legend>${stakes}</fieldset>` : "")
       + sides(m, comp, table, clubs, files));
@@ -250,7 +250,9 @@ const EVENT_WORDS = { goal: "Goal", own_goal: "Own goal", penalty_goal: "Penalty
 const isGoal = (e) => ["goal", "own_goal", "penalty_goal"].includes(e.type);
 const eventSide = (e) => e.type === "own_goal" ? other(e.side) : e.side;
 const eventMinute = (e) => `${e.clock}'`;
-const eventLabel = (e) => `${eventMinute(e)} ${EVENT_WORDS[e.type]} · ${e.type === "substitution" ? e.players.join(" ← ") : e.players[0]}`;
+const eventLabel = (e, m) => `${eventMinute(e)} ${EVENT_WORDS[e.type]} · ${e.type === "substitution" ? e.players.join(" ← ") : e.players[0]}${e.type === "own_goal"
+  ? ` (${e.side === "h" ? m.home : m.away}), for ${eventSide(e) === "h" ? m.home : m.away}`
+  : ` · ${e.side === "h" ? m.home : m.away}`}`;
 const firstHalf = (e) => e.minute <= 45 || String(e.clock).startsWith("45+");
 /* event icons: a ball for goals (red for an own goal, struck through for a missed penalty), cards in their colours,
    and a green arrow on / red arrow off for substitutions */
@@ -269,13 +271,16 @@ const icon = (type) => `<svg class="ev-ic ${type}" viewBox="0 0 16 16" aria-hidd
 
 function matchStats(m) {
   const data = page.detail;
-  if (!data || (!data.box && !data.events?.length)) return "";
+  if (!data || (!data.box && !data.events?.length && !(page.comp.slug === "champions-league" && data.physical))) return "";
   const box = data.box || {};
   const events = data.events || [];
   // the side with the better figure (more, or fewer for fouls, offsides and cards) is lit; a tie lights neither
   const leader = (pair, fewer) => (pair[0] === pair[1] ? -1 : (pair[0] > pair[1]) !== Boolean(fewer) ? 0 : 1);
   const rows = BOX_ROWS.filter(([key]) => box[key]).map(([key, label, percent, fewer]) => statRow(box[key], label, percent, leader(box[key], fewer))).join("")
     + (m.xg ? statRow(m.xg, "xG <small>Understat</small>", false, leader(m.xg), 2) : "");
+  const physical = page.comp.slug === "champions-league" ? data.physical : null;
+  const running = physical ? [["distance", "Distance", " km", 1], ["sprints", "Sprints", "", 0], ["top_speed", "Top speed", " km/h", 1]]
+    .map(([key, label, unit, digits]) => statRow([physical.h[key], physical.a[key]], label, false, -1, digits, unit)).join("") : "";
   let poss = "";
   if (box.possession) {
     const p = box.possession, lead = leader(p);
@@ -286,16 +291,75 @@ function matchStats(m) {
   }
   const head = `<div class="mp-stat-head">${["h", "a"].map((s) => `<div class="mp-stat-club ${s}">
       ${clubName(s === "h" ? m.home_id : m.away_id, s === "h" ? m.home : m.away, "card")}${scorers(events, s)}</div>`).join(`<div class="mp-stat-score">${m.score[0]}<span>–</span>${m.score[1]}</div>`)}</div>`;
-  return `<fieldset class="frame mp-after mp-stats"><legend>Match stats</legend>
-    ${head}${poss}${rows ? `<div class="mp-stat-rows">${rows}</div>` : ""}
+  return `<fieldset class="frame mp-after mp-stats${physical ? " mp-running" : ""}"><legend>Match stats</legend>
+    ${head}${poss}${rows || running ? `<div class="mp-stat-rows">${rows}${running}</div>` : ""}
     ${!page.shots && events.length ? minuteRuler(m, events) : ""}${events.length ? feed(m, events) : ""}
-    <p class="note">Match statistics and timeline from ESPN${m.xg ? ", xG from Understat" : ""}. The better figure in each row is lit; fewer is better for fouls, offsides and cards.</p>
+    <p class="note">${data.sources.espn ? "Match statistics and timeline from ESPN" : "Match data"}${physical ? "; running data from UEFA" : ""}${m.xg ? ", xG from Understat" : ""}. The better figure in each row is lit; fewer is better for fouls, offsides and cards.${physical ? " Running rows compare activity; neither side is marked better." : ""}</p>
   </fieldset>`;
 }
 
-function statRow(pair, label, percent, lead, digits = percent ? 1 : 0) {
+/* ---------- UEFA activity: one pitch, one side or player at a time ---------- */
+function wherePlayed(m) {
+  const data = page.detail;
+  if (page.comp.slug !== "champions-league" || !data?.heat) return "";
+  const side = page.heatSide, heat = data.heat[side];
+  const players = data.physical[side].players;
+  const selected = heat.players.find((p) => String(p.id) === page.heatPlayer);
+  const grid = selected ? selected.grid : heat.team;
+  const club = side === "h" ? m.home : m.away;
+  const name = selected ? players.find((p) => p.id === selected.id).player : club;
+  const total = grid.reduce((a, b) => a + b, 0), peak = Math.max(...grid);
+  const thirds = [0, 0, 0];
+  grid.forEach((value, i) => { thirds[Math.floor(i % 21 / 7)] += value; });
+  if (side === "a") thirds.reverse();
+  const summary = `${name}: ${thirds.map((n, i) => `${dec(n / total * 100, 0)}% in the ${["defensive", "middle", "attacking"][i]} third`).join(", ")}.`;
+  const positions = data.positions?.[side] || [];
+  const bulbs = grid.map((n, i) => {
+    const x = i % 21 * 5 + 2.5, y = Math.floor(i / 21) * 5 + (i >= 273 ? 2 : 2.5);
+    return `<g><title>${dec(n / total * 100, 2)}% of activity in this cell</title><circle class="heat-off" cx="${x}" cy="${y}" r="1.65"/>
+      <circle class="heat-bulb" cx="${x}" cy="${y}" r="1.65" fill-opacity="${n / peak}"/></g>`;
+  }).join("");
+  const dots = page.positions ? positions.map((p) => `<g class="heat-starter"><title>${esc(`#${p.number} ${p.player}: average position`)}</title>
+    <circle cx="${p.x * 105}" cy="${p.y * 69}" r="2.8"/><text x="${p.x * 105}" y="${p.y * 69}" dy=".35em">${p.number}</text></g>`).join("") : "";
+  const pitch = `<g class="pitch"><rect x="0" y="0" width="105" height="69"/><path d="M52.5 0V69M0 14.5H16.5V54.5H0M105 14.5H88.5V54.5H105"/><circle cx="52.5" cy="34.5" r="9.15"/></g>`;
+  const options = heat.players.map((p) => {
+    const person = players.find((row) => row.id === p.id);
+    return `<option value="${p.id}"${selected?.id === p.id ? " selected" : ""}>${esc(person.player)} · ${dec(person.minutes, 0)} min</option>`;
+  }).join("");
+  return `<fieldset class="frame mp-after mp-where"><legend>Where they played</legend>
+    <div class="mp-heat-controls"><div class="chips" role="group" aria-label="Activity map side">${[["h", "Home"], ["a", "Away"]].map(([s, label]) =>
+      `<button type="button" class="chip" data-heat-side="${s}" aria-pressed="${side === s}">${label}</button>`).join("")}</div>
+      <label>Player <select id="mp-heat-player"><option value="">Whole team</option>${options}</select></label>
+      ${positions.length ? `<label><input id="mp-heat-positions" type="checkbox"${page.positions ? " checked" : ""}> Average positions</label>` : ""}</div>
+    <div class="mp-pitch mp-heat-pitch"><svg viewBox="-3 -3 111 75" role="img" aria-label="${esc(`UEFA activity map. ${summary} ${club} attacking ${side === "h" ? "right" : "left"}. ${page.positions ? "Numbered dots show starters' average positions, listed below." : "Average positions hidden."}`)}">${bulbs}${pitch}${dots}</svg></div>
+    <p class="note mp-heat-caption">${esc(summary)} ${esc(club)} ${side === "h" ? "→" : "←"}. Bulb brightness is activity relative to the busiest cell; each cell's share is shown on hover. Player maps cover at least 30 minutes.</p>
+    ${positions.length ? `<details class="mp-heat-list"><summary>Starters' average positions</summary><ul>${positions.map((p) => `<li>#${p.number} ${esc(p.player)} · ${dec(p.x * 100, 0)}% from the left, ${dec(p.y * 100, 0)}% from the top</li>`).join("")}</ul></details>` : ""}
+    <p class="note">UEFA · match data. Activity includes play with and without the ball; these are average locations, not the starting formation.</p>
+  </fieldset>`;
+}
+
+function updateHeat(focus) {
+  $("view-match").querySelector(".mp-where").outerHTML = wherePlayed(page.m);
+  $("view-match").querySelector(focus)?.focus();
+}
+
+$("view-match").addEventListener("click", (e) => {
+  const button = e.target.closest("[data-heat-side]");
+  if (!button || !page) return;
+  page.heatSide = button.dataset.heatSide;
+  page.heatPlayer = "";
+  updateHeat(`[data-heat-side="${page.heatSide}"]`);
+});
+$("view-match").addEventListener("change", (e) => {
+  if (e.target.id === "mp-heat-player") page.heatPlayer = e.target.value;
+  else if (e.target.id === "mp-heat-positions") page.positions = e.target.checked;
+  else return;
+  updateHeat(`#${e.target.id}`);
+});
+
+function statRow(pair, label, percent, lead, digits = percent ? 1 : 0, unit = "") {
   const total = pair[0] + pair[1];
-  const value = (i) => `<span class="mp-stat-value${lead === i ? " best" : ""}">${dec(pair[i], digits)}${percent ? "%" : ""}${lead === i ? '<span class="vh"> (better)</span>' : ""}</span>`;
+  const value = (i) => `<span class="mp-stat-value${lead === i ? " best" : ""}">${dec(pair[i], digits)}${percent ? "%" : unit}${lead === i ? '<span class="vh"> (better)</span>' : ""}</span>`;
   // each bar is that side's share of the pair (of 100 for percentages), growing out from the label
   const bar = (i) => `<span class="mp-stat-bar ${i ? "away" : "home"}" aria-hidden="true"><i class="${lead === i ? "best" : ""}" style="width:${(percent ? pair[i] : total ? pair[i] / total * 100 : 0).toFixed(1)}%"></i></span>`;
   return `<div class="mp-stat-row">${value(0)}${bar(0)}<span class="mp-stat-label">${label}</span>${bar(1)}${value(1)}</div>`;
@@ -330,7 +394,7 @@ function feed(m, events) {
     let body;
     if (isGoal(e)) {
       score[side === "h" ? 0 : 1] += 1;
-      const note = e.type === "penalty_goal" ? "Penalty" : e.type === "own_goal" ? "Own goal" : e.players[1] ? `Assist ${esc(e.players[1])}` : "";
+      const note = e.type === "penalty_goal" ? "Penalty" : e.type === "own_goal" ? `Own goal · ${esc(e.side === "h" ? m.home : m.away)}, for ${esc(side === "h" ? m.home : m.away)}` : e.players[1] ? `Assist ${esc(e.players[1])}` : "";
       body = `<span><b>${esc(e.players[0])}</b> <span class="mp-feed-score">${score[0]}–${score[1]}</span></span>${note ? `<small>${note}</small>` : ""}`;
     } else if (e.type === "substitution") {
       body = `<span class="on"><span class="vh">On: </span>${esc(e.players[0])}</span><small class="off"><span class="vh">off: </span>${esc(e.players[1] || "")}</small>`;
@@ -338,7 +402,7 @@ function feed(m, events) {
       body = `<span>${esc(e.players[0])}</span>${e.type === "missed_penalty" ? "<small>Missed penalty</small>" : ""}`;
     }
     const cell = `<div class="mp-feed-ev">${icon(e.type)}<div class="mp-feed-txt"><span class="vh">${EVENT_WORDS[e.type]}, ${esc(side === "h" ? m.home : m.away)}: </span>${body}</div></div>`;
-    rows.push(`<li class="mp-feed-row ${side} ${e.type}${isGoal(e) ? " goal" : ""}">${side === "h" ? cell : "<div></div>"}<span class="mp-feed-min">${eventMinute(e)}</span>${side === "a" ? cell : "<div></div>"}</li>`);
+    rows.push(`<li aria-label="${esc(eventLabel(e, m))}" class="mp-feed-row ${side} ${e.type}${isGoal(e) ? " goal" : ""}">${side === "h" ? cell : "<div></div>"}<span class="mp-feed-min">${eventMinute(e)}</span>${side === "a" ? cell : "<div></div>"}</li>`);
   }
   rows.push(marker(`Full time · ${m.score[0]}–${m.score[1]}`));
   return `<h4>Timeline</h4><ol class="mp-feed">${marker("Kick-off")}${rows.join("")}</ol>`;
@@ -349,7 +413,7 @@ function minuteRuler(m, events) {
   const marks = events.filter((e) => isGoal(e) || ["red", "yellow"].includes(e.type));
   const ticks = [0, 15, 30, 45, 60, 75, ...(last >= 100 ? [90] : []), last];
   const position = (t) => `${t / last * 100}%`;
-  const label = (e) => `${eventLabel(e)} · ${eventSide(e) === "h" ? m.home : m.away}`;
+  const label = (e) => eventLabel(e, m);
   return `<h4>Through the game</h4><div class="mp-ruler" role="img" aria-label="${esc(`Match timeline. ${marks.map(label).join("; ") || "No goals or cards."}`)}">
     <div class="mp-ruler-rail"></div><div class="mp-ruler-ht" style="left:${position(45)}"></div>${ticks.map((t) => `<span class="mp-ruler-tick" style="left:${position(t)}">${t}'</span>`).join("")}
     ${marks.map((e) => `<span class="mp-event ${eventSide(e)}" style="left:${position(e.minute)}" data-tip="${esc(esc(label(e)))}">${icon(e.type)}</span>`).join("")}</div>
@@ -479,7 +543,7 @@ function drawXg() {
   // ESPN supplies one authoritative goal/card timeline when present; Understat goals remain the fallback.
   const moments = events ? events.filter((e) => isGoal(e) || e.type === "red").map((e) => ({
     side: eventSide(e), t: Math.max(0, e.minute - 1), red: e.type === "red",
-    text: `${eventMinute(e)} ${surname(e.players[0])}${e.type === "own_goal" ? " (og)" : e.type === "red" ? " red card" : ""}`, label: eventLabel(e),
+    text: `${eventMinute(e)} ${surname(e.players[0])}${e.type === "own_goal" ? " (og)" : e.type === "red" ? " red card" : ""}`, label: eventLabel(e, m),
   })) : shots.filter((s) => s[5] === "Goal" || own(s)).map((s) => ({
     side: own(s) ? other(s[1]) : s[1], t: s[0], red: false,
     text: `${minute(s)} ${surname(s[8])}${own(s) ? " (og)" : ""}`, label: `${minute(s)} ${s[8]}${own(s) ? " (own goal)" : ""}`,
@@ -493,7 +557,7 @@ function drawXg() {
     let ly = cy - 7;
     while (placed.some((p) => x0 < p.x1 && x0 + width > p.x0 && ly - 9 < p.y1 && ly + 2 > p.y0)) ly -= 11;
     placed.push({ x0, x1: x0 + width, y0: ly - 9, y1: ly + 2 });
-    const tipText = esc(`${esc(label)}<br>${esc(side === "h" ? m.home : m.away)}`);
+    const tipText = esc(esc(label));
     const glyph = red ? `<rect class="card" x="${(cx - 3).toFixed(1)}" y="${(cy - 5).toFixed(1)}" width="6" height="10"/>`
       : `<circle class="goal" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4.5"/>`;
     return { side, label, svg: `<g data-tip="${tipText}">${glyph}<text class="glbl${red ? " card-label" : ""}" x="${(right ? cx - 6 : cx + 6).toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${right ? "end" : "start"}">${esc(text)}</text></g>` };

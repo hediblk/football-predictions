@@ -931,3 +931,25 @@ table.mp-stand { min-width: 460px; }
   .mp-stat-label { font-size: 10px; }
   .mp-stat-teams { font-size: 11px; }
 }
+
+/* Task 13 · UEFA activity bulbs and numbered starters, using the scoreboard's existing amber */
+.mp-heat-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 16px; font-size: 12px; }
+.mp-heat-controls .chips { margin: 0; }
+.mp-heat-controls label { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.mp-heat-controls select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--rule); padding: 8px; min-width: 0; max-width: 100%; }
+.mp-heat-controls input { accent-color: var(--amber); }
+.mp-heat-pitch .heat-off { fill: var(--bulb-off); }
+.mp-heat-pitch .heat-bulb { fill: var(--amber); }
+.mp-heat-pitch .pitch { pointer-events: none; }
+.mp-heat-pitch .heat-starter circle { fill: var(--panel); stroke: var(--ink); stroke-width: .35; }
+.mp-heat-pitch .heat-starter text { fill: var(--ink); font: 700 2.6px var(--mono); text-anchor: middle; }
+.mp-heat-list { color: var(--ink-2); font-size: 12px; margin: 12px 0; }
+.mp-heat-list summary { cursor: pointer; }
+.mp-heat-list li { margin: 6px 0; }
+.mp-stats.mp-running .mp-stat-row { grid-template-columns: 88px minmax(0, 1fr) 126px minmax(0, 1fr) 88px; }
+@media (max-width: 600px) {
+  .mp-heat-controls label:has(select) { width: 100%; }
+  .mp-heat-controls select { flex: 1; }
+  .mp-stats.mp-running .mp-stat-row { grid-template-columns: 68px minmax(0, 1fr) 80px minmax(0, 1fr) 68px; gap: 5px; }
+  .mp-stats.mp-running .mp-stat-value { padding: 2px 3px; font-size: 10px; }
+}

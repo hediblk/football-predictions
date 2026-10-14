@@ -131,15 +131,22 @@ def main():
     parser.add_argument("--data", type=Path, default=Path("site/data"))
     parser.add_argument("--cache", type=Path, default=Path(".cache/understat/matches"))
     parser.add_argument("--espn-cache", type=Path, default=Path(".cache/espn/matches"))
-    parser.add_argument("--provider", choices=("all", "understat", "espn"), default="all")
+    parser.add_argument("--uefa-cache", type=Path, default=Path(".cache/uefa"))
+    parser.add_argument("--provider", choices=("all", "understat", "espn", "uefa"), default="all")
     args = parser.parse_args()
-    if args.provider != "espn":
+    if args.provider in ("all", "understat"):
         fetch_events(args.src, args.data, args.cache)
-    if args.provider != "understat":
+    if args.provider in ("all", "espn"):
         from fetch_espn_events import fetch_espn_events
         if args.provider == "all":
             time.sleep(1)
         fetch_espn_events(args.src, args.data, args.espn_cache)
+
+    if args.provider in ("all", "uefa"):
+        from fetch_uefa_events import fetch_uefa_events
+        if args.provider == "all":
+            time.sleep(1)
+        fetch_uefa_events(args.src, args.data, args.uefa_cache)
 
 
 if __name__ == "__main__":
