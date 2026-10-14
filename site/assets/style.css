@@ -16,6 +16,9 @@
   --draw: #8a8f98;
   --green-t: #88cb8a;
   --yellow: #f2c14e;
+  --heat-lo: #16803c; /* the activity map only: less → more activity */
+  --heat-mid: #f4db49;
+  --heat-hi: #e3342f;
   --sign: "Big Shoulders Display", "Arial Narrow", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
 }
@@ -928,6 +931,41 @@ table.mp-stand { min-width: 460px; }
   .mp-feed-ev { gap: 7px; padding: 6px 8px; }
   .mp-feed-txt { font-size: 11px; }
 }
-  .mp-stat-label { font-size: 10px; }
-  .mp-stat-teams { font-size: 11px; }
+
+/* Task 13 · UEFA activity map: one control row of chip-sized controls over the shared pitch */
+.mp-heat-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
+.mp-heat-sides { display: flex; gap: 8px; }
+.mp-heat-sides .chip .club-name { gap: 8px; }
+.mp-heat-sides .chip .club-name, .mp-heat-sides .chip .club-label { font: inherit; letter-spacing: inherit; }
+.chip-select { position: relative; display: inline-flex; min-width: 0; max-width: 100%; }
+.chip-select select {
+  appearance: none; -webkit-appearance: none; min-height: 40px; max-width: 100%; padding: 0 32px 0 12px; cursor: pointer;
+  background: none; border: 1px solid var(--rule); color: var(--ink-2); text-overflow: ellipsis;
+  font: 700 13px/1 var(--sign); letter-spacing: .12em; text-transform: uppercase;
+}
+.chip-select select:hover { border-color: var(--ink-2); }
+.chip-select.on select { border-color: var(--amber); color: var(--amber); }
+.chip-select::after { content: ""; position: absolute; right: 12px; top: 50%; margin-top: -2px; border: 5px solid transparent; border-top-color: var(--amber); pointer-events: none; }
+.chip-select option { background: var(--panel); color: var(--ink); font: 400 14px var(--mono); text-transform: none; letter-spacing: 0; }
+@media (pointer: coarse) { .chip-select select { min-height: 44px; } }
+.mp-heat-pitch .heat-cell { fill: transparent; }
+.mp-heat-pitch .pitch { pointer-events: none; }
+.mp-heat-pitch .pitch * { fill: none; stroke: var(--ink); stroke-opacity: .65; stroke-width: .3; }
+.mp-heat-pitch .pitch .spot { fill: var(--ink); fill-opacity: .65; stroke: none; }
+.mp-heat-pitch .heat-starter circle { fill: var(--bg); stroke: var(--ink); stroke-width: .3; }
+.mp-heat-pitch .heat-starter text { fill: var(--ink); font: 700 2.6px var(--mono); text-anchor: middle; }
+.mp-heat-pitch .heat-starter.on circle { stroke: var(--amber); stroke-width: .6; }
+.mp-heat-pitch .heat-starter.off { opacity: .45; }
+.mp-key .k.heat { width: 96px; height: 8px; border-radius: 0; background: linear-gradient(to right, var(--heat-lo), var(--heat-mid), var(--heat-hi)); }
+.mp-key .k.pos { border: 1px solid var(--ink); background: var(--bg); }
+.mp-stats.mp-running .mp-stat-row { grid-template-columns: 88px minmax(0, 1fr) 126px minmax(0, 1fr) 88px; }
+@media (max-width: 699px) {
+  .mp-heat-sides { flex: 1 1 100%; }
+  .mp-heat-sides .chip { flex: 1; justify-content: center; min-width: 0; }
+  .chip-select { flex: 1; }
+  .chip-select select { width: 100%; }
+}
+@media (max-width: 600px) {
+  .mp-stats.mp-running .mp-stat-row { grid-template-columns: 68px minmax(0, 1fr) 80px minmax(0, 1fr) 68px; gap: 5px; }
+  .mp-stats.mp-running .mp-stat-value { padding: 2px 3px; font-size: 10px; }
 }

@@ -78,7 +78,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | 10. Understat shot ingestion | Phase 2 | B | none | M | [PR #33](https://github.com/hediblk/football-predictions/pull/33) |
 | 11. Shot report on the match page | Phase 2 | C | 6, 10 | M | [PR #34](https://github.com/hediblk/football-predictions/pull/34) |
 | 12. ESPN box score and timeline | Phase 3 | C | 6 | L | [PR #38](https://github.com/hediblk/football-predictions/pull/38) |
-| 13. UEFA running data and heatmaps (Champions League) | Phase 3 | C | 6 | L | To do |
+| 13. UEFA running data and heatmaps (Champions League) | Phase 3 | C | 6 | L | [PR #41](https://github.com/hediblk/football-predictions/pull/41) |
 | 14. Scorecard: market comparison | Addition 1 | D | 8, plus enough archived odds | M | To do |
 
 Tasks in the same wave can run in parallel. **Merge Task 1 first.** Every day without it is a day of published forecasts that can't be recovered later.
@@ -416,7 +416,7 @@ Leave the expanded match row unchanged.
 
 - **Match page After mode, Champions League only:**
   - Add distance, sprints and top speed as rows in Task 12's "Match stats" frame (or create that frame if Task 12 hasn't merged).
-  - One new frame, "Where they played": a pitch drawn as a grid of bulbs whose brightness is the share of activity (the existing bulb signature, no new colour).
+  - One new frame, "Where they played": a regular continuous green → yellow → red activity heatmap, with green for less activity and red for more, plus a labelled scale. Updated at the user's request on 14 October 2026; this is an exception to the bulb signature and no-new-hues rule.
   - Chips Home · Away, a native player `<select>` for one player's map, and an average-positions overlay of numbered dots for the starters.
 - **Footer:** add "UEFA · match data".
 

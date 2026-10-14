@@ -161,6 +161,33 @@ def validate_forecast_receipts(data):
 
 
 def validate_match_events(data, fixture=None, *, consistency=True):
+    require(len((json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n").encode()) < 60_000,
+            "match file must be under 60 KB")
+    uefa = data["sources"].get("uefa")
+    if uefa:
+        require(data["competition"] == "champions-league", "UEFA detail requires Champions League")
+        require(datetime.fromisoformat(uefa["fetched_at"]) >= datetime.fromisoformat(data["kickoff"]),
+                "UEFA data fetched before kickoff")
+    if any(key in data for key in ("physical", "heat", "positions")):
+        require(uefa is not None and "physical" in data, "UEFA detail requires its source and physical players")
+        for side in ("h", "a"):
+            players = data["physical"][side]["players"]
+            unique(players, "id")
+            by_id = {row["id"]: row for row in players}
+            if "heat" in data:
+                heat = data["heat"][side]
+                unique(heat["players"], "id")
+                require(sum(heat["team"]) > 0, "empty UEFA team heatmap")
+                require(all(row["id"] in by_id and by_id[row["id"]]["minutes"] >= 30 and sum(row["grid"]) > 0
+                            for row in heat["players"]), "heatmap requires a player with at least 30 minutes")
+                require(all(sum(row["grid"][i] for row in heat["players"]) <= cell for i, cell in enumerate(heat["team"])),
+                        "player heatmaps exceed team activity")
+            if "positions" in data:
+                positions = data["positions"][side]
+                unique(positions, "id")
+                unique(positions, "number")
+                require(all(row["id"] in by_id and row["player"] == by_id[row["id"]]["player"] for row in positions),
+                        "average position has no matching physical player")
     if "retro" in data:
         close(sum(data["retro"]), 1, 1e-9, "retrospective probability sum")
     understat = data["sources"].get("understat")
@@ -203,6 +230,8 @@ def validate_match_events(data, fixture=None, *, consistency=True):
     require(data["id"] == fixture["id"] and data["kickoff"] == fixture["kickoff"],
             "match event identity differs from fixture")
     require(fixture["status"] == "FINISHED", "match events require a finished fixture")
+    if consistency and uefa:
+        require(uefa["score"] == fixture["score"], "UEFA final score differs from fixture")
     if consistency and espn:
         require(espn["score"] == fixture["score"], "ESPN final score differs from fixture")
     if not consistency or "shots" not in data:
@@ -379,6 +408,7 @@ def validate_site_data(data_dir, *, site_dir=None):
             if relative.parts[0] == "history":
                 require(data["season"].split("/")[0] == relative.parts[1], "history season differs from directory")
             if family == "match_events":
+                require(path.stat().st_size < 60_000, "match file must be under 60 KB")
                 require(data["id"] == int(path.stem), "match event id differs from filename")
                 require(data["competition"] == relative.parts[2], "match event competition differs from directory")
             files[relative.as_posix()] = data

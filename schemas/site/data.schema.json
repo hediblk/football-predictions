@@ -723,6 +723,47 @@
     "percentPair": {
       "type":"array","items":{"type":"number","minimum":0,"maximum":100},"minItems":2,"maxItems":2
     },
+    "heatGrid": {
+      "type":"array","items":{"type":"integer","minimum":0},"minItems":294,"maxItems":294
+    },
+    "physicalPlayer": {
+      "type":"object",
+      "properties": {
+        "id":{"type":"integer","minimum":1}, "player":{"$ref":"#/$defs/string"},
+        "minutes":{"type":"number","exclusiveMinimum":0,"maximum":150},
+        "distance":{"type":"number","minimum":0}, "top_speed":{"type":"number","minimum":0}
+      },
+      "required":["id","player","minutes","distance","top_speed"]
+    },
+    "physicalTeam": {
+      "type":"object",
+      "properties": {
+        "distance":{"type":"number","minimum":0}, "sprints":{"type":"integer","minimum":0},
+        "top_speed":{"type":"number","minimum":0},
+        "players":{"type":"array","items":{"$ref":"#/$defs/physicalPlayer"},"minItems":1}
+      },
+      "required":["distance","sprints","top_speed","players"]
+    },
+    "heatTeam": {
+      "type":"object",
+      "properties": {
+        "team":{"$ref":"#/$defs/heatGrid"},
+        "players":{"type":"array","items":{
+          "type":"object","properties":{"id":{"type":"integer","minimum":1},"grid":{"$ref":"#/$defs/heatGrid"}},
+          "required":["id","grid"]
+        }}
+      },
+      "required":["team","players"]
+    },
+    "averagePosition": {
+      "type":"object",
+      "properties": {
+        "id":{"type":"integer","minimum":1}, "player":{"$ref":"#/$defs/string"},
+        "number":{"type":"integer","minimum":1,"maximum":99},
+        "x":{"$ref":"#/$defs/probability"}, "y":{"$ref":"#/$defs/probability"}
+      },
+      "required":["id","player","number","x","y"]
+    },
     "match_events": {
       "type": "object",
       "properties": {
@@ -732,6 +773,14 @@
         "sources": {
           "type": "object",
           "properties": {
+            "uefa": {
+              "type":"object",
+              "properties": {
+                "id":{"type":"integer","minimum":1},
+                "fetched_at":{"$ref":"#/$defs/timestamp"}, "score":{"$ref":"#/$defs/goalPair"}
+              },
+              "required":["id","fetched_at","score"]
+            },
             "espn": {
               "type": "object",
               "properties": {
@@ -750,6 +799,18 @@
               "required": ["id","fetched_at"]
             }
           }
+        },
+        "physical": {
+          "type":"object","properties":{"h":{"$ref":"#/$defs/physicalTeam"},"a":{"$ref":"#/$defs/physicalTeam"}},"required":["h","a"]
+        },
+        "heat": {
+          "type":"object","properties":{"h":{"$ref":"#/$defs/heatTeam"},"a":{"$ref":"#/$defs/heatTeam"}},"required":["h","a"]
+        },
+        "positions": {
+          "type":"object","properties":{
+            "h":{"type":"array","items":{"$ref":"#/$defs/averagePosition"},"maxItems":11},
+            "a":{"type":"array","items":{"$ref":"#/$defs/averagePosition"},"maxItems":11}
+          },"required":["h","a"]
         },
         "box": {
           "type": "object",

@@ -108,6 +108,18 @@ def routes(data):
             elif any(e["type"] == "red" for e in extra["events"]):
                 selectors.append("#view-match .mp-xgline rect.card")
         found.append((f"#match/{slug}/{match['id']}", selectors, [], None))
+    # UEFA: a finished Champions League page with physical rows, continuous heatmap and numbered starters.
+    mapped = [f for f in reversed(done) if f[0] == "champions-league" and detail(*f).get("heat")]
+    game = next((f for f in mapped if f[1]["id"] == 575327), mapped[0] if mapped else None)
+    if game:
+        slug, match = game
+        found.append((f"#match/{slug}/{match['id']}", AFTER + [
+            "#view-match .mp-running .mp-stat-row:has-text('Distance')",
+            "#view-match .mp-running .mp-stat-row:has-text('Sprints')",
+            "#view-match .mp-running .mp-stat-row:has-text('Top speed')",
+            "#view-match .mp-where .heat-surface", "#view-match .mp-where .heat-starter",
+            "#view-match #mp-heat-player option", "#view-match #mp-heat-positions[aria-pressed=true]", "#view-match .mp-where .mp-dir"],
+            ["#view-match [data-heat-side=a]"], "#view-match [data-heat-side=a][aria-pressed=true]"))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
@@ -139,16 +151,19 @@ def visit(context, url, origin, selectors, rows, opened):
             problems.append(f"empty: nothing matches {selector}")
     text = page.locator("main").inner_text()
     problems += [f"shows {phrase!r}" for phrase in BROKEN if phrase in text]
-    if page.locator(".mp-stat-row").count() > 10:
-        problems.append("Match stats has more than ten rows")
+    limit = 13 if page.locator(".mp-running").count() else 10
+    if page.locator(".mp-stat-row").count() > limit:
+        problems.append(f"Match stats has more than {limit} rows")
+    if page.locator(".mp-where").count() and page.evaluate("document.documentElement.scrollWidth > innerWidth"):
+        problems.append("UEFA match page scrolls horizontally")
     row = next((page.locator(selector).first for selector in rows if page.locator(selector).count()), None)
     if row:
         row.click()
         page.wait_for_load_state("networkidle")
         if not page.locator(opened).count():
             problems.append(f"clicking a row did not open {opened}")
-        if page.locator(".mp-modes [data-mode=before][aria-pressed=true]").count() and page.locator(".mp-stats").count():
-            problems.append("Match stats is visible in Before mode")
+        if page.locator(".mp-modes [data-mode=before][aria-pressed=true]").count() and page.locator(".mp-stats, .mp-where").count():
+            problems.append("Post-match stats are visible in Before mode")
     page.close()
     return problems
 
