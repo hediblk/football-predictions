@@ -347,7 +347,7 @@ Tasks in the same wave can run in parallel. **Merge Task 1 first.** Every day wi
   - `shots`: compact tuples `[minute, side, x, y, xg, result, situation, body, player, assister]`.
   - `players: {h, a}`: rows with minutes, position, shots, goals, xG, xA, key passes and cards.
   - `retro: [h, d, a]`: after-the-fact outcome chances, from an exact convolution of each side's shot xGs, treating shots as independent. Name that assumption in the contract.
-- **Consistency gates:** shot xG sums must match the published match `xg` to within 0.05 per side, and goals from shots plus own goals must equal the score. On failure, publish nothing and log why.
+- **Consistency gates:** each side's shot xG sum must be at least the published match `xg` minus 0.05, and goals from shots plus own goals must equal the score. On failure, publish nothing and log why. The sum can be higher: Understat's match xG counts shots from the same attack as one chance, 1 − ∏(1 − xG); on 14 October this was about one La Liga game in five.
 - Backfill the current season once (about 400 requests at present).
 
 **Done when:** the derived files validate and two reruns fetch nothing new; the contract documents the family and its fields.
@@ -366,6 +366,7 @@ Tasks in the same wave can run in parallel. **Merge Task 1 first.** Every day wi
   - Tap or hover shows the player, minute, xG and situation.
   - A `<details>` "Shot list" table is the text equivalent.
 - **Cumulative xG timeline:**
+  - Raw shot xG can sum above Understat's match xG, which counts shots from one attack as one chance. Combine shots in the same minute as 1 − ∏(1 − xG) so the line ends at the match figure shown elsewhere, or label the end total as summed shot xG.
   - Step lines, home solid ink and away dashed, minutes 0 to the end of stoppage time.
   - Goals are amber bulbs on the scoring side's line, with minute and scorer.
 - **"From the chances" row:** the retrospective home/draw/away chances as three small numbers, labelled "after the fact, from shot xG, not a forecast". Don't use the forecast bulbs, so the two can't be confused.
