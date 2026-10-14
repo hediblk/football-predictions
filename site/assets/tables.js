@@ -1,17 +1,19 @@
 // Tables view: the projected final table for one competition.
-import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus, clubName } from "./core.js";
+import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus, clubName, loadForm, formDots, formPoints } from "./core.js";
 import { showRounds } from "./rounds.js";
 import { showRace } from "./race.js";
 
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
 let clubSlugs = new Set();
 let current = null;
+let sort = null; // { key, slug }: the table's column order, until the same header is pressed again
+const sortValue = (t, key) => (key === "form" ? formPoints(t.id) : key === "projected" ? t.xpts : t[key]);
 
 export async function showTables(slug) {
   current = slug;
   let data;
   try {
-    [data] = await Promise.all([getJSON(`${slug}.json`), loadClubSlugs()]);
+    [data] = await Promise.all([getJSON(`${slug}.json`), loadClubSlugs(), loadForm().catch(() => {})]);
   } catch (err) {
     $("hero-in").innerHTML = `<div class="who"><h1>No signal</h1><p class="caption">This forecast could not be loaded (${esc(err.message)}).</p></div>`;
     $("status-text").textContent = "Offline";
@@ -120,9 +122,13 @@ function renderTable(data) {
   const cuts = ucl
     ? { 8: ["▲ Round of 16 · ▼ Play-offs", ""], 24: ["▼ Eliminated", "bad"] }
     : { [good.to]: ["▲ Champions League", ""], [bad.from - 1]: ["▼ Relegation", "bad"] };
-  const span = 7 + cols.length;
+  const span = 8 + cols.length;
 
-  const rows = data.teams.map((t, i) => {
+  const by = sort && sort.slug === data.slug ? sort.key : null;
+  const order = data.teams.map((t, i) => i);
+  if (by) order.sort((a, b) => sortValue(data.teams[b], by) - sortValue(data.teams[a], by) || a - b);
+  const rows = order.map((i) => {
+    const t = data.teams[i];
     const rank = i + 1;
     const bulbs = t.probs.map((p, j) =>
       `<i class="${gaps.has(j + 1) ? "gap" : ""}" style="background:${bulb(p, top)}" data-tip="${esc(`${clubName(t.id, t.name, "inline")} ${ordinal(j + 1)}: <b>${p.toFixed(2)}%</b>`)}"></i>`).join("");
@@ -132,10 +138,11 @@ function renderTable(data) {
       const cls = v <= 0 ? "off" : tone === "warn" ? (v >= 10 ? "warn" : "") : tone === "lit" ? (v >= 1 ? "lit" : "") : tone;
       return `<td class="${cls}">${num(v)}</td>`;
     }).join("");
-    const cut = cuts[rank] && rank < n ? `<tr class="cut ${cuts[rank][1]}"><td colspan="${span}"><span>${cuts[rank][0]}</span></td></tr>` : "";
+    const cut = !by && cuts[rank] && rank < n ? `<tr class="cut ${cuts[rank][1]}"><td colspan="${span}"><span>${cuts[rank][0]}</span></td></tr>` : "";
     return `<tr class="row" data-i="${i}" aria-expanded="false" tabindex="0">
       <td class="rk l">${String(rank).padStart(2, "0")}</td>
       <td class="club l" title="${esc(t.full)}">${clubName(t.id, t.name)}</td>
+      <td class="l">${formDots(t.id)}</td>
       <td>${t.played}</td><td class="b">${t.points}</td>
       <td class="${t.gd >= 0 ? "gd-pos" : "gd-neg"}">${t.gd > 0 ? "+" : ""}${t.gd}</td>
       <td data-tip="${esc(tip)}"><span class="rg"><span class="band" style="left:${x(t.p10)}%;width:${x(t.p90) - x(t.p10)}%"></span><span class="now" style="left:${x(t.points)}%"></span><span class="proj" style="left:${x(t.xpts)}%"></span></span>&nbsp; <b class="b">${Math.round(t.xpts)}</b></td>
@@ -144,18 +151,24 @@ function renderTable(data) {
     </tr>${cut}`;
   }).join("");
 
+  const th = (key, label, cls = "") => `<th class="sortable ${cls}${by === key ? " sorted" : ""}" data-sort="${key}" tabindex="0" aria-sort="${by === key ? "descending" : "none"}" title="Sort by ${esc(label)}">${label}</th>`;
   const table = $("table");
   table.innerHTML = `<thead><tr>
-      <th class="rk l">#</th><th class="club l">Club</th><th>P</th><th>Pts</th><th>GD</th><th>Projected pts</th>
+      <th class="rk l">#</th><th class="club l">Club</th>${th("form", "Form", "l")}<th>P</th>${th("points", "Pts")}${th("gd", "GD")}${th("projected", "Projected pts")}
       <th class="l"><span class="bulb-head" style="--b:${size}px">${head}</span></th>
-      ${cols.map(([, label]) => `<th>${label}</th>`).join("")}
+      ${cols.map(([k, label]) => th(k, label)).join("")}
     </tr></thead><tbody>${rows}</tbody>`;
+  const resort = (head) => { sort = by === head.dataset.sort ? null : { key: head.dataset.sort, slug: data.slug }; renderTable(data); };
   table.onclick = (e) => {
     if (e.target.closest("a")) return;
+    const head = e.target.closest("th.sortable");
+    if (head) return resort(head);
     const tr = e.target.closest("tr.row");
     if (tr) toggleDetail(data, tr, span);
   };
   table.onkeydown = (e) => {
+    const head = e.target.closest("th.sortable");
+    if (head && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); return resort(head); }
     const tr = e.target.closest("tr.row");
     if (tr && e.target === tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); toggleDetail(data, tr, span); }
   };

@@ -31,6 +31,7 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 --red:     #e1524f;  /* relegation / elimination bulb; a missed call */
 --green:   #5ad664;  /* a called result, or a rank gained: lamp / arrow */
 --green-t: #88cb8a;  /* "Called" text */
+--draw:    #8a8f98;  /* a drawn game: form boxes and dots */
 ```
 
 `--green` came from the same generator (`--seed 145`, accent steps 9 and 11); it marks a called result and, with `--green-t`, a rank gained. Calls always pair a lamp with a word (Called, Missed, Exact), never colour alone.
@@ -49,6 +50,8 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 - **Stakes:** a fixture's conditional chances for each result, with the likeliest result lit amber. They're shown only when a result swings a chance by at least 2 points and by more than three standard errors, so simulation noise never reads as stakes. On top of that, a title swing must be 8 points or more and a top-four or relegation swing 15, so only games that really matter carry a Stakes tag, a stakes table or a place in "Games that decide our season". Champions League games use the same trophy bar (8) but 30 points for the top eight and top 24, since one league-phase game moves those by 25 or more almost every time; a club in both lists its league and Champions League games under separate ruled headings.
 - **Club board:** ruled cells, not cards, with the rating as the lit number and attack/defence hairline meters. Champions League clubs from outside the five leagues show a country code where a league would go, and their pages follow the Champions League season.
 - **Movement arrows:** weekly rank changes use a green ▲ with the number of places gained or a red ▼ with the places dropped, a dim dash when unchanged and dim "new" for clubs without a previous week; colour never stands alone. This extends `--green`/`--green-t` (otherwise reserved for called results) and `--red` (relegation, misses) to rank movement.
+- **Form:** results use the standard colours: win green, draw grey (`--draw`), loss red. The club page shows its last six as lettered boxes; the standings (a Form column) and an opened match (under both clubs' names, as they stood before kickoff) show the last five as 7 px dots with the result in a hover tip and a spoken label.
+- **Form extras:** match rows carry both clubs' dots under their names; opened panels add streaks (3+ wins or losses, 4+ unbeaten or winless) and recent meetings this season; the club hero shows dots and the streak, and the season card home and away dots. Fixture strength (`#rank`, red for the top ten, green for the bottom thirty) sits beside each upcoming opponent; the number is always shown. Standings headers sort descending on press (press again to restore); cut lines hide while sorted.
 - **Race charts:** chances through the season as thin lines on the ruled grid. The leader is lit amber (red for relegation) and the others are ink with dash patterns, never extra hues. Names sit at the line ends.
 
 Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --scheme dark`; `--dim` was lifted from the ramp's step 9 to clear 4.5:1 for small labels.
