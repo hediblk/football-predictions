@@ -162,6 +162,7 @@ def save_match_forecasts(inputs, model, out_dir, *, origin, season, offset_ridge
     records = match_forecasts(inputs, model, origin=origin, offset_ridge=offset_ridge, market=market)
     write_match_forecasts(out_dir / "cl_match_forecasts.json", records, {
         "competition": "CL", "season": season, "generated_at": origin.isoformat(), "weights": DEFAULT_WEIGHTS,
+        "frequency_baseline": inputs.metadata.get("frequency_baseline"),
         "xg_weight": DEFAULT_XG_WEIGHT, "xg_scale": DEFAULT_XG_SCALE, "odds": False, "weight_calibration_version": CALIBRATION_VERSION,
         "played_forecast_rule": PLAYED_FORECAST_RULE, "score_rule": "Scores and forecasts cover 90 minutes.",
         "display_names": inputs.metadata["display_names"],

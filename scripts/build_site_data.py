@@ -19,6 +19,7 @@ import pandas as pd
 
 from champions_league.identities import AREA_LEAGUES, COUNTRY_LEAGUES, canonical_team
 from standing_prediction import site_history
+from standing_prediction.scorecard import combine_entries, scorecard_entry, scoring_rows
 
 
 LEAGUES = [
@@ -38,7 +39,7 @@ UCL_ZONES = [("r16", "Round of 16", 1, 8), ("playoff", "Knockout play-offs", 9, 
 UCL_STAGES = ["round16", "quarterfinal", "semifinal", "final"]
 # What's at stake: domestic title/top-four/relegation, Champions League top eight/top 24/winner.
 STAKE_METRICS = ("title", "ucl", "releg", "top8", "top24")
-FORECAST_FIELDS = ("p", "exp", "top", "call", "btts", "o25", "stakes")
+FORECAST_FIELDS = ("p", "exp", "top", "call", "btts", "o25", "stakes", "elo")
 # The Champions League model's league codes, for clubs from outside the five leagues.
 COUNTRIES = {code: area for area, code in AREA_LEAGUES.items()}
 COUNTRY_CODES = {code: short for short, code in COUNTRY_LEAGUES.items()}
@@ -226,6 +227,8 @@ def export_matches(src, slug, prefix, receipts=None):
                 "top": [[home, away, num(p, 4)] for home, away, p in match["scorelines"]],
                 "btts": num(match["btts"], 3), "o25": num(match["over_2_5"], 3), "at": match["forecast_at"],
             })
+            if "elo" in match:
+                row["elo"] = [num(p, 6) for p in match["elo"]]
             if "pick_score" in match:
                 home, away, p = match["pick_score"]
                 row["call"] = [home, away, num(p, 4)]
@@ -436,6 +439,24 @@ def main(argv=None):
         fresh = [data for data in competitions if data["slug"] not in kept]
         ucl_fresh = "champions-league" not in kept
         update_history(args.dest, fresh, rated_clubs(args.src, competitions[:-1], competitions[-1]) if ucl_fresh else None)
+    previous_scorecard = read_json(args.dest / "scorecard.json") or {"competitions": {}}
+    records = {}
+    for competition in competitions:
+        slug = competition["slug"]
+        prefix = competition["code"].lower()
+        if slug in kept or f"matches/{slug}" in kept or f"matches/{slug}" not in exports:
+            if slug in previous_scorecard["competitions"]:
+                records[slug] = previous_scorecard["competitions"][slug]
+            continue
+        raw = read_json(args.src / f"{prefix}_match_forecasts.json")
+        frequency = raw.get("frequency_baseline")
+        rows = scoring_rows(exports[f"matches/{slug}"]["matches"], raw, frequency)
+        records[slug] = {"season": competition["season"], "generated_at": competition["generated_at"],
+                         "frequency_baseline": frequency, **scorecard_entry(rows)}
+    write_json(args.dest / "scorecard.json", {
+        "generated_at": max(c["generated_at"] for c in competitions),
+        "competitions": records, "all": combine_entries(list(records.values())),
+    })
     index = [{key: data[key] for key in ("slug", "code", "name", "country", "season", "generated_at")} for data in competitions]
     (args.dest / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
     print(f"Wrote site data to {args.dest}" + (f"; kept previous data for {', '.join(kept)}" if kept else "")

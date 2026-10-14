@@ -29,6 +29,7 @@ from standing_prediction.odds import (
 )
 from standing_prediction.h2h import encounter_residuals, h2h_shifts, pair_effects
 from standing_prediction.match_forecasts import describe_match, forecast_played, match_records, write_match_forecasts
+from standing_prediction.scorecard import frequency_baseline
 from standing_prediction.simulate import FixtureSimulationSpec, simulate_season_scores
 from standing_prediction.stakes import fixture_stakes
 from standing_prediction.xg import XG_COLUMNS, blend_xg_strengths, fetch_understat_matches, fit_xg_strengths, load_season_xg
@@ -113,7 +114,7 @@ def load_season_results(client, competition, season, *, cache=True, xg=False):
     return load_season_xg(matches, competition=competition, season=season, cache=cache) if xg else matches
 
 
-def load_history(client, competition, season, teams, *, prior_seasons=2, cache=True, xg=False):
+def load_history(client, competition, season, teams, *, prior_seasons=2, cache=True, xg=False, frequency=False):
     frames = []
     loaded = []
     coverage = {}
@@ -133,6 +134,16 @@ def load_history(client, competition, season, teams, *, prior_seasons=2, cache=T
     history = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
     history.attrs["seasons"] = loaded
     history.attrs["xg_coverage"] = coverage
+    if frequency:
+        baseline_frames = dict(zip(loaded, frames))
+        for year in range(season - 5, season):
+            if year in baseline_frames:
+                continue
+            try:
+                baseline_frames[year] = load_season_results(client, competition, year, cache=cache)
+            except (ValueError, OSError, RuntimeError) as exc:
+                LOG.warning("Frequency baseline season %s unavailable (%s).", year, type(exc).__name__)
+        history.attrs["frequency_baseline"] = frequency_baseline(baseline_frames, season)
     return history
 
 
@@ -241,7 +252,8 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
         points = np.broadcast_to(standings["points"].to_numpy(), (n_sim, len(teams))).copy()
         LOG.info("Season is complete; using the official final standings.")
     else:
-        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
+        history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache,
+                               xg=xg_weight > 0, frequency=match_forecasts)
         xg_coverage.update(history.attrs.get("xg_coverage", {}))
         if h2h_weight:
             h2h_results = pd.concat([load_h2h_results(client, competition, season, seasons=h2h_seasons, cache=cache), finished],
@@ -316,13 +328,15 @@ def run_prediction(*, competition="PD", season=None, n_sim=10000, seed=7, max_go
     forecasts_path.unlink(missing_ok=True)
     if match_forecasts:
         if remaining.empty:
-            history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache, xg=xg_weight > 0)
+            history = load_history(client, competition, season, teams, prior_seasons=prior_seasons, cache=cache,
+                                   xg=xg_weight > 0, frequency=match_forecasts)
         records = season_match_forecasts(
             matches, teams=teams, history=history, current_models=current_models, cutoff=cutoff,
             weights=weights or DEFAULT_WEIGHTS, odds=odds, calibrator=calibrator, max_goals=max_goals,
             xi=xi, lambda_reg=lambda_reg, xg_weight=xg_weight, xg_scale=xg_scale, h2h_weight=h2h_weight, h2h_residuals=residuals)
         write_match_forecasts(forecasts_path, records, {
             "competition": competition, "season": season, "generated_at": cutoff.isoformat(),
+            "frequency_baseline": history.attrs.get("frequency_baseline"),
             "weights": weights or DEFAULT_WEIGHTS, "xg_weight": xg_weight, "xg_scale": xg_scale, "calibrated": calibrator is not None,
             "weight_calibration_version": CALIBRATION_VERSION, "played_forecast_rule": PLAYED_FORECAST_RULE,
         })
@@ -417,10 +431,12 @@ def fixture_forecasts(fixtures, *, dc, elo, forecast_at, weights, odds=None, cal
     for row in fixtures.itertuples():
         home, away = str(row.homeTeam), str(row.awayTeam)
         _, matrix = dc.score_matrix(home, away, max_goals=max_goals)
-        p = predict_outcome_probs(outcome_probs_from_matrix(matrix), elo.predict_probs(home, away),
+        p_elo = elo.predict_probs(home, away)
+        p = predict_outcome_probs(outcome_probs_from_matrix(matrix), p_elo,
                                   lookup.get((home, away)), weights=weights, calibrator=calibrator)
         score = (row.homeGoals, row.awayGoals) if row.status == "FINISHED" else None
-        forecasts.append({"forecast_at": pd.Timestamp(forecast_at).isoformat(), **describe_match(matrix, p, score=score)})
+        forecasts.append({"forecast_at": pd.Timestamp(forecast_at).isoformat(), "elo": list(p_elo),
+                          **describe_match(matrix, p, score=score)})
     return forecasts
 
 

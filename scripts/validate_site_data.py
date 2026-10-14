@@ -133,6 +133,8 @@ def validate_forecast(match, label):
         close(sum(match["p"]), 1, 0.0002, f"{label}: outcome probability sum")
         scores = [score[2] for score in match["top"]]
         require(scores == sorted(scores, reverse=True), f"{label}: unsorted top scores")
+    if "elo" in match:
+        close(sum(match["elo"]), 1, 0.000002, f"{label}: Elo probability sum")
     if "stakes" in match:
         unique(match["stakes"]["teams"], "id")
         require(all(any(key in team for key in STAKE_METRICS)
@@ -225,6 +227,57 @@ def validate_club_history(data):
     require(all(date.fromisoformat(day).weekday() == 0 for day in dates), "week date must be Monday")
 
 
+def validate_score_record(row):
+    n = row["n"]
+    require(row["model"]["n"] == n, "scorecard model count differs")
+    require(row["n_published"] <= n and row["called"] <= n and row["exact"] <= n, "scorecard count exceeds n")
+    close(sum(cell["n"] for cell in row["calibration"]), 3 * n, 0, "calibration outcome count")
+    for i, cell in enumerate(row["calibration"]):
+        require(cell["lo"] == i / 10 and cell["hi"] == (i + 1) / 10, "calibration bin edges differ")
+        for key in ("probability", "observed"):
+            require((cell[key] is None) == (cell["n"] == 0), "empty calibration bin must have null means")
+    summaries = [row["model"], *row["baselines"].values(), *[b["model"] for b in row["baselines"].values()]]
+    for baseline in row["baselines"].values():
+        require(baseline["n"] <= n and baseline["model"]["n"] == baseline["n"], "baseline must compare the same fixtures")
+    weeks = [point["week"] for point in row["weekly"]]
+    require(weeks == sorted(set(weeks)), "scorecard weeks must strictly increase")
+    require(all(date.fromisoformat(week).weekday() == 0 for week in weeks), "scorecard week must be Monday")
+    for key in ("model", "frequency", "elo"):
+        series = [point[key] for point in row["weekly"]]
+        summaries.extend(series)
+        require([point["n"] for point in series] == sorted(point["n"] for point in series), "cumulative counts must increase")
+        final = row["model"] if key == "model" else row["baselines"][key]
+        require((series[-1]["n"] if series else 0) == final["n"], "weekly endpoint count differs")
+        if series:
+            for metric in ("log_loss", "brier", "rps"):
+                require(series[-1][metric] == final[metric], "weekly endpoint score differs")
+    for summary in summaries:
+        for key in ("log_loss", "brier", "rps"):
+            require((summary[key] is None) == (summary["n"] == 0), "empty score must be null")
+    require((row["avg_chance_given"] is None) == (n == 0), "empty chance given must be null")
+
+
+def validate_scorecard(data):
+    for entry in [*data["competitions"].values(), data["all"]]:
+        for row in (entry, entry["published"], entry["reconstructed"]):
+            validate_score_record(row)
+        require(entry["n"] == entry["published"]["n"] + entry["reconstructed"]["n"], "cohort counts must sum")
+        require(entry["n_published"] == entry["published"]["n"] and entry["reconstructed"]["n_published"] == 0,
+                "published cohort count differs")
+    for key in ("n", "n_published", "called", "exact"):
+        require(data["all"][key] == sum(entry[key] for entry in data["competitions"].values()), "all-competition count differs")
+    for entry in data["competitions"].values():
+        baseline = entry["frequency_baseline"]
+        if baseline:
+            season = int(entry["season"][:4])
+            require(baseline["requested_seasons"] == list(range(season - 5, season)), "frequency seasons must precede season")
+            require(baseline["seasons"] == sorted(set(baseline["seasons"])) and
+                    set(baseline["seasons"]) <= set(baseline["requested_seasons"]), "invalid frequency season coverage")
+            if baseline["p"] is not None:
+                require(len(baseline["seasons"]) == 5 and baseline["n"] > 0, "frequency needs five prior seasons")
+                close(sum(baseline["p"]), 1, 1e-9, "frequency probability sum")
+
+
 def validate_payload(data, family):
     finite(data)
     errors = list(validator(family).iter_errors(data))
@@ -242,6 +295,8 @@ def validate_payload(data, family):
         validate_forecast_receipts(data)
     elif family == "match_events":
         validate_match_events(data)
+    elif family == "scorecard":
+        validate_scorecard(data)
     elif family == "clubs":
         validate_clubs(data)
     elif family == "history":
@@ -253,7 +308,7 @@ def validate_payload(data, family):
 def file_family(path):
     parts = path.parts
     if len(parts) == 1:
-        if path.stem in ("index", "clubs", "crests"):
+        if path.stem in ("index", "clubs", "crests", "scorecard"):
             return path.stem
         if path.stem in COMPETITIONS:
             return "ucl" if path.stem == "champions-league" else "league"
