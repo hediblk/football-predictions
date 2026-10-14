@@ -416,7 +416,7 @@ Leave the expanded match row unchanged.
 
 - **Match page After mode, Champions League only:**
   - Add distance, sprints and top speed as rows in Task 12's "Match stats" frame (or create that frame if Task 12 hasn't merged).
-  - One new frame, "Where they played": a pitch drawn as a grid of bulbs whose brightness is the share of activity (the existing bulb signature, no new colour).
+  - One new frame, "Where they played": a regular continuous green → yellow → red activity heatmap, with green for less activity and red for more, plus a labelled scale. Updated at the user's request on 14 October 2026; this is an exception to the bulb signature and no-new-hues rule.
   - Chips Home · Away, a native player `<select>` for one player's map, and an average-positions overlay of numbered dots for the starters.
 - **Footer:** add "UEFA · match data".
 

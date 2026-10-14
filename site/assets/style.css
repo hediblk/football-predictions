@@ -932,14 +932,16 @@ table.mp-stand { min-width: 460px; }
   .mp-stat-teams { font-size: 11px; }
 }
 
-/* Task 13 · UEFA activity bulbs and numbered starters, using the scoreboard's existing amber */
+/* Task 13 · UEFA's continuous green-to-red activity heatmap and numbered starters */
 .mp-heat-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 16px; font-size: 12px; }
 .mp-heat-controls .chips { margin: 0; }
 .mp-heat-controls label { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .mp-heat-controls select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--rule); padding: 8px; min-width: 0; max-width: 100%; }
 .mp-heat-controls input { accent-color: var(--amber); }
-.mp-heat-pitch .heat-off { fill: var(--bulb-off); }
-.mp-heat-pitch .heat-bulb { fill: var(--amber); }
+.mp-heat-pitch .heat-cell { fill: transparent; }
+.mp-heat-pitch .pitch * { stroke: var(--ink); stroke-width: .45; }
+.mp-heat-scale { display: flex; align-items: center; gap: 12px; max-width: 640px; margin: 12px 0; font-size: 11px; color: var(--ink-2); }
+.mp-heat-scale i { flex: 1; height: 8px; background: linear-gradient(to right, #16803c, #f4db49, #e3342f); }
 .mp-heat-pitch .pitch { pointer-events: none; }
 .mp-heat-pitch .heat-starter circle { fill: var(--panel); stroke: var(--ink); stroke-width: .35; }
 .mp-heat-pitch .heat-starter text { fill: var(--ink); font: 700 2.6px var(--mono); text-anchor: middle; }

@@ -108,7 +108,7 @@ def routes(data):
             elif any(e["type"] == "red" for e in extra["events"]):
                 selectors.append("#view-match .mp-xgline rect.card")
         found.append((f"#match/{slug}/{match['id']}", selectors, [], None))
-    # UEFA: a finished Champions League page with physical rows, activity bulbs and numbered starters.
+    # UEFA: a finished Champions League page with physical rows, continuous heatmap and numbered starters.
     mapped = [f for f in reversed(done) if f[0] == "champions-league" and detail(*f).get("heat")]
     game = next((f for f in mapped if f[1]["id"] == 575327), mapped[0] if mapped else None)
     if game:
@@ -117,7 +117,7 @@ def routes(data):
             "#view-match .mp-running .mp-stat-row:has-text('Distance')",
             "#view-match .mp-running .mp-stat-row:has-text('Sprints')",
             "#view-match .mp-running .mp-stat-row:has-text('Top speed')",
-            "#view-match .mp-where .heat-bulb", "#view-match .mp-where .heat-starter",
+            "#view-match .mp-where .heat-surface", "#view-match .mp-where .heat-starter",
             "#view-match #mp-heat-player option", "#view-match .mp-heat-caption"],
             ["#view-match [data-heat-side=a]"], "#view-match [data-heat-side=a][aria-pressed=true]"))
     # The top club, and a Champions League club from outside the five leagues if one is ranked.

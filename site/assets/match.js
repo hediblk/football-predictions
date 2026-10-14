@@ -298,7 +298,36 @@ function matchStats(m) {
   </fieldset>`;
 }
 
-/* ---------- UEFA activity: one pitch, one side or player at a time ---------- */
+/* ---------- UEFA activity: a continuous green-to-red map of the saved activity grid ---------- */
+function heatImage(grid) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 315; canvas.height = 207;
+  const ctx = canvas.getContext("2d"), pixels = ctx.createImageData(canvas.width, canvas.height);
+  const palette = document.createElement("canvas");
+  palette.width = 256; palette.height = 1;
+  const colors = palette.getContext("2d"), gradient = colors.createLinearGradient(0, 0, 255, 0);
+  gradient.addColorStop(0, "#16803c"); gradient.addColorStop(.5, "#f4db49"); gradient.addColorStop(1, "#e3342f");
+  colors.fillStyle = gradient; colors.fillRect(0, 0, 256, 1);
+  const ramp = colors.getImageData(0, 0, 256, 1).data, peak = Math.max(...grid);
+  // Interpolate activity before applying colour; the last source row is four metres tall.
+  for (let y = 0; y < canvas.height; y++) {
+    const metres = (y + .5) / 3;
+    const gy = Math.max(0, Math.min(13, metres > 62.5 ? 12 + (metres - 62.5) / 4.5 : (metres - 2.5) / 5));
+    const row = Math.floor(gy), fy = gy - row;
+    for (let x = 0; x < canvas.width; x++) {
+      const gx = Math.max(0, Math.min(20, ((x + .5) / 3 - 2.5) / 5));
+      const col = Math.floor(gx), fx = gx - col;
+      const at = (r, c) => grid[Math.min(13, r) * 21 + Math.min(20, c)];
+      const top = at(row, col) * (1 - fx) + at(row, col + 1) * fx;
+      const bottom = at(row + 1, col) * (1 - fx) + at(row + 1, col + 1) * fx;
+      const color = Math.round((top * (1 - fy) + bottom * fy) / peak * 255) * 4;
+      const i = (y * canvas.width + x) * 4;
+      pixels.data.set(ramp.subarray(color, color + 3), i); pixels.data[i + 3] = 255;
+    }
+  }
+  ctx.putImageData(pixels, 0, 0);
+  return canvas.toDataURL();
+}
 function wherePlayed(m) {
   const data = page.detail;
   if (page.comp.slug !== "champions-league" || !data?.heat) return "";
@@ -314,11 +343,7 @@ function wherePlayed(m) {
   if (side === "a") thirds.reverse();
   const summary = `${name}: ${thirds.map((n, i) => `${dec(n / total * 100, 0)}% in the ${["defensive", "middle", "attacking"][i]} third`).join(", ")}.`;
   const positions = data.positions?.[side] || [];
-  const bulbs = grid.map((n, i) => {
-    const x = i % 21 * 5 + 2.5, y = Math.floor(i / 21) * 5 + (i >= 273 ? 2 : 2.5);
-    return `<g><title>${dec(n / total * 100, 2)}% of activity in this cell</title><circle class="heat-off" cx="${x}" cy="${y}" r="1.65"/>
-      <circle class="heat-bulb" cx="${x}" cy="${y}" r="1.65" fill-opacity="${n / peak}"/></g>`;
-  }).join("");
+  const cells = grid.map((n, i) => `<rect class="heat-cell" x="${i % 21 * 5}" y="${Math.floor(i / 21) * 5}" width="5" height="${i >= 273 ? 4 : 5}"><title>${dec(n / total * 100, 2)}% of activity in this cell</title></rect>`).join("");
   const dots = page.positions ? positions.map((p) => `<g class="heat-starter"><title>${esc(`#${p.number} ${p.player}: average position`)}</title>
     <circle cx="${p.x * 105}" cy="${p.y * 69}" r="2.8"/><text x="${p.x * 105}" y="${p.y * 69}" dy=".35em">${p.number}</text></g>`).join("") : "";
   const pitch = `<g class="pitch"><rect x="0" y="0" width="105" height="69"/><path d="M52.5 0V69M0 14.5H16.5V54.5H0M105 14.5H88.5V54.5H105"/><circle cx="52.5" cy="34.5" r="9.15"/></g>`;
@@ -331,8 +356,9 @@ function wherePlayed(m) {
       `<button type="button" class="chip" data-heat-side="${s}" aria-pressed="${side === s}">${label}</button>`).join("")}</div>
       <label>Player <select id="mp-heat-player"><option value="">Whole team</option>${options}</select></label>
       ${positions.length ? `<label><input id="mp-heat-positions" type="checkbox"${page.positions ? " checked" : ""}> Average positions</label>` : ""}</div>
-    <div class="mp-pitch mp-heat-pitch"><svg viewBox="-3 -3 111 75" role="img" aria-label="${esc(`UEFA activity map. ${summary} ${club} attacking ${side === "h" ? "right" : "left"}. ${page.positions ? "Numbered dots show starters' average positions, listed below." : "Average positions hidden."}`)}">${bulbs}${pitch}${dots}</svg></div>
-    <p class="note mp-heat-caption">${esc(summary)} ${esc(club)} ${side === "h" ? "→" : "←"}. Bulb brightness is activity relative to the busiest cell; each cell's share is shown on hover. Player maps cover at least 30 minutes.</p>
+    <div class="mp-pitch mp-heat-pitch"><svg viewBox="-3 -3 111 75" role="img" aria-label="${esc(`UEFA heatmap: green is less activity, yellow is intermediate, red is more activity. ${summary} ${club} attacking ${side === "h" ? "right" : "left"}. ${page.positions ? "Numbered dots show starters' average positions, listed below." : "Average positions hidden."}`)}"><image class="heat-surface" href="${heatImage(grid)}" x="0" y="0" width="105" height="69"/>${cells}${pitch}${dots}</svg></div>
+    <div class="mp-heat-scale" aria-label="Activity scale: green at zero, yellow halfway, red at the busiest cell"><span>Less activity</span><i aria-hidden="true"></i><span>More activity</span></div>
+    <p class="note mp-heat-caption">${esc(summary)} ${esc(club)} ${side === "h" ? "→" : "←"}. Green → yellow → red shows less → more activity, relative to this map's busiest cell (${dec(peak / total * 100, 2)}% of activity). The surface is smoothed; hover gives the original cell's share. Player maps cover at least 30 minutes.</p>
     ${positions.length ? `<details class="mp-heat-list"><summary>Starters' average positions</summary><ul>${positions.map((p) => `<li>#${p.number} ${esc(p.player)} · ${dec(p.x * 100, 0)}% from the left, ${dec(p.y * 100, 0)}% from the top</li>`).join("")}</ul></details>` : ""}
     <p class="note">UEFA · match data. Activity includes play with and without the ball; these are average locations, not the starting formation.</p>
   </fieldset>`;
