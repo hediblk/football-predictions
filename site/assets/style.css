@@ -360,11 +360,10 @@ tr.detail .det a.more { grid-column: 1 / -1; }
 .rsum { margin: 14px 0 0; color: var(--ink-2); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
 .rsum b { color: var(--ink); }
 .rsum a { color: var(--amber-t); text-decoration: none; }
-.mlist.by-team { margin-top: 10px; }
-.by-team .mrow { grid-template-columns: 70px minmax(0, 1fr) 24px 10px 24px minmax(0, 1fr) auto; }
+.mlist.by-team { --when-width: 70px; margin-top: 10px; }
 .by-team .m-when { line-height: 1.5; }
 .by-team .m-when b { color: var(--ink-2); font-weight: 700; }
-@media (max-width: 759px) { .by-team .mrow { grid-template-columns: 64px minmax(0, 1fr) 26px; } }
+@media (max-width: 759px) { .mlist.by-team { --when-width: 64px; } }
 @media (max-width: 559px) {
   .picker select, .picker .probe { font-size: 19px; letter-spacing: .05em; }
   .picker select { padding-right: 26px; }
@@ -379,12 +378,18 @@ h3.dgroup { margin: 18px 0 4px; padding-bottom: 6px; border-bottom: 1px solid va
 .day-head .jump a { color: var(--amber-t); margin-right: 14px; }
 
 .comp-day { padding-top: 6px; padding-bottom: 6px; }
-.mlist { display: grid; }
+/* Shared columns and reserved footer slots keep optional form and Stakes from moving fixtures. */
+.mlist {
+  --when-width: 50px;
+  display: grid; column-gap: 10px;
+  grid-template-columns: var(--when-width) minmax(0, 1fr) 24px 10px 24px minmax(0, 1fr) auto;
+}
 .mrow {
   display: grid; align-items: center; gap: 0 10px; min-height: 54px; padding: 6px 8px; margin: 0 -8px; cursor: pointer;
-  grid-template-columns: 50px minmax(0, 1fr) 24px 10px 24px minmax(0, 1fr) auto;
+  grid-column: 1 / -1; grid-template-columns: subgrid;
   border-top: 1px solid var(--rule-2);
 }
+.mlist > .panel { grid-column: 1 / -1; }
 .mrow:first-child { border-top: 0; }
 .mrow:hover, .mrow[aria-expanded="true"] { background: var(--panel); }
 .m-when { font: 500 12px/1 var(--mono); color: var(--dim); }
@@ -394,13 +399,18 @@ h3.dgroup { margin: 18px 0 4px; padding-bottom: 6px; border-bottom: 1px solid va
 .m-home.won, .m-away.won { color: var(--ink); }
 .m-hs, .m-as { font: 900 24px/1 var(--sign); color: var(--ink); text-align: center; }
 .m-sep { text-align: center; color: var(--dim); font-size: 12px; }
-.m-foot { display: flex; align-items: center; justify-content: flex-end; gap: 16px; padding-left: 12px; }
+.m-foot { display: grid; align-items: center; grid-template-columns: 50px 158px 76px minmax(116px, 1fr); gap: 16px; padding-left: 12px; }
+.m-foot .m-stake { grid-column: 1; grid-row: 1; justify-self: start; }
+.m-foot .m-probs { grid-column: 2; grid-row: 1; }
+.m-foot .m-exp { grid-column: 3; grid-row: 1; }
+.m-foot .m-verdict { grid-column: 4; grid-row: 1; }
 .m-exp { font: 500 12px/1 var(--mono); color: var(--dim); min-width: 62px; text-align: right; }
 .m-exp::before { content: "exp "; color: #6b655f; font-size: 10px; }
 .m-exp:empty::before { content: none; }
 .m-foot .m-verdict { min-width: 116px; }
 @media (max-width: 759px) {
-  .mrow { grid-template-columns: 44px minmax(0, 1fr) 26px; grid-template-areas: "when home hs" "when away as" ". foot foot"; row-gap: 4px; padding: 10px 8px; }
+  .mlist { --when-width: 44px; grid-template-columns: var(--when-width) minmax(0, 1fr) 26px; }
+  .mrow { grid-template-areas: "when home hs" "when away as" "foot foot foot"; row-gap: 4px; padding: 10px 8px; }
   .m-when { grid-area: when; align-self: start; padding-top: 3px; }
   .m-home { grid-area: home; text-align: left; }
   .m-home .club-name { flex-direction: row; }
@@ -408,8 +418,11 @@ h3.dgroup { margin: 18px 0 4px; padding-bottom: 6px; border-bottom: 1px solid va
   .m-hs { grid-area: hs; font-size: 20px; }
   .m-as { grid-area: as; font-size: 20px; }
   .m-sep { display: none; }
-  .m-foot { grid-area: foot; justify-content: flex-start; flex-wrap: wrap; gap: 6px 14px; padding: 6px 0 0; }
-  .m-foot .m-verdict { min-width: 0; }
+  .m-foot { grid-area: foot; grid-template-columns: minmax(158px, 1fr) 76px; gap: 6px 14px; padding: 6px 0 0; }
+  .m-foot .m-probs { grid-column: 1; }
+  .m-foot .m-exp { grid-column: 2; }
+  .m-foot .m-verdict { grid-column: 1; grid-row: 2; min-width: 0; }
+  .m-foot .m-stake { grid-column: 2; grid-row: 2; justify-self: end; }
 }
 
 /* expanded match */
@@ -675,10 +688,10 @@ h3.sub + .scroll { margin-bottom: 14px; }
 @media (max-width: 759px) { .srow { grid-template-columns: minmax(0, 1fr); } }
 
 /* form, streaks, head to head, sortable headers, fixture strength */
-.m-home, .m-away { display: flex; flex-direction: column; gap: 5px; }
-.m-home { align-items: flex-end; }
-.m-away { align-items: flex-start; }
-@media (max-width: 759px) { .m-home { align-items: flex-start; } }
+.m-home, .m-away { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 24px 7px; row-gap: 5px; align-items: center; }
+.m-home { justify-items: end; }
+.m-away { justify-items: start; }
+@media (max-width: 759px) { .m-home { justify-items: start; } }
 .pform small { font: 500 11px/1 var(--mono); letter-spacing: 0; text-transform: none; color: var(--dim); }
 .pform b { color: var(--ink); font: 800 15px/1 var(--sign); }
 .pforms.h2h { gap: 6px 22px; }
