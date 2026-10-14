@@ -5,6 +5,7 @@ import {
 } from "./core.js";
 import { matchPanel, record, BIG_STAKE, stakeNow } from "./matches.js";
 import { spreadPanel } from "./tables.js";
+import { pointsComparison, rollingXg } from "./model-performance.js";
 
 const RESULT = ["W", "D", "L"];
 const RESULT_WORD = ["Win", "Draw", "Loss"];
@@ -326,13 +327,13 @@ async function showProfile(club) {
   $("p-tiles").innerHTML = tiles.map(([label, value, sub]) => `<div class="tile"><h2>${label}</h2><b>${value}</b><span>${sub}</span></div>`).join("");
 
   renderSeason(club, main, domestic ? "League" : "Champions League", domestic ? europe : [], uclTeam);
-  renderGoals(main, domestic ? "League games" : "Champions League games");
+  renderGoals(main, domestic ? "League games" : "Champions League games", club.name);
   renderNext(all);
   renderStakes(club, [
     domestic && leagueMatches && { label: comp.label, team, file: leagueMatches, keys: [leagueMetric(team)].filter(Boolean), words: STAKE_WORDS.league },
     uclTeam && uclMatches && { label: "Champions League", team: uclTeam, file: uclMatches, keys: ["top8", "top24", "title"], words: STAKE_WORDS.ucl },
   ].filter(Boolean));
-  renderResults(all);
+  renderResults(club, league, europe);
   renderStrength(club);
   $("p-finish").innerHTML = spreadPanel(team, (domestic ? zones.releg : zones.out).from);
 }
@@ -371,7 +372,7 @@ function renderSeason(club, main, label, europe, uclTeam) {
 }
 
 /* goals and xG per game in the competition the page follows, against what the model expects in the games left */
-function renderGoals(league, label) {
+function renderGoals(league, label, clubName) {
   const per = (rows, f, i, home) => (rows.length ? rows.reduce((t, m) => t + sidePair(m[f], home)[i], 0) / rows.length : null);
   const line = (label, home, i) => {
     const played = league.filter((m) => m.score && m.isHome === home);
@@ -383,7 +384,8 @@ function renderGoals(league, label) {
   $("p-goals").innerHTML = `<div class="scroll"><table class="board stats">
     <thead><tr><th class="l">Per game</th><th>Goals</th><th>xG</th><th>Model, next ${left}</th></tr></thead>
     <tbody>${line("Scored at home", true, 0)}${line("Scored away", false, 0)}${line("Conceded at home", true, 1)}${line("Conceded away", false, 1)}</tbody></table></div>
-    <p class="note">${label}. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>`;
+    <p class="note">${label}. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>
+    ${rollingXg({ name: clubName }, league)}`;
 }
 
 function clubRow(m) {
@@ -455,16 +457,33 @@ function renderStakes(club, groups) {
     <p class="note">${esc(club.name)}'s ${b.words[b.key]} is <b>${pct(stakeNow(b.team, b.key))}</b> now. Under each result of these games it would be as shown; the likeliest result is lit. Only games where a result moves it by ${BIG_STAKE[b.key]} points or more are listed.</p>`).join("");
 }
 
-function renderResults(all) {
-  const played = all.filter((m) => m.score).reverse();
-  const r = record(played);
-  const avg = r.n ? pct1(r.given) : "–";
-  $("p-results").innerHTML = played.length ? `
-    <p class="lead">Called <b>${r.hits} of ${r.n}</b> results · <b>${r.exact}</b> exact score${r.exact === 1 ? "" : "s"} · gave the actual result <b>${avg}</b> on average.</p>
-    ${callStrip([...played].reverse())}
-    <div class="clist">${played.map(clubRow).join("")}</div>
-    <p class="note">Each forecast was made at 00:00 UTC on match day from earlier results only. Tap a game for the scorelines the model expected.</p>`
-    : `<p class="note">No games played yet.</p>`;
+function renderResults(club, league, europe) {
+  const groups = [
+    club.league && { slug: club.league, label: compBySlug[club.league].label, matches: league },
+    club.ucl && { slug: "champions-league", label: "Champions League", matches: europe, leaguePhaseOnly: true },
+  ].filter(Boolean);
+  let selected = groups.find((g) => g.slug === club.league)?.slug || groups[0].slug;
+  const paint = () => {
+    const group = groups.find((g) => g.slug === selected);
+    const rows = group.matches.filter((m) => !group.leaguePhaseOnly || m.stage === "LEAGUE_STAGE");
+    const played = rows.filter((m) => m.score).reverse();
+    const r = record(played);
+    const avg = r.n ? pct1(r.given) : "–";
+    const chips = groups.length > 1 ? `<div class="chips" role="group" aria-label="Results by competition">
+      ${groups.map((g) => `<button type="button" class="chip" data-pcomp="${g.slug}" aria-pressed="${g.slug === selected}">${esc(g.label)}</button>`).join("")}</div>` : "";
+    $("p-results").innerHTML = `${chips}${pointsComparison(club, group.matches, group.leaguePhaseOnly)}${played.length ? `
+      <p class="lead">Called <b>${r.hits} of ${r.n}</b> results · <b>${r.exact}</b> exact score${r.exact === 1 ? "" : "s"} · gave the actual result <b>${avg}</b> on average.</p>
+      ${callStrip([...played].reverse())}
+      <div class="clist">${played.map(clubRow).join("")}</div>
+      <p class="note">Forecasts published before kickoff use their saved probabilities; reconstructed forecasts use results available before match day. Tap a game for the scorelines the model expected.</p>` : `<p class="note">No games played yet.</p>`}`;
+  };
+  $("p-results").onclick = (e) => {
+    const button = e.target.closest("button[data-pcomp]");
+    if (!button) return;
+    selected = button.dataset.pcomp;
+    paint();
+  };
+  paint();
 }
 
 /* one bar per game, oldest first: its height is the chance the model gave what happened, lit green when it was the
