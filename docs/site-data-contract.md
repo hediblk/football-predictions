@@ -25,6 +25,7 @@ Contract validation guarantees that published data conforms to these rules. It c
 | `history/<season>/<competition>.json` | `slug, season, metrics, dates, cutoff, teams`. Each team has one series per metric, with entries aligned to `dates`. Domestic metrics are `title,ucl,releg`; UCL metrics are `top8,top24,last16,qf,sf,final,title`. |
 | `history/<season>/clubs.json` | `season, fields, weeks`; each week has a Monday `date`, nullable result `cutoff`, and club-ID-string keys mapped to rating tuples. `fields` is currently `rating,attack,defense`. |
 | `history/<season>/forecasts/<competition>.json` | `slug, season, fixtures`, keyed by positive decimal-string fixture IDs. Receipts contain `kickoff, generated_at, p, exp, top, call, btts, o25` and optional `stakes`, copied at published precision. Missing files or receipts mean no published forecast was saved. |
+| `match/<season>/<competition>/<fixture id>.json` | Per-match detail, loaded on demand by future match-page sections. Required envelope: `id, competition, kickoff, sources`; `competition` is the route slug and the season directory is its start year. `shots, players, retro` are optional; missing files or keys mean that source is unavailable. The family also accepts later ESPN/UEFA additions. |
 
 Common competition metadata is `slug, kind, code, name, country, season, generated_at, as_of, data_cutoff, n_sim, played_fixtures, remaining_fixtures`. Zone entries contain `key, label, from, to`, with inclusive one-based position bounds.
 
@@ -50,6 +51,10 @@ Required current competition tables, index, and club rankings must exist and be 
 | Club `gf, ga` | Expected goals against the reference opponent |
 | Weekly club tuple | Rating values in `fields` order, currently `[rating, attack, defense]` |
 | Fixture-note `score` | Human-readable string or null, unlike a match's integer score pair |
+| Match-detail `sources.understat` | `{id, fetched_at}`: positive integer Understat match ID and timezone-qualified retrieval timestamp |
+| Match-detail `shots` | Tuples `[minute, side, x, y, xg, result, situation, body, player, assister]`, ordered by minute. `side` is `h` or `a`; minutes are Understat's zero-based elapsed minutes, including stoppage time. Coordinates are Understat's unmodified 0–1 pitch fractions, with `x` toward the attacking goal and `y` across the pitch. Shot xG is on 0–1; result/situation/body retain provider labels; player/assister are names, with null for no assister. |
+| Match-detail `players` | `{h, a}` arrays of rows: `id` (Understat player ID), `player` (name), `minutes, position, shots, goals, own_goals, xg, xa, key_passes, yellow, red`. Goals exclude own goals; own goals count against the player's side. `xg` and `xa` are observed expected goals/assists, not pre-match model rates. Cards are counts. |
+| Match-detail `retro` | `[home win, draw, away win]`, on 0–1. After-the-fact chances from the exact convolution of independent Bernoulli trials with each side's observed shot xGs. This assumes shots are independent, including successive attempts in the same attack; own goals are excluded. These are not pre-match forecasts and never feed the model. |
 
 Stakes always use the fixture's home/draw/away order, including for affected clubs that are not playing in that fixture. Null means insufficient conditioning simulations, not zero chance. UCL match scores and match forecasts cover 90 minutes; tournament progression also accounts for the remainder of a tie.
 
@@ -67,6 +72,7 @@ The representative UCL bracket is illustrative. Its champion need not have the l
 - Domestic result cutoff covers current-season completed results. UCL cutoff covers training results across leagues, and its exporter substitutes `as_of` when a result cutoff is unavailable.
 - Do not require every forecast time to precede kickoff: an unplayed postponed/cancelled fixture can retain an old kickoff while receiving a new forecast. Pre-match timing protection belongs to completed-match forecast tests.
 - Receipt `generated_at` is the competition run's execution timestamp, distinct from the match-file forecast origin. It must strictly precede the saved kickoff. Only fresh competition exports save receipts, for unplayed fixtures with a forecast whose kickoff is after both the run and the build time. Before kickoff a receipt can be replaced; after its saved kickoff it is immutable, even if a later feed reschedules the fixture. Retained competitions write nothing. There is no historical backfill.
+- Domestic model `*_match_forecasts.json` and match snapshots carry optional `understat_id` from the existing score/kickoff-checked xG join. It is an internal provider identifier, omitted from published `matches/<competition>.json` and all probability calculations. Shot ingestion reads it from fresh model outputs and checks against the staged published fixture.
 
 ## Consistency checks
 
@@ -85,6 +91,7 @@ Within matches and history:
 - Receipts obey the same forecast probability, scoreline and stakes checks. Published finished fixtures must have a forecast with `at` strictly before kickoff. Receipt filenames and season directories must agree with their `slug` and `season`.
 - History dates strictly increase and each metric series has exactly `len(dates)` entries. Week dates strictly increase and represent Mondays; missing days and weeks are valid. The history season's start year matches its directory (`2026/27` → `history/2026/`), while older-season members may differ from today's clubs.
 - Published club ranking numbers form the relevant rank sequences; overall list order agrees with overall rank. Featured IDs reference available ranked clubs. Crest paths, where declared, resolve to the published assets.
+- Match-detail IDs and competition slugs agree with their paths; retrospective chances sum to one, player IDs are unique within each side, and Understat retrieval is after kickoff. Current-season files must match a finished published fixture with the same ID and kickoff. At ingestion, each side's shot xG sum must be at least its published match `xg` minus 0.05, and `Goal` shots plus opposition players' own goals must equal the final score. The sum may exceed the match figure, because Understat's match xG counts shots from the same attack as one chance (1 − ∏(1 − xG)). Later dataset validation repeats only the identity and status checks, so a provider revision or a corrected result after publication cannot block a refresh. Older season files remain valid without today's fixture list.
 
 Across files, each index entry agrees with its table's identity and generation metadata. Nonnull club league slugs and required file references resolve. Do not require universal membership or equal timestamps/seasons between independently retained tables, matches, ratings, and history. `scale.clubs` describes the model's reference population, not the length of the published clubs array; the ranking holds the five leagues' clubs and the current UCL field, and weekly history can hold clubs that have since left both.
 
@@ -113,6 +120,8 @@ During refresh, assemble fresh exports and retained files into a candidate datas
 Site-only publication validates the data shipped with that revision. Deploy the exact immutable artifact that passed validation: a later checkout of moving `main` is a different candidate and needs validation again. Daily bot commits do not trigger other workflows, so refresh must invoke the same gate explicitly. No provider access is needed for PR checks or data validation.
 
 Old but valid data is not structurally invalid. Treat freshness separately from schema validity; the current global updated indicator uses the newest competition and can conceal an older retained competition.
+
+`scripts/fetch_match_events.py` runs after exports and before candidate validation in `refresh_site.sh`. It fills finished domestic fixtures with joined Understat IDs on the next refresh, including the existing season's games. Successful derived Understat data is never refetched or replaced; files from another source keep their keys when Understat is added. Raw payloads and failed-attempt markers live in uncommitted `.cache/understat/matches/`. Requests are at least one second apart, with one attempt per fixture per run. A first attempt is allowed for older games; subsequent failed attempts retry only through seven days after kickoff. Fetch, missing-data and consistency failures log warnings and publish no Understat data; they never fail a forecast refresh. Retained competitions without fresh model outputs are skipped.
 
 ## Compatibility and changes
 

@@ -56,6 +56,7 @@ def attach_xg(matches, xg, *, max_kickoff_gap=pd.Timedelta(days=2)):
     Rows that cannot be matched unambiguously keep missing xG; nothing is imputed.
     """
     out = matches.copy()
+    out["understat_id"] = None
     for column in XG_COLUMNS:
         out[column] = np.nan
     coverage = {"provider": XG_PROVIDER, "finished": 0, "matched": 0, "unmatched": 0,
@@ -83,6 +84,7 @@ def attach_xg(matches, xg, *, max_kickoff_gap=pd.Timedelta(days=2)):
             coverage["score_mismatch"] += 1
             continue
         out.loc[index, XG_COLUMNS] = row[XG_COLUMNS].to_numpy(dtype=float)
+        out.at[index, "understat_id"] = row.get("understat_id")
         coverage["matched"] += 1
     out.attrs["xg_coverage"] = coverage
     return out

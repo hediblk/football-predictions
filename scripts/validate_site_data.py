@@ -158,6 +158,36 @@ def validate_forecast_receipts(data):
                 f"receipt {fixture_id}: generated_at must precede kickoff")
 
 
+def validate_match_events(data, fixture=None, *, consistency=True):
+    if "retro" in data:
+        close(sum(data["retro"]), 1, 1e-9, "retrospective probability sum")
+    understat = data["sources"].get("understat")
+    if understat:
+        require(datetime.fromisoformat(understat["fetched_at"]) >= datetime.fromisoformat(data["kickoff"]),
+                "Understat data fetched before kickoff")
+    if "players" in data:
+        for side in ("h", "a"):
+            unique(data["players"][side], "id")
+    if fixture is None:
+        return
+    require(data["id"] == fixture["id"] and data["kickoff"] == fixture["kickoff"],
+            "match event identity differs from fixture")
+    require(fixture["status"] == "FINISHED", "match events require a finished fixture")
+    if not consistency or "shots" not in data:
+        return
+    require("xg" in fixture, "shot consistency requires published match xg")
+    for index, side in enumerate(("h", "a")):
+        shots = [shot for shot in data["shots"] if shot[1] == side]
+        # Understat's match xG counts shots from one attack as a single chance, 1 - prod(1 - xG), so the
+        # per-shot sum can exceed it but never fall short.
+        require(sum(shot[4] for shot in shots) >= fixture["xg"][index] - 0.05, f"{side} shot xG sum below match xG")
+        opposite = "a" if side == "h" else "h"
+        goals = sum(shot[5] == "Goal" for shot in shots)
+        goals += (sum(player["own_goals"] for player in data["players"][opposite]) if "players" in data
+                  else sum(shot[1] == opposite and shot[5] == "OwnGoal" for shot in data["shots"]))
+        require(goals == fixture["score"][index], f"{side} shot goals plus opposition own goals differ from score")
+
+
 def validate_clubs(data):
     clubs = data["clubs"]
     for key in ("id", "slug"):
@@ -210,6 +240,8 @@ def validate_payload(data, family):
         validate_matches(data)
     elif family == "forecast_receipts":
         validate_forecast_receipts(data)
+    elif family == "match_events":
+        validate_match_events(data)
     elif family == "clubs":
         validate_clubs(data)
     elif family == "history":
@@ -227,6 +259,9 @@ def file_family(path):
             return "ucl" if path.stem == "champions-league" else "league"
     if len(parts) == 2 and parts[0] == "matches" and path.stem in COMPETITIONS:
         return "matches"
+    if (len(parts) == 4 and parts[0] == "match" and parts[1].isdigit()
+            and parts[2] in COMPETITIONS and path.stem.isdigit() and int(path.stem) > 0):
+        return "match_events"
     if len(parts) == 3 and parts[0] == "history" and parts[1].isdigit():
         if path.stem == "clubs":
             return "club_history"
@@ -258,6 +293,9 @@ def validate_site_data(data_dir, *, site_dir=None):
                 require(data["code"] == COMPETITIONS[path.stem], "competition code differs from slug")
             if relative.parts[0] == "history":
                 require(data["season"].split("/")[0] == relative.parts[1], "history season differs from directory")
+            if family == "match_events":
+                require(data["id"] == int(path.stem), "match event id differs from filename")
+                require(data["competition"] == relative.parts[2], "match event competition differs from directory")
             files[relative.as_posix()] = data
         except (OSError, ValueError) as exc:
             errors.append(f"{relative}: {exc}")
@@ -272,6 +310,22 @@ def validate_site_data(data_dir, *, site_dir=None):
     for club in files.get("clubs.json", {}).get("clubs", []):
         if club["league"] is not None and f"{club['league']}.json" not in files:
             errors.append(f"clubs.json: unresolved league {club['league']}")
+    for name, data in files.items():
+        parts = Path(name).parts
+        if parts[0] != "match":
+            continue
+        table = files.get(f"{data['competition']}.json", {})
+        if table.get("season", "").split("/")[0] != parts[1]:
+            continue
+        matches = files.get(f"matches/{data['competition']}.json")
+        if matches is None:
+            continue
+        fixture = next((row for row in matches["matches"] if row["id"] == data["id"]), None)
+        try:
+            require(fixture is not None, "match events have no current-season fixture")
+            validate_match_events(data, fixture, consistency=False)
+        except ValueError as exc:
+            errors.append(f"{name}: {exc}")
     for crest in files.get("crests.json", {}).values():
         if not (site_dir / crest["path"]).is_file():
             errors.append(f"crests.json: missing asset {crest['path']}")
