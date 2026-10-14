@@ -300,7 +300,8 @@ export function matchPanel(m, slugs = null, league = null) {
     call = (v.hit
       ? `<p>Called it: the model picked a ${OUTCOMES[fav].toLowerCase()} (<b>${pct1(m.p[fav])}</b>), ${ch}–${ca}.`
       : `<p>Missed it: the model picked a ${OUTCOMES[fav].toLowerCase()} (<b>${pct1(m.p[fav])}</b>), ${ch}–${ca}; ${result} had <b>${pct1(v.given)}</b>.`)
-      + (v.exact ? ` Exact score, too.</p>` : ` The actual ${m.score[0]}–${m.score[1]} had <b>${pct1(m.p_score || 0)}</b>.</p>`)
+      + (v.exact ? ` Exact score, too.</p>` : m.p_score != null ? ` The actual ${m.score[0]}–${m.score[1]} had <b>${pct1(m.p_score)}</b>.</p>`
+        : ` The actual ${m.score[0]}–${m.score[1]} was not among the saved likeliest scores.</p>`)
       + `<p class="dim">${m.published ? `Published before kickoff, from the model run of ${new Date(m.at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC, ${new Date(m.at).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}.` : "Reconstructed: forecast as of 00:00 UTC on match day, from results before then."}</p>`;
   } else {
     call = `<p>Pick: <b>${OUTCOMES[fav].toLowerCase()}, ${ch}–${ca}</b> (${pct1(m.p[fav])} for the result).</p><p class="dim">Forecast from the model run of ${origin} UTC.</p>`;
