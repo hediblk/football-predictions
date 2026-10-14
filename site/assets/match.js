@@ -1,6 +1,6 @@
 // Match page: everything known about one fixture before kickoff, and after full time the forecast against the result.
 import {
-  COMPS, compBySlug, $, esc, getJSON, setStatus, ordinal, dec, dayKey, pick, sidePair, clubName, loadForm, played,
+  COMPS, compBySlug, $, esc, getJSON, setStatus, ordinal, dec, dayKey, pick, sidePair, clubName, clubCrest, loadForm, played,
   verdict, pct, pct1,
 } from "./core.js";
 import { forecastBlocks, stakesTable, stageLabel, probCells, PENDING, stakeKinds, stakeLines } from "./matches.js";
@@ -37,10 +37,12 @@ export async function showMatch(slug, id) {
   }
   const post = Boolean(m.score && m.p);
   const season = (table || clubs)?.season.split("/")[0];
-  const [stakes, hist, weekly] = await Promise.all([
+  const [stakes, hist, weekly, events] = await Promise.all([
     stakesTable(m, slug),
     post && season ? getJSON(`history/${season}/${slug}.json`).catch(() => null) : null,
     post && season ? getJSON(`history/${season}/clubs.json`).catch(() => null) : null,
+    // Understat shots: finished league games only (none for the Champions League); a missing file hides "Chances"
+    post && season && slug !== "champions-league" ? getJSON(`match/${season}/${slug}/${m.id}.json`).catch(() => null) : null,
   ]);
   const span = post ? refreshes(hist, m.kickoff) : null;
   const pastStakes = post && m.published ? await stakesTable(m, slug, { day: span ? dayLabel(hist.dates[span.b]) : "–", before: (club, key) => histValue(hist, span, club, key, "b") }) : "";
@@ -48,16 +50,18 @@ export async function showMatch(slug, id) {
   document.title = `${m.home} v ${m.away} · Floodlight`;
   setStatus(file.generated_at);
   const slugs = new Map((clubs ? clubs.clubs : []).map((c) => [c.id, c.slug]));
-  page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly, mode: post ? "after" : "before" };
+  page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly, mode: post ? "after" : "before",
+    shots: events && events.shots && events.shots.length ? events : null };
   render();
 }
 
 function render() {
   const { m, comp, slugs, stakes, table, clubs, files } = page;
-  $("view-match").innerHTML = hero(m, comp, slugs) + (page.mode === "after" ? against(m, comp, page.file) + changed(m, comp)
+  $("view-match").innerHTML = hero(m, comp, slugs) + (page.mode === "after" ? against(m, comp, page.file) + shotReport(m) + changed(m, comp)
     : (m.p ? `<fieldset class="frame"><legend>${m.score ? "The forecast before kickoff" : "The forecast"}</legend><div class="panel mp-fc">${forecastBlocks(m)}</div></fieldset>` : "")
       + (stakes ? `<fieldset class="frame"><legend>What's at stake</legend>${stakes}</fieldset>` : "")
       + sides(m, comp, table, clubs, files));
+  drawXg();
 }
 
 /* After · Before: re-render in place and keep focus on the chip */
@@ -235,6 +239,160 @@ function strength(m) {
       <tbody>${rows}</tbody></table></div>
     <p class="note">Ratings from the ranking frozen on Monday ${dayLabel(span.from.date)} to ${span.until}. Every game in that span counts, not this one alone.</p>`;
 }
+
+/* ---------- chances: Understat shots, after full time ---------- */
+// shot tuples are [minute, side, x, y, xg, result, situation, body, player, assister]; an OwnGoal tuple carries the
+// side of the player who scored it, so it counts for the other side and is not a chance of either
+const WORDS = { SavedShot: "Saved", MissedShots: "Missed", BlockedShot: "Blocked", ShotOnPost: "Post", OwnGoal: "Own goal", DirectFreekick: "Direct free kick", OtherBodyPart: "Other" };
+const word = (s) => WORDS[s] || String(s).replace(/([a-z])([A-Z])/g, (_, a, b) => `${a} ${b.toLowerCase()}`);
+/* Understat minutes are zero-based elapsed minutes: 0 is the first minute */
+const minute = (s) => `${s[0] + 1}'`;
+const own = (s) => s[5] === "OwnGoal";
+const other = (side) => (side === "h" ? "a" : "h");
+const surname = (name) => String(name).split(" ").slice(-1)[0];
+
+/* cumulative xG per side as steps [{ t, v }], ending at the published match xG where we can: Understat's match xG
+   counts shots from one attack as one chance, so shots in the same minute combine as 1 − ∏(1 − xG) when that gives
+   the match figure, plain sums when those do (it didn't merge them), and otherwise plain sums flagged `summed` */
+function xgLines(shots, m) {
+  return ["h", "a"].map((side, i) => {
+    const build = (combine) => {
+      const by = new Map();
+      for (const s of shots) if (s[1] === side && !own(s)) by.set(s[0], combine ? (by.get(s[0]) ?? 1) * (1 - s[4]) : (by.get(s[0]) ?? 0) + s[4]);
+      let v = 0;
+      return [...by].sort((a, b) => a[0] - b[0]).map(([t, x]) => ({ t, v: (v += combine ? 1 - x : x) }));
+    };
+    const total = (steps) => (steps.length ? steps[steps.length - 1].v : 0);
+    const near = (steps) => m.xg != null && Math.abs(total(steps) - m.xg[i]) < 0.0051;
+    const combined = build(true);
+    const steps = near(combined) ? combined : build(false);
+    return { steps, total: total(steps), summed: !near(steps) };
+  });
+}
+
+function shotReport(m) {
+  const data = page.shots;
+  if (!data) return "";
+  const { shots } = data;
+  const names = { h: m.home, a: m.away };
+  const ids = { h: m.home_id, a: m.away_id };
+  const chances = shots.filter((s) => !own(s));
+
+  // the pitch: 105 × 68, home shooting right, away mirrored to shoot left
+  const end = (x0, d) => {
+    const box = (depth, half) => `<path d="M${x0} ${34 - half}H${x0 + d * depth}V${34 + half}H${x0}"/>`;
+    const dy = Math.sqrt(9.15 ** 2 - 5.5 ** 2).toFixed(2);
+    return box(16.5, 20.16) + box(5.5, 9.16) + `<circle class="spot" cx="${x0 + d * 11}" cy="34" r=".35"/>`
+      + `<path d="M${x0 + d * 16.5} ${(34 - dy).toFixed(2)}A9.15 9.15 0 0 ${d > 0 ? 1 : 0} ${x0 + d * 16.5} ${(34 + +dy).toFixed(2)}"/>`
+      + `<rect x="${d > 0 ? -1.6 : 105}" y="30.34" width="1.6" height="7.32"/>`;
+  };
+  const lines = `<rect x="0" y="0" width="105" height="68"/><path d="M52.5 0V68"/><circle cx="52.5" cy="34" r="9.15"/><circle class="spot" cx="52.5" cy="34" r=".35"/>${end(0, 1)}${end(105, -1)}`;
+  const kind = (s) => (s[5] === "Goal" ? "goal" : s[5] === "SavedShot" ? "saved" : "off");
+  const tip = (s) => esc(`<b>${esc(s[8])}</b> · ${esc(names[s[1]])}<br>${minute(s)} · <b>${dec(s[4], 2)}</b> xG · ${esc(word(s[6]))}<br>${esc(word(s[5]))}, ${esc(word(s[7]).toLowerCase())}${s[9] ? ` · assist ${esc(s[9])}` : ""}`);
+  // biggest chances first so small ones stay on top; goals last of all
+  const dots = [...chances].sort((a, b) => (a[5] === "Goal") - (b[5] === "Goal") || b[4] - a[4]).map((s) => {
+    const [x, y] = s[1] === "h" ? [s[2], s[3]] : [1 - s[2], 1 - s[3]];
+    const [cx, cy, r] = [(x * 105).toFixed(2), (y * 68).toFixed(2), Math.max(0.6, 3.6 * Math.sqrt(s[4]))];
+    return `<g data-tip="${tip(s)}"><circle class="hit" cx="${cx}" cy="${cy}" r="${Math.max(r, 2.2).toFixed(2)}"/><circle class="shot ${kind(s)}" cx="${cx}" cy="${cy}" r="${r.toFixed(2)}"/></g>`;
+  }).join("");
+  const sum = (side) => chances.filter((s) => s[1] === side);
+  const say = (side) => `${names[side]} ${sum(side).length} shots, ${sum(side).filter((s) => s[5] === "Goal").length} scored`;
+  const map = `<div class="mp-pitch"><svg viewBox="-2 -2 109 72" role="img" aria-label="${esc(`Shot map: ${say("h")}, shooting right; ${say("a")}, shooting left. The shot list below has every shot.`)}"><g class="pitch">${lines}</g>${dots}</svg>
+    <p class="mp-dir"><span>${clubName(m.home_id, m.home, "inline")} →</span><span>← ${clubName(m.away_id, m.away, "inline")}</span></p></div>
+    <p class="mp-key"><span><i class="k goal"></i>Goal</span><span><i class="k saved"></i>Saved</span><span><i class="k off"></i>Missed, blocked or post</span><span>Circle area is the shot's xG</span></p>`;
+
+  const owns = shots.filter(own);
+  const ogNote = owns.length ? ` Own goals aren't chances, so they're off the map and out of the xG lines: ${owns.map((s) => `${esc(s[8])}'s own goal (${minute(s)}) counted for ${esc(names[other(s[1])])}`).join("; ")}.` : "";
+  const list = `<details class="mp-list"><summary>Shot list</summary><div class="scroll"><table class="board">
+    <thead><tr><th>Min</th><th class="l">Player</th><th>xG</th><th class="l">Result</th><th class="l">Situation</th><th class="l">Body</th><th class="l">Assist</th></tr></thead>
+    <tbody>${shots.map((s) => `<tr class="${s[5] === "Goal" || own(s) ? "lit" : ""}"><td>${minute(s)}</td><td class="l">${clubCrest(ids[s[1]], "inline")} ${esc(s[8])}</td><td>${own(s) ? "–" : dec(s[4], 2)}</td><td class="l">${esc(word(s[5]))}</td><td class="l">${esc(word(s[6]))}</td><td class="l">${esc(word(s[7]))}</td><td class="l">${s[9] ? esc(s[9]) : ""}</td></tr>`).join("")}</tbody></table></div></details>`;
+
+  const sides = xgLines(shots, m);
+  const key = `<p class="mp-key">${sides.map((l, i) => `<span><svg width="22" height="8" aria-hidden="true"><line x1="0" x2="22" y1="4" y2="4" class="${i ? "xa" : "xh"}"/></svg>${clubName(ids["ha"[i]], names["ha"[i]], "inline")} <b>${dec(l.total, 2)}</b>${l.summed ? " summed shot xG" : ""}</span>`).join("")}</p>`;
+  const off = sides.map((l, i) => (l.summed && m.xg ? `${esc(names["ha"[i]])}'s line ends at summed shot xG, ${dec(l.total, 2)}, not the match xG of ${dec(m.xg[i], 2)}.` : "")).filter(Boolean);
+  const xgNote = "Each step is a chance. Understat's match xG counts shots from one attack as one chance, so shots in the same minute combine as 1 − ∏(1 − xG) where that gives the match figure."
+    + (off.length ? ` ${off.join(" ")}` : " Both lines end at the match xG above.") + " Amber bulbs are goals.";
+
+  let retro = "";
+  if (data.retro) {
+    const r = data.retro;
+    retro = `<h4>From the chances</h4><p class="mp-retro"><span><b>${pct1(r[0])}</b> ${esc(m.home)} win</span><span><b>${pct1(r[1])}</b> Draw</span><span><b>${pct1(r[2])}</b> ${esc(m.away)} win</span></p>
+      <p class="note">After the fact, from shot xG, not a forecast: how often these chances, each taken as an independent shot, give each result. Own goals are left out.</p>`;
+  }
+
+  let stand = "";
+  if (data.players) {
+    const top = ["h", "a"].flatMap((side) => (data.players[side] || []).map((p) => ({ ...p, side })))
+      .filter((p) => p.xg + p.xa > 0).sort((a, b) => b.xg + b.xa - (a.xg + a.xa)).slice(0, 3);
+    if (top.length) stand = `<h4>Standouts</h4><div class="scroll"><table class="board mp-stand">
+      <thead><tr><th class="l">Player</th><th>Min</th><th>Shots</th><th>xG</th><th>xA</th><th>Key passes</th></tr></thead>
+      <tbody>${top.map((p) => `<tr><td class="l">${clubCrest(ids[p.side], "inline")} <b>${esc(p.player)}</b></td><td>${p.minutes}</td><td>${p.shots}</td><td class="b">${dec(p.xg, 2)}</td><td class="b">${dec(p.xa, 2)}</td><td>${p.key_passes}</td></tr>`).join("")}</tbody></table></div>
+      <p class="note">The top three by xG + xA: the chances each player took and the chances their passes made.</p>`;
+  }
+
+  return `<fieldset class="frame mp-after mp-shots"><legend>Chances</legend>
+    <h4>Shot map</h4>${map}${list}
+    <h4>xG through the game</h4>${key}<div class="mp-xgline" id="mp-xgline"></div><p class="note">${xgNote}${ogNote}</p>
+    ${retro}${stand}
+    <p class="note">Shots, xG and players from Understat.</p>
+  </fieldset>`;
+}
+
+/* the cumulative xG timeline: step lines, home solid and away dashed, goals as amber bulbs; drawn at the frame's width */
+function drawXg() {
+  const box = $("mp-xgline");
+  if (!box || !page.shots) return;
+  const { m } = page, { shots } = page.shots;
+  const sides = xgLines(shots, m);
+  const lines = sides.map((l) => l.steps), totals = sides.map((l) => l.total);
+  const W = Math.round(Math.min(760, Math.max(300, box.clientWidth || 760)));
+  const H = W < 480 ? 210 : 250, pad = { l: 34, r: 40, t: 16, b: 24 };
+  const last = Math.max(90, ...shots.map((s) => s[0] + 1));
+  const top = Math.max(1, Math.ceil(Math.max(...totals) * 2) / 2);
+  const x = (t) => pad.l + (t / last) * (W - pad.l - pad.r);
+  const y = (v) => H - pad.b - (v / top) * (H - pad.t - pad.b);
+  const step = top > 3 ? 1 : 0.5;
+  let grid = "";
+  for (let v = 0; v <= top + 1e-9; v += step) grid += `<line class="grid" x1="${pad.l}" x2="${W - pad.r}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${pad.l - 6}" y="${y(v) + 3.5}" text-anchor="end">${dec(v)}</text>`;
+  for (const t of [0, 15, 30, 45, 60, 75, 90]) grid += `<line class="grid" x1="${x(t)}" x2="${x(t)}" y1="${H - pad.b}" y2="${H - pad.b + 4}"/><text class="tick" x="${x(t)}" y="${H - 8}" text-anchor="middle">${t}'</text>`;
+  const path = (steps) => `M${x(0)} ${y(0)}${steps.map((s) => `H${x(s.t).toFixed(1)}V${y(s.v).toFixed(1)}`).join("")}H${x(last)}`;
+  const at = (steps, t) => steps.reduce((v, s) => (s.t <= t ? s.v : v), 0);
+
+  // goals (and own goals, for the side they counted for) as bulbs on that side's line, labels pushed clear of each other
+  const placed = [];
+  const goals = shots.filter((s) => s[5] === "Goal" || own(s)).map((s) => {
+    const side = own(s) ? other(s[1]) : s[1];
+    const [cx, cy] = [x(s[0]), y(at(lines[side === "h" ? 0 : 1], s[0]))];
+    const text = `${minute(s)} ${surname(s[8])}${own(s) ? " (og)" : ""}`;
+    const width = text.length * 6.2;
+    const right = cx + 6 + width > x(last);
+    const x0 = right ? cx - 6 - width : cx + 6;
+    let ly = cy - 7;
+    while (placed.some((p) => x0 < p.x1 && x0 + width > p.x0 && Math.abs(p.y - ly) < 11)) ly -= 11;
+    placed.push({ x0, x1: x0 + width, y: ly });
+    const tipText = esc(`<b>${esc(s[8])}</b>${own(s) ? " (own goal)" : ""} · ${minute(s)}<br>Goal for ${esc(side === "h" ? m.home : m.away)}${own(s) ? "" : ` · ${dec(s[4], 2)} xG`}`);
+    return { side, label: `${minute(s)} ${s[8]}${own(s) ? " (own goal)" : ""}`,
+      svg: `<g data-tip="${tipText}"><circle class="goal" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4.5"/><text class="glbl" x="${(right ? cx - 6 : cx + 6).toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${right ? "end" : "start"}">${esc(text)}</text></g>` };
+  });
+  // end totals, kept 12 px apart
+  const ends = totals.map((v, i) => ({ i, y: y(v) + 3.5 }));
+  if (Math.abs(ends[0].y - ends[1].y) < 12) {
+    const [hi, lo] = ends[0].y <= ends[1].y ? [ends[0], ends[1]] : [ends[1], ends[0]];
+    const mid = (hi.y + lo.y) / 2;
+    hi.y = mid - 6; lo.y = mid + 6;
+  }
+  const endLabels = ends.map((e) => `<text class="end${e.i ? " away" : ""}" x="${x(last) + 5}" y="${e.y.toFixed(1)}">${dec(totals[e.i], 2)}</text>`).join("");
+  const scored = goals.map((g) => g.label).join(", ");
+  const aria = `xG through the game: ${m.home} ${dec(totals[0], 2)}, ${m.away} ${dec(totals[1], 2)}.${scored ? ` Goals: ${scored}.` : ""}`;
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(aria)}">${grid}
+    <path class="xa" d="${path(lines[1])}"/><path class="xh" d="${path(lines[0])}"/>${endLabels}${goals.map((g) => g.svg).join("")}</svg>`;
+}
+
+let resizing;
+window.addEventListener("resize", () => {
+  clearTimeout(resizing);
+  resizing = setTimeout(() => { if (page && !$("view-match").hidden) drawXg(); }, 150);
+});
 
 /* goals and xG per game in every competition this season, before kickoff */
 function seasonGoals(files, id, before) {
