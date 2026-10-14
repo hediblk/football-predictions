@@ -241,35 +241,107 @@ function strength(m) {
 }
 
 /* ---------- chances: Understat shots, after full time ---------- */
-const BOX_ROWS = [["possession", "Possession", true], ["shots", "Shots"], ["shots_on_target", "On target"],
-  ["corners", "Corners"], ["fouls", "Fouls"], ["offsides", "Offsides"], ["saves", "Saves"],
-  ["pass_accuracy", "Pass accuracy", true], ["yellow", "Yellow cards"], ["red", "Red cards"]];
+// [key, label, percent, fewer is better]; possession leads the board as its own split bar
+const BOX_ROWS = [["shots", "Shots"], ["shots_on_target", "On target"], ["corners", "Corners"], ["saves", "Saves"],
+  ["pass_accuracy", "Pass accuracy", true], ["fouls", "Fouls", false, true], ["offsides", "Offsides", false, true],
+  ["yellow", "Yellow cards", false, true], ["red", "Red cards", false, true]];
 const EVENT_WORDS = { goal: "Goal", own_goal: "Own goal", penalty_goal: "Penalty goal", missed_penalty: "Missed penalty",
   yellow: "Yellow card", red: "Red card", substitution: "Substitution" };
 const isGoal = (e) => ["goal", "own_goal", "penalty_goal"].includes(e.type);
 const eventSide = (e) => e.type === "own_goal" ? other(e.side) : e.side;
 const eventMinute = (e) => `${e.clock}'`;
 const eventLabel = (e) => `${eventMinute(e)} ${EVENT_WORDS[e.type]} · ${e.type === "substitution" ? e.players.join(" ← ") : e.players[0]}`;
-const eventGlyph = (e) => isGoal(e) ? "●" : e.type === "red" ? "▯R" : "▯Y";
+const firstHalf = (e) => e.minute <= 45 || String(e.clock).startsWith("45+");
+/* event icons: a ball for goals (red for an own goal, struck through for a missed penalty), cards in their colours,
+   and a green arrow on / red arrow off for substitutions */
+// a truncated-icosahedron ball drawn on 24 units: centre pentagon, seams, and five pentagon patches cut by the rim
+const BALL = `<g transform="scale(.6667)"><circle class="ball" cx="12" cy="12" r="11"/>`
+  + `<path class="patch" d="M12 8.3L15.52 10.86L14.17 14.99L9.83 14.99L8.48 10.86ZM14.66 1.33L14.85 1.93L12 4L9.15 1.93L9.34 1.33A11 11 0 0 1 14.66 1.33ZM22.97 11.23L22.46 11.6L19.61 9.53L20.7 6.17L21.33 6.17A11 11 0 0 1 22.97 11.23ZM16.12 22.2L15.61 21.83L16.7 18.47L20.23 18.47L20.42 19.07A11 11 0 0 1 16.12 22.2ZM3.58 19.07L3.77 18.47L7.3 18.47L8.39 21.83L7.88 22.2A11 11 0 0 1 3.58 19.07ZM2.67 6.17L3.3 6.17L4.39 9.53L1.54 11.6L1.03 11.23A11 11 0 0 1 2.67 6.17Z"/>`
+  + `<path class="seam" d="M12 8.3L12 4M15.52 10.86L19.61 9.53M14.17 14.99L16.7 18.47M9.83 14.99L7.3 18.47M8.48 10.86L4.39 9.53"/></g>`;
+const ICONS = {
+  goal: BALL, penalty_goal: BALL, own_goal: BALL,
+  missed_penalty: `${BALL}<path class="miss" d="M2 14 14 2"/>`,
+  yellow: `<rect class="card-y" x="4" y="1.5" width="8.5" height="12" rx="1.3" transform="rotate(8 8 8)"/>`,
+  red: `<rect class="card-r" x="4" y="1.5" width="8.5" height="12" rx="1.3" transform="rotate(8 8 8)"/>`,
+  substitution: `<path class="sub-on" d="M5 14V5H2l4-4 4 4H7v9z"/><path class="sub-off" d="M11 2v9h3l-4 4-4-4h3V2z"/>`,
+};
+const icon = (type) => `<svg class="ev-ic ${type}" viewBox="0 0 16 16" aria-hidden="true">${ICONS[type]}</svg>`;
 
 function matchStats(m) {
   const data = page.detail;
   if (!data || (!data.box && !data.events?.length)) return "";
-  const rows = BOX_ROWS.filter(([key]) => data.box?.[key]).map(([key, label, percent]) => {
-    const pair = data.box[key], scale = Math.max(...pair, 1);
-    const value = (i) => `<span class="mp-stat-value">${pair[i] > pair[1 - i] ? "<b>" : ""}${dec(pair[i], percent ? 1 : 0)}${percent ? "%" : ""}${pair[i] > pair[1 - i] ? "</b>" : ""}</span>`;
-    const bar = (i) => `<span class="mp-stat-bar ${i ? "away" : "home"}" aria-hidden="true"><i style="width:${pair[i] / scale * 100}%"></i></span>`;
-    return `<div class="mp-stat-row">${value(0)}${bar(0)}<span class="mp-stat-label">${label}</span>${bar(1)}${value(1)}</div>`;
-  }).join("");
+  const box = data.box || {};
   const events = data.events || [];
-  const list = events.length ? `<details class="mp-list mp-full"><summary>Full timeline</summary>
-    <div class="scroll"><table class="board"><thead><tr><th>Minute</th><th class="l">Club</th><th class="l">Event</th><th class="l">Players</th></tr></thead>
-    <tbody>${events.map((e) => `<tr><td>${eventMinute(e)}</td><td class="l">${esc(e.side === "h" ? m.home : m.away)}</td><td class="l">${EVENT_WORDS[e.type]}</td><td class="l">${e.players.map(esc).join(e.type === "substitution" ? " ← " : ", ")}</td></tr>`).join("")}</tbody></table></div></details>` : "";
+  // the side with the better figure (more, or fewer for fouls, offsides and cards) is lit; a tie lights neither
+  const leader = (pair, fewer) => (pair[0] === pair[1] ? -1 : (pair[0] > pair[1]) !== Boolean(fewer) ? 0 : 1);
+  const rows = BOX_ROWS.filter(([key]) => box[key]).map(([key, label, percent, fewer]) => statRow(box[key], label, percent, leader(box[key], fewer))).join("")
+    + (m.xg ? statRow(m.xg, "xG <small>Understat</small>", false, leader(m.xg), 2) : "");
+  let poss = "";
+  if (box.possession) {
+    const p = box.possession, lead = leader(p);
+    const side = (i) => `<b class="${lead === i ? "best" : ""}">${dec(p[i], 0)}%</b>`;
+    poss = `<div class="mp-poss"><span class="mp-stat-label">Possession</span>
+      <div class="mp-poss-in">${side(0)}<div class="mp-poss-bar" role="img" aria-label="Possession ${esc(m.home)} ${dec(p[0], 1)}%, ${esc(m.away)} ${dec(p[1], 1)}%">
+        ${[0, 1].map((i) => `<i class="${lead === i ? "best" : ""}" style="width:${p[i] / (p[0] + p[1]) * 100}%"></i>`).join("")}</div>${side(1)}</div></div>`;
+  }
+  const head = `<div class="mp-stat-head">${["h", "a"].map((s) => `<div class="mp-stat-club ${s}">
+      ${clubName(s === "h" ? m.home_id : m.away_id, s === "h" ? m.home : m.away, "card")}${scorers(events, s)}</div>`).join(`<div class="mp-stat-score">${m.score[0]}<span>–</span>${m.score[1]}</div>`)}</div>`;
   return `<fieldset class="frame mp-after mp-stats"><legend>Match stats</legend>
-    ${rows ? `<div class="mp-stat-teams"><span>${clubName(m.home_id, m.home, "inline")}</span><span>${clubName(m.away_id, m.away, "inline")}</span></div>${rows}` : ""}
-    ${!page.shots && events.length ? minuteRuler(m, events) : ""}${list}
-    <p class="note">Match statistics and timeline from ESPN.${events.some((e) => e.type === "substitution") ? " Substitutions list the player on ← player off." : ""}</p>
+    ${head}${poss}${rows ? `<div class="mp-stat-rows">${rows}</div>` : ""}
+    ${!page.shots && events.length ? minuteRuler(m, events) : ""}${events.length ? feed(m, events) : ""}
+    <p class="note">Match statistics and timeline from ESPN${m.xg ? ", xG from Understat" : ""}. The better figure in each row is lit; fewer is better for fouls, offsides and cards.</p>
   </fieldset>`;
+}
+
+function statRow(pair, label, percent, lead, digits = percent ? 1 : 0) {
+  const total = pair[0] + pair[1];
+  const value = (i) => `<span class="mp-stat-value${lead === i ? " best" : ""}">${dec(pair[i], digits)}${percent ? "%" : ""}${lead === i ? '<span class="vh"> (better)</span>' : ""}</span>`;
+  // each bar is that side's share of the pair (of 100 for percentages), growing out from the label
+  const bar = (i) => `<span class="mp-stat-bar ${i ? "away" : "home"}" aria-hidden="true"><i class="${lead === i ? "best" : ""}" style="width:${(percent ? pair[i] : total ? pair[i] / total * 100 : 0).toFixed(1)}%"></i></span>`;
+  return `<div class="mp-stat-row">${value(0)}${bar(0)}<span class="mp-stat-label">${label}</span>${bar(1)}${value(1)}</div>`;
+}
+
+/* goals (each scorer once, with every minute) and red cards under a club's name, as on a scoreboard */
+function scorers(events, side) {
+  const lines = new Map();
+  for (const e of events) {
+    if (!(isGoal(e) && eventSide(e) === side) && !(e.type === "red" && e.side === side)) continue;
+    const key = `${e.type === "red" ? "red" : "goal"}|${e.players[0]}`;
+    const tag = e.type === "penalty_goal" ? " pen" : e.type === "own_goal" ? " og" : "";
+    if (!lines.has(key)) lines.set(key, { type: e.type === "red" ? "red" : "goal", name: e.players[0], minutes: [] });
+    lines.get(key).minutes.push(`${eventMinute(e)}${tag}`);
+  }
+  if (!lines.size) return "";
+  return `<ul class="mp-scorers">${[...lines.values()].map((l) => `<li>${icon(l.type)}<span>${esc(surname(l.name))} <small>${esc(l.minutes.join(", "))}</small></span></li>`).join("")}</ul>`;
+}
+
+/* the event feed: home events to the left of the minute, away to the right, with half-time and full-time lines */
+function feed(m, events) {
+  const score = [0, 0];
+  const marker = (text) => `<li class="mp-feed-mark"><span>${text}</span></li>`;
+  let half = false;
+  const rows = [];
+  for (const e of events) {
+    if (!half && !firstHalf(e)) {
+      rows.push(marker(`Half-time · ${score[0]}–${score[1]}`));
+      half = true;
+    }
+    const side = eventSide(e);
+    let body;
+    if (isGoal(e)) {
+      score[side === "h" ? 0 : 1] += 1;
+      const note = e.type === "penalty_goal" ? "Penalty" : e.type === "own_goal" ? "Own goal" : e.players[1] ? `Assist ${esc(e.players[1])}` : "";
+      body = `<span><b>${esc(e.players[0])}</b> <span class="mp-feed-score">${score[0]}–${score[1]}</span></span>${note ? `<small>${note}</small>` : ""}`;
+    } else if (e.type === "substitution") {
+      body = `<span class="on"><span class="vh">On: </span>${esc(e.players[0])}</span><small class="off"><span class="vh">off: </span>${esc(e.players[1] || "")}</small>`;
+    } else {
+      body = `<span>${esc(e.players[0])}</span>${e.type === "missed_penalty" ? "<small>Missed penalty</small>" : ""}`;
+    }
+    const cell = `<div class="mp-feed-ev">${icon(e.type)}<div class="mp-feed-txt"><span class="vh">${EVENT_WORDS[e.type]}, ${esc(side === "h" ? m.home : m.away)}: </span>${body}</div></div>`;
+    rows.push(`<li class="mp-feed-row ${side} ${e.type}${isGoal(e) ? " goal" : ""}">${side === "h" ? cell : "<div></div>"}<span class="mp-feed-min">${eventMinute(e)}</span>${side === "a" ? cell : "<div></div>"}</li>`);
+  }
+  rows.push(marker(`Full time · ${m.score[0]}–${m.score[1]}`));
+  return `<h4>Timeline</h4><ol class="mp-feed">${marker("Kick-off")}${rows.join("")}</ol>`;
 }
 
 function minuteRuler(m, events) {
@@ -279,10 +351,9 @@ function minuteRuler(m, events) {
   const position = (t) => `${t / last * 100}%`;
   const label = (e) => `${eventLabel(e)} · ${eventSide(e) === "h" ? m.home : m.away}`;
   return `<h4>Through the game</h4><div class="mp-ruler" role="img" aria-label="${esc(`Match timeline. ${marks.map(label).join("; ") || "No goals or cards."}`)}">
-    <div class="mp-ruler-rail"></div>${ticks.map((t) => `<span class="mp-ruler-tick" style="left:${position(t)}">${t}'</span>`).join("")}
-    ${marks.map((e) => `<span class="mp-event ${isGoal(e) ? "goal" : "card"} ${eventSide(e)}" style="left:${position(e.minute)}" title="${esc(label(e))}" aria-hidden="true">${eventGlyph(e)}</span>`).join("")}</div>
-    <p class="mp-key"><span>Home above · away below</span><span>● Goal · ▯Y Yellow · ▯R Red</span></p>
-    <ul class="mp-moments">${marks.filter((e) => isGoal(e) || e.type === "red").map((e) => `<li>${esc(label(e))}</li>`).join("")}</ul>`;
+    <div class="mp-ruler-rail"></div><div class="mp-ruler-ht" style="left:${position(45)}"></div>${ticks.map((t) => `<span class="mp-ruler-tick" style="left:${position(t)}">${t}'</span>`).join("")}
+    ${marks.map((e) => `<span class="mp-event ${eventSide(e)}" style="left:${position(e.minute)}" data-tip="${esc(esc(label(e)))}">${icon(e.type)}</span>`).join("")}</div>
+    <p class="mp-key"><span>${clubName(m.home_id, m.home, "inline")} above · ${clubName(m.away_id, m.away, "inline")} below</span><span>${icon("goal")} Goal</span><span>${icon("yellow")} Yellow</span><span>${icon("red")} Red</span></p>`;
 }
 
 // shot tuples are [minute, side, x, y, xg, result, situation, body, player, assister]; an OwnGoal tuple carries the
@@ -408,7 +479,7 @@ function drawXg() {
   // ESPN supplies one authoritative goal/card timeline when present; Understat goals remain the fallback.
   const moments = events ? events.filter((e) => isGoal(e) || e.type === "red").map((e) => ({
     side: eventSide(e), t: Math.max(0, e.minute - 1), red: e.type === "red",
-    text: `${eventMinute(e)} ${surname(e.players[0])}${e.type === "own_goal" ? " (og)" : e.type === "red" ? " ▯R" : ""}`, label: eventLabel(e),
+    text: `${eventMinute(e)} ${surname(e.players[0])}${e.type === "own_goal" ? " (og)" : e.type === "red" ? " red card" : ""}`, label: eventLabel(e),
   })) : shots.filter((s) => s[5] === "Goal" || own(s)).map((s) => ({
     side: own(s) ? other(s[1]) : s[1], t: s[0], red: false,
     text: `${minute(s)} ${surname(s[8])}${own(s) ? " (og)" : ""}`, label: `${minute(s)} ${s[8]}${own(s) ? " (own goal)" : ""}`,

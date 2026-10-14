@@ -15,6 +15,7 @@
   --green: #5ad664;
   --draw: #8a8f98;
   --green-t: #88cb8a;
+  --yellow: #f2c14e;
   --sign: "Big Shoulders Display", "Arial Narrow", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
 }
@@ -842,34 +843,91 @@ table.mp-stand { min-width: 460px; }
 .matter.by-team { margin-top: 0; }
 .matter .m-swing { grid-column: 2 / -1; margin-top: 6px; font: 500 12px/1.4 var(--mono); color: var(--dim); }
 
-/* Task 12 · ESPN match statistics and timeline */
-.mp-stat-teams { display: flex; justify-content: space-between; gap: 18px; margin: 0 0 14px; font-size: 12px; }
-.mp-stat-teams > span:last-child { text-align: right; }
-.mp-stat-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 126px minmax(0, 1fr) 44px; align-items: center; gap: 8px; min-height: 34px; border-top: 1px solid var(--rule-2); font-size: 12px; color: var(--ink-2); }
-.mp-stat-value:last-child { text-align: right; }
-.mp-stat-value b { color: var(--ink); font-weight: 700; }
+/* Task 12 · ESPN match statistics and timeline; the better figure in each row is lit amber */
+.mp-stat-head { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: 16px; margin: 4px 0 18px; }
+.mp-stat-club { min-width: 0; font: 800 15px/1.2 var(--sign); letter-spacing: .04em; text-transform: uppercase; }
+.mp-stat-club.a { text-align: right; }
+.mp-stat-club.a .club-name { flex-direction: row-reverse; }
+.mp-stat-score { font: 900 34px/1 var(--sign); color: var(--ink); letter-spacing: .02em; padding-top: 2px; }
+.mp-stat-score span { margin: 0 8px; color: var(--dim); }
+.mp-scorers { list-style: none; margin: 10px 0 0; padding: 0; font: 400 12px/1.4 var(--mono); letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+.mp-scorers li { display: flex; align-items: center; gap: 7px; margin: 0 0 4px; }
+.mp-stat-club.a .mp-scorers li { flex-direction: row-reverse; }
+.mp-scorers small { color: var(--dim); font-size: 11px; }
+.ev-ic { flex: none; width: 14px; height: 14px; vertical-align: -2px; }
+.ev-ic .ball { fill: var(--ink); }
+.ev-ic .patch { fill: var(--bg); }
+.ev-ic .seam { fill: none; stroke: var(--bg); stroke-width: .9; stroke-linecap: round; }
+.ev-ic.own_goal .ball { fill: var(--red); }
+.ev-ic.missed_penalty .ball { fill: var(--dim); }
+.ev-ic .miss { stroke: var(--red); stroke-width: 2; }
+.ev-ic .card-y { fill: var(--yellow); }
+.ev-ic .card-r { fill: var(--red); }
+.ev-ic .sub-on { fill: var(--green); }
+.ev-ic .sub-off { fill: var(--red); }
+.mp-poss { margin: 0 0 6px; text-align: center; }
+.mp-poss-in { display: grid; grid-template-columns: 56px minmax(0, 1fr) 56px; align-items: center; gap: 10px; margin-top: 6px; }
+.mp-poss-in > b { font: 800 20px/1 var(--sign); color: var(--ink-2); text-align: left; }
+.mp-poss-in > b:last-child { text-align: right; }
+.mp-poss-in > b.best { color: var(--amber-t); }
+.mp-poss-bar { display: flex; gap: 2px; height: 10px; }
+.mp-poss-bar i { display: block; background: var(--dim); }
+.mp-poss-bar i.best { background: var(--amber); }
+.mp-stat-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) 126px minmax(0, 1fr) 52px; align-items: center; gap: 10px; min-height: 36px; border-top: 1px solid var(--rule-2); font-size: 12px; color: var(--ink-2); }
+.mp-stat-value { justify-self: start; padding: 2px 6px; font-variant-numeric: tabular-nums; }
+.mp-stat-value:last-child { justify-self: end; }
+.mp-stat-value.best { color: var(--bg); background: var(--amber); font-weight: 700; }
 .mp-stat-label { text-align: center; color: var(--dim); font-size: 11px; }
-.mp-stat-bar { display: flex; height: 4px; background: var(--rule-2); }
+.mp-stat-label small { font-size: 9.5px; }
+.mp-stat-bar { display: flex; height: 6px; background: var(--bulb-off); }
 .mp-stat-bar.home { justify-content: flex-end; }
-.mp-stat-bar i { display: block; height: 4px; background: var(--ink-2); }
-.mp-stat-bar.away i { background: repeating-linear-gradient(to right, var(--ink-2) 0 5px, transparent 5px 8px); }
-.mp-full table { min-width: 520px; }
-.mp-full td:last-child { white-space: normal; }
+.mp-stat-bar i { display: block; background: var(--dim); }
+.mp-stat-bar i.best { background: var(--amber); }
+/* the event feed: home events right-aligned to the minute, away left-aligned */
+.mp-feed { list-style: none; margin: 0; padding: 0; font-size: 12px; }
+.mp-feed-row { display: grid; grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr); align-items: center; min-height: 40px; border-top: 1px solid var(--rule-2); }
+.mp-feed-min { justify-self: center; min-width: 38px; padding: 2px 4px; text-align: center; color: var(--ink-2); background: var(--bulb-off); font-size: 11px; font-variant-numeric: tabular-nums; }
+.mp-feed-row.goal .mp-feed-min { color: var(--bg); background: var(--amber); font-weight: 700; }
+.mp-feed-ev { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 6px 12px; }
+.mp-feed-row.h .mp-feed-ev { flex-direction: row-reverse; text-align: right; }
+.mp-feed-ev .ev-ic { width: 16px; height: 16px; }
+.mp-feed-txt { min-width: 0; display: flex; flex-direction: column; gap: 2px; color: var(--ink-2); }
+.mp-feed-txt b { color: var(--ink); font-weight: 700; }
+.mp-feed-txt small { color: var(--dim); font-size: 11px; }
+.mp-feed-txt .on { color: var(--ink); }
+.mp-feed-row.substitution { min-height: 34px; font-size: 11.5px; }
+.mp-feed-row.substitution .mp-feed-ev { padding: 4px 12px; }
+.mp-feed-row.substitution .ev-ic { width: 14px; height: 14px; }
+.mp-feed-score { margin-left: 4px; padding: 0 4px; color: var(--amber-t); border: 1px solid var(--rule); font-weight: 700; font-size: 11px; }
+.mp-feed-mark { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--rule-2); color: var(--dim); font: 800 11px/1 var(--sign); letter-spacing: .16em; text-transform: uppercase; }
+.mp-feed-mark::before, .mp-feed-mark::after { content: ''; flex: 1; border-top: 1px dashed var(--rule); }
+.mp-feed-mark:first-child { border-top: 0; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .mp-ruler { position: relative; margin: 10px 14px 0; height: 90px; font-size: 10px; }
 .mp-ruler-rail { position: absolute; top: 34px; left: 0; right: 0; border-top: 1px solid var(--rule); }
+.mp-ruler-ht { position: absolute; top: 4px; height: 58px; border-left: 1px dashed var(--rule); }
 .mp-ruler-tick { position: absolute; top: 66px; transform: translateX(-50%); color: var(--dim); }
 .mp-ruler-tick::before { content: ''; position: absolute; height: 4px; border-left: 1px solid var(--rule); top: -6px; left: 50%; }
-.mp-event { position: absolute; transform: translateX(-50%); white-space: nowrap; font-size: 12px; }
-.mp-event.h { top: 10px; }
+.mp-event { position: absolute; transform: translateX(-50%); display: flex; padding: 3px; cursor: default; }
+.mp-event.h { top: 8px; }
 .mp-event.a { top: 38px; }
-.mp-event.goal { color: var(--amber-t); }
-.mp-event.card { color: var(--ink); }
-.mp-moments { list-style: none; margin: 14px 0; padding: 0; font-size: 11px; color: var(--ink-2); line-height: 1.7; }
-.mp-moments li { border-top: 1px solid var(--rule-2); padding: 5px 0; }
-.mp-xgline .card { fill: var(--ink); stroke: var(--bg); stroke-width: 1.5; }
+.mp-event .ev-ic { width: 16px; height: 16px; }
+.mp-key .ev-ic { width: 12px; height: 12px; }
+.mp-xgline .card { fill: var(--red); stroke: var(--bg); stroke-width: 1.5; }
 .mp-xgline .card-label { fill: var(--ink); }
 @media (max-width: 599px) {
-  .mp-stat-row { grid-template-columns: 38px minmax(0, 1fr) 100px minmax(0, 1fr) 38px; gap: 4px; font-size: 11px; }
+  .mp-stat-row { grid-template-columns: 46px minmax(0, 1fr) 92px minmax(0, 1fr) 46px; gap: 6px; font-size: 11px; }
+  .mp-stat-value { padding: 2px 4px; }
+  .mp-stat-label { font-size: 10px; }
+  .mp-stat-club { font-size: 13px; }
+  .mp-stat-score { font-size: 26px; }
+  .mp-stat-score span { margin: 0 4px; }
+  .mp-scorers { font-size: 11px; }
+  .mp-poss-in { grid-template-columns: 44px minmax(0, 1fr) 44px; }
+  .mp-feed-row { grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); }
+  .mp-feed-ev { gap: 7px; padding: 6px 8px; }
+  .mp-feed-txt { font-size: 11px; }
+}
   .mp-stat-label { font-size: 10px; }
   .mp-stat-teams { font-size: 11px; }
 }

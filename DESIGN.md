@@ -32,6 +32,7 @@ SIGNATURE   Section headings are legends cut into their frame's top border, like
 --green:   #5ad664;  /* a called result, or a rank gained: lamp / arrow */
 --green-t: #88cb8a;  /* "Called" text */
 --draw:    #8a8f98;  /* a drawn game: form boxes and dots */
+--yellow:  #f2c14e;  /* a yellow card icon only */
 ```
 
 `--green` came from the same generator (`--seed 145`, accent steps 9 and 11); it marks a called result and, with `--green-t`, a rank gained. Calls always pair a lamp with a word (Called, Missed, Exact), never colour alone.
@@ -63,9 +64,11 @@ Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --sche
 
 ## Task 12 · Match stats and timeline
 
-Finished match pages add "Match stats" in After mode when ESPN detail is available. At most ten rows place home values on the left and away values on the right, with a centred metric label and paired hairline bars on the same scale within each row. Home bars are solid ink and away bars dashed; the larger number is bold. Percentages retain their units and absent pairs hide their row.
+Finished match pages add "Match stats" in After mode when ESPN detail is available. It opens like a broadcast scoreboard: both clubs with 36 px crests, the final score between them, and under each club its scorers (surname and minutes, "pen" or "og" tagged) and red cards, each led by its event icon. Possession follows as one full-width split bar with the two percentages at its ends. Below, up to nine rows place home values on the left and away values on the right around a centred label: shots, on target, corners, saves, pass accuracy, fouls, offsides and cards, plus Understat xG when the league has it. Each bar is that side's share of the pair, growing out from the label. The better figure in each row is lit: its value sits on an amber plate and its bar is amber, the other side dim; more is better except fouls, offsides and cards, where fewer is; a tie lights neither. The plate's shape and a spoken "(better)" mean colour never stands alone. Percentages keep their units and absent pairs hide their row.
 
-On the existing xG timeline, ESPN goals replace the fallback Understat markers and red cards add an ink card glyph with an R label. Goals keep amber bulbs and minute/scorer labels; cards use shape and text without another hue. Without shots, including Champions League games, a compact ruled minute line puts home events above and away events below, with goal bulbs, Y/R card glyphs and a short minute/name list for goals and dismissals. The chart's spoken label and Full timeline provide the text equivalent. The native "Full timeline" details starts collapsed and is the only place substitutions appear (player on ← player off). Before mode and expanded match rows keep their existing presentation. The footer credits "ESPN · match statistics".
+Events have their own small icons, the one place outside relegation and calls where extra hues appear, each always beside text: a white football for goals (red for an own goal, grey and struck through in red for a missed penalty), yellow (`--yellow`) and red cards, and a green ▲ on / red ▼ off pair for substitutions. The "Timeline" feed lists every event in order, home events right-aligned to a centred minute pill and away events left-aligned, with dashed Kick-off, Half-time (with the score) and Full time markers. Goal rows light the minute pill amber and add the running score in a ruled box and the assister underneath; substitutions are quieter rows with the player on above the player off. Each row carries spoken text (event, club, on/off).
+
+On the existing xG timeline, ESPN goals replace the fallback Understat markers and red cards add a red card glyph labelled "red card". Goals keep amber bulbs and minute/scorer labels. Without shots, including Champions League games, a compact ruled minute line puts home events above and away events below with the same icons and a dashed half-time rule; the feed is its text equivalent. Before mode and expanded match rows keep their existing presentation. The footer credits "ESPN · match statistics".
 
 ## Task 8 · Scorecard
 
