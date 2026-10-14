@@ -1,6 +1,336 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "scoreMetrics": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "log_loss": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "brier": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rps": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "n",
+        "log_loss",
+        "brier",
+        "rps"
+      ]
+    },
+    "scoreBaseline": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/scoreMetrics"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "model": {
+              "$ref": "#/$defs/scoreMetrics"
+            }
+          },
+          "required": [
+            "model"
+          ]
+        }
+      ]
+    },
+    "frequencyBaseline": {
+      "type": "object",
+      "properties": {
+        "seasons": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "uniqueItems": true,
+          "maxItems": 5
+        },
+        "requested_seasons": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "p": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/match/properties/p"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "seasons",
+        "requested_seasons",
+        "n",
+        "p"
+      ]
+    },
+    "calibrationBin": {
+      "type": "object",
+      "properties": {
+        "lo": {
+          "$ref": "#/$defs/probability"
+        },
+        "hi": {
+          "$ref": "#/$defs/probability"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "probability": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/probability"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "observed": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/probability"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "lo",
+        "hi",
+        "n",
+        "probability",
+        "observed"
+      ]
+    },
+    "scoreWeek": {
+      "type": "object",
+      "properties": {
+        "week": {
+          "$ref": "#/$defs/date"
+        },
+        "model": {
+          "$ref": "#/$defs/scoreMetrics"
+        },
+        "frequency": {
+          "$ref": "#/$defs/scoreMetrics"
+        },
+        "elo": {
+          "$ref": "#/$defs/scoreMetrics"
+        }
+      },
+      "required": [
+        "week",
+        "model",
+        "frequency",
+        "elo"
+      ]
+    },
+    "scoreRecord": {
+      "type": "object",
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_published": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model": {
+          "$ref": "#/$defs/scoreMetrics"
+        },
+        "baselines": {
+          "type": "object",
+          "properties": {
+            "frequency": {
+              "$ref": "#/$defs/scoreBaseline"
+            },
+            "elo": {
+              "$ref": "#/$defs/scoreBaseline"
+            }
+          },
+          "required": [
+            "frequency",
+            "elo"
+          ]
+        },
+        "called": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exact": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "avg_chance_given": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/probability"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "calibration": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/calibrationBin"
+          },
+          "minItems": 10,
+          "maxItems": 10
+        },
+        "weekly": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scoreWeek"
+          }
+        },
+        "market": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "n",
+        "n_published",
+        "model",
+        "baselines",
+        "called",
+        "exact",
+        "avg_chance_given",
+        "calibration",
+        "weekly",
+        "market"
+      ]
+    },
+    "scoreEntry": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/scoreRecord"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "published": {
+              "$ref": "#/$defs/scoreRecord"
+            },
+            "reconstructed": {
+              "$ref": "#/$defs/scoreRecord"
+            }
+          },
+          "required": [
+            "published",
+            "reconstructed"
+          ]
+        }
+      ]
+    },
+    "competitionScore": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/scoreEntry"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "season": {
+              "$ref": "#/$defs/season"
+            },
+            "generated_at": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "frequency_baseline": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/frequencyBaseline"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "season",
+            "generated_at",
+            "frequency_baseline"
+          ]
+        }
+      ]
+    },
+    "scorecard": {
+      "type": "object",
+      "properties": {
+        "generated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "competitions": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/competitionSlug"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/competitionScore"
+          }
+        },
+        "all": {
+          "$ref": "#/$defs/scoreEntry"
+        }
+      },
+      "required": [
+        "generated_at",
+        "competitions",
+        "all"
+      ]
+    },
     "string": {"type":"string","minLength":1},
     "slug": {"type":"string","pattern":"^[a-z0-9]+(?:-[a-z0-9]+)*$"},
     "competitionSlug": {"enum":["premier-league","la-liga","bundesliga","serie-a","ligue-1","champions-league"]},
@@ -308,6 +638,7 @@
     "match": {
       "type": "object",
       "properties": {
+        "elo": {"$ref":"#/$defs/match/properties/p"},
         "id": {"type":"integer","minimum":1},
         "kickoff": {"$ref":"#/$defs/timestamp"},
         "status": {"$ref":"#/$defs/string"},
@@ -413,6 +744,7 @@
         "kickoff": {"$ref":"#/$defs/timestamp"},
         "generated_at": {"$ref":"#/$defs/timestamp"},
         "p": {"$ref":"#/$defs/match/properties/p"},
+        "elo": {"$ref":"#/$defs/match/properties/p"},
         "exp": {"$ref":"#/$defs/goalPair"},
         "top": {"type":"array","items":{"$ref":"#/$defs/scoreProbability"},"minItems":1},
         "call": {"$ref":"#/$defs/scoreProbability"},

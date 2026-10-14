@@ -76,10 +76,11 @@
       <div class="chips" id="m-chips" role="group" aria-label="Competition"></div>
     </fieldset>
     <div id="m-day" aria-live="polite"></div>
-    <fieldset class="frame">
-      <legend>Model record · this season</legend>
-      <p class="note top-note">Every played match is forecast at 00:00 UTC on its match day from earlier results only, so the record never peeks at the result. A call is right when the model's likeliest outcome (home win, draw or away win) happens; the baseline always picks the home side.</p>
+    <fieldset class="frame" id="m-scorecard" hidden>
+      <legend>Scorecard · this season</legend>
       <div class="scroll"><table class="board record" id="m-record-table"></table></div>
+      <p class="note">Lower is better. A blind one-in-three guess scores 1.099. Combined published and reconstructed forecasts; vs baseline = model minus prior frequency on the same fixtures. Called = hit rate.</p>
+      <p class="more-link"><a href="#model/scorecard">Calibration and the rolling record →</a></p>
     </fieldset>
   </div>
 
@@ -130,6 +131,18 @@
   <div id="view-match" hidden></div>
 
   <div id="view-model" hidden>
+    <fieldset class="frame sc-frame" id="scorecard" hidden>
+      <legend>Track record</legend>
+      <div class="sc-controls"><label for="sc-competition">Competition</label> <select id="sc-competition"></select></div>
+      <div class="chips" id="sc-cohorts" role="group" aria-label="Forecast cohort"></div>
+      <div id="sc-summary"></div>
+      <p class="note" id="sc-counts"></p>
+      <div id="sc-charts"></div>
+      <details><summary>Baselines and coverage</summary><div id="sc-baselines"></div>
+        <p class="note">Prior frequency is fixed from the five seasons before this one, with seasons listed above. It is unavailable until all five are loaded. Elo compares only fixtures with a saved component from the same forecast run.</p>
+      </details>
+      <p class="note">Published forecasts were saved before kickoff. Reconstructed forecasts use results before match day and fill games without a receipt; the combined record counts each fixture once. Calibrated seasons are not independent holdouts. Champions League strengths already use archived market prices. Market comparison awaits enough archived quotes.</p>
+    </fieldset>
     <fieldset class="frame hero">
       <legend>The model</legend>
       <div class="hero-in">

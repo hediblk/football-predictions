@@ -92,6 +92,12 @@ def routes(data):
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
             found.append((f"#clubs/{club['slug']}", ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go"], [], None))
+    # Task 8: scorecard route, with calibration and cumulative record on both widths.
+    if (data / "scorecard.json").exists():
+        scorecard = json.loads((data / "scorecard.json").read_text())
+        if scorecard["all"]["n"]:
+            found.append(("#model/scorecard", ["#sc-summary tbody tr", "#sc-charts svg", "#sc-cohorts button"],
+                          ["#sc-cohorts [data-cohort=published]"], "#sc-summary tbody tr"))
     return origin, found
 
 

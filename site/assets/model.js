@@ -1,6 +1,8 @@
 // Model view: how the forecasts and ratings are made. Static copy, plus the live league averages.
 import { LEAGUES, $, dec, esc, getJSON, setStatus } from "./core.js";
 
+import { showTrackRecord } from "./scorecard.js";
+
 export async function showModel(section) {
   document.title = "The model · Floodlight";
   try {
@@ -11,5 +13,6 @@ export async function showModel(section) {
   } catch {
     $("c-factors").textContent = "unavailable right now";
   }
+  await showTrackRecord();
   if (section) $(section)?.scrollIntoView();
 }

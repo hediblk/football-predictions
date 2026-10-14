@@ -4,6 +4,8 @@ import {
   expandable, bulb, outcome, callScore, clubName, num, pct, loadForm, formDots, streak, meetings,
 } from "./core.js";
 
+import { renderScorecardTable } from "./scorecard.js";
+
 const OUTCOMES = ["Home win", "Draw", "Away win"];
 export const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Cancelled" };
 /* the chances a fixture's stakes track: league title, top four and drop; Champions League winner, top eight and top 24 */
@@ -80,7 +82,7 @@ function render() {
   renderDays();
   renderChips();
   renderDay();
-  renderRecord();
+  renderScorecardTable();
 }
 
 /* ---------- day strip ---------- */
@@ -384,16 +386,4 @@ export function record(matches) {
     home: played.filter((m) => outcome(m.score) === 0).length,
     given: n ? calls.reduce((s, v) => s + v.given, 0) / n : 0,
   };
-}
-
-function renderRecord() {
-  const rows = data.comps.map(({ slug, file }) => ({ label: compBySlug[slug].label, ...record(file.matches) }));
-  const total = record(data.comps.flatMap((c) => c.file.matches));
-  const share = (k, n) => (n ? `${Math.round((100 * k) / n)}%` : "–");
-  const line = (r, cls = "") => `<tr class="${cls}"><td class="club l">${esc(r.label)}</td><td>${r.n}</td>
-    <td class="b">${r.hits}</td><td class="lit">${share(r.hits, r.n)}</td><td>${share(r.exact, r.n)}</td>
-    <td>${share(r.home, r.n)}</td><td>${r.n ? pct1(r.given) : "–"}</td></tr>`;
-  $("m-record-table").innerHTML = `<thead><tr><th class="club l">Competition</th><th>Played</th><th>Called</th><th>Hit rate</th>
-      <th>Exact score</th><th>Home-win baseline</th><th>Avg chance given</th></tr></thead>
-    <tbody>${rows.map((r) => line(r)).join("")}${line({ label: "All", ...total }, "total")}</tbody>`;
 }

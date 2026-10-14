@@ -25,9 +25,11 @@ def fixture_forecasts(model, fixtures, forecast_at, max_goals=10):
         matrix = matrix / matrix.sum()
         home, away = np.indices(matrix.shape)
         p_model = [matrix[mask].sum() for mask in (home > away, home == away, home < away)]
-        p = blend_probabilities(p_model, p_elo=model.elo_probs(row["homeTeam"], row["awayTeam"], neutral=neutral),
+        p_elo = model.elo_probs(row["homeTeam"], row["awayTeam"], neutral=neutral)
+        p = blend_probabilities(p_model, p_elo=p_elo,
                                 weights=DEFAULT_WEIGHTS)
-        forecasts.append({"forecast_at": pd.Timestamp(forecast_at).isoformat(), **describe_match(matrix, p, score=_score(row))})
+        forecasts.append({"forecast_at": pd.Timestamp(forecast_at).isoformat(), "elo": list(p_elo),
+                          **describe_match(matrix, p, score=_score(row))})
     return forecasts
 
 

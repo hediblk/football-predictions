@@ -18,9 +18,9 @@ The main fix is done (Plan D in [PLAN.md](PLAN.md)). League offsets now shrink t
 - **Serie A looks low.** It sits last of the big five (57.5 against StatsUltra's 69.8); its few priced fixtures barely move it.
 - **Europa and Conference League data.** These are where mid-table clubs meet across leagues, so they matter for league levels. football-data.org's free tier refuses the Europa League (paid plans only) and has no Conference League; openfootball stops at 2024/25 plus qualifiers. The Odds API quotes both, and the archive has saved their 1X2 prices since 13 October 2026 (about 36 fixtures per round; 17 of the first 36 involve two clubs the Champions League model rates). Next: test them as extra market rows in the fit (the 10 December recheck does this). Its scores endpoint could also log results from now on for about 4 credits a day; the archive uses 8 of 500 monthly credits a day. 2025/26 results would need another source, such as Wikipedia's match tables or a paid API.
 
-### 2. Scorecard tab
+### 2. Scorecard in Matches and Model
 
-The track record in proper scores (log loss, RPS, Brier) against always backing the home side, Elo, and the market from the odds archive, with a calibration chart and a rolling view. "Called N of M" moves below these. It needs a few weeks of archived odds first. Champions League forecasts already use earlier archived prices (Plan E), so they are not independent of the market there.
+The Matches scorecard and Model Track record frame show log loss, RPS and Brier against each competition’s prior five-season outcome frequencies and Elo, with calibration counts and cumulative weekly scores. Published receipts and reconstructed forecasts are reported separately and together. The market comparison (feature-plan Task 14) remains pending until at least 300 published domestic fixtures have eligible archived quotes. Champions League forecasts already use earlier archived prices (Plan E), so they are not independent of the market there.
 
 ### 3. Players (phase 6)
 

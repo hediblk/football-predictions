@@ -9,6 +9,7 @@ import pandas as pd
 from dotenv import load_dotenv
 
 from standing_prediction.data import FootballDataClient, STANDING_COLUMNS, fetch_standings, standings_from_matches
+from standing_prediction.scorecard import frequency_baseline
 from standing_prediction.utils import normalize_team
 from standing_prediction.xg import load_season_xg
 
@@ -205,6 +206,16 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
             if year == season:
                 raise
             errors.append({"source": "football-data.org", "season": year, "error": str(exc)})
+    baseline_frames = {year: frame for frame in api_frames
+                       for year in frame["season"].unique() if year < season}
+    for year in range(season - 5, season):
+        if year in baseline_frames:
+            continue
+        try:
+            baseline_frames[year] = fetch_ucl_fixtures(client, season=year, cache=cache)
+        except (KeyError, ValueError, RuntimeError, OSError) as exc:
+            LOG.warning("Frequency baseline season %s unavailable (%s).", year, type(exc).__name__)
+    frequency = frequency_baseline(baseline_frames, season)
     source_audits, domestic_frames = [], []
     leagues = sorted(set(DOMESTIC_LEAGUES) | ({"SC0"} if "SC0" in team_leagues.values() else set()))
     with ThreadPoolExecutor(max_workers=6) as pool:
@@ -338,6 +349,7 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
                      "xg_missing": xg.empty, "sparse_domestic": len(domestic) < 20})
     metadata = {
         "season": season, "as_of": origin.isoformat(), "prior_seasons": prior_seasons,
+        "frequency_baseline": frequency,
         "history_matches": len(history), "display_names": display_names, "provider_team_ids": provider_ids,
         "sources": sorted(source_audits, key=lambda item: (item["competition"], item["season"])), "source_errors": errors,
         "source_versions": {"openfootball_europe": EUROPE_COMMIT, "openfootball_european_cups": EURO_CUPS_COMMIT},
