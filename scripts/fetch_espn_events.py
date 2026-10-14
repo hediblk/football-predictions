@@ -89,7 +89,7 @@ def derive_espn(payload, fixture, event_id, fetched_at):
         kind = EVENT_TYPES.get(row["type"]["type"])
         if not kind and row.get("scoringPlay"):
             kind = "goal"  # headers, volleys and free kicks have their own ESPN type labels
-        if not kind or row.get("shootout") or row.get("period", {}).get("number", 1) > 2:
+        if not kind or row.get("shootout") or row.get("period", {}).get("number", 1) > 4:  # keep extra time, drop shootouts
             continue
         side = side_ids[str(row["team"]["id"])]
         # ESPN credits own goals to the beneficiary; our side identifies the participating player's team.
