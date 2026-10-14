@@ -131,18 +131,6 @@
   <div id="view-match" hidden></div>
 
   <div id="view-model" hidden>
-    <fieldset class="frame sc-frame" id="scorecard" hidden>
-      <legend>Track record</legend>
-      <div class="sc-controls"><label for="sc-competition">Competition</label> <select id="sc-competition"></select></div>
-      <div class="chips" id="sc-cohorts" role="group" aria-label="Forecast cohort"></div>
-      <div id="sc-summary"></div>
-      <p class="note" id="sc-counts"></p>
-      <div id="sc-charts"></div>
-      <details><summary>Baselines and coverage</summary><div id="sc-baselines"></div>
-        <p class="note">Prior frequency is fixed from the five seasons before this one, with seasons listed above. It is unavailable until all five are loaded. Elo compares only fixtures with a saved component from the same forecast run.</p>
-      </details>
-      <p class="note">Published forecasts were saved before kickoff. Reconstructed forecasts use results before match day and fill games without a receipt; the combined record counts each fixture once. Calibrated seasons are not independent holdouts. Champions League strengths already use archived market prices. Market comparison awaits enough archived quotes.</p>
-    </fieldset>
     <fieldset class="frame hero">
       <legend>The model</legend>
       <div class="hero-in">
@@ -223,6 +211,19 @@
         <dt>Across leagues</dt>
         <dd>Leagues are compared through matches between clubs from different countries in the European cups; a league with few such matches is assumed to be a typical European league until results say otherwise. Bookmaker prices for upcoming Champions League games then set each league's current level. The average side is the mean of <span id="c-pool">every club with domestic results in the past year</span>. League averages on this scale: <span id="c-factors">loading</span>.</dd>
       </dl>
+    </fieldset>
+
+    <fieldset class="frame sc-frame" id="scorecard" hidden>
+      <legend>Track record</legend>
+      <div class="sc-controls"><label for="sc-competition">Competition</label> <select id="sc-competition"></select></div>
+      <div class="chips" id="sc-cohorts" role="group" aria-label="Forecast cohort"></div>
+      <div id="sc-summary"></div>
+      <p class="note" id="sc-counts"></p>
+      <div id="sc-charts"></div>
+      <details><summary>Baselines and coverage</summary><div id="sc-baselines"></div>
+        <p class="note">Prior frequency is fixed from the five seasons before this one, with seasons listed above. It is unavailable until all five are loaded. Elo compares only fixtures with a saved component from the same forecast run.</p>
+      </details>
+      <p class="note">Published forecasts were saved before kickoff. Reconstructed forecasts use results before match day and fill games without a receipt; the combined record counts each fixture once. Calibrated seasons are not independent holdouts. Champions League strengths already use archived market prices. Market comparison awaits enough archived quotes.</p>
     </fieldset>
 
     <fieldset class="frame method">
