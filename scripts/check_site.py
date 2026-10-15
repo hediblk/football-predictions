@@ -123,7 +123,11 @@ def routes(data):
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
-            found.append((f"#clubs/{club['slug']}", ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go"], [], None))
+            found.append((f"#clubs/{club['slug']}", ["#p-hero h1", "#p-strength .gauge", "#p-rating-chart svg", "#p-rating-caption", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go"], [], None))
+    if len(clubs) > 1:
+        found.append((f"#clubs/{clubs[0]['slug']}/vs/{clubs[1]['slug']}", [
+            "#p-hero h1", "#p-compare optgroup", "#p-compare option:checked", "#p-rating-chart .rating-series.comparison path",
+            "#p-strength .rating-compare-tick", "#p-rating-caption"], [], None))
     # Task 8: scorecard route, with calibration and cumulative record on both widths.
     if (data / "scorecard.json").exists():
         scorecard = json.loads((data / "scorecard.json").read_text())

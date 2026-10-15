@@ -8,13 +8,16 @@ import { spreadPanel } from "./tables.js";
 
 const RESULT = ["W", "D", "L"];
 const RESULT_WORD = ["Win", "Draw", "Loss"];
+const RATING_METRICS = [["rating", "Overall"], ["attack", "Attack"], ["defense", "Defence"]];
 let clubs = null;
 let leagueFilter = "all";
 let sortKey = "rating";
 let showAll = false;
 let profile = null; // matches shown on the open profile, by id
+let ratingState = null;
+let ratingMetric = "rating";
 
-export async function showClubs(slug) {
+export async function showClubs(slug, compareSlug = "") {
   try {
     clubs = await getJSON("clubs.json");
   } catch (err) {
@@ -25,9 +28,10 @@ export async function showClubs(slug) {
   }
   setStatus(clubs.generated_at);
   const club = slug && clubs.clubs.find((c) => c.slug === slug);
+  const comparison = club && compareSlug && clubs.clubs.find((c) => c.slug === compareSlug && c.id !== club.id);
   $("clubs-index").hidden = Boolean(club);
   $("club-profile").hidden = !club;
-  if (club) await showProfile(club);
+  if (club) await showProfile(club, comparison || null);
   else await showIndex();
 }
 
@@ -276,18 +280,19 @@ function renderScatter() {
 }
 
 /* ---------- profile ---------- */
-async function showProfile(club) {
+async function showProfile(club, comparison) {
   document.title = `${club.name} · Floodlight`;
   // A club from outside the five leagues has no league table here: its page follows its Champions League season.
   const domestic = Boolean(club.league);
   const comp = compBySlug[club.league || "champions-league"];
-  const [table, leagueMatches, ucl, uclMatches] = (await Promise.all([
+  const [table, leagueMatches, ucl, uclMatches, weekly] = (await Promise.all([
     domestic ? getJSON(`${club.league}.json`) : null,
     domestic ? getJSON(`matches/${club.league}.json`).catch(() => null) : null,
     club.ucl ? getJSON("champions-league.json").catch((err) => { if (domestic) return null; throw err; }) : null,
     club.ucl ? getJSON("matches/champions-league.json").catch(() => null) : null,
+    getJSON(`history/${clubs.season.split("/")[0]}/clubs.json`).catch(() => null),
     loadForm().catch(() => {}),
-  ])).slice(0, 4);
+  ])).slice(0, 5);
   const uclTeam = ucl ? ucl.teams.find((t) => t.id === club.id) : null;
   const team = domestic ? table.teams.find((t) => t.id === club.id) : uclTeam;
   const mine = (file, slug) => (file ? file.matches : [])
@@ -333,7 +338,7 @@ async function showProfile(club) {
     uclTeam && uclMatches && { label: "Champions League", team: uclTeam, file: uclMatches, keys: ["top8", "top24", "title"], words: STAKE_WORDS.ucl },
   ].filter(Boolean));
   renderResults(all);
-  renderStrength(club);
+  renderStrength(club, comparison, weekly);
   $("p-finish").innerHTML = spreadPanel(team, (domestic ? zones.releg : zones.out).from);
 }
 
@@ -487,28 +492,179 @@ function callStrip(games) {
     <p class="key"><span><i class="k-lamp hit"></i>Called: the result was the model's pick</span><span><i class="k-lamp miss"></i>Missed</span><span>Bar height: chance it gave what happened</span></p>`;
 }
 
-function renderStrength(club) {
+const dateMs = (iso) => Date.parse(`${iso}T00:00:00Z`);
+const signedRating = (value) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${Math.abs(value).toFixed(1)}`;
+
+/* Shared by the club profile and the match page's two-sides frame. `rated` is ordered amber, then dashed. */
+export function renderRatingComparisonChart(history, rated, metric, width = 640, liveDate = "") {
+  const weeks = history?.weeks || [];
+  const field = history?.fields?.indexOf(metric) ?? -1;
+  if (!weeks.length || field < 0) return `<p class="note">Weekly rating history is not available.</p>`;
+
+  const W = Math.round(Math.min(760, Math.max(300, width || 640)));
+  const phone = W < 480, H = phone ? 220 : 250;
+  const pad = { l: 36, r: phone ? 104 : 150, t: 14, b: 30 };
+  const times = weeks.map((week) => dateMs(week.date));
+  let liveTime = dateMs(liveDate || weeks.at(-1).date);
+  if (!Number.isFinite(liveTime) || liveTime <= times.at(-1)) liveTime = times.at(-1) + 60 * 60 * 1000;
+  times.push(liveTime);
+  const first = times[0], last = times.at(-1);
+  const x = (time) => pad.l + ((time - first) / (last - first || 1)) * (W - pad.l - pad.r);
+  const y = (value) => H - pad.b - (value / 100) * (H - pad.t - pad.b);
+  const lines = rated.map((club) => {
+    const values = weeks.map((week) => {
+      const tuple = week.clubs[String(club.id)];
+      return Array.isArray(tuple) ? tuple[field] : null;
+    });
+    values.push(club[metric]);
+    return { club, values };
+  });
+
+  const grid = [0, 25, 50, 75, 100].map((value) =>
+    `<line class="grid" x1="${pad.l}" x2="${W - pad.r}" y1="${y(value)}" y2="${y(value)}"/><text class="tick" x="${pad.l - 7}" y="${y(value) + 3}" text-anchor="end">${value}</text>`).join("");
+  const every = Math.max(1, Math.ceil((weeks.length - 1) / (phone ? 3 : 6)));
+  const ticks = weeks.map((week, i) => ({ x: x(times[i]), i, label: weekDay(week.date) }))
+    .filter(({ i }) => i % every === 0)
+    .filter(({ x: at }) => times.length < 3 || x(liveTime) - at > (phone ? 30 : 42))
+    .map(({ x: at, i, label }) => `<line class="week-tick" x1="${at}" x2="${at}" y1="${H - pad.b}" y2="${H - pad.b + 4}"/><text class="tick" x="${at}" y="${H - 8}" text-anchor="${i === 0 ? "start" : "middle"}">${esc(label)}</text>`).join("");
+  const linesSvg = lines.map(({ club, values }, index) => {
+    const cls = index ? "comparison" : "primary";
+    let path = "", open = false;
+    const points = values.map((value, i) => {
+      if (!Number.isFinite(value)) { open = false; return ""; }
+      path += `${open ? "L" : "M"}${x(times[i]).toFixed(1)} ${y(value).toFixed(1)} `;
+      open = true;
+      return `<circle class="point ${cls}${i === values.length - 1 ? " live" : ""}" cx="${x(times[i]).toFixed(1)}" cy="${y(value).toFixed(1)}" r="${i === values.length - 1 ? 3.5 : 1.8}"/>`;
+    }).join("");
+    return `<g class="rating-series ${cls}"><path d="${path}"/>${points}</g>`;
+  }).join("");
+
+  const ends = lines.map(({ club, values }, i) => ({ club, i, value: values.at(-1), y: y(values.at(-1)) }));
+  if (ends.length === 2 && Math.abs(ends[0].y - ends[1].y) < 15) {
+    ends[0].y = Math.max(pad.t + 8, ends[0].y - 8);
+    ends[1].y = Math.min(H - pad.b - 5, ends[1].y + 8);
+  }
+  const endLabels = ends.map(({ club, i, value, y: labelY }) => {
+    const actualY = y(value), short = club.name.length > (phone ? 8 : 13) ? `${club.name.slice(0, phone ? 7 : 12)}…` : club.name;
+    return `<line class="end-leader" x1="${x(liveTime) + 2}" y1="${actualY}" x2="${x(liveTime) + 7}" y2="${labelY}"/><text class="end ${i ? "comparison" : "primary"}" x="${x(liveTime) + 9}" y="${labelY + 4}">${esc(short)} ${dec(value)}</text>`;
+  }).join("");
+  const names = lines.map(({ club }) => `${club.name} ${dec(club[metric])}`).join("; ");
+  const metricLabel = RATING_METRICS.find(([key]) => key === metric)?.[1] || "Rating";
+  const aria = `${metricLabel} rating history by week. Live ratings: ${names}. Weekly values are available in the table below.`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(aria)}">
+    ${grid}${ticks}<line class="week-tick" x1="${x(liveTime)}" x2="${x(liveTime)}" y1="${H - pad.b}" y2="${H - pad.b + 4}"/><text class="tick" x="${x(liveTime)}" y="${H - 8}" text-anchor="end">Live</text>${linesSvg}${endLabels}</svg>`;
+}
+
+function ratingChange(club, metric, history, baseline) {
+  if (!baseline) return "";
+  const field = history?.fields?.indexOf(metric) ?? -1;
+  const tuple = baseline.clubs[String(club.id)];
+  const before = field >= 0 && Array.isArray(tuple) ? tuple[field] : null;
+  const since = weekDay(baseline.date);
+  if (!Number.isFinite(before)) return `<span class="mv new" aria-label="new since ${since}" title="new since ${since}">new</span>`;
+  const delta = Number((club[metric] - before).toFixed(1));
+  const direction = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
+  const arrow = delta > 0 ? "▲" : delta < 0 ? "▼" : "–";
+  const label = delta === 0 ? `unchanged since ${since}` : `${direction} ${Math.abs(delta).toFixed(1)} rating points since ${since}`;
+  return `<span class="mv ${direction}" aria-label="${label}" title="${label}">${arrow}<b>${signedRating(delta)}</b> since ${since}</span>`;
+}
+
+function compareOptions(club) {
+  const options = (items) => items.sort((a, b) => b.rating - a.rating || a.name.localeCompare(b.name))
+    .map((c) => `<option value="${esc(c.slug)}">${esc(c.name)}</option>`).join("");
+  const leagues = LEAGUES.map(({ slug, label }) => {
+    const items = clubs.clubs.filter((c) => c.league === slug && c.id !== club.id);
+    return items.length ? `<optgroup label="${esc(label)}">${options(items)}</optgroup>` : "";
+  }).join("");
+  const european = clubs.clubs.filter((c) => !c.league && c.id !== club.id);
+  return `<label class="rating-compare">Compare with <select id="p-compare" aria-label="Compare with">
+    <option value="">None</option>${leagues}${european.length ? `<optgroup label="Champions League">${options(european)}</optgroup>` : ""}
+  </select></label>`;
+}
+
+function historyCaption(history, rated, metric) {
+  const label = RATING_METRICS.find(([key]) => key === metric)?.[1] || "Rating";
+  const changes = rated.map((club) => {
+    const first = (history?.weeks || []).map((week) => ({ week, value: week.clubs[String(club.id)]?.[history.fields.indexOf(metric)] }))
+      .find((point) => Number.isFinite(point.value));
+    if (!first) return `${club.name}: no earlier weekly rating`;
+    const change = Number((club[metric] - first.value).toFixed(1));
+    return `${club.name} ${signedRating(change)} since the first week (${weekDay(first.week.date)})`;
+  });
+  return `${label} rating. ${changes.join("; ")}. The last point is the live rating.`;
+}
+
+function historyTable(history, rated, metric, liveDate) {
+  if (!history?.weeks?.length) return `<p class="note">Weekly rating history is not available.</p>`;
+  const rows = history.weeks.map((week) => `<tr><th scope="row">${esc(weekDay(week.date))}</th>${rated.map((club) => {
+    const value = week.clubs[String(club.id)]?.[history.fields.indexOf(metric)];
+    return `<td>${dec(value)}</td>`;
+  }).join("")}</tr>`).join("");
+  return `<div class="scroll"><table class="board rating-values" aria-label="Weekly ${esc(metric)} rating history">
+    <thead><tr><th scope="col">Week</th>${rated.map((club) => `<th scope="col">${esc(club.name)}</th>`).join("")}</tr></thead>
+    <tbody>${rows}<tr><th scope="row">Live · ${esc(weekDay(liveDate))}</th>${rated.map((club) => `<td>${dec(club[metric])}</td>`).join("")}</tr></tbody>
+  </table></div>`;
+}
+
+function drawRatingHistory() {
+  if (!ratingState) return;
+  const { history, club, comparison, liveDate } = ratingState;
+  const rated = comparison ? [club, comparison] : [club];
+  const chart = $("p-rating-chart");
+  chart.innerHTML = renderRatingComparisonChart(history, rated, ratingMetric, chart.clientWidth, liveDate);
+  $("p-rating-caption").textContent = historyCaption(history, rated, ratingMetric);
+  $("p-rating-table").innerHTML = historyTable(history, rated, ratingMetric, liveDate);
+}
+
+function renderRatingHistory(club, comparison, history) {
+  const metrics = RATING_METRICS.map(([key, label]) => `<button type="button" class="chip" data-rating-metric="${key}" aria-pressed="${ratingMetric === key}">${label}</button>`).join("");
+  return `${compareOptions(club)}
+    <div class="chips rating-metrics" role="group" aria-label="Rating history measure">${metrics}</div>
+    <figure class="rating-history"><div class="rating-chart" id="p-rating-chart"></div><figcaption class="note" id="p-rating-caption"></figcaption></figure>
+    <details class="rating-history-values"><summary>Weekly values</summary><div id="p-rating-table"></div></details>`;
+}
+
+function renderStrength(club, comparison, history) {
   const n = clubs.clubs.length;
   const avg = clubs.clubs.reduce((s, c) => s + c.rating, 0) / n;
+  const baseline = baseWeek(history, clubs.generated_at);
   const members = clubs.clubs.filter((c) => c.league === club.league).length;
   const field = clubs.clubs.filter((c) => c.ucl);
   const place = club.league ? `#${club.league_rank} of ${members} in ${esc(leagueName(club.league))}`
     : `#${field.indexOf(club) + 1} of the ${field.length} Champions League clubs`;
   const home = club.league ? `an average ${esc(leagueName(club.league))} side` : `an average side in ${esc(club.country)}'s top flight`;
-  const meter = (label, value, rank, note) => `<div class="gauge">
-      <h3>${label}</h3><b>${dec(value)}</b><span class="rank">${rankTag(rank, "span")} of ${n}</span>
-      <span class="meter big"><i style="width:${value}%"></i><em style="left:${avg}%" title="Average club"></em></span>
+  const meter = (label, metric, value, rank, note) => `<div class="gauge">
+      <h3>${label}</h3><b>${dec(value)}</b><span class="rank">${rankTag(rank, "span")} of ${n}${ratingChange(club, metric, history, baseline)}</span>
+      <span class="meter big" role="img" aria-label="${esc(`${label} ${dec(value)}; average ${dec(avg)}${comparison ? `; ${comparison.name} ${dec(comparison[metric])}` : ""}`)}">
+        <i style="width:${value}%"></i><em style="left:${avg}%" title="Average club"></em>${comparison ? `<span class="rating-compare-tick" style="left:${comparison[metric]}%" title="${esc(`${comparison.name}: ${dec(comparison[metric])}`)}"></span>` : ""}</span>
+      ${comparison ? `<span class="rating-compare-value">${esc(comparison.name)} <b>${dec(comparison[metric])}</b></span>` : ""}
       <span class="note">${note}</span></div>`;
   $("p-strength").innerHTML = `<div class="gauges">
-      ${meter("Overall", club.rating, club.rating_rank, place)}
-      ${meter("Attack", club.attack, club.attack_rank, `Scores ${dec(club.gf, 2)} a game against an average European top-flight side`)}
-      ${meter("Defence", club.defense, club.defense_rank, `Concedes ${dec(club.ga, 2)} a game against the same side`)}
+      ${meter("Overall", "rating", club.rating, club.rating_rank, place)}
+      ${meter("Attack", "attack", club.attack, club.attack_rank, `Scores ${dec(club.gf, 2)} a game against an average European top-flight side`)}
+      ${meter("Defence", "defense", club.defense, club.defense_rank, `Concedes ${dec(club.ga, 2)} a game against the same side`)}
     </div>
-    <p class="note">Share of points against an average European top-flight side: <b>${dec(club.home)}</b> at home, <b>${dec(club.away)}</b> away. Against ${home} it would take ${dec(club.league_rating)}%. The tick on each bar is the ${n}-club average.</p>`;
+    <p class="note">Share of points against an average European top-flight side: <b>${dec(club.home)}</b> at home, <b>${dec(club.away)}</b> away. Against ${home} it would take ${dec(club.league_rating)}%. The solid tick is the ${n}-club average${comparison ? `; the outlined tick is ${esc(comparison.name)}` : ""}.</p>
+    ${renderRatingHistory(club, comparison, history)}`;
+  ratingState = { club, comparison, history, liveDate: clubs.generated_at.slice(0, 10) };
+  $("p-compare").value = comparison?.slug || "";
+  drawRatingHistory();
 }
 
 expandable($("p-next"), ".crow", (row) => panelFor(row));
 expandable($("p-results"), ".crow", (row) => panelFor(row));
+$("p-strength").addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-rating-metric]");
+  if (!button) return;
+  ratingMetric = button.dataset.ratingMetric;
+  $("p-strength").querySelectorAll("[data-rating-metric]").forEach((chip) => chip.setAttribute("aria-pressed", String(chip === button)));
+  drawRatingHistory();
+});
+$("p-strength").addEventListener("change", (event) => {
+  const select = event.target.closest("#p-compare");
+  if (!select || !ratingState) return;
+  location.hash = select.value ? `clubs/${ratingState.club.slug}/vs/${select.value}` : `clubs/${ratingState.club.slug}`;
+});
 // Links lead to the other club's profile; the open club's own link is dropped.
 const panelFor = (row) => {
   const m = profile.get(row.dataset.key);
