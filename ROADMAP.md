@@ -24,7 +24,11 @@ The Matches scorecard and Model Track record frame show log loss, RPS and Brier 
 
 ### 3. Players (phase 6)
 
-Lineups, injuries and suspensions, with player ratings that turn an expected starting XI into team strength. A player dataset with ratings for whole squads would give every player a prior, including clubs outside the top five leagues where we have the least data. Check each source's terms before republishing its data on the site. A lineup and injury source is also needed: the API-Football free tier or a paid football-data.org plan. This is the largest effort and the largest remaining source of information.
+The [La Liga ideal-XI pilot](docs/squad-matching.md) matches current API squads to EA ratings, freezes position-constrained XIs, and compares actual starts, substitute appearances and minutes from collected match data. Its local reports keep older-game diagnostics separate from prospective observations. The UEFA identity cross-check resolves all 129 heatmap-player and 110 starter records for the five pilot clubs represented in ten Champions League club-games.
+
+The [XI follow-up plan](docs/xi-ui-plan-2026-10-15.md) defines four tasks: publish dated squad/participation data; add a club **Squad** subtab; show actual XI history, average playing time and reference usage; evaluate LightGBM/XGBoost for lineup-based 1X2 and xG for/against. Start the experiment with pooled teams and compare separate team models only when data supports them. Any small forecast weight requires chronological incremental-gain evidence and an explicit calibration change.
+
+Remaining work includes identity coverage, historical rating vintages, dated pre-kickoff lineups, source redistribution terms and evaluation. Existing domestic match sheets and UEFA lineup/physical records supply historical starters/minutes; heatmap grids alone do not. Unused bench, injuries and suspensions need additional evidence. The current pilot changes neither published player data nor forecast probabilities.
 
 ## Parked
 

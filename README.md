@@ -263,6 +263,10 @@ python3 -m http.server -d site 8000
 
 Every adjustment is logged and listed in the forecast metadata.
 
+## Squad ratings pilot
+
+A local [ideal-XI pilot](docs/squad-matching.md) matches current squads to EA ratings, freezes position-constrained XIs, and compares their starters, substitute appearances and minutes with collected match data. It starts with La Liga and writes review reports under `out/squads/`; it does not change forecasts or published site data. A UEFA heatmap-player identity audit and [follow-up task plan](docs/xi-ui-plan-2026-10-15.md) prepare the club Squad subtab, XI/minutes history and a later lineup-based forecasting experiment.
+
 ## Limits
 
 - Probabilities assume the fitted team strengths are right; they ignore rating uncertainty, transfers and injuries.
