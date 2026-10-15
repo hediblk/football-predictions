@@ -84,7 +84,7 @@ def routes(data):
     # "Games that matter" is hidden when no fixture in the next seven days passes the stakes bar; open a row if shown.
     found += [("#matches", ["#m-day .day-head", "#m-record-table tbody tr"], ["#m-matter:not([hidden]) .mrow"],
                "#m-matter .panel a[href^='#match/']"),
-              ("#clubs", ["#c-hero h1", "#c-board .cell", "#c-rank tbody tr", "#c-scatter svg"], [], None),
+              ("#clubs", ["#c-hero h1", "#c-rank tbody tr", "#c-scatter svg"], [], None),
               ("#model/ratings", ["#c-factors b"], [], None)]
     # The first day from the forecast on with fixtures, opening a game with something at stake if there is one.
     fixtures = [(slug, match) for slug in COMPETITIONS if (data / f"matches/{slug}.json").exists()
