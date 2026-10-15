@@ -337,6 +337,13 @@ def validate_scorecard(data):
                 close(sum(baseline["p"]), 1, 1e-9, "frequency probability sum")
 
 
+def validate_notes(data):
+    seasons = data["seasons"]
+    years = [int(season.split("/")[0]) for season in seasons]
+    require(years == sorted(set(years)), "note coverage seasons must strictly increase")
+    require(data["first_season"] == seasons[0], "first season differs from note coverage")
+
+
 def validate_payload(data, family):
     finite(data)
     errors = list(validator(family).iter_errors(data))
@@ -362,6 +369,8 @@ def validate_payload(data, family):
         validate_history(data)
     elif family == "club_history":
         validate_club_history(data)
+    elif family == "notes":
+        validate_notes(data)
 
 
 def file_family(path):
@@ -373,6 +382,8 @@ def file_family(path):
             return "ucl" if path.stem == "champions-league" else "league"
     if len(parts) == 2 and parts[0] == "matches" and path.stem in COMPETITIONS:
         return "matches"
+    if len(parts) == 2 and parts[0] == "notes" and path.stem in COMPETITIONS:
+        return "notes"
     if (len(parts) == 4 and parts[0] == "match" and parts[1].isdigit()
             and parts[2] in COMPETITIONS and path.stem.isdigit() and int(path.stem) > 0):
         return "match_events"
@@ -422,6 +433,21 @@ def validate_site_data(data_dir, *, site_dir=None):
             errors.append(f"index.json: {entry['slug']} metadata differs from table")
     if "index.json" in files and {entry["slug"] for entry in files["index.json"]} != set(COMPETITIONS):
         errors.append("index.json: competition set differs from required tables")
+    for name, data in files.items():
+        if Path(name).parts[0] != "notes":
+            continue
+        slug = Path(name).stem
+        matches = files.get(f"matches/{slug}.json")
+        table = files.get(f"{slug}.json")
+        if table is not None:
+            if data["as_of"] != table["as_of"]:
+                errors.append(f"{name}: forecast origin differs from competition")
+            if data["generated_at"] != table["generated_at"]:
+                errors.append(f"{name}: generation time differs from competition")
+        if matches is not None:
+            fixture_ids = {str(row["id"]) for row in matches["matches"]}
+            if not set(data["fixtures"]) <= fixture_ids:
+                errors.append(f"{name}: note references an unknown fixture")
     for club in files.get("clubs.json", {}).get("clubs", []):
         if club["league"] is not None and f"{club['league']}.json" not in files:
             errors.append(f"clubs.json: unresolved league {club['league']}")

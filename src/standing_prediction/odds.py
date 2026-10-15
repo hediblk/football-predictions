@@ -163,6 +163,10 @@ def fetch_football_data_uk_matches(
     cache_dir=".cache/football-data-uk", use_cache=True,
 ):
     df = _football_data_csv(league_code, season_start_year, timeout, cache_dir, use_cache)
+    return _football_data_matches(df)
+
+
+def _football_data_matches(df):
     required = {"Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG"}
     if not required.issubset(df.columns):
         raise ValueError(f"football-data.co.uk CSV missing columns: {sorted(required - set(df.columns))}")

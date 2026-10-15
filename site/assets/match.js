@@ -37,12 +37,13 @@ export async function showMatch(slug, id) {
   }
   const post = Boolean(m.score && m.p);
   const season = (table || clubs)?.season.split("/")[0];
-  const [stakes, hist, weekly, events] = await Promise.all([
+  const [stakes, hist, weekly, events, notes] = await Promise.all([
     stakesTable(m, slug),
     post && season ? getJSON(`history/${season}/${slug}.json`).catch(() => null) : null,
     post && season ? getJSON(`history/${season}/clubs.json`).catch(() => null) : null,
     // Shared detail is optional and fetched only on the finished match page, for every competition.
     post && season ? getJSON(`match/${season}/${slug}/${m.id}.json`).catch(() => null) : null,
+    getJSON(`notes/${slug}.json`).catch(() => null),
   ]);
   const span = post ? refreshes(hist, m.kickoff) : null;
   const pastStakes = post && m.published ? await stakesTable(m, slug, { day: span ? dayLabel(hist.dates[span.b]) : "–", before: (club, key) => histValue(hist, span, club, key, "b") }) : "";
@@ -50,15 +51,17 @@ export async function showMatch(slug, id) {
   document.title = `${m.home} v ${m.away} · Floodlight`;
   setStatus(file.generated_at);
   const slugs = new Map((clubs ? clubs.clubs : []).map((c) => [c.id, c.slug]));
-  page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly, mode: post ? "after" : "before",
+  page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly,
+    note: notes?.fixtures?.[String(m.id)] || null, noteSeasons: notes?.seasons || [], mode: post ? "after" : "before",
     heatSide: "h", heatPlayer: "", positions: true, detail: events, shots: events && events.shots && events.shots.length ? events : null };
   render();
 }
 
 function render() {
   const { m, comp, slugs, stakes, table, clubs, files } = page;
-  $("view-match").innerHTML = hero(m, comp, slugs) + (page.mode === "after" ? against(m, comp, page.file) + shotReport(m) + matchStats(m) + wherePlayed(m) + changed(m, comp)
-    : (m.p ? `<fieldset class="frame"><legend>${m.score ? "The forecast before kickoff" : "The forecast"}</legend><div class="panel mp-fc">${forecastBlocks(m)}</div></fieldset>` : "")
+  $("view-match").innerHTML = hero(m, comp, slugs) + (page.mode === "after"
+    ? against(m, comp, page.file) + shotReport(m) + matchStats(m) + wherePlayed(m) + changed(m, comp) + notesFrame()
+    : notesFrame() + (m.p ? `<fieldset class="frame"><legend>${m.score ? "The forecast before kickoff" : "The forecast"}</legend><div class="panel mp-fc">${forecastBlocks(m)}</div></fieldset>` : "")
       + (stakes ? `<fieldset class="frame"><legend>What's at stake</legend>${stakes}</fieldset>` : "")
       + sides(m, comp, table, clubs, files));
   drawXg();
@@ -116,6 +119,26 @@ function hero(m, comp, slugs) {
 const dayLabel = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 const happened = (m, v) => (v.actual === 1 ? "a draw" : `a ${v.actual ? m.away : m.home} win`);
 const utcDay = (iso) => new Date(iso).toISOString().slice(0, 10);
+
+function notesFrame() {
+  const { note, noteSeasons } = page;
+  if (!note) return "";
+  const after = page.mode === "after";
+  const notes = after ? note.post || [] : note.pre || [];
+  const meetings = !after && note.meetings ? note.meetings : [];
+  if (!notes.length && !meetings.length) return "";
+  const sentences = notes.map((item) => `<li><span class="mp-note-bulb" aria-hidden="true"></span>${esc(item.text)}</li>`).join("");
+  const chips = meetings.map((item) => {
+    const score = `${item.score[0]}–${item.score[1]}`;
+    const date = new Date(`${item.date}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+    const detail = `${date} · at ${item.venue} (${item.home} v ${item.away})`;
+    return `<details class="mp-meeting"><summary title="${esc(detail)}" aria-label="${esc(`${score}; ${detail}`)}">${score}</summary><span>${esc(detail)}</span></details>`;
+  }).join("");
+  return `<fieldset class="frame mp-notes"><legend>Notes</legend><h4>${after ? "What it meant" : "On the line"}</h4>
+    ${sentences ? `<ul class="mp-note-list">${sentences}</ul>` : ""}
+    ${chips ? `<div class="mp-meetings"><h5>Last meetings</h5><div class="mp-meeting-chips">${chips}</div></div>` : ""}
+    ${noteSeasons.length ? `<p class="note">Results in our records: ${esc(noteSeasons.join(", "))}.</p>` : ""}</fieldset>`;
+}
 
 /* The history points either side of a fixture, as indices { b, a }, or null. A point dated D is the run as of D
    (site_history.add_point dates it by the run's as_of): the daily refresh runs at 01:17 UTC (the backfill at 05:30),

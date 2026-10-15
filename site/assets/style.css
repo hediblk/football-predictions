@@ -1053,3 +1053,20 @@ table.mp-stand { min-width: 460px; }
   .mp-stats.mp-running .mp-stat-row { grid-template-columns: 68px minmax(0, 1fr) 80px minmax(0, 1fr) 68px; gap: 5px; }
   .mp-stats.mp-running .mp-stat-value { padding: 2px 3px; font-size: 10px; }
 }
+
+/* Task 9 · match notes and accessible last-meeting score chips */
+.mp-notes h4 { margin: 4px 0 12px; font: 800 12px/1 var(--sign); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.mp-note-list { display: grid; gap: 9px; max-width: 96ch; margin: 0; padding: 0; list-style: none; }
+.mp-note-list li { display: flex; align-items: flex-start; gap: 10px; color: var(--ink-2); font: 12px/1.55 var(--mono); }
+.mp-note-bulb { flex: 0 0 7px; width: 7px; height: 7px; margin-top: .55em; border-radius: 50%; background: var(--amber); box-shadow: 0 0 5px var(--amber); }
+.mp-meetings { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--rule-2); }
+.mp-meetings h5 { margin: 0 0 9px; color: var(--dim); font: 800 10px/1 var(--sign); letter-spacing: .16em; text-transform: uppercase; }
+.mp-meeting-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.mp-meeting { position: relative; }
+.mp-meeting summary { min-width: 44px; padding: 6px 8px; border: 1px solid var(--rule); color: var(--ink-2); cursor: help; list-style: none; text-align: center; font: 500 11px/1 var(--mono); }
+.mp-meeting summary::-webkit-details-marker { display: none; }
+.mp-meeting summary:hover, .mp-meeting[open] summary { border-color: var(--amber); color: var(--amber-t); }
+.mp-meeting > span { display: none; }
+.mp-meeting[open] > span { position: absolute; z-index: 3; top: calc(100% + 4px); left: 0; width: max-content; max-width: min(280px, calc(100vw - 56px)); padding: 7px 9px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink-2); font-size: 11px; line-height: 1.45; }
+.mp-notes > .note { margin-top: 14px; }
+@media (max-width: 600px) { .mp-meeting:nth-child(n+4) > span { right: 0; left: auto; } }
