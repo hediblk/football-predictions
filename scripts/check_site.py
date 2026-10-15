@@ -154,7 +154,7 @@ def routes(data):
         if club:
             slug = club.get("league") or "champions-league"
             selectors = ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go",
-                         "#p-goals .pm-xg-table"]
+                         "#p-rating-chart svg", "#p-rating-caption", "#p-goals .pm-xg-table"]
             if has_points_data(data, slug, club["id"]):
                 selectors.append("#p-results .pm-chart svg")
             if has_xg_data(data, slug, club["id"]):
@@ -168,6 +168,10 @@ def routes(data):
                     content = "#p-results .pm-chart svg" if has_points_data(data, comp_slug, club["id"]) else None
                     interactions.append((button, f'{button}[aria-pressed="true"]', content))
             found.append((f"#clubs/{club['slug']}", selectors, [], None, interactions))
+    if len(clubs) > 1:
+        found.append((f"#clubs/{clubs[0]['slug']}/vs/{clubs[1]['slug']}", [
+            "#p-hero h1", "#p-compare optgroup", "#p-compare option:checked", "#p-rating-chart .rating-series.comparison path",
+            "#p-strength .rating-compare-tick", "#p-rating-caption"], [], None))
     # Task 8: scorecard route, with calibration and cumulative record on both widths.
     if (data / "scorecard.json").exists():
         scorecard = json.loads((data / "scorecard.json").read_text())

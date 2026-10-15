@@ -69,7 +69,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | 1. Published forecast receipts | Foundation | A | none | M | [PR #31](https://github.com/hediblk/football-predictions/pull/31) |
 | 2. Match page: route and pre-game mode | Phase 1 | A | none | L | [PR #30](https://github.com/hediblk/football-predictions/pull/30) |
 | 3. Weekly race movers | Addition 2 | A | none | S | [PR #37](https://github.com/hediblk/football-predictions/pull/37) |
-| 4. Rating history and club comparison | Addition 5 | A | none | M | To do |
+| 4. Rating history and club comparison | Addition 5 | A | none | M | [PR #44](https://github.com/hediblk/football-predictions/pull/44) |
 | 5. Games that matter | Addition 6 | A | none | S | [PR #36](https://github.com/hediblk/football-predictions/pull/36) |
 | 6. Match page: post-game mode | Phase 1 | B | 2 (uses 1 when merged) | M | [PR #32](https://github.com/hediblk/football-predictions/pull/32) |
 | 7. Who's beating the model | Addition 4 | B | none (uses 1 when merged) | M | [PR #45](https://github.com/hediblk/football-predictions/pull/45) |

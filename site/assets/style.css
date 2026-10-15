@@ -980,6 +980,42 @@ table.mp-stand { min-width: 460px; }
   .mp-feed-txt { font-size: 11px; }
 }
 
+/* Task 4 · club rating history and comparison */
+.gauge .meter, .gauge .note, .gauge .rating-compare-value { grid-column: 1 / -1; }
+.gauge .rating-compare-value { color: var(--ink-2); font-size: 11px; }
+.gauge .rank .mv { font: 500 11px/1 var(--mono); }
+.gauge .rank .mv b, .gauge .rating-compare-value b { font: 700 11px/1 var(--mono); }
+.rating-compare { display: flex; align-items: center; gap: 12px; width: max-content; max-width: 100%; margin-top: 18px; color: var(--dim); font-size: 12px; }
+.rating-compare select { min-height: 40px; max-width: 100%; padding: 0 30px 0 10px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink-2); font: 500 12px var(--mono); }
+.rating-compare select:hover { border-color: var(--ink-2); }
+.rating-compare select:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.rating-compare option, .rating-compare optgroup { background: var(--panel); color: var(--ink); }
+.rating-metrics { margin: 12px 0 6px; }
+.rating-history { margin: 0; }
+.rating-chart > svg { display: block; width: 100%; max-width: 760px; height: auto; }
+.rating-chart .grid { stroke: var(--rule-2); stroke-width: 1; }
+.rating-chart .tick { fill: var(--dim); font: 500 9px var(--mono); }
+.rating-chart .week-tick, .rating-chart .end-leader { stroke: var(--rule); stroke-width: 1; }
+.rating-chart .rating-series path { fill: none; stroke-width: 1.7; stroke-linejoin: round; }
+.rating-chart .rating-series.primary path { stroke: var(--amber); stroke-width: 2.4; }
+.rating-chart .rating-series.comparison path { stroke: var(--ink-2); stroke-dasharray: 5 4; }
+.rating-chart .point.primary { fill: var(--amber); stroke: var(--bg); stroke-width: 1; }
+.rating-chart .point.comparison { fill: var(--panel); stroke: var(--ink-2); stroke-width: 1.5; }
+.rating-chart .end { font: 500 10px var(--mono); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.rating-chart .end.primary { fill: var(--amber-t); font-weight: 700; }
+.rating-chart .end.comparison { fill: var(--ink); }
+.rating-compare-tick { position: absolute; z-index: 1; top: -4px; bottom: -4px; width: 5px; transform: translateX(-50%); box-sizing: border-box; border: 1px solid var(--ink-2); background: var(--panel); }
+.rating-history-values { margin-top: 8px; color: var(--ink-2); font-size: 11px; }
+.rating-history-values summary { width: max-content; max-width: 100%; cursor: pointer; color: var(--dim); }
+.rating-values { min-width: 260px; margin-top: 8px; }
+.rating-values th, .rating-values td { padding: 6px 10px; text-align: right; white-space: nowrap; }
+.rating-values th:first-child { text-align: left; }
+@media (pointer: coarse) { .rating-compare select { min-height: 44px; } }
+@media (max-width: 599px) {
+  .rating-compare { width: 100%; justify-content: space-between; }
+  .rating-compare select { min-width: 0; flex: 1; }
+}
+
 /* Task 13 · UEFA activity map: one control row of chip-sized controls over the shared pitch */
 .mp-heat-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 4px 0 16px; }
 .mp-heat-sides { display: flex; gap: 8px; }
