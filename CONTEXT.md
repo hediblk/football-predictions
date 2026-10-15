@@ -35,6 +35,12 @@ _Avoid_: Current ranking when the movement baseline is meant.
 Club strength ratings and league averages saved at one refresh with a fresh Champions League fit, dated by its forecast origin. The match page compares the last run before kickoff with the first run that includes the result.
 _Avoid_: Weekly ranking snapshot.
 
+**Ideal XI**:
+A frozen, rating-based reference lineup that maximizes summed EA overall within a chosen formation, using each player's listed positions and assuming everyone is available. It is distinct from the expected or confirmed starting XI.
+
+**Ideal XI usage**:
+The reference players' observed starts, substitute appearances and minutes in a match. An absence does not establish injury, suspension or rest; missing identity or match-sheet evidence stays unknown.
+
 **Retained forecast**:
 The last successfully published forecast kept when a competition's refresh fails. Its original forecast time remains meaningful even when other competitions have newer forecasts.
 _Avoid_: Fresh forecast, updated forecast.
