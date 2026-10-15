@@ -1,12 +1,15 @@
 """Dated snapshots behind the website's charts and weekly club ranking (`site/data/history/<season>/`).
 
-Two kinds of file, both small and columnar:
+Three kinds of file, all small and columnar:
 
 - `<competition slug>.json`: each club's title, top-four and relegation chances (Champions League:
   stage chances) through the season, in percent (one decimal below 10, whole numbers above). A point is added on each day that brings new results; a refresh
   without new results updates the latest point instead, so the file grows with match days, not runs.
 - `clubs.json`: every rated club's overall, attack and defence ratings, frozen once a week on Monday,
   after the weekend round and the previous week's Champions League games.
+- `ratings/<YYYY-MM>.json`: the same ratings plus the five league averages at every refresh with fresh club
+  ratings, one month per file by the run's forecast origin, so a match page can compare the last run before
+  kickoff with the first run after the result.
 
 The functions here work on plain dicts so the refresh, the backfill and the tests share them.
 """
@@ -157,3 +160,25 @@ def merge_weeks(earlier, later):
         return earlier
     last = earlier["weeks"][-1]["date"] if earlier["weeks"] else ""
     return {**earlier, "weeks": earlier["weeks"] + [week for week in later["weeks"] if week["date"] > last]}
+
+
+def run_month(as_of):
+    """`2026-10-14T18:40:00+00:00` -> `2026-10`, the UTC month whose file holds that run."""
+    return pd.to_datetime(as_of, utc=True).strftime("%Y-%m")
+
+
+def add_run(history, ratings, *, as_of, season, cutoff=None, leagues=None):
+    """Append one refresh's `ratings` ({club id: (rating, attack, defense)}) and league averages to its month.
+
+    Runs are append-only: a run at or before the month's latest origin is refused (returns False), so a
+    rerun of the same outputs adds nothing and a refresh cannot rewrite earlier runs.
+    """
+    month = run_month(as_of)
+    if not history or history.get("season") != season or history.get("month") != month:
+        history = {"season": season, "month": month, "fields": list(CLUB_FIELDS), "runs": []}
+    runs = history["runs"]
+    if not ratings or (runs and pd.Timestamp(runs[-1]["as_of"]) >= pd.Timestamp(as_of)):
+        return history, False
+    runs.append({"as_of": as_of, "cutoff": cutoff, "leagues": dict(leagues or {}),
+                 "clubs": {str(club): [_round(value) for value in values] for club, values in ratings.items()}})
+    return history, True

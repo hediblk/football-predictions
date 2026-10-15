@@ -202,8 +202,8 @@ def routes(data):
 def visit(context, url, origin, selectors, rows, opened, interactions=()):
     problems = []
     page = context.new_page()
-    # A missing per-match file is a documented state (that source has no data), so its 404 is not a failure.
-    optional = lambda url: "/data/match/" in url or "/data/notes/" in url
+    # A missing per-match, notes or rating-month file is a documented state (no data), so its 404 is not a failure.
+    optional = lambda url: "/data/match/" in url or "/data/notes/" in url or "/ratings/" in url
     page.on("console", lambda msg: msg.type == "error" and not optional(msg.location.get("url", ""))
             and problems.append(f"console: {msg.text}"))
     page.on("pageerror", lambda exc: problems.append(f"exception: {exc}"))

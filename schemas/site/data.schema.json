@@ -1090,6 +1090,30 @@
         "weeks": {"type":"array","items":{"$ref":"#/$defs/week"},"minItems":0}
       },
       "required": ["season","fields","weeks"]
+    },
+    "ratingRun": {
+      "type": "object",
+      "properties": {
+        "as_of": {"$ref":"#/$defs/timestamp"},
+        "cutoff": {"anyOf":[{"$ref":"#/$defs/timestamp"},{"type":"null"}]},
+        "leagues": {
+          "type": "object",
+          "propertyNames": {"$ref":"#/$defs/leagueSlug"},
+          "additionalProperties": {"$ref":"#/$defs/percentage"}
+        },
+        "clubs": {"$ref":"#/$defs/week/properties/clubs"}
+      },
+      "required": ["as_of","cutoff","leagues","clubs"]
+    },
+    "rating_runs": {
+      "type": "object",
+      "properties": {
+        "season": {"$ref":"#/$defs/season"},
+        "month": {"type":"string","pattern":"^[0-9]{4}-(0[1-9]|1[0-2])$"},
+        "fields": {"const":["rating","attack","defense"]},
+        "runs": {"type":"array","items":{"$ref":"#/$defs/ratingRun"},"minItems":1}
+      },
+      "required": ["season","month","fields","runs"]
     }
   }
 }
