@@ -20,7 +20,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
-TABLE = ["#hero-in h1", "#table tbody tr.row",
+TABLE = ["#hero-in h1", "#table tbody tr.row", "#table th.vsm", "#table tbody tr.row td.vsm",
          # Race movers: a mover or the "no change" line; hidden without a frozen Monday before this week to compare with.
          "#race-moves li, #race-moves[hidden]"]
 MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
@@ -45,13 +45,42 @@ class Server(ThreadingHTTPServer):
         pass  # a closed page cut off a download; the browser reports any failure that matters
 
 
+def has_points_data(data, slug, club_id=None):
+    path = data / f"matches/{slug}.json"
+    if not path.exists():
+        return False
+    matches = json.loads(path.read_text()).get("matches", [])
+    return any(match.get("status") == "FINISHED"
+               and isinstance(match.get("score"), list) and len(match["score"]) == 2
+               and isinstance(match.get("p"), list) and len(match["p"]) == 3
+               and (club_id is None or club_id in (match.get("home_id"), match.get("away_id")))
+               and (slug != "champions-league" or match.get("stage") == "LEAGUE_STAGE")
+               for match in matches)
+
+
+def has_xg_data(data, slug, club_id):
+    path = data / f"matches/{slug}.json"
+    if not path.exists():
+        return False
+    matches = json.loads(path.read_text()).get("matches", [])
+    return any(match.get("status") == "FINISHED"
+               and isinstance(match.get("score"), list) and len(match["score"]) == 2
+               and isinstance(match.get("xg"), list) and len(match["xg"]) == 2
+               and club_id in (match.get("home_id"), match.get("away_id"))
+               for match in matches)
+
+
 def routes(data):
     # (hash, selectors that must each match something, rows to try opening in turn, what an opened row shows)
     index = json.loads((data / "index.json").read_text())
     clubs = json.loads((data / "clubs.json").read_text())["clubs"]
     origin = max(entry["generated_at"] for entry in index)
-    found = [(f"#{slug}", TABLE + (["#rounds .mrow", "#bracket .tie", "#ko-table tbody tr"] if slug == "champions-league" else []),
-              ["#table tr.row"], "#table tr.detail") for slug in COMPETITIONS]
+    found = []
+    for slug in COMPETITIONS:
+        selectors = TABLE + (["#rounds .mrow", "#bracket .tie", "#ko-table tbody tr"] if slug == "champions-league" else [])
+        if has_points_data(data, slug):
+            selectors.append('#table tbody tr.row td.vsm[title*="finished games with a forecast"]')
+        found.append((f"#{slug}", selectors, ["#table tr.row"], "#table tr.detail"))
     # "Games that matter" is hidden when no fixture in the next seven days passes the stakes bar; open a row if shown.
     found += [("#matches", ["#m-day .day-head", "#m-record-table tbody tr"], ["#m-matter:not([hidden]) .mrow"],
                "#m-matter .panel a[href^='#match/']"),
@@ -123,7 +152,22 @@ def routes(data):
     # The top club, and a Champions League club from outside the five leagues if one is ranked.
     for club in [clubs[0], next((c for c in clubs if c.get("league") is None), None)]:
         if club:
-            found.append((f"#clubs/{club['slug']}", ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go"], [], None))
+            slug = club.get("league") or "champions-league"
+            selectors = ["#p-hero h1", "#p-strength .gauge", "#p-tiles .tile", "#p-finish .det", "#club-profile .c-go",
+                         "#p-goals .pm-xg-table"]
+            if has_points_data(data, slug, club["id"]):
+                selectors.append("#p-results .pm-chart svg")
+            if has_xg_data(data, slug, club["id"]):
+                selectors.append("#p-goals .pm-spark svg")
+            interactions = []
+            if club.get("league") and club.get("ucl"):
+                league_selector = f'#p-results [data-pcomp="{club["league"]}"]'
+                ucl_selector = '#p-results [data-pcomp="champions-league"]'
+                selectors += [league_selector, ucl_selector, f'{league_selector}[aria-pressed="true"]']
+                for comp_slug, button in (("champions-league", ucl_selector), (club["league"], league_selector)):
+                    content = "#p-results .pm-chart svg" if has_points_data(data, comp_slug, club["id"]) else None
+                    interactions.append((button, f'{button}[aria-pressed="true"]', content))
+            found.append((f"#clubs/{club['slug']}", selectors, [], None, interactions))
     # Task 8: scorecard route, with calibration and cumulative record on both widths.
     if (data / "scorecard.json").exists():
         scorecard = json.loads((data / "scorecard.json").read_text())
@@ -133,7 +177,7 @@ def routes(data):
     return origin, found
 
 
-def visit(context, url, origin, selectors, rows, opened):
+def visit(context, url, origin, selectors, rows, opened, interactions=()):
     problems = []
     page = context.new_page()
     # A missing per-match file is a documented state (that source has no data), so its 404 is not a failure.
@@ -149,6 +193,15 @@ def visit(context, url, origin, selectors, rows, opened):
     for selector in selectors:
         if not page.locator(selector).count():
             problems.append(f"empty: nothing matches {selector}")
+    for button, selected, content in interactions:
+        if not page.locator(button).count():
+            problems.append(f"empty: nothing matches {button}")
+            continue
+        page.locator(button).click()
+        if not page.locator(selected).count():
+            problems.append(f"clicking {button} did not select {selected}")
+        if content and not page.locator(content).count():
+            problems.append(f"clicking {button} did not render {content}")
     text = page.locator("main").inner_text()
     problems += [f"shows {phrase!r}" for phrase in BROKEN if phrase in text]
     limit = 13 if page.locator(".mp-running").count() else 10

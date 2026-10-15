@@ -465,8 +465,7 @@ function renderResults(club, league, europe) {
   let selected = groups.find((g) => g.slug === club.league)?.slug || groups[0].slug;
   const paint = () => {
     const group = groups.find((g) => g.slug === selected);
-    const rows = group.matches.filter((m) => !group.leaguePhaseOnly || m.stage === "LEAGUE_STAGE");
-    const played = rows.filter((m) => m.score).reverse();
+    const played = group.matches.filter((m) => m.status === "FINISHED" && m.score).reverse();
     const r = record(played);
     const avg = r.n ? pct1(r.given) : "–";
     const chips = groups.length > 1 ? `<div class="chips" role="group" aria-label="Results by competition">
