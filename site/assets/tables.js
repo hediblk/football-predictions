@@ -144,7 +144,7 @@ function renderTable(data, matches) {
       : "No finished games with a forecast";
     const rank = i + 1;
     const bulbs = t.probs.map((p, j) =>
-      `<i class="${gaps.has(j + 1) ? "gap" : ""}" style="background:${bulb(p, top)}" data-tip="${esc(`${clubName(t.id, t.name, "inline")} ${ordinal(j + 1)}: <b>${p.toFixed(2)}%</b>`)}"></i>`).join("");
+      `<i class="${gaps.has(j + 1) ? "gap" : ""}" style="background:${bulb(p, top, 1)}" data-tip="${esc(`${clubName(t.id, t.name, "inline")} ${ordinal(j + 1)}: <b>${p.toFixed(2)}%</b>`)}"></i>`).join("");
     const tip = `${clubName(t.id, t.name, "inline")}<br>Projected <b>${t.xpts.toFixed(1)}</b> pts · 80% range <b>${t.p10}–${t.p90}</b><br>Now <b>${t.points}</b> after ${t.played}`;
     const cells = cols.map(([k, , tone]) => {
       const v = t[k];

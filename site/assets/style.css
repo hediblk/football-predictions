@@ -303,7 +303,7 @@ tr.detail td { height: auto; padding: 14px 8px 20px; background: var(--panel); t
   .chips::-webkit-scrollbar { display: none; }
   .chip { flex: none; }
 }
-a.more { color: var(--amber-t); text-decoration: none; font: 700 14px/1.6 var(--sign); letter-spacing: .1em; text-transform: uppercase; margin-right: 22px; display: inline-block; }
+a.more { color: var(--amber-t); text-decoration: none; font: 700 14px/1.6 var(--sign); letter-spacing: .1em; text-transform: uppercase; margin-right: 22px; display: inline-flex; align-items: center; gap: .3em; }
 a.more:hover { color: var(--amber); }
 tr.detail .det a.more { grid-column: 1 / -1; }
 
