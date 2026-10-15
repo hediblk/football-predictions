@@ -459,33 +459,6 @@ table.record tr.total td { border-top: 1px solid var(--rule); color: var(--ink);
 /* ---------- clubs: index ---------- */
 .who h1 a { color: inherit; text-decoration: none; }
 .who h1 a:hover { color: var(--amber-t); }
-.cboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin: 4px 0 0; }
-.cell {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "nm rt" "lg rk" "ad ad" "df df";
-  gap: 5px 12px; padding: 14px 14px 16px; text-decoration: none; border: 1px solid var(--rule-2); margin: -1px 0 0 -1px;
-}
-.cell:hover { background: var(--panel); }
-.cell .nm { grid-area: nm; font: 900 25px/1 var(--sign); text-transform: uppercase; letter-spacing: .01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cell .club-name { display: flex; }
-.cell .rt { grid-area: rt; font: 900 28px/1 var(--sign); color: var(--amber); }
-.cell .lg { grid-area: lg; font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: .05em; }
-.cell .rk { grid-area: rk; font-size: 11px; color: var(--dim); justify-self: end; }
-.cell .ad { grid-area: ad; display: grid; grid-template-columns: 30px minmax(0, 1fr) 34px; align-items: center; gap: 8px; font-size: 11px; color: var(--dim); margin-top: 6px; }
-.cell .ad.def { grid-area: df; margin-top: 0; }
-.cell .ad span { text-transform: uppercase; letter-spacing: .06em; }
-.cell .ad i { height: 4px; background: linear-gradient(to right, var(--ink-2) var(--w), var(--bulb-off) var(--w)); }
-.cell .ad b { color: var(--ink-2); text-align: right; font-weight: 500; }
-@media (max-width: 559px) {
-  .cboard { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cell { grid-template-areas: "nm nm" "lg lg" "rt rk" "ad ad" "df df"; padding: 12px 10px 14px; }
-  .cell .nm { font-size: 19px; }
-  .cell .club-name { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .cell .club-label { max-width: 100%; }
-  .cell .rt { font-size: 24px; margin-top: 2px; }
-  .cell .rk { align-self: end; }
-  .cell .ad { grid-template-columns: 24px minmax(0, 1fr) 30px; gap: 6px; }
-}
-
 .meter { display: inline-block; position: relative; width: 60px; height: 4px; background: var(--bulb-off); vertical-align: middle; margin-right: 8px; }
 .meter i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--amber); }
 .meter em { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--ink-2); }
@@ -634,7 +607,6 @@ h3.sub + .scroll { margin-top: 8px; }
 .crk { color: var(--dim); font-size: 10px; }
 .crk.top10 { color: var(--amber-t); }
 .crk.first { color: var(--bg); background: var(--amber); font-weight: 700; padding: 1px 4px; }
-.cell .crk { font-size: 11px; }
 
 /* the call strip: one bar per game, its height the chance given to what happened */
 .callstrip { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px; margin: 4px 0 6px; }

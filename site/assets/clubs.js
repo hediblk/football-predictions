@@ -45,12 +45,6 @@ const clubShort = (c) => (c.league ? compBySlug[c.league].short : c.country_code
 const inFilter = (c) => leagueFilter === "all" || c.league === leagueFilter || (leagueFilter === "champions-league" && c.ucl);
 /* a category rank: #1 lit, top ten warm, the rest dim */
 export const rankTag = (rank, tag = "small", cls = "") => `<${tag} class="crk${rank === 1 ? " first" : rank <= 10 ? " top10" : ""}${cls}">#${rank}</${tag}>`;
-const leagueTables = () => Promise.all(LEAGUES.map((l) => getJSON(`${l.slug}.json`).catch(() => null)));
-const rowFor = (tables, club) => {
-  const table = tables.find((t) => t && t.slug === club.league);
-  return table ? table.teams.find((t) => t.id === club.id) : null;
-};
-
 /* ---------- weekly ranks ---------- */
 const KEYS = ["rating", "attack", "defense"];
 const weekDay = (iso) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
@@ -104,10 +98,7 @@ let view = null;
 /* ---------- index ---------- */
 async function showIndex() {
   document.title = "Clubs · Floodlight";
-  const [tables, history] = await Promise.all([
-    leagueTables(),
-    getJSON(`history/${clubs.season.split("/")[0]}/clubs.json`).catch(() => null),
-  ]);
+  const history = await getJSON(`history/${clubs.season.split("/")[0]}/clubs.json`).catch(() => null);
   view = weeklyView(history);
   const list = clubs.clubs;
   const [best] = list;
@@ -121,20 +112,6 @@ async function showIndex() {
         best attack <b>${clubName(topAttack.id, topAttack.name, "inline")} ${dec(topAttack.attack)}</b> · best defence <b>${clubName(topDefense.id, topDefense.name, "inline")} ${dec(topDefense.defense)}</b> · ${list.length} clubs rated</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${best.name}: rating ${dec(best.rating)}`)}">${Math.round(best.rating)}<sup>%</sup></div>`;
-
-  $("c-board").innerHTML = clubs.featured.map((id) => {
-    const c = list.find((x) => x.id === id);
-    const row = rowFor(tables, c);
-    const place = row ? `${ordinal(row.position)} in ${leagueName(c.league)}` : leagueName(c.league);
-    return `<a class="cell" href="#clubs/${c.slug}">
-      <span class="nm">${clubName(c.id, c.name, "card")}</span>
-      <span class="lg">${esc(place)}</span>
-      <span class="rt">${dec(c.rating)}</span>
-      ${rankTag(c.rating_rank, "span", " rk")}
-      <span class="ad"><span>Att</span><i style="--w:${c.attack}%"></i><b>${dec(c.attack)}</b></span>
-      <span class="ad def"><span>Def</span><i style="--w:${c.defense}%"></i><b>${dec(c.defense)}</b></span>
-    </a>`;
-  }).join("");
 
   renderRanking();
   renderScatter();
