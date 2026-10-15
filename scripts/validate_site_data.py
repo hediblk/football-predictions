@@ -1,7 +1,7 @@
 import argparse
 import json
 import math
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 
@@ -286,6 +286,13 @@ def validate_club_history(data):
     require(all(date.fromisoformat(day).weekday() == 0 for day in dates), "week date must be Monday")
 
 
+def validate_rating_runs(data):
+    times = [datetime.fromisoformat(run["as_of"]) for run in data["runs"]]
+    require(all(a < b for a, b in zip(times, times[1:])), "rating run origins must strictly increase")
+    require(all(time.tzinfo is not None and time.astimezone(timezone.utc).strftime("%Y-%m") == data["month"]
+                for time in times), "rating run origin outside its month")
+
+
 def validate_score_record(row):
     n = row["n"]
     require(row["model"]["n"] == n, "scorecard model count differs")
@@ -369,6 +376,8 @@ def validate_payload(data, family):
         validate_history(data)
     elif family == "club_history":
         validate_club_history(data)
+    elif family == "rating_runs":
+        validate_rating_runs(data)
     elif family == "notes":
         validate_notes(data)
 
@@ -395,6 +404,8 @@ def file_family(path):
     if (len(parts) == 4 and parts[0] == "history" and parts[1].isdigit()
             and parts[2] == "forecasts" and path.stem in COMPETITIONS):
         return "forecast_receipts"
+    if len(parts) == 4 and parts[0] == "history" and parts[1].isdigit() and parts[2] == "ratings":
+        return "rating_runs"
     raise ValueError("unknown JSON file family")
 
 
@@ -418,6 +429,8 @@ def validate_site_data(data_dir, *, site_dir=None):
                 require(data["code"] == COMPETITIONS[path.stem], "competition code differs from slug")
             if relative.parts[0] == "history":
                 require(data["season"].split("/")[0] == relative.parts[1], "history season differs from directory")
+            if family == "rating_runs":
+                require(data["month"] == path.stem, "rating month differs from filename")
             if family == "match_events":
                 require(path.stat().st_size < 60_000, "match file must be under 60 KB")
                 require(data["id"] == int(path.stem), "match event id differs from filename")

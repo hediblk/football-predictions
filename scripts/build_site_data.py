@@ -6,7 +6,8 @@ Reads `<prefix>_summary.csv`, `<prefix>_position_probs.csv`, `<prefix>_standings
 `<prefix>_matches_snapshot.csv`, `<prefix>_club_ratings.csv`, `<prefix>_match_forecasts.json` and
 `<prefix>_metadata.json` for each league, plus the `cl_*` files for the Champions League.
 Each fresh forecast also adds a point to `history/<season>/<slug>.json`, and the first refresh of a
-week freezes the club ratings into `history/<season>/clubs.json` (see standing_prediction.site_history).
+week freezes the club ratings into `history/<season>/clubs.json`; every refresh with fresh ratings also appends
+them to `history/<season>/ratings/<YYYY-MM>.json` (see standing_prediction.site_history).
 """
 
 import argparse
@@ -742,8 +743,8 @@ def publish_matches(src, dest, competition, prefix):
     return data
 
 
-def update_history(dest, competitions, ratings=None):
-    """Add each fresh forecast to its competition's history and freeze the week's club ratings."""
+def update_history(dest, competitions, ratings=None, leagues=None):
+    """Add each fresh forecast to its competition's history, save this run's club ratings and freeze the week's."""
     for data in competitions:
         path = history_path(dest, data, data["slug"])
         try:
@@ -760,6 +761,11 @@ def update_history(dest, competitions, ratings=None):
         if added:
             write_json(path, history)
             print(f"Froze the club ranking for the week of {history['weeks'][-1]['date']}")
+        path = history_path(dest, ucl, f"ratings/{site_history.run_month(ucl['as_of'])}")
+        history, added = site_history.add_run(read_json(path), ratings, as_of=ucl["as_of"], season=ucl["season"],
+                                              cutoff=ucl["data_cutoff"], leagues=leagues)
+        if added:
+            write_json(path, history)
 
 
 def write_json(path, data):
@@ -815,11 +821,13 @@ def main(argv=None):
     competitions = [exports[league[0]] for league in LEAGUES] + [exports["champions-league"]]
     clubs_path = args.dest / "clubs.json"
     previous = json.loads(clubs_path.read_text()) if clubs_path.exists() else None
-    write_json(clubs_path, export_clubs(args.src, competitions[:-1], competitions[-1], previous))
+    clubs = export_clubs(args.src, competitions[:-1], competitions[-1], previous)
+    write_json(clubs_path, clubs)
     if args.history:
         fresh = [data for data in competitions if data["slug"] not in kept]
         ucl_fresh = "champions-league" not in kept
-        update_history(args.dest, fresh, rated_clubs(args.src, competitions[:-1], competitions[-1]) if ucl_fresh else None)
+        update_history(args.dest, fresh, rated_clubs(args.src, competitions[:-1], competitions[-1]) if ucl_fresh else None,
+                       clubs["league_averages"])
     for competition in competitions:
         slug = competition["slug"]
         if slug in kept or f"matches/{slug}" in kept or f"matches/{slug}" not in exports:

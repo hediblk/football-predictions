@@ -166,7 +166,7 @@ def dataset(tmp_path, exported):
 
 
 def test_complete_exported_dataset_and_history(dataset):
-    assert CONTRACT.validate_site_data(dataset) == 13
+    assert CONTRACT.validate_site_data(dataset) == 14
     history = json.loads((dataset / "history/2026/premier-league.json").read_text())
     assert history["teams"][2]["id"] == "charlie" and history["teams"][0]["title"] == [60]
     ucl_history = json.loads((dataset / "history/2026/champions-league.json").read_text())
@@ -191,7 +191,7 @@ def test_retained_files_optional_absence_and_old_history_are_valid(dataset):
            "teams": [{"id": "departed-club", "name": "Departed club", "title": [None, 1.2],
                       "ucl": [None, 10], "releg": [None, 0]}]}
     write_json(dataset / "history/2025/la-liga.json", old)
-    assert CONTRACT.validate_site_data(dataset) == 12
+    assert CONTRACT.validate_site_data(dataset) == 13
 
 
 @pytest.mark.parametrize("family,change,message", [

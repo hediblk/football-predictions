@@ -37,10 +37,10 @@ export async function showMatch(slug, id) {
   }
   const post = Boolean(m.score && m.p);
   const season = (table || clubs)?.season.split("/")[0];
-  const [stakes, hist, weekly, events, notes] = await Promise.all([
+  const [stakes, hist, runs, events, notes] = await Promise.all([
     stakesTable(m, slug),
     post && season ? getJSON(`history/${season}/${slug}.json`).catch(() => null) : null,
-    post && season ? getJSON(`history/${season}/clubs.json`).catch(() => null) : null,
+    post && season ? ratingRuns(season, m.kickoff, clubs?.generated_at) : null,
     // Shared detail is optional and fetched only on the finished match page, for every competition.
     post && season ? getJSON(`match/${season}/${slug}/${m.id}.json`).catch(() => null) : null,
     getJSON(`notes/${slug}.json`).catch(() => null),
@@ -51,7 +51,7 @@ export async function showMatch(slug, id) {
   document.title = `${m.home} v ${m.away} · Floodlight`;
   setStatus(file.generated_at);
   const slugs = new Map((clubs ? clubs.clubs : []).map((c) => [c.id, c.slug]));
-  page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly,
+  page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, runs,
     note: notes?.fixtures?.[String(m.id)] || null, noteSeasons: notes?.seasons || [], mode: post ? "after" : "before",
     heatSide: "h", heatPlayer: "", positions: true, detail: events, shots: events && events.shots && events.shots.length ? events : null };
   render();
@@ -189,7 +189,7 @@ function against(m, comp, file) {
 }
 
 /* "What it changed": season chances across the refreshes either side of the game, the stakes as saved before
-   kickoff, and both clubs' ratings across the weekly rankings either side of it */
+   kickoff, and both clubs' ratings from the last refresh before kickoff to the first after the result */
 function changed(m, comp) {
   const parts = [chances(m, comp), page.pastStakes ? `<h4>What was at stake</h4>${page.pastStakes}` : "", strength(m)].filter(Boolean);
   return parts.length ? `<fieldset class="frame mp-after"><legend>What it changed</legend>${parts.join("")}</fieldset>` : "";
@@ -225,42 +225,58 @@ function chances(m, comp) {
     <p class="note">Across the refreshes of ${d1} and ${d2}, the last before kickoff and the first after it, so other results in between count too. Changes under ${NOISE} points are within simulation noise and shown as –.${m.published && m.stakes ? " Rivals are the clubs in the stakes saved before kickoff." : ""}</p>`;
 }
 
-/* rating changes between the weekly ranking frozen before the game and the next one that holds it (or today's) */
-function ratingSpan(m) {
-  const { weekly, clubs } = page;
-  if (!weekly || !clubs) return null;
-  const k = Date.parse(m.kickoff);
-  const holds = (w) => (w.cutoff ? Date.parse(w.cutoff) >= k : w.date > utcDay(m.kickoff));
-  const i = weekly.weeks.findLastIndex((w) => w.date <= utcDay(m.kickoff) && !holds(w));
-  if (i < 0) return null;
-  const next = weekly.weeks.slice(i + 1).find(holds);
-  if (next) return { from: weekly.weeks[i], to: (id) => next.clubs[id], until: `Monday ${dayLabel(next.date)}` };
-  if (utcDay(clubs.generated_at) <= utcDay(m.kickoff)) return null;
-  const live = new Map(clubs.clubs.map((c) => [String(c.id), [c.rating, c.attack, c.defense]]));
-  return { from: weekly.weeks[i], to: (id) => live.get(id), until: "today's ratings" };
+/* Club ratings saved at every refresh with fresh ratings (history/<season>/ratings/<YYYY-MM>.json, by forecast
+   origin): the kickoff month, plus the month before when no run there precedes kickoff and the month after when none
+   there holds the result yet and today's ratings are newer. A missing month file means no runs were saved then. */
+const holdsGame = (run, k) => run.cutoff != null && Date.parse(run.cutoff) >= k;
+async function ratingRuns(season, kickoff, today) {
+  const k = Date.parse(kickoff);
+  const month = (offset) => {
+    const d = new Date(k);
+    d.setUTCDate(1);
+    d.setUTCMonth(d.getUTCMonth() + offset);
+    return d.toISOString().slice(0, 7);
+  };
+  const load = (offset) => getJSON(`history/${season}/ratings/${month(offset)}.json`).then((f) => f.runs, () => []);
+  let runs = await load(0);
+  if (!runs.some((r) => Date.parse(r.as_of) < k)) runs = [...await load(-1), ...runs];
+  if (!runs.some((r) => holdsGame(r, k)) && today && today.slice(0, 7) > month(0)) runs = [...runs, ...await load(1)];
+  return runs;
 }
+const runLabel = (iso) => `${new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
 
+/* rating changes from the last refresh before kickoff to the first whose results reach it, beside each club's
+   league average, which moves every club in that league alike */
 function strength(m) {
-  const span = ratingSpan(m);
-  if (!span) return "";
-  const cell = (id, i) => {
-    const [b, a] = [span.from.clubs[id]?.[i], span.to(String(id))?.[i]];
+  const runs = page.runs || [];
+  const k = Date.parse(m.kickoff);
+  const before = runs.findLast((r) => Date.parse(r.as_of) < k);
+  const after = before && runs.find((r) => holdsGame(r, k));
+  const head = "<h4>Strength</h4>";
+  if (!before) {
+    return `${head}<p class="note">Club ratings are saved at every refresh${runs.length ? ` since ${runLabel(runs[0].as_of)}` : ""}, which doesn't reach back to this game, so its rating change isn't shown.</p>`;
+  }
+  if (!after) return `${head}<p class="note">No refresh has included the result yet; the rating change appears once one does.</p>`;
+  const league = (id) => page.clubs?.clubs.find((c) => c.id === id)?.league;
+  const cell = (b, a) => {
     if (b == null || a == null) return "";
     const d = Math.round((a - b) * 10) / 10;
     const label = d ? `${d > 0 ? "up" : "down"} ${dec(Math.abs(d))}` : "unchanged";
     const mv = `<span class="mv ${d > 0 ? "up" : d < 0 ? "down" : "flat"}" aria-label="${label}">${d > 0 ? `▲<b>${dec(d)}</b>` : d < 0 ? `▼<b>${dec(-d)}</b>` : "–"}</span>`;
     return `${dec(b)} → <b>${dec(a)}</b> ${mv}`;
   };
-  const rows = STRENGTH.map(([, label], i) => {
-    const [h, a] = [cell(m.home_id, i), cell(m.away_id, i)];
+  const row = (label, value) => {
+    const [h, a] = [m.home_id, m.away_id].map((id) => cell(value(before, id), value(after, id)));
     return h || a ? `<tr><td class="h">${h}</td><th scope="row">${label}</th><td class="a">${a}</td></tr>` : "";
-  }).join("");
+  };
+  const rows = STRENGTH.map(([, label], i) => row(label, (run, id) => run.clubs[String(id)]?.[i])).join("");
   if (!rows) return "";
-  return `<h4>Strength</h4>
+  const leagues = row("League average", (run, id) => run.leagues[league(id)]);
+  return `${head}
     <div class="scroll"><table class="board mp-sides">
       <thead><tr><th class="h">${clubName(m.home_id, m.home, "inline")}</th><th></th><th class="a">${clubName(m.away_id, m.away, "inline")}</th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
-    <p class="note">Ratings from the ranking frozen on Monday ${dayLabel(span.from.date)} to ${span.until}. Every game in that span counts, not this one alone.</p>`;
+      <tbody>${rows}${leagues}</tbody></table></div>
+    <p class="note">From the last refresh before kickoff (${runLabel(before.as_of)}) to the first after the result (${runLabel(after.as_of)}). Other results and market prices that arrived in between count too.${leagues ? " A change in the league average moves every club in that league, so read a club's change against it." : ""}</p>`;
 }
 
 /* ---------- chances: Understat shots, after full time ---------- */

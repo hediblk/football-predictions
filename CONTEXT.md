@@ -31,6 +31,10 @@ A dated season forecast retained to show how chances change through the season. 
 Club strength ratings frozen after the weekend round, normally on Monday, used as a baseline for movement in the current ranking. The current ranking uses live ratings rather than the frozen ratings.
 _Avoid_: Current ranking when the movement baseline is meant.
 
+**Rating run**:
+Club strength ratings and league averages saved at one refresh with a fresh Champions League fit, dated by its forecast origin. The match page compares the last run before kickoff with the first run that includes the result.
+_Avoid_: Weekly ranking snapshot.
+
 **Retained forecast**:
 The last successfully published forecast kept when a competition's refresh fails. Its original forecast time remains meaningful even when other competitions have newer forecasts.
 _Avoid_: Fresh forecast, updated forecast.
