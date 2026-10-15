@@ -22,8 +22,8 @@ function route() {
   $("tabs").querySelector('[data-view="tables"]').href = `#${lastComp}`;
   $("subnav").hidden = view !== "tables";
   if (view === "tables") renderSubnav();
-  // A new view, club or fixture starts at the top; stepping through match days keeps the place.
-  const key = `${arg}/${sub}/${extra}`;
+  // A new view, club or fixture starts at the top; stepping through match days or changing a club comparison keeps the place.
+  const key = view === "clubs" ? arg : `${arg}/${sub}/${extra}`;
   if (view !== lastView || (["clubs", "model", "match"].includes(view) && key !== lastArg)) window.scrollTo(0, 0);
   lastView = view;
   lastArg = key;

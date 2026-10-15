@@ -676,7 +676,7 @@ function sides(m, comp, table, clubs, files) {
 
   const strength = (key) => (id) => {
     const c = club(id);
-    return c ? `<b>${dec(c[key])}</b> ${rankTag(c[`${key}_rank`])}<span class="meter"><i style="width:${c[key]}%"></i><em style="left:${avg[key]}%" title="Average club"></em></span>` : "";
+    return c ? `<b>${dec(c[key])}</b> ${rankTag(c[`${key}_rank`], "span")}<span class="meter"><i style="width:${c[key]}%"></i><em style="left:${avg[key]}%" title="Average club"></em></span>` : "";
   };
   const standing = (id) => {
     const e = entry(id);
