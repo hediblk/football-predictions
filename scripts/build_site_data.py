@@ -10,6 +10,8 @@ week freezes the club ratings into `history/<season>/clubs.json` (see standing_p
 """
 
 import argparse
+import hashlib
+import io
 import json
 import re
 import unicodedata
@@ -261,7 +263,28 @@ NOTE_STREAKS = {
 }
 
 
-def note_result(row, season, *, display_home=None, display_away=None, forecast=None, current=False):
+def cached_note_content(url, cache_dir, params=None):
+    public_params = {key: value for key, value in (params or {}).items()
+                     if key.lower() not in {"apikey", "api_key", "token"}}
+    key = hashlib.sha256(json.dumps([url, public_params], sort_keys=True).encode()).hexdigest()
+    try:
+        content = json.loads((Path(cache_dir) / f"{key}.json").read_text(encoding="utf-8"))["content"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return content if isinstance(content, str) else None
+
+
+def note_id(value):
+    if pd.isna(value):
+        return None
+    try:
+        return str(int(value))
+    except (TypeError, ValueError):
+        return str(value)
+
+
+def note_result(row, season, *, display_home=None, display_away=None, home_key=None, away_key=None,
+                forecast=None, current=False):
     kickoff = pd.to_datetime(row.get("utcDate"), errors="coerce", utc=True)
     home_goals, away_goals = row.get("homeGoals"), row.get("awayGoals")
     if current and row.get("score"):
@@ -278,12 +301,15 @@ def note_result(row, season, *, display_home=None, display_away=None, forecast=N
             local = kickoff.tz_convert("Europe/London")
             if local.hour == 0 and local.minute == 0:
                 available = (local.normalize() + pd.DateOffset(days=1)).tz_convert("UTC")
+    neutral = row.get("neutral", False)
     return {
         "kickoff": kickoff, "available_at": pd.to_datetime(available, utc=True), "season": int(season),
         "home": display_home or short_name(home), "away": display_away or short_name(away),
-        "home_key": canonical_team(home), "away_key": canonical_team(away),
+        "home_key": home_key if home_key is not None else canonical_team(home),
+        "away_key": away_key if away_key is not None else canonical_team(away),
         "hg": int(home_goals), "ag": int(away_goals), "p": (forecast or {}).get("p"),
-        "forecast_at": (forecast or {}).get("at"),
+        "forecast_at": (forecast or {}).get("at"), "published": bool((forecast or {}).get("published")),
+        "neutral": False if pd.isna(neutral) else bool(neutral),
     }
 
 
@@ -292,56 +318,85 @@ def note_results(src, competition, match_file):
     prefix = competition["code"].lower()
     current = pd.read_csv(src / f"{prefix}_matches_snapshot.csv")
     exported = {str(match["id"]): match for match in match_file["matches"]}
-    results, years = [], []
+    results, years, identities = [], [], {}
+    team_keys = {}
+    for team in competition["teams"]:
+        key = canonical_team(team.get("key") or team.get("full") or team["name"])
+        team_id = note_id(team.get("id"))
+        if team_id is not None:
+            team_keys[team_id] = key
+        team_keys[team["name"]] = key
+        if team.get("full"):
+            team_keys[team["full"]] = key
+    for fixture in match_file["matches"]:
+        home_key = team_keys.get(note_id(fixture.get("home_id"))) or team_keys.get(fixture["home"])
+        away_key = team_keys.get(note_id(fixture.get("away_id"))) or team_keys.get(fixture["away"])
+        if home_key and away_key:
+            identities[note_id(fixture["id"])] = (home_key, away_key)
     for row in current.to_dict("records"):
-        forecast = exported.get(str(row.get("id")), {})
+        fixture_id = note_id(row.get("id"))
+        forecast = exported.get(fixture_id, {})
+        keys = identities.get(fixture_id, (None, None))
         item = note_result(row, season, display_home=forecast.get("home"), display_away=forecast.get("away"),
-                           forecast=forecast, current=True)
+                           home_key=keys[0], away_key=keys[1], forecast=forecast, current=True)
         if item:
             results.append(item)
+    years.append(season)
     if competition["kind"] == "league":
-        from standing_prediction.predict_positions import DEFAULT_H2H, load_season_results
+        from standing_prediction.odds import (
+            FOOTBALL_DATA_UK_BASE, _football_data_matches, _football_data_uk_season_code,
+        )
+        from standing_prediction.predict_positions import DEFAULT_H2H, COMPETITION_TO_FOOTBALL_DATA_UK_LEAGUE
 
         for year in range(season - DEFAULT_H2H["seasons"] - 2, season):
+            league = COMPETITION_TO_FOOTBALL_DATA_UK_LEAGUE.get(competition["code"])
+            url = f"{FOOTBALL_DATA_UK_BASE}/{_football_data_uk_season_code(year)}/{league}.csv"
+            content = cached_note_content(url, ".cache/football-data-uk")
+            if content is None:
+                print(f"Match notes: {competition['slug']} history {year} unavailable (no local cache)")
+                continue
             try:
-                history = load_season_results(None, competition["code"], year, cache=True)
-            except (KeyError, OSError, RuntimeError, ValueError) as exc:
+                history = _football_data_matches(pd.read_csv(io.StringIO(content)))
+            except (ValueError, pd.errors.ParserError) as exc:
                 print(f"Match notes: {competition['slug']} history {year} unavailable ({type(exc).__name__})")
                 continue
-            count = 0
             for row in history.to_dict("records"):
                 item = note_result(row, year)
                 if item:
                     results.append(item)
-                    count += 1
-            if count:
-                years.append(year)
+            years.append(year)
     else:
-        from champions_league.data import fetch_ucl_fixtures
-        from standing_prediction.data import FootballDataClient
+        from champions_league.data import matches_from_api
+        from standing_prediction.data import BASE_URL
 
-        try:
-            client = FootballDataClient()
-        except ValueError as exc:
-            print(f"Match notes: Champions League history unavailable ({type(exc).__name__})")
-        else:
-            for year in range(max(2023, season - 2), season):
-                try:
-                    history = fetch_ucl_fixtures(client, season=year)
-                except (KeyError, OSError, RuntimeError, ValueError) as exc:
-                    print(f"Match notes: Champions League history {year} unavailable ({type(exc).__name__})")
-                    continue
-                count = 0
-                for row in history.to_dict("records"):
-                    item = note_result(row, year)
-                    if item:
-                        results.append(item)
-                        count += 1
-                if count:
-                    years.append(year)
-    if any(match.get("score") for match in match_file["matches"]):
-        years.append(season)
-    return sorted(results, key=lambda row: (row["kickoff"], row["home_key"], row["away_key"])), sorted(set(years or [season]))
+        for year in range(max(2023, season - 2), season):
+            params = {"season": year}
+            content = cached_note_content(f"{BASE_URL}/competitions/CL/matches", ".cache/football-data", params)
+            if content is None:
+                print(f"Match notes: Champions League history {year} unavailable (no local cache)")
+                continue
+            try:
+                history = matches_from_api(json.loads(content)["matches"], season=year)
+            except (KeyError, TypeError, ValueError) as exc:
+                print(f"Match notes: Champions League history {year} unavailable ({type(exc).__name__})")
+                continue
+            for row in history.to_dict("records"):
+                item = note_result(row, year)
+                if item:
+                    results.append(item)
+            years.append(year)
+    return (sorted(results, key=lambda row: (row["kickoff"], row["home_key"], row["away_key"])),
+            sorted(set(years)), identities)
+
+
+def contiguous_note_seasons(seasons, current):
+    covered = set(seasons)
+    if current not in covered:
+        return []
+    start = current
+    while start - 1 in covered:
+        start -= 1
+    return list(range(start, current + 1))
 
 
 def note_streak_length(results, team, scope, predicate):
@@ -370,13 +425,19 @@ def note_record_text(row):
     return f"{row['home']} {row['hg']}–{row['ag']} {row['away']}"
 
 
-def fixture_note_data(fixture, results, season, first_season, competition_name):
+def fixture_note_data(fixture, results, season, coverage_seasons, competition_name, identities):
     kickoff = pd.to_datetime(fixture["kickoff"], utc=True)
-    home_key, away_key = canonical_team(fixture["home"]), canonical_team(fixture["away"])
+    identity = identities.get(note_id(fixture["id"]))
+    if identity is None:
+        return {"pre": [], "post": [], "meetings": []}
+    home_key, away_key = identity
+    contiguous_seasons = contiguous_note_seasons(coverage_seasons, season)
+    covered = set(contiguous_seasons)
     competition_phrase = {"Premier League": "the Premier League", "Bundesliga": "the Bundesliga",
                          "Champions League": "the Champions League"}.get(competition_name, competition_name)
-    before = [row for row in results if row["kickoff"] < kickoff and row["available_at"] < kickoff]
-    meetings = sorted((row for row in before if {row["home_key"], row["away_key"]} == {home_key, away_key}),
+    all_before = [row for row in results if row["kickoff"] < kickoff and row["available_at"] < kickoff]
+    before = [row for row in all_before if row["season"] in covered]
+    meetings = sorted((row for row in all_before if {row["home_key"], row["away_key"]} == {home_key, away_key}),
                       key=lambda row: row["kickoff"], reverse=True)[:6]
     sides = [("home", fixture["home"], home_key, "home"), ("away", fixture["away"], away_key, "away")]
     pre, post = {"home": [], "away": []}, {"home": [], "away": []}
@@ -410,7 +471,7 @@ def fixture_note_data(fixture, results, season, first_season, competition_name):
                         for row in meetings)
         draws = len(meetings) - home_wins - away_wins
         add(pre, "home", "head_to_head", len(meetings),
-            f"In the last {len(meetings)} meetings, {fixture['home']} have won {home_wins}, "
+            f"Among our last {len(meetings)} recorded meetings, {fixture['home']} have won {home_wins}, "
             f"{fixture['away']} {away_wins}; {draws} were drawn.")
 
     season_rows = [row for row in before if row["season"] == season]
@@ -434,13 +495,23 @@ def fixture_note_data(fixture, results, season, first_season, competition_name):
                 f"{note_record_text(most_goals)} ({total} goals).")
         if biggest_upset and team in (biggest_upset[1]["home_key"], biggest_upset[1]["away_key"]):
             chance, result = biggest_upset
+            origin = "published forecast" if result.get("published") else "reconstructed forecast"
             add(pre, side, "upset", round((1 - chance) * 1000),
                 f"{name} featured in the biggest upset in {competition_phrase} this season: "
-                f"{note_record_text(result)} (the model gave the result {chance:.1%}).")
+                f"{note_record_text(result)} (the {origin} gave the result {chance:.1%}).")
 
     def selected(target):
-        chosen = [note for side in ("home", "away")
-                  for note in sorted(target[side], key=lambda item: (-item[0], item[1], item[2]))[:4]]
+        chosen, seen = [], set()
+        for side in ("home", "away"):
+            count = 0
+            for note in sorted(target[side], key=lambda item: (-item[0], item[1], item[2])):
+                if note[2] in seen:
+                    continue
+                seen.add(note[2])
+                chosen.append(note)
+                count += 1
+                if count == 4:
+                    break
         chosen.sort(key=lambda item: (-item[0], item[1], item[2]))
         return [{"kind": kind, "text": text} for _, kind, text in chosen]
 
@@ -451,6 +522,7 @@ def fixture_note_data(fixture, results, season, first_season, competition_name):
             "kickoff": kickoff, "available_at": kickoff + pd.Timedelta(hours=3), "season": season,
             "home": fixture["home"], "away": fixture["away"], "home_key": home_key, "away_key": away_key,
             "hg": int(score[0]), "ag": int(score[1]), "p": fixture.get("p"), "forecast_at": fixture.get("at"),
+            "published": bool(fixture.get("published")),
         }
         after = [*before, focal]
         for side, name, team, venue_scope in sides:
@@ -477,13 +549,17 @@ def fixture_note_data(fixture, results, season, first_season, competition_name):
         if winner_key is not None and not fixture.get("neutral"):
             winner_side = "home" if winner_key == home_key else "away"
             venue_wins = sorted((row for row in before if row["home_key"] == home_key and row["away_key"] == away_key
+                                 and not row.get("neutral", False)
                                  and ((winner_side == "home" and row["hg"] > row["ag"])
                                       or (winner_side == "away" and row["ag"] > row["hg"]))),
                                 key=lambda row: row["kickoff"], reverse=True)
             last_win_year = venue_wins[0]["season"] if venue_wins else None
-            gap = season - (last_win_year if last_win_year is not None else first_season)
-            if gap >= 3:
-                since = _season_label(last_win_year if last_win_year is not None else first_season)
+            since_year = last_win_year if last_win_year is not None else (contiguous_seasons[0] if contiguous_seasons else season)
+            gap = season - since_year
+            years_after = range(since_year + 1, season)
+            complete = all(year in covered for year in years_after)
+            if gap >= 3 and complete:
+                since = _season_label(since_year)
                 winner = fixture[winner_side]
                 text = (f"First home win for {winner} over {fixture['away']} since {since}." if winner_side == "home"
                         else f"First {winner} win at {fixture['home']} since {since}.")
@@ -508,9 +584,10 @@ def fixture_note_data(fixture, results, season, first_season, competition_name):
         prior_upsets = [note_actual_probability(row) for row in prior_season]
         prior_upsets = [value for value in prior_upsets if value is not None]
         if chance is not None and chance < min(prior_upsets, default=float("inf")):
+            origin = "published forecast" if focal["published"] else "reconstructed forecast"
             for side in ("home", "away") if score[0] == score[1] else (outcome_side,):
                 add(post, side, "upset", round((1 - chance) * 1000),
-                    f"Biggest upset in {competition_phrase} this season: {result_text} (the model gave the result {chance:.1%}).")
+                    f"Biggest upset in {competition_phrase} this season: {result_text} (the {origin} gave the result {chance:.1%}).")
 
     meetings_json = [{
         "date": row["kickoff"].date().isoformat(), "venue": row["home"], "home": row["home"], "away": row["away"],
@@ -524,7 +601,7 @@ def _season_label(year):
 
 
 def export_match_notes(src, competition, match_file):
-    results, seasons = note_results(src, competition, match_file)
+    results, seasons, identities = note_results(src, competition, match_file)
     as_of = pd.to_datetime(competition["as_of"], utc=True)
     first_season = seasons[0]
     competition_name = competition["name"]
@@ -534,7 +611,9 @@ def export_match_notes(src, competition, match_file):
         kickoff = pd.to_datetime(fixture.get("kickoff"), errors="coerce", utc=True)
         if pd.isna(kickoff) or not (as_of - pd.Timedelta(days=14) <= kickoff <= as_of + pd.Timedelta(days=14)):
             continue
-        fixtures[str(fixture["id"])] = fixture_note_data(fixture, results, season, first_season, competition_name)
+        fixtures[str(fixture["id"])] = fixture_note_data(
+            fixture, results, season, seasons, competition_name, identities,
+        )
     return {
         "generated_at": competition["generated_at"], "as_of": competition["as_of"],
         "first_season": _season_label(first_season), "seasons": [_season_label(year) for year in seasons],
@@ -688,6 +767,18 @@ def write_json(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n")
 
 
+def publish_match_notes(src, dest, competition, match_file):
+    path = dest / "notes" / f"{competition['slug']}.json"
+    try:
+        write_json(path, export_match_notes(src, competition, match_file))
+    except Exception as exc:
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass
+        print(f"Match notes unavailable for {competition['slug']} ({type(exc).__name__}); omitted for this refresh")
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--src", type=Path, default=Path("out/site"))
@@ -733,12 +824,7 @@ def main(argv=None):
         slug = competition["slug"]
         if slug in kept or f"matches/{slug}" in kept or f"matches/{slug}" not in exports:
             continue
-        try:
-            notes = export_match_notes(args.src, competition, exports[f"matches/{slug}"])
-        except (FileNotFoundError, OSError, ValueError) as exc:
-            print(f"Match notes unavailable for {slug} ({type(exc).__name__}); kept previous notes")
-            continue
-        write_json(args.dest / "notes" / f"{slug}.json", notes)
+        publish_match_notes(args.src, args.dest, competition, exports[f"matches/{slug}"])
     previous_scorecard = read_json(args.dest / "scorecard.json") or {"competitions": {}}
     records = {}
     for competition in competitions:

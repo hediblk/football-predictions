@@ -65,7 +65,7 @@ Generated with `palette.mjs --seed 67.65 --chroma balanced --harmony mono --sche
 
 ## Task 9 · Match notes
 
-Each match page has one ruled “Notes” frame. Before mode labels it “On the line” and shows up to four fixed-template facts per side, led by a small lit amber bulb, followed by the six latest meeting score chips when available. Each chip exposes its UTC date and home venue on hover, focus, or tap. After mode labels the same frame “What it meant” and shows only notes about streaks extended or ended, a qualifying venue win, or a new season record. A dim line names the first season covered by the loaded result history. Empty note and meeting lists hide the frame. The notes use mono text, no new colour or motion, and load only on the match page.
+Each match page has one ruled “Notes” frame. Before mode labels it “On the line” and shows up to four fixed-template facts per side, led by a small lit amber bulb, followed by the six latest meeting score chips when available. Each chip exposes its UTC date and home venue on hover, focus, or tap. After mode labels the same frame “What it meant” and shows only notes about streaks extended or ended, a qualifying venue win, or a new season record. A dim line lists the exact source seasons, including any gaps. Empty note and meeting lists hide the frame. The notes use mono text, no new colour or motion, and load only on the match page.
 
 ## Task 12 · Match stats and timeline
 

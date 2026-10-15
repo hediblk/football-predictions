@@ -52,7 +52,7 @@ export async function showMatch(slug, id) {
   setStatus(file.generated_at);
   const slugs = new Map((clubs ? clubs.clubs : []).map((c) => [c.id, c.slug]));
   page = { m, comp, slugs, stakes, pastStakes, file, table, clubs, files: all.filter(Boolean), hist, span, weekly,
-    note: notes?.fixtures?.[String(m.id)] || null, firstNoteSeason: notes?.first_season, mode: post ? "after" : "before",
+    note: notes?.fixtures?.[String(m.id)] || null, noteSeasons: notes?.seasons || [], mode: post ? "after" : "before",
     heatSide: "h", heatPlayer: "", positions: true, detail: events, shots: events && events.shots && events.shots.length ? events : null };
   render();
 }
@@ -121,7 +121,7 @@ const happened = (m, v) => (v.actual === 1 ? "a draw" : `a ${v.actual ? m.away :
 const utcDay = (iso) => new Date(iso).toISOString().slice(0, 10);
 
 function notesFrame() {
-  const { note, firstNoteSeason } = page;
+  const { note, noteSeasons } = page;
   if (!note) return "";
   const after = page.mode === "after";
   const notes = after ? note.post || [] : note.pre || [];
@@ -137,7 +137,7 @@ function notesFrame() {
   return `<fieldset class="frame mp-notes"><legend>Notes</legend><h4>${after ? "What it meant" : "On the line"}</h4>
     ${sentences ? `<ul class="mp-note-list">${sentences}</ul>` : ""}
     ${chips ? `<div class="mp-meetings"><h5>Last meetings</h5><div class="mp-meeting-chips">${chips}</div></div>` : ""}
-    ${firstNoteSeason ? `<p class="note">Results in our records since ${esc(firstNoteSeason)}.</p>` : ""}</fieldset>`;
+    ${noteSeasons.length ? `<p class="note">Results in our records: ${esc(noteSeasons.join(", "))}.</p>` : ""}</fieldset>`;
 }
 
 /* The history points either side of a fixture, as indices { b, a }, or null. A point dated D is the run as of D

@@ -437,7 +437,7 @@ def validate_site_data(data_dir, *, site_dir=None):
         if Path(name).parts[0] != "notes":
             continue
         slug = Path(name).stem
-        matches = files.get(f"matches/{slug}")
+        matches = files.get(f"matches/{slug}.json")
         table = files.get(f"{slug}.json")
         if table is not None:
             if data["as_of"] != table["as_of"]:

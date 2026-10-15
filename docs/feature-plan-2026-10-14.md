@@ -74,7 +74,7 @@ No free source with acceptable terms provides running data or heatmaps for the f
 | 6. Match page: post-game mode | Phase 1 | B | 2 (uses 1 when merged) | M | [PR #32](https://github.com/hediblk/football-predictions/pull/32) |
 | 7. Who's beating the model | Addition 4 | B | none (uses 1 when merged) | M | To do |
 | 8. Scorecard core | Addition 1 | B | 1 | L | [PR #35](https://github.com/hediblk/football-predictions/pull/35) |
-| 9. Match notes: streaks, head-to-head, records | Phase 1 | B | 2 | L | [Draft PR #46](https://github.com/hediblk/football-predictions/pull/46) |
+| 9. Match notes: streaks, head-to-head, records | Phase 1 | B | 2 | L | [Draft PR #46 · review fixes](https://github.com/hediblk/football-predictions/pull/46) |
 | 10. Understat shot ingestion | Phase 2 | B | none | M | [PR #33](https://github.com/hediblk/football-predictions/pull/33) |
 | 11. Shot report on the match page | Phase 2 | C | 6, 10 | M | [PR #34](https://github.com/hediblk/football-predictions/pull/34) |
 | 12. ESPN box score and timeline | Phase 3 | C | 6 | L | [PR #38](https://github.com/hediblk/football-predictions/pull/38) |
