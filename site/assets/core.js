@@ -53,10 +53,11 @@ export const parseDay = (key) => { const [y, m, d] = key.split("-").map(Number);
 export const shiftDay = (key, n) => { const d = parseDay(key); d.setDate(d.getDate() + n); return dayKey(d); };
 export const shortDate = (iso) => new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
-/* bulb brightness: near-linear so only real contenders light up; `top` is the brightest chance on show */
-export function bulb(p, top) {
+/* bulb brightness: near-linear so only real contenders light up; `top` is the brightest chance on show; `min` is the
+   chance below which the bulb stays fully off */
+export function bulb(p, top, min = 0) {
   const t = Math.min(1, Math.pow(Math.max(0, p) / top, 0.9));
-  return t < 0.02 ? "var(--bulb-off)" : `color-mix(in srgb, var(--amber) ${Math.round(t * 100)}%, var(--bulb-off))`;
+  return p < min || t < 0.02 ? "var(--bulb-off)" : `color-mix(in srgb, var(--amber) ${Math.round(t * 100)}%, var(--bulb-off))`;
 }
 
 /* ---------- data ---------- */
