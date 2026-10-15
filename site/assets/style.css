@@ -584,6 +584,32 @@ h3.sub + .scroll { margin-bottom: 14px; }
 .chart .band { fill: transparent; }
 .chart .band:hover { fill: rgba(235, 231, 227, .04); }
 
+/* points versus model and rolling xG on club pages */
+.pm-chart { margin: 14px 0 18px; }
+.pm-chart svg, .pm-spark svg { display: block; width: 100%; height: auto; }
+.pm-chart .grid { stroke: var(--rule-2); stroke-width: 1; }
+.pm-chart .tick, .pm-spark .tick { fill: var(--dim); font: 500 10px var(--mono); }
+.pm-chart path { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.pm-chart path.actual { stroke: var(--ink); }
+.pm-chart path.expected { stroke: var(--ink-2); stroke-dasharray: 5 4; }
+.pm-chart .key { margin: 0 0 4px; color: var(--dim); font-size: 11px; }
+.pm-chart .key span { display: inline-flex; align-items: center; gap: 7px; }
+.pm-key { display: inline-block; width: 18px; height: 2px; background: var(--ink); }
+.pm-key.expected { background: repeating-linear-gradient(to right, var(--ink-2) 0 5px, transparent 5px 9px); }
+.pm-chart figcaption, .pm-spark figcaption { margin: 4px 0 10px; }
+.pm-source { margin: -8px 0 10px; }
+.pm-list { margin: 8px 0 16px; }
+.pm-list summary { cursor: pointer; width: fit-content; font: 700 11px/1.4 var(--sign); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+.pm-list summary:hover { color: var(--amber-t); }
+.pm-list .scroll { margin-top: 8px; }
+.pm-xg-table small { color: var(--dim); font: 500 10px var(--mono); letter-spacing: 0; text-transform: none; }
+.pm-spark { margin: 10px 0 0; }
+.pm-spark .zero { stroke: var(--rule); stroke-dasharray: 2 4; }
+.pm-spark .line path { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pm-spark .line circle { fill: var(--ink); }
+#table { min-width: 1080px; }
+#table .vsm { min-width: 68px; color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 700; }
+
 .gauges { display: grid; gap: 22px 32px; }
 @media (min-width: 900px) { .gauges { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .gauge { display: grid; grid-template-columns: auto 1fr; align-items: baseline; gap: 4px 12px; }

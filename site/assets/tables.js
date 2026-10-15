@@ -2,6 +2,7 @@
 import { $, esc, nf, ordinal, num, pct, bulb, getJSON, setStatus, clubName, loadForm, formDots, formPoints } from "./core.js";
 import { showRounds } from "./rounds.js";
 import { showRace } from "./race.js";
+import { pointsByClub } from "./model-performance.js";
 
 const STAGES = [["playoffs", "Play-offs"], ["round16", "Round of 16"], ["quarterfinal", "Quarter-finals"], ["semifinal", "Semi-finals"], ["final", "Final"]];
 let clubSlugs = new Set();
@@ -12,14 +13,20 @@ const sortValue = (t, key) => (key === "form" ? formPoints(t.id) : key === "proj
 export async function showTables(slug) {
   current = slug;
   let data;
+  let matches;
   try {
-    [data] = await Promise.all([getJSON(`${slug}.json`), loadClubSlugs(), loadForm().catch(() => {})]);
+    [data, matches] = await Promise.all([
+      getJSON(`${slug}.json`),
+      getJSON(`matches/${slug}.json`).catch(() => null),
+      loadClubSlugs(),
+      loadForm().catch(() => {}),
+    ]);
   } catch (err) {
     $("hero-in").innerHTML = `<div class="who"><h1>No signal</h1><p class="caption">This forecast could not be loaded (${esc(err.message)}).</p></div>`;
     $("status-text").textContent = "Offline";
     return;
   }
-  if (current === slug) render(data);
+  if (current === slug) render(data, matches);
 }
 
 async function loadClubSlugs() {
@@ -29,14 +36,14 @@ async function loadClubSlugs() {
   } catch { /* profiles are optional here */ }
 }
 
-function render(data) {
+function render(data, matches) {
   const ucl = data.kind === "ucl";
   document.title = `${data.name} forecast ${data.season} · Floodlight`;
   setStatus(data.generated_at, data.data_cutoff);
   renderHero(data);
   renderRaces(data);
   showRace(data);
-  renderTable(data);
+  renderTable(data, matches);
   $("rounds-frame").hidden = !ucl;
   $("ko-frame").hidden = !ucl;
   $("bracket-frame").hidden = !ucl;
@@ -97,8 +104,9 @@ function renderRaces(data) {
 }
 
 /* ---------- main board ---------- */
-function renderTable(data) {
+function renderTable(data, matches) {
   const ucl = data.kind === "ucl";
+  const modelPoints = pointsByClub(matches?.matches || [], ucl);
   const n = data.teams.length;
   const size = ucl ? 9 : 13;
   const gaps = ucl ? new Set([9, 25]) : new Set();
@@ -122,13 +130,18 @@ function renderTable(data) {
   const cuts = ucl
     ? { 8: ["▲ Round of 16 · ▼ Play-offs", ""], 24: ["▼ Eliminated", "bad"] }
     : { [good.to]: ["▲ Champions League", ""], [bad.from - 1]: ["▼ Relegation", "bad"] };
-  const span = 8 + cols.length;
+  const span = 9 + cols.length;
 
   const by = sort && sort.slug === data.slug ? sort.key : null;
   const order = data.teams.map((t, i) => i);
   if (by) order.sort((a, b) => sortValue(data.teams[b], by) - sortValue(data.teams[a], by) || a - b);
   const rows = order.map((i) => {
     const t = data.teams[i];
+    const model = modelPoints.get(t.id);
+    const modelDelta = model?.n ? model.delta : null;
+    const modelLabel = model?.n
+      ? `${model.n} finished games with a forecast; ${model.published} published before kickoff`
+      : "No finished games with a forecast";
     const rank = i + 1;
     const bulbs = t.probs.map((p, j) =>
       `<i class="${gaps.has(j + 1) ? "gap" : ""}" style="background:${bulb(p, top)}" data-tip="${esc(`${clubName(t.id, t.name, "inline")} ${ordinal(j + 1)}: <b>${p.toFixed(2)}%</b>`)}"></i>`).join("");
@@ -144,6 +157,7 @@ function renderTable(data) {
       <td class="club l" title="${esc(t.full)}">${clubName(t.id, t.name)}</td>
       <td class="l">${formDots(t.id)}</td>
       <td>${t.played}</td><td class="b">${t.points}</td>
+      <td class="vsm" title="${modelLabel}" aria-label="${modelLabel}${modelDelta == null ? "" : `; ${modelDelta >= 0 ? "plus" : "minus"} ${Math.abs(modelDelta).toFixed(1)} points versus the model`}">${modelDelta == null ? "–" : `${modelDelta < 0 ? "−" : "+"}${Math.abs(modelDelta).toFixed(1)}`}</td>
       <td class="${t.gd >= 0 ? "gd-pos" : "gd-neg"}">${t.gd > 0 ? "+" : ""}${t.gd}</td>
       <td data-tip="${esc(tip)}"><span class="rg"><span class="band" style="left:${x(t.p10)}%;width:${x(t.p90) - x(t.p10)}%"></span><span class="now" style="left:${x(t.points)}%"></span><span class="proj" style="left:${x(t.xpts)}%"></span></span>&nbsp; <b class="b">${Math.round(t.xpts)}</b></td>
       <td class="l"><span class="bulbs" style="--b:${size}px">${bulbs}</span></td>
@@ -154,11 +168,11 @@ function renderTable(data) {
   const th = (key, label, cls = "") => `<th class="sortable ${cls}${by === key ? " sorted" : ""}" data-sort="${key}" tabindex="0" aria-sort="${by === key ? "descending" : "none"}" title="Sort by ${esc(label)}">${label}</th>`;
   const table = $("table");
   table.innerHTML = `<thead><tr>
-      <th class="rk l">#</th><th class="club l">Club</th>${th("form", "Form", "l")}<th>P</th>${th("points", "Pts")}${th("gd", "GD")}${th("projected", "Projected pts")}
+      <th class="rk l">#</th><th class="club l">Club</th>${th("form", "Form", "l")}<th>P</th>${th("points", "Pts")}<th class="vsm">vs model</th>${th("gd", "GD")}${th("projected", "Projected pts")}
       <th class="l"><span class="bulb-head" style="--b:${size}px">${head}</span></th>
       ${cols.map(([k, label]) => th(k, label)).join("")}
     </tr></thead><tbody>${rows}</tbody>`;
-  const resort = (head) => { sort = by === head.dataset.sort ? null : { key: head.dataset.sort, slug: data.slug }; renderTable(data); };
+  const resort = (head) => { sort = by === head.dataset.sort ? null : { key: head.dataset.sort, slug: data.slug }; renderTable(data, matches); };
   table.onclick = (e) => {
     if (e.target.closest("a")) return;
     const head = e.target.closest("th.sortable");
@@ -181,11 +195,12 @@ function renderTable(data) {
     <span><i class="k-now"></i>Now</span>
     <span><span class="k-bulbs">${sample}</span>Chance of each finishing place: brighter is likelier</span>
     <span>Tap a club for its full spread</span>`;
-  $("table-note").textContent = ucl
+  $("table-note").textContent = (ucl
     ? "Places 1–8 go straight to the round of 16, 9–24 enter the knockout play-offs and 25–36 are eliminated."
     : `Europe = places ${data.zones[1].from}–${data.zones[1].to}; the real Europa and Conference League spots also depend on cup winners.`
       + (n === 18 ? ` Down includes ${ordinal(bad.from)}, which goes to a relegation play-off.` : "")
-      + fixtureNotes(data);
+      + fixtureNotes(data))
+    + " vs model is actual minus model-expected points (3 × win probability + draw probability) from finished games with a forecast; Champions League points cover the league phase.";
 }
 
 /* cancelled/awarded fixtures the model had to interpret, from the forecast metadata */
