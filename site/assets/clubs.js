@@ -17,6 +17,7 @@ let showAll = false;
 let profile = null; // matches shown on the open profile, by id
 let ratingState = null;
 let ratingMetric = "rating";
+let compareAnchor = null; // the compare select's viewport offset, kept while a comparison redraws the profile
 
 export async function showClubs(slug, compareSlug = "") {
   try {
@@ -341,6 +342,10 @@ async function showProfile(club, comparison) {
   renderResults(club, league, europe);
   renderStrength(club, comparison, weekly);
   $("p-finish").innerHTML = spreadPanel(team, (domestic ? zones.releg : zones.out).from);
+  if (compareAnchor != null) {
+    window.scrollBy(0, $("p-compare").getBoundingClientRect().top - compareAnchor);
+    compareAnchor = null;
+  }
 }
 
 /* points, goals and xG from the club's side of a played match */
@@ -528,7 +533,12 @@ export function renderRatingComparisonChart(history, rated, metric, width = 640,
   times.push(liveTime);
   const first = times[0], last = times.at(-1);
   const x = (time) => pad.l + ((time - first) / (last - first || 1)) * (W - pad.l - pad.r);
-  const y = (value) => H - pad.b - (value / 100) * (H - pad.t - pad.b);
+  // The axis spans the plotted values with a margin, in steps of ten, so weekly moves stay visible.
+  const plotted = rated.flatMap((club) => [club[metric], ...weeks.map((week) => week.clubs[String(club.id)]?.[field])]).filter(Number.isFinite);
+  const lo = Math.max(0, Math.floor((Math.min(...plotted) - 3) / 10) * 10);
+  const hi = Math.min(100, Math.max(lo + 20, Math.ceil((Math.max(...plotted) + 3) / 10) * 10));
+  const step = hi - lo > 40 ? 20 : hi - lo > 20 ? 10 : 5;
+  const y = (value) => H - pad.b - ((value - lo) / (hi - lo)) * (H - pad.t - pad.b);
   const lines = rated.map((club) => {
     const values = weeks.map((week) => {
       const tuple = week.clubs[String(club.id)];
@@ -538,7 +548,7 @@ export function renderRatingComparisonChart(history, rated, metric, width = 640,
     return { club, values };
   });
 
-  const grid = [0, 25, 50, 75, 100].map((value) =>
+  const grid = Array.from({ length: Math.floor((hi - lo) / step) + 1 }, (_, i) => lo + i * step).map((value) =>
     `<line class="grid" x1="${pad.l}" x2="${W - pad.r}" y1="${y(value)}" y2="${y(value)}"/><text class="tick" x="${pad.l - 7}" y="${y(value) + 3}" text-anchor="end">${value}</text>`).join("");
   const every = Math.max(1, Math.ceil((weeks.length - 1) / (phone ? 3 : 6)));
   const ticks = weeks.map((week, i) => ({ x: x(times[i]), i, label: weekDay(week.date) }))
@@ -682,6 +692,7 @@ $("p-strength").addEventListener("click", (event) => {
 $("p-strength").addEventListener("change", (event) => {
   const select = event.target.closest("#p-compare");
   if (!select || !ratingState) return;
+  compareAnchor = select.getBoundingClientRect().top;
   location.hash = select.value ? `clubs/${ratingState.club.slug}/vs/${select.value}` : `clubs/${ratingState.club.slug}`;
 });
 // Links lead to the other club's profile; the open club's own link is dropped.
