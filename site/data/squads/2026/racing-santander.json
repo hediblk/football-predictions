@@ -604,6 +604,76 @@
         "defending": 36,
         "physical": 50
       }
+    },
+    {
+      "id": "observed:understat:11869",
+      "name": "Gustavo Puerta",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 273827,
+        "overall": 74,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 63,
+        "shooting": 64,
+        "passing": 72,
+        "dribbling": 74,
+        "defending": 69,
+        "physical": 78
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            11869
+          ],
+          "names": [
+            "Gustavo Puerta"
+          ]
+        }
+      },
+      "first_seen": "2026-08-16",
+      "last_seen": "2026-08-28"
+    },
+    {
+      "id": "observed:understat:14688",
+      "name": "Sergio Martínez",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 80659,
+        "overall": 64,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 59,
+        "shooting": 43,
+        "passing": 57,
+        "dribbling": 58,
+        "defending": 63,
+        "physical": 70
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            14688
+          ],
+          "names": [
+            "Sergio Martínez"
+          ]
+        }
+      },
+      "first_seen": "2026-08-16",
+      "last_seen": "2026-08-23"
     }
   ],
   "baseline_id": "6b32579dc08c2504",
@@ -922,6 +992,32 @@
           ],
           "xg": 0.0667,
           "xa": 0.0239
+        },
+        "observed:understat:11869": {
+          "starts": 3,
+          "sub": 0,
+          "minutes": 270,
+          "share": 0.375,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            11869
+          ],
+          "xg": 0.0746,
+          "xa": 0.511
+        },
+        "observed:understat:14688": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 123,
+          "share": 0.170833,
+          "known_games": 5,
+          "unknown_games": 3,
+          "provider_ids": [
+            14688
+          ],
+          "xg": 0.0327,
+          "xa": 0.0
         }
       },
       "most_used_xi": {
@@ -1035,7 +1131,7 @@
               "starter": true,
               "xg": 0.03265717998147011,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:14688"
             },
             {
               "source_id": 11869,
@@ -1044,7 +1140,7 @@
               "starter": true,
               "xg": 0.07459449023008347,
               "xa": 0.4309897720813751,
-              "player": null
+              "player": "observed:understat:11869"
             },
             {
               "source_id": 9814,
@@ -1134,6 +1230,8 @@
             246656,
             98747,
             264402,
+            "observed:understat:14688",
+            "observed:understat:11869",
             32679,
             25,
             102151,
@@ -1144,7 +1242,7 @@
             3874,
             183154
           ],
-          "ideal_started": null
+          "ideal_started": 7
         },
         {
           "fixture_id": 564644,
@@ -1206,7 +1304,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:11869"
             },
             {
               "source_id": 14688,
@@ -1215,7 +1313,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:14688"
             },
             {
               "source_id": 9814,
@@ -1305,6 +1403,8 @@
             3874,
             98747,
             264402,
+            "observed:understat:11869",
+            "observed:understat:14688",
             32679,
             25,
             102151,
@@ -1316,7 +1416,7 @@
             265516,
             180099
           ],
-          "ideal_started": null
+          "ideal_started": 7
         },
         {
           "fixture_id": 564654,
@@ -1387,7 +1487,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.08005532622337341,
-              "player": null
+              "player": "observed:understat:11869"
             },
             {
               "source_id": 9814,
@@ -1468,6 +1568,7 @@
             3874,
             264402,
             102497,
+            "observed:understat:11869",
             32679,
             25,
             102151,
@@ -2367,5 +2468,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:20.812033+00:00"
+  "usage_generated_at": "2026-10-16T07:14:20.899994+00:00"
 }

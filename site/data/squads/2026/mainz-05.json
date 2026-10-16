@@ -639,6 +639,40 @@
         "defending": 23,
         "physical": 67
       }
+    },
+    {
+      "id": "observed:understat:14953",
+      "name": "Rael Nakuzola",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 89424,
+        "overall": 60,
+        "positions": [
+          "LB"
+        ],
+        "pace": 64,
+        "shooting": 41,
+        "passing": 50,
+        "dribbling": 56,
+        "defending": 58,
+        "physical": 66
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            14953
+          ],
+          "names": [
+            "Rael Nakuzola"
+          ]
+        }
+      },
+      "first_seen": "2026-09-06",
+      "last_seen": "2026-09-12"
     }
   ],
   "baseline_id": "de5c1f7b56579bb0",
@@ -993,6 +1027,19 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
+        },
+        "observed:understat:14953": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 14,
+          "share": 0.031111,
+          "known_games": 2,
+          "unknown_games": 3,
+          "provider_ids": [
+            14953
+          ],
+          "xg": 0.0187,
+          "xa": 0.4877
         }
       },
       "most_used_xi": {
@@ -1021,7 +1068,7 @@
           },
           {
             "role": "CDM",
-            "player": 152726
+            "player": 114809
           },
           {
             "role": "CM",
@@ -1029,7 +1076,7 @@
           },
           {
             "role": "CM",
-            "player": 114809
+            "player": 152726
           },
           {
             "role": "LW",
@@ -1360,7 +1407,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:14953"
             }
           ],
           "starters": [
@@ -1378,7 +1425,8 @@
           "subs": [
             181758,
             137302,
-            6707
+            6707,
+            "observed:understat:14953"
           ],
           "ideal_started": null
         },
@@ -1505,7 +1553,7 @@
               "starter": false,
               "xg": 0.018747704103589058,
               "xa": 0.4877149760723114,
-              "player": null
+              "player": "observed:understat:14953"
             },
             {
               "source_id": 11981,
@@ -1549,6 +1597,7 @@
           ],
           "subs": [
             137302,
+            "observed:understat:14953",
             150647,
             6707,
             181758
@@ -1894,5 +1943,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:20.013994+00:00"
+  "usage_generated_at": "2026-10-16T07:11:05.058390+00:00"
 }

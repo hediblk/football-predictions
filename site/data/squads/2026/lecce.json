@@ -716,6 +716,43 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:11246",
+      "name": "Amar Ahmed Fatah",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 266049,
+        "overall": 67,
+        "positions": [
+          "LM",
+          "LW",
+          "RW",
+          "RM"
+        ],
+        "pace": 78,
+        "shooting": 58,
+        "passing": 58,
+        "dribbling": 70,
+        "defending": 28,
+        "physical": 53
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            11246
+          ],
+          "names": [
+            "Amar Ahmed Fatah"
+          ]
+        }
+      },
+      "first_seen": "2026-08-31",
+      "last_seen": "2026-10-11"
     }
   ],
   "baseline_id": "816633a76c3d7f48",
@@ -1140,6 +1177,19 @@
           ],
           "xg": 0.1024,
           "xa": 0.0252
+        },
+        "observed:understat:11246": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 172,
+          "share": 0.318519,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            11246
+          ],
+          "xg": 0.1958,
+          "xa": 0.0361
         }
       },
       "most_used_xi": {
@@ -1517,7 +1567,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.01811259612441063,
-              "player": null
+              "player": "observed:understat:11246"
             }
           ],
           "starters": [
@@ -1536,7 +1586,8 @@
           "subs": [
             145690,
             67697,
-            57805
+            57805,
+            "observed:understat:11246"
           ],
           "ideal_started": 7
         },
@@ -1672,7 +1723,7 @@
               "starter": false,
               "xg": 0.015129946172237396,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:11246"
             },
             {
               "source_id": 13875,
@@ -1709,6 +1760,7 @@
           "subs": [
             57805,
             188103,
+            "observed:understat:11246",
             150530
           ],
           "ideal_started": 8
@@ -1863,7 +1915,7 @@
               "starter": false,
               "xg": 0.03199320286512375,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:11246"
             }
           ],
           "starters": [
@@ -1882,7 +1934,8 @@
             177262,
             299291,
             170915,
-            116223
+            116223,
+            "observed:understat:11246"
           ],
           "ideal_started": null
         },
@@ -2000,7 +2053,7 @@
               "starter": false,
               "xg": 0.04662167653441429,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:11246"
             },
             {
               "source_id": 14347,
@@ -2053,6 +2106,7 @@
             153292
           ],
           "subs": [
+            "observed:understat:11246",
             177262,
             170915,
             299291
@@ -2164,7 +2218,7 @@
               "starter": true,
               "xg": 0.10203887522220612,
               "xa": 0.017983729019761086,
-              "player": null
+              "player": "observed:understat:11246"
             },
             {
               "source_id": 14347,
@@ -2222,7 +2276,8 @@
             67697,
             57805,
             116223,
-            299291
+            299291,
+            "observed:understat:11246"
           ],
           "subs": [
             177262,
@@ -2230,10 +2285,10 @@
             8475,
             153292
           ],
-          "ideal_started": null
+          "ideal_started": 8
         }
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:19.574270+00:00"
+  "usage_generated_at": "2026-10-16T07:14:06.111002+00:00"
 }

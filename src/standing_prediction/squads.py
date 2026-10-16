@@ -119,9 +119,11 @@ def match_squads(teams, by_birth, overrides=None):
 
 def select_xi(players, formation="4-3-3", *, minutes=None):
     roles = FORMATIONS[formation]
-    eligible = sorted((row for row in players if row["status"] == "matched" and row["ea"]["rating"] is not None
+    players = [row for row in players if minutes is not None or row["status"] != "observed"]
+    statuses = {"matched"} if minutes is None else {"matched", "observed"}
+    eligible = sorted((row for row in players if row["status"] in statuses and row["ea"] is not None and row["ea"]["rating"] is not None
                        and row["ea"]["positions"] and
-                       (minutes is None or (minutes.get(row["id"]) or 0) > 0)), key=lambda row: row["id"])
+                       (minutes is None or (minutes.get(row["id"]) or 0) > 0)), key=lambda row: (isinstance(row["id"], str), row["id"]))
     # One tenth of a minute outweighs the combined EA overall of eleven players.
     values = {row["id"]: row["ea"]["rating"] if minutes is None else
               round(minutes[row["id"]] * 10) * 1100 + row["ea"]["rating"] for row in eligible}

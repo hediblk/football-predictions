@@ -549,6 +549,41 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:12566",
+      "name": "Alberto Risco",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 71977,
+        "overall": 62,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 54,
+        "shooting": 57,
+        "passing": 62,
+        "dribbling": 63,
+        "defending": 42,
+        "physical": 44
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            12566
+          ],
+          "names": [
+            "Alberto Risco"
+          ]
+        }
+      },
+      "first_seen": "2026-08-15",
+      "last_seen": "2026-09-17"
     }
   ],
   "baseline_id": "999b5ba4c73c8a9b",
@@ -859,6 +894,19 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
+        },
+        "observed:understat:12566": {
+          "starts": 0,
+          "sub": 4,
+          "minutes": 46,
+          "share": 0.063889,
+          "known_games": 4,
+          "unknown_games": 4,
+          "provider_ids": [
+            12566
+          ],
+          "xg": 0.1295,
+          "xa": 0.0
         }
       },
       "most_used_xi": {
@@ -1053,7 +1101,7 @@
               "starter": false,
               "xg": 0.014879445545375347,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:12566"
             },
             {
               "source_id": 13696,
@@ -1080,7 +1128,8 @@
           "subs": [
             33132,
             161083,
-            220164
+            220164,
+            "observed:understat:12566"
           ],
           "ideal_started": null
         },
@@ -1207,7 +1256,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:12566"
             },
             {
               "source_id": 9297,
@@ -1242,6 +1291,7 @@
           ],
           "subs": [
             69,
+            "observed:understat:12566",
             81187,
             220164
           ],
@@ -1361,7 +1411,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:12566"
             },
             {
               "source_id": 7888,
@@ -1395,6 +1445,7 @@
             33132
           ],
           "subs": [
+            "observed:understat:12566",
             21410,
             69
           ],
@@ -1867,7 +1918,7 @@
               "starter": false,
               "xg": 0.11462581902742386,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:12566"
             },
             {
               "source_id": 14895,
@@ -1895,7 +1946,8 @@
           "subs": [
             33132,
             3724,
-            220164
+            220164,
+            "observed:understat:12566"
           ],
           "ideal_started": 6
         },
@@ -2230,5 +2282,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:19.048234+00:00"
+  "usage_generated_at": "2026-10-16T07:13:54.289919+00:00"
 }

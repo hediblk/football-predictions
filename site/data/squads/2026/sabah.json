@@ -368,6 +368,29 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:uefa:250171312",
+      "name": "Abdulakh Khaibulaev",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "uefa": {
+          "ids": [
+            250171312
+          ],
+          "names": [
+            "Abdulakh Khaibulaev"
+          ]
+        }
+      },
+      "first_seen": "2026-09-10",
+      "last_seen": "2026-10-13",
+      "reason": "no_name_match"
     }
   ],
   "baseline_id": "aa85ca16b2b1342b",
@@ -712,6 +735,19 @@
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
+        },
+        "observed:uefa:250171312": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 31.1,
+          "share": 0.172778,
+          "known_games": 2,
+          "unknown_games": 0,
+          "provider_ids": [
+            250171312
+          ],
+          "avg_x": null,
+          "avg_y": null
         }
       },
       "most_used_xi": {
@@ -830,7 +866,7 @@
               "name": "Abdulakh Khaibulaev",
               "minutes": 22.1,
               "starter": false,
-              "player": null
+              "player": "observed:uefa:250171312"
             },
             {
               "source_id": 250174049,
@@ -921,6 +957,7 @@
             296481
           ],
           "subs": [
+            "observed:uefa:250171312",
             263271,
             177640
           ],
@@ -984,7 +1021,7 @@
               "name": "Abdulakh Khaibulaev",
               "minutes": 9.0,
               "starter": false,
-              "player": null
+              "player": "observed:uefa:250171312"
             },
             {
               "source_id": 250174049,
@@ -1075,6 +1112,7 @@
             177640
           ],
           "subs": [
+            "observed:uefa:250171312",
             216671,
             254518,
             263271
@@ -1084,5 +1122,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:02.092033+00:00"
+  "usage_generated_at": "2026-10-16T07:14:22.861141+00:00"
 }

@@ -727,6 +727,43 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:15035",
+      "name": "Yanik Spalt",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 81634,
+        "overall": 60,
+        "positions": [
+          "CDM",
+          "LB",
+          "CM",
+          "LM"
+        ],
+        "pace": 65,
+        "shooting": 43,
+        "passing": 56,
+        "dribbling": 58,
+        "defending": 57,
+        "physical": 50
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            15035
+          ],
+          "names": [
+            "Yanik Spalt"
+          ]
+        }
+      },
+      "first_seen": "2026-09-04",
+      "last_seen": "2026-09-12"
     }
   ],
   "baseline_id": "8e6b5f9d1a1f4964",
@@ -1116,6 +1153,19 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
+        },
+        "observed:understat:15035": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 57,
+          "share": 0.126667,
+          "known_games": 2,
+          "unknown_games": 3,
+          "provider_ids": [
+            15035
+          ],
+          "xg": 0.0,
+          "xa": 0.0
         }
       },
       "most_used_xi": {
@@ -1465,7 +1515,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:15035"
             },
             {
               "source_id": 12927,
@@ -1509,6 +1559,7 @@
           ],
           "subs": [
             123333,
+            "observed:understat:15035",
             157263,
             33242,
             214587
@@ -1665,7 +1716,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:15035"
             }
           ],
           "starters": [
@@ -1684,7 +1735,8 @@
             189873,
             6928,
             214587,
-            123333
+            123333,
+            "observed:understat:15035"
           ],
           "ideal_started": null
         },
@@ -2408,6 +2460,17 @@
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
+        },
+        "observed:understat:15035": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 2,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
         }
       },
       "most_used_xi": {
@@ -2792,5 +2855,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:21.519733+00:00"
+  "usage_generated_at": "2026-10-16T07:14:31.212094+00:00"
 }

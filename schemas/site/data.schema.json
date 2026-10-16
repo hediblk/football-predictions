@@ -1225,12 +1225,12 @@
         "physical"
       ]
     },
+    "squadPlayerId": {"anyOf": [{"$ref": "#/$defs/id"}, {"type": "string", "pattern": "^observed:(understat|uefa):[1-9][0-9]*$"}]},
     "squadPlayer": {
       "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "minimum": 1
+          "$ref": "#/$defs/squadPlayerId"
         },
         "name": {
           "$ref": "#/$defs/string"
@@ -1259,7 +1259,8 @@
           "enum": [
             "matched",
             "unmatched",
-            "ambiguous"
+            "ambiguous",
+            "observed"
           ]
         },
         "method": {
@@ -1267,7 +1268,9 @@
             {
               "enum": [
                 "verified_override",
-                "name_and_birth_date"
+                "name_and_birth_date",
+                "name_and_club",
+                "unique_name"
               ]
             },
             {
@@ -1288,6 +1291,74 @@
         "reason": {
           "type": "string",
           "minLength": 1
+        },
+        "source": {
+          "const": "match_sheet"
+        },
+        "providers": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "understat": {
+              "type": "object",
+              "properties": {
+                "ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  }
+                },
+                "names": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/$defs/string"
+                  }
+                }
+              },
+              "required": [
+                "ids",
+                "names"
+              ],
+              "additionalProperties": false
+            },
+            "uefa": {
+              "type": "object",
+              "properties": {
+                "ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  }
+                },
+                "names": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/$defs/string"
+                  }
+                }
+              },
+              "required": [
+                "ids",
+                "names"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "first_seen": {
+          "$ref": "#/$defs/date"
+        },
+        "last_seen": {
+          "$ref": "#/$defs/date"
         }
       },
       "required": [
@@ -1298,6 +1369,57 @@
         "status",
         "method",
         "ea"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "observed"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "source",
+              "providers",
+              "first_seen",
+              "last_seen"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "dob": {
+                "type": "null"
+              },
+              "provider_position": {
+                "type": "null"
+              },
+              "method": {
+                "enum": [
+                  "name_and_club",
+                  "unique_name",
+                  null
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "method": {
+                "enum": [
+                  "verified_override",
+                  "name_and_birth_date",
+                  null
+                ]
+              }
+            }
+          }
+        }
       ]
     },
     "squadSlot": {
@@ -1322,7 +1444,7 @@
         "player": {
           "anyOf": [
             {
-              "$ref": "#/$defs/id"
+              "$ref": "#/$defs/squadPlayerId"
             },
             {
               "type": "null"
@@ -1348,7 +1470,7 @@
         "player": {
           "anyOf": [
             {
-              "$ref": "#/$defs/id"
+              "$ref": "#/$defs/squadPlayerId"
             },
             {
               "type": "null"
@@ -1373,8 +1495,14 @@
           "minimum": 0,
           "maximum": 1
         },
-        "xg": {"type": "number", "minimum": 0},
-        "xa": {"type": "number", "minimum": 0}
+        "xg": {
+          "type": "number",
+          "minimum": 0
+        },
+        "xa": {
+          "type": "number",
+          "minimum": 0
+        }
       },
       "required": [
         "source_id",
@@ -1535,16 +1663,14 @@
         "starters": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "minimum": 1
+            "$ref": "#/$defs/squadPlayerId"
           },
           "uniqueItems": true
         },
         "subs": {
           "type": "array",
           "items": {
-            "type": "integer",
-            "minimum": 1
+            "$ref": "#/$defs/squadPlayerId"
           },
           "uniqueItems": true
         },
@@ -1592,11 +1718,14 @@
           "type": "integer",
           "minimum": 0
         },
-        "fully_mapped": {"type": "integer", "minimum": 0},
+        "fully_mapped": {
+          "type": "integer",
+          "minimum": 0
+        },
         "players": {
           "type": "object",
           "patternProperties": {
-            "^[0-9]+$": {
+            "^([0-9]+|observed:(understat|uefa):[1-9][0-9]*)$": {
               "$ref": "#/$defs/squadUsagePlayer"
             }
           },

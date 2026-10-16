@@ -546,6 +546,29 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:5311",
+      "name": "Vincent Sierro",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "understat": {
+          "ids": [
+            5311
+          ],
+          "names": [
+            "Vincent Sierro"
+          ]
+        }
+      },
+      "first_seen": "2026-09-06",
+      "last_seen": "2026-10-10",
+      "reason": "no_name_match"
     }
   ],
   "baseline_id": "f21f29882c01418c",
@@ -893,6 +916,19 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
+        },
+        "observed:understat:5311": {
+          "starts": 3,
+          "sub": 1,
+          "minutes": 254,
+          "share": 0.564444,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            5311
+          ],
+          "xg": 0.0496,
+          "xa": 0.3882
         }
       },
       "most_used_xi": {
@@ -1280,7 +1316,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:5311"
             }
           ],
           "starters": [
@@ -1299,7 +1335,8 @@
             184455,
             299423,
             31881,
-            97151
+            97151,
+            "observed:understat:5311"
           ],
           "ideal_started": null
         },
@@ -1372,7 +1409,7 @@
               "starter": true,
               "xg": 0.04957856982946396,
               "xa": 0.3882497251033783,
-              "player": null
+              "player": "observed:understat:5311"
             },
             {
               "source_id": 13097,
@@ -1463,6 +1500,7 @@
             212729,
             272754,
             42613,
+            "observed:understat:5311",
             165900,
             140773,
             299423,
@@ -1474,7 +1512,7 @@
             184455,
             31881
           ],
-          "ideal_started": null
+          "ideal_started": 5
         },
         {
           "fixture_id": 558590,
@@ -1554,7 +1592,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:5311"
             },
             {
               "source_id": 14804,
@@ -1637,6 +1675,7 @@
             1839,
             42613,
             165900,
+            "observed:understat:5311",
             299423,
             140773
           ],
@@ -1718,7 +1757,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:5311"
             },
             {
               "source_id": 13097,
@@ -1809,6 +1848,7 @@
             212729,
             1839,
             42613,
+            "observed:understat:5311",
             165900,
             171123,
             140773,
@@ -1820,10 +1860,10 @@
             184455,
             299423
           ],
-          "ideal_started": null
+          "ideal_started": 4
         }
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:20.719248+00:00"
+  "usage_generated_at": "2026-10-16T07:11:11.818142+00:00"
 }
