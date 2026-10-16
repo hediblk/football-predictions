@@ -5,6 +5,7 @@ on:
     paths:
       - "site/**"
       - "scripts/build_squads.py"
+      - "scripts/build_squad_usage.py"
       - "data/players/**"
       - "scripts/check_site.py"
       - "scripts/stamp_assets.py"

@@ -1,6 +1,6 @@
 # Ideal XI and match usage pilot
 
-The La Liga pilot uses a fixed EA FC 27 rating snapshot, current football-data.org squads, and collected Understat appearances. It produces local review reports in `out/squads/`. It does not alter forecast probabilities. Task 1 now publishes checked per-club references for all supported competitions; usage comparisons remain local.
+The La Liga pilot uses a fixed EA FC 27 rating snapshot, current football-data.org squads, and collected Understat appearances. It produces local review reports in `out/squads/`. It does not alter forecast probabilities. Task 1 now publishes checked per-club references for all supported competitions; the pilot comparison reports remain local, while Task 4 publishes retrospective season usage.
 
 ## Inputs and setup
 
@@ -91,3 +91,16 @@ PYTHONDONTWRITEBYTECODE=1 python scripts/build_squads.py --publish --offline \
 The default competition set is `PL PD BL1 SA FL1 CL`; `--publish` requires exactly the club set in `clubs.json`. The pinned EA CSV is verified against `data/players/ea.sha256`. CI uses `--download-players`; a failed download or mismatch retains the previous publication. Online rosters are reused for seven days and archived immutably under `data/players/rosters/`. Per-club baselines are frozen under `data/players/baselines/`; the [published contract](site-data-contract.md#squad-references) explains retention, dated duplicate-roster selection and ambiguous provider membership. Local aggregate reports keep candidate suggestions for identity review.
 
 The initial all-club export has 111 files, including an explicit unavailable state for Slovan Bratislava's empty provider squad. Three provider identities occur at two clubs each (Yann Gboho, Daniel Elfadli and Mikkel Hansen); all six rows remain ambiguous and unrated. Eleven additional source-backed exceptions prioritize regular first-team players: Livramento, Guirassy, Nmecha, Marcus/Khéphren Thuram, Ndicka, Pacho, Safonov, Eduardo Quaresma, Mykolenko and Weah. The evidence for each is stored alongside the exception.
+
+## Published season participation
+
+The optional refresh runs `scripts/build_squad_usage.py` after `build_squads.py`, reading only published fixtures and match details. It adds separate per-competition ledgers for every supported club, preserving the EA baseline and its creation time. To rerun without provider requests:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python scripts/build_squad_usage.py \
+  --players /Users/hedibelkahia/codes/football/.cache/players/ea/fc27-2026-09-12.csv
+```
+
+Understat supplies domestic starts/sub appearances/minutes. UEFA `positions` identifies starters, including early substitutions; `physical` supplies elapsed minutes, including long substitutes and stoppage time. UEFA coordinates are rotated for away games before computing mean starter positions and approximate role notes. The most-used XI uses the same formation-constrained assignment as the EA reference, prioritizing observed minutes then EA overall.
+
+Known observations on partial sheets are retained. Unobserved players become zero only on a fully mapped side; player `known_games` and `unknown_games` distinguish incomplete lower-bound totals from complete observations. Entirely unknown totals are null. Shares use the requested 90 × covered source games denominator, can exceed one with UEFA stoppage time, and must be read with coverage. `fully_mapped` reports the subset with complete identity mappings. See the [Squad references contract](site-data-contract.md#squad-references) for field meanings, provenance, position zones and retention rules. This season view is retrospective and never enters forecast probabilities.
