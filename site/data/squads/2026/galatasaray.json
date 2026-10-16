@@ -1,0 +1,713 @@
+{
+  "slug": "galatasaray",
+  "club_id": 610,
+  "name": "Galatasaray SK",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-14T04:00:41.767417+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
+    "snapshot": "data/players/rosters/2026-10-14/CL.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 31,
+    "matched": 26
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 79.9,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 30283
+      },
+      {
+        "role": "LB",
+        "player": 194
+      },
+      {
+        "role": "CB",
+        "player": 3733
+      },
+      {
+        "role": "CB",
+        "player": 29804
+      },
+      {
+        "role": "RB",
+        "player": 16119
+      },
+      {
+        "role": "CDM",
+        "player": 2260
+      },
+      {
+        "role": "CM",
+        "player": 168955
+      },
+      {
+        "role": "CM",
+        "player": 3182
+      },
+      {
+        "role": "LW",
+        "player": 15892
+      },
+      {
+        "role": "ST",
+        "player": 9434
+      },
+      {
+        "role": "RW",
+        "player": 3184
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 30283,
+      "name": "Uğurcan Çakır",
+      "dob": "1996-04-05",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 226300,
+        "overall": 80,
+        "positions": [
+          "GK"
+        ],
+        "pace": 80,
+        "shooting": 76,
+        "passing": 81,
+        "dribbling": 82,
+        "defending": 54,
+        "physical": 80
+      }
+    },
+    {
+      "id": 30516,
+      "name": "Günay Güvenç",
+      "dob": "1991-07-25",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 171608,
+      "name": "Jankat Yilmaz",
+      "dob": "2004-08-16",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271211,
+        "overall": 66,
+        "positions": [
+          "GK"
+        ],
+        "pace": 66,
+        "shooting": 65,
+        "passing": 60,
+        "dribbling": 68,
+        "defending": 26,
+        "physical": 65
+      }
+    },
+    {
+      "id": 289951,
+      "name": "Arda Yılmaz",
+      "dob": "2008-02-13",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 194,
+      "name": "Ismail Jakobs",
+      "dob": "1999-08-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252293,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 89,
+        "shooting": 58,
+        "passing": 64,
+        "dribbling": 74,
+        "defending": 71,
+        "physical": 75
+      }
+    },
+    {
+      "id": 3733,
+      "name": "Davinson Sánchez",
+      "dob": "1996-06-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 220793,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 81,
+        "shooting": 57,
+        "passing": 62,
+        "dribbling": 72,
+        "defending": 80,
+        "physical": 86
+      }
+    },
+    {
+      "id": 9512,
+      "name": "Kaan Ayhan",
+      "dob": "1994-11-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 207790,
+        "overall": 73,
+        "positions": [
+          "CDM",
+          "CB",
+          "RB"
+        ],
+        "pace": 51,
+        "shooting": 63,
+        "passing": 73,
+        "dribbling": 67,
+        "defending": 74,
+        "physical": 71
+      }
+    },
+    {
+      "id": 16119,
+      "name": "Roland Sallai",
+      "dob": "1997-05-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234171,
+        "overall": 78,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 80,
+        "shooting": 70,
+        "passing": 72,
+        "dribbling": 76,
+        "defending": 75,
+        "physical": 77
+      }
+    },
+    {
+      "id": 29804,
+      "name": "Abdülkerim Bardakcı",
+      "dob": "1994-09-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229905,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 55,
+        "shooting": 50,
+        "passing": 70,
+        "dribbling": 69,
+        "defending": 79,
+        "physical": 85
+      }
+    },
+    {
+      "id": 113375,
+      "name": "Wilfried Singo",
+      "dob": "2000-12-25",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252802,
+        "overall": 78,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 82,
+        "shooting": 61,
+        "passing": 68,
+        "dribbling": 74,
+        "defending": 77,
+        "physical": 84
+      }
+    },
+    {
+      "id": 134780,
+      "name": "Kazımcan Karataş",
+      "dob": "2003-01-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262607,
+        "overall": 67,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 75,
+        "shooting": 57,
+        "passing": 59,
+        "dribbling": 65,
+        "defending": 62,
+        "physical": 71
+      }
+    },
+    {
+      "id": 145831,
+      "name": "Evren Eren Elmalı",
+      "dob": "2000-07-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259754,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 83,
+        "shooting": 58,
+        "passing": 72,
+        "dribbling": 72,
+        "defending": 69,
+        "physical": 78
+      }
+    },
+    {
+      "id": 170415,
+      "name": "El Chadaille Bitshiabu",
+      "dob": "2005-05-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263193,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 67,
+        "shooting": 36,
+        "passing": 60,
+        "dribbling": 56,
+        "defending": 74,
+        "physical": 79
+      }
+    },
+    {
+      "id": 191211,
+      "name": "Arda Unyay",
+      "dob": "2007-01-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70253,
+        "overall": 65,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 70,
+        "shooting": 29,
+        "passing": 54,
+        "dribbling": 60,
+        "defending": 63,
+        "physical": 71
+      }
+    },
+    {
+      "id": 2260,
+      "name": "Lucas Torreira",
+      "dob": "1996-02-11",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 223959,
+        "overall": 81,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 72,
+        "shooting": 72,
+        "passing": 78,
+        "dribbling": 75,
+        "defending": 78,
+        "physical": 76
+      }
+    },
+    {
+      "id": 3182,
+      "name": "Ilkay Gündogan",
+      "dob": "1990-10-24",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 186942,
+        "overall": 78,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 52,
+        "shooting": 77,
+        "passing": 80,
+        "dribbling": 77,
+        "defending": 69,
+        "physical": 64
+      }
+    },
+    {
+      "id": 8097,
+      "name": "Mario Lemina",
+      "dob": "1993-09-01",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212811,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM",
+          "CB"
+        ],
+        "pace": 73,
+        "shooting": 67,
+        "passing": 74,
+        "dribbling": 74,
+        "defending": 78,
+        "physical": 84
+      }
+    },
+    {
+      "id": 153555,
+      "name": "Chimuanya Ugochukwu",
+      "dob": "2004-03-26",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 168955,
+      "name": "Gabriel Sara",
+      "dob": "1999-06-26",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270571,
+        "overall": 80,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 79,
+        "shooting": 75,
+        "passing": 83,
+        "dribbling": 81,
+        "defending": 68,
+        "physical": 76
+      }
+    },
+    {
+      "id": 172978,
+      "name": "Eyup Aydin",
+      "dob": "2004-08-02",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278168,
+        "overall": 64,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 65,
+        "shooting": 54,
+        "passing": 65,
+        "dribbling": 66,
+        "defending": 60,
+        "physical": 66
+      }
+    },
+    {
+      "id": 205981,
+      "name": "Aleksey Batrakov",
+      "dob": "2005-06-09",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 277805,
+      "name": "Renato Nhaga",
+      "dob": "2007-03-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78160,
+        "overall": 64,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 76,
+        "shooting": 46,
+        "passing": 56,
+        "dribbling": 68,
+        "defending": 58,
+        "physical": 60
+      }
+    },
+    {
+      "id": 3184,
+      "name": "Leroy Sané",
+      "dob": "1996-01-11",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 222492,
+        "overall": 80,
+        "positions": [
+          "RM",
+          "LM",
+          "RW",
+          "LW"
+        ],
+        "pace": 84,
+        "shooting": 79,
+        "passing": 78,
+        "dribbling": 83,
+        "defending": 29,
+        "physical": 65
+      }
+    },
+    {
+      "id": 9434,
+      "name": "Victor Osimhen",
+      "dob": "1998-12-29",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232293,
+        "overall": 85,
+        "positions": [
+          "ST"
+        ],
+        "pace": 89,
+        "shooting": 84,
+        "passing": 65,
+        "dribbling": 78,
+        "defending": 51,
+        "physical": 86
+      }
+    },
+    {
+      "id": 15892,
+      "name": "Rafael Leão",
+      "dob": "1999-06-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241721,
+        "overall": 83,
+        "positions": [
+          "LW",
+          "LM",
+          "ST",
+          "CAM"
+        ],
+        "pace": 93,
+        "shooting": 79,
+        "passing": 79,
+        "dribbling": 83,
+        "defending": 30,
+        "physical": 73
+      }
+    },
+    {
+      "id": 79906,
+      "name": "Yunus Akgün",
+      "dob": "2000-07-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239892,
+        "overall": 79,
+        "positions": [
+          "CAM",
+          "RM",
+          "LM",
+          "RW"
+        ],
+        "pace": 85,
+        "shooting": 75,
+        "passing": 75,
+        "dribbling": 81,
+        "defending": 46,
+        "physical": 58
+      }
+    },
+    {
+      "id": 172081,
+      "name": "Baris Yilmaz",
+      "dob": "2000-05-23",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263205,
+        "overall": 80,
+        "positions": [
+          "LM",
+          "RM",
+          "ST",
+          "LW"
+        ],
+        "pace": 93,
+        "shooting": 75,
+        "passing": 72,
+        "dribbling": 80,
+        "defending": 69,
+        "physical": 86
+      }
+    },
+    {
+      "id": 188466,
+      "name": "Deniz Gul",
+      "dob": "2004-07-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278587,
+        "overall": 72,
+        "positions": [
+          "ST"
+        ],
+        "pace": 72,
+        "shooting": 71,
+        "passing": 60,
+        "dribbling": 71,
+        "defending": 31,
+        "physical": 75
+      }
+    },
+    {
+      "id": 270658,
+      "name": "Berat Luş",
+      "dob": "2007-04-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75892,
+        "overall": 62,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 80,
+        "shooting": 56,
+        "passing": 56,
+        "dribbling": 66,
+        "defending": 26,
+        "physical": 49
+      }
+    },
+    {
+      "id": 289922,
+      "name": "Can Güner",
+      "dob": "2008-01-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83745,
+        "overall": 64,
+        "positions": [
+          "RW",
+          "LW",
+          "RM",
+          "LM"
+        ],
+        "pace": 71,
+        "shooting": 61,
+        "passing": 62,
+        "dribbling": 67,
+        "defending": 31,
+        "physical": 51
+      }
+    },
+    {
+      "id": 290541,
+      "name": "Ada Yüzgeç",
+      "dob": "2009-04-03",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "ce43c514d19b3678",
+  "generated_at": "2026-10-16T00:40:41.219312+00:00"
+}

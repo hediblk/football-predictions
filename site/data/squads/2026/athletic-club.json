@@ -1,0 +1,638 @@
+{
+  "slug": "athletic-club",
+  "club_id": 77,
+  "name": "Athletic Club",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-15T19:46:39.321664+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "bf1f579baac7ac64c9991a2282e59215a1f14a3c1e55aeef02b3cf47e17eea79",
+    "snapshot": "data/players/rosters/2026-10-15/PD.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 26,
+    "matched": 24
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 81.2,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 32570
+      },
+      {
+        "role": "LB",
+        "player": 8479
+      },
+      {
+        "role": "CB",
+        "player": 32579
+      },
+      {
+        "role": "CB",
+        "player": 7884
+      },
+      {
+        "role": "RB",
+        "player": 32618
+      },
+      {
+        "role": "CDM",
+        "player": 32481
+      },
+      {
+        "role": "CM",
+        "player": 126878
+      },
+      {
+        "role": "CM",
+        "player": 244599
+      },
+      {
+        "role": "LW",
+        "player": 157135
+      },
+      {
+        "role": "ST",
+        "player": 32629
+      },
+      {
+        "role": "RW",
+        "player": 2294
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 32570,
+      "name": "Unai Simón",
+      "dob": "1997-06-11",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 230869,
+        "overall": 85,
+        "positions": [
+          "GK"
+        ],
+        "pace": 84,
+        "shooting": 81,
+        "passing": 76,
+        "dribbling": 85,
+        "defending": 49,
+        "physical": 82
+      }
+    },
+    {
+      "id": 203459,
+      "name": "Álex Padilla",
+      "dob": "2003-09-01",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271034,
+        "overall": 69,
+        "positions": [
+          "GK"
+        ],
+        "pace": 71,
+        "shooting": 68,
+        "passing": 63,
+        "dribbling": 71,
+        "defending": 34,
+        "physical": 68
+      }
+    },
+    {
+      "id": 7884,
+      "name": "Aymeric Laporte",
+      "dob": "1994-05-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212218,
+        "overall": 84,
+        "positions": [
+          "CB"
+        ],
+        "pace": 53,
+        "shooting": 52,
+        "passing": 76,
+        "dribbling": 70,
+        "defending": 85,
+        "physical": 79
+      }
+    },
+    {
+      "id": 8479,
+      "name": "Yuri Berchiche",
+      "dob": "1990-02-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 183512,
+        "overall": 79,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 77,
+        "shooting": 68,
+        "passing": 75,
+        "dribbling": 74,
+        "defending": 77,
+        "physical": 81
+      }
+    },
+    {
+      "id": 32579,
+      "name": "Yeray Álvarez",
+      "dob": "1995-01-24",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 227950,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 64,
+        "shooting": 49,
+        "passing": 73,
+        "dribbling": 66,
+        "defending": 82,
+        "physical": 75
+      }
+    },
+    {
+      "id": 32618,
+      "name": "Daniel Vivian",
+      "dob": "1999-07-05",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 248550,
+        "overall": 82,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 76,
+        "shooting": 50,
+        "passing": 61,
+        "dribbling": 68,
+        "defending": 82,
+        "physical": 83
+      }
+    },
+    {
+      "id": 136000,
+      "name": "Jesús Areso",
+      "dob": "1999-07-02",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239614,
+        "overall": 76,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 80,
+        "shooting": 45,
+        "passing": 71,
+        "dribbling": 74,
+        "defending": 70,
+        "physical": 77
+      }
+    },
+    {
+      "id": 151439,
+      "name": "Aitor Paredes Casamichana",
+      "dob": "2000-04-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259524,
+        "overall": 78,
+        "positions": [
+          "CB"
+        ],
+        "pace": 64,
+        "shooting": 42,
+        "passing": 53,
+        "dribbling": 57,
+        "defending": 79,
+        "physical": 77
+      }
+    },
+    {
+      "id": 229042,
+      "name": "Hugo Rincón",
+      "dob": "2003-01-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279026,
+        "overall": 75,
+        "positions": [
+          "RB",
+          "RM",
+          "RW"
+        ],
+        "pace": 83,
+        "shooting": 64,
+        "passing": 69,
+        "dribbling": 72,
+        "defending": 69,
+        "physical": 75
+      }
+    },
+    {
+      "id": 261644,
+      "name": "Unai Egiluz",
+      "dob": "2002-03-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278408,
+        "overall": 70,
+        "positions": [
+          "CB"
+        ],
+        "pace": 53,
+        "shooting": 40,
+        "passing": 46,
+        "dribbling": 45,
+        "defending": 71,
+        "physical": 73
+      }
+    },
+    {
+      "id": 32481,
+      "name": "Ruiz de Galarreta",
+      "dob": "1993-08-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 205157,
+        "overall": 79,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 50,
+        "shooting": 65,
+        "passing": 79,
+        "dribbling": 80,
+        "defending": 75,
+        "physical": 70
+      }
+    },
+    {
+      "id": 126878,
+      "name": "Oihan Sancet",
+      "dob": "2000-04-25",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244675,
+        "overall": 82,
+        "positions": [
+          "CAM",
+          "CM",
+          "ST",
+          "CDM"
+        ],
+        "pace": 75,
+        "shooting": 80,
+        "passing": 80,
+        "dribbling": 84,
+        "defending": 69,
+        "physical": 81
+      }
+    },
+    {
+      "id": 168663,
+      "name": "Benat Prados",
+      "dob": "2001-02-08",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263617,
+        "overall": 77,
+        "positions": [
+          "CDM",
+          "CM",
+          "CB"
+        ],
+        "pace": 67,
+        "shooting": 62,
+        "passing": 71,
+        "dribbling": 75,
+        "defending": 76,
+        "physical": 75
+      }
+    },
+    {
+      "id": 244599,
+      "name": "Mikel Jauregizar",
+      "dob": "2003-11-13",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279604,
+        "overall": 79,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 75,
+        "shooting": 72,
+        "passing": 76,
+        "dribbling": 77,
+        "defending": 78,
+        "physical": 80
+      }
+    },
+    {
+      "id": 270747,
+      "name": "Peio Canales",
+      "dob": "2005-01-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75263,
+        "overall": 73,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 68,
+        "shooting": 71,
+        "passing": 72,
+        "dribbling": 72,
+        "defending": 64,
+        "physical": 73
+      }
+    },
+    {
+      "id": 278297,
+      "name": "Alejandro Rego",
+      "dob": "2003-06-11",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78550,
+        "overall": 73,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 61,
+        "shooting": 55,
+        "passing": 65,
+        "dribbling": 67,
+        "defending": 73,
+        "physical": 75
+      }
+    },
+    {
+      "id": 279951,
+      "name": "Beñat Gerenabarrena",
+      "dob": "2003-03-29",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80342,
+        "overall": 70,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 71,
+        "shooting": 57,
+        "passing": 67,
+        "dribbling": 70,
+        "defending": 63,
+        "physical": 69
+      }
+    },
+    {
+      "id": 2294,
+      "name": "Álex Berenguer",
+      "dob": "1995-07-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 225201,
+        "overall": 79,
+        "positions": [
+          "RW",
+          "LM",
+          "CAM",
+          "RM"
+        ],
+        "pace": 81,
+        "shooting": 78,
+        "passing": 77,
+        "dribbling": 80,
+        "defending": 67,
+        "physical": 68
+      }
+    },
+    {
+      "id": 32629,
+      "name": "Iñaki Williams",
+      "dob": "1994-06-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 216201,
+        "overall": 80,
+        "positions": [
+          "RW",
+          "ST",
+          "RM"
+        ],
+        "pace": 92,
+        "shooting": 79,
+        "passing": 74,
+        "dribbling": 77,
+        "defending": 47,
+        "physical": 83
+      }
+    },
+    {
+      "id": 81565,
+      "name": "Gorka Guruzeta",
+      "dob": "1996-09-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231184,
+        "overall": 78,
+        "positions": [
+          "ST"
+        ],
+        "pace": 71,
+        "shooting": 78,
+        "passing": 73,
+        "dribbling": 78,
+        "defending": 52,
+        "physical": 79
+      }
+    },
+    {
+      "id": 101870,
+      "name": "Roberto Navarro",
+      "dob": "2002-04-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253130,
+        "overall": 76,
+        "positions": [
+          "RW",
+          "RM",
+          "LW",
+          "LM"
+        ],
+        "pace": 84,
+        "shooting": 71,
+        "passing": 70,
+        "dribbling": 78,
+        "defending": 45,
+        "physical": 66
+      }
+    },
+    {
+      "id": 157135,
+      "name": "Nico Williams",
+      "dob": "2002-07-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256516,
+        "overall": 84,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 93,
+        "shooting": 77,
+        "passing": 79,
+        "dribbling": 86,
+        "defending": 37,
+        "physical": 67
+      }
+    },
+    {
+      "id": 172027,
+      "name": "Nico Serrano",
+      "dob": "2003-03-05",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259422,
+        "overall": 71,
+        "positions": [
+          "LW",
+          "LM",
+          "RM",
+          "RW"
+        ],
+        "pace": 82,
+        "shooting": 64,
+        "passing": 64,
+        "dribbling": 77,
+        "defending": 27,
+        "physical": 54
+      }
+    },
+    {
+      "id": 185137,
+      "name": "Álvaro Djaló",
+      "dob": "1999-08-16",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271302,
+        "overall": 74,
+        "positions": [
+          "RW",
+          "LW",
+          "ST",
+          "RM"
+        ],
+        "pace": 87,
+        "shooting": 68,
+        "passing": 69,
+        "dribbling": 77,
+        "defending": 50,
+        "physical": 54
+      }
+    },
+    {
+      "id": 261580,
+      "name": "Sannadi",
+      "dob": "2001-02-01",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302105,
+      "name": "Christian Imga",
+      "dob": "2009-02-17",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "2ebe2e36a97d91cd",
+  "generated_at": "2026-10-16T00:40:41.164148+00:00"
+}
