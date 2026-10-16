@@ -160,7 +160,10 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
     else:
         games = team_only_predictions(games, xi=xi, lambda_reg=lambda_reg)
         games.to_csv(cached, index=False)
-    entries = lineup_entries(games, apps, lineup=lineup, xi=xi)
+    if lineup == "starters":
+        # Pre-kickoff information only: a start counts as a full game, a substitute appearance as none.
+        apps = apps.assign(minutes=np.where(apps["appearance"] == "starter", 90, 0))
+    entries = lineup_entries(games, apps, lineup="absolute" if lineup == "absolute" else "centred", xi=xi)
     out_dir = out_dir / lineup
     out_dir.mkdir(exist_ok=True)
     games = games[games["season"] > WARMUP_SEASON].reset_index(drop=True)
@@ -315,7 +318,8 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Offline xG plus-minus experiment (Task 7).")
     parser.add_argument("--data", type=Path, default=DATA)
     parser.add_argument("--out-dir", type=Path, default=Path("out/player-impact"))
-    parser.add_argument("--lineup", nargs="+", choices=["centred", "absolute"], default=["centred", "absolute"])
+    parser.add_argument("--lineup", nargs="+", choices=["centred", "starters", "absolute"],
+                        default=["centred", "starters", "absolute"])
     parser.add_argument("--refit-team", action="store_true", help="Recompute the cached team-only predictions.")
     args = parser.parse_args(argv)
     for lineup in args.lineup:
