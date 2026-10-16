@@ -1,0 +1,542 @@
+{
+  "slug": "brest",
+  "club_id": 512,
+  "name": "Stade Brestois 29",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "url": "https://api.football-data.org/v4/competitions/FL1/teams",
+    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
+    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 23,
+    "matched": 19
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 74.0,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 44441
+      },
+      {
+        "role": "LB",
+        "player": 171659
+      },
+      {
+        "role": "CB",
+        "player": 1004
+      },
+      {
+        "role": "CB",
+        "player": 441
+      },
+      {
+        "role": "RB",
+        "player": 8778
+      },
+      {
+        "role": "CDM",
+        "player": 76145
+      },
+      {
+        "role": "CM",
+        "player": 175942
+      },
+      {
+        "role": "CM",
+        "player": 8465
+      },
+      {
+        "role": "LW",
+        "player": 43707
+      },
+      {
+        "role": "ST",
+        "player": 723
+      },
+      {
+        "role": "RW",
+        "player": 212975
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 44441,
+      "name": "Egil Selvik",
+      "dob": "1997-07-30",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247611,
+        "overall": 70,
+        "positions": [
+          "GK"
+        ],
+        "pace": 70,
+        "shooting": 69,
+        "passing": 66,
+        "dribbling": 70,
+        "defending": 19,
+        "physical": 69
+      }
+    },
+    {
+      "id": 147457,
+      "name": "Romain Cagnon",
+      "dob": "1997-05-12",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237133,
+        "overall": 60,
+        "positions": [
+          "GK"
+        ],
+        "pace": 61,
+        "shooting": 59,
+        "passing": 54,
+        "dribbling": 61,
+        "defending": 27,
+        "physical": 58
+      }
+    },
+    {
+      "id": 214577,
+      "name": "Mathieu Patouillet",
+      "dob": "2004-02-20",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 441,
+      "name": "Brendan Chardonnet",
+      "dob": "1994-12-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 215410,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 41,
+        "shooting": 45,
+        "passing": 54,
+        "dribbling": 60,
+        "defending": 78,
+        "physical": 76
+      }
+    },
+    {
+      "id": 1004,
+      "name": "Gautier Lloris",
+      "dob": "1995-07-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 222286,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 35,
+        "shooting": 36,
+        "passing": 54,
+        "dribbling": 56,
+        "defending": 76,
+        "physical": 78
+      }
+    },
+    {
+      "id": 8778,
+      "name": "Kenny Lala",
+      "dob": "1991-10-03",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 204105,
+        "overall": 75,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 71,
+        "shooting": 61,
+        "passing": 72,
+        "dribbling": 72,
+        "defending": 73,
+        "physical": 72
+      }
+    },
+    {
+      "id": 171659,
+      "name": "Bradley Locko",
+      "dob": "2002-05-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263908,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 73,
+        "shooting": 50,
+        "passing": 63,
+        "dribbling": 71,
+        "defending": 74,
+        "physical": 67
+      }
+    },
+    {
+      "id": 227982,
+      "name": "Luc Zogbe",
+      "dob": "2005-03-24",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 273433,
+      "name": "Raphaël Le Guen",
+      "dob": "2006-09-01",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76035,
+        "overall": 70,
+        "positions": [
+          "CB"
+        ],
+        "pace": 61,
+        "shooting": 28,
+        "passing": 47,
+        "dribbling": 50,
+        "defending": 70,
+        "physical": 71
+      }
+    },
+    {
+      "id": 274570,
+      "name": "Justin Bourgault",
+      "dob": "2005-09-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76730,
+        "overall": 65,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 61,
+        "shooting": 43,
+        "passing": 54,
+        "dribbling": 59,
+        "defending": 62,
+        "physical": 67
+      }
+    },
+    {
+      "id": 8465,
+      "name": "Lucas Tousart",
+      "dob": "1997-04-29",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 227234,
+        "overall": 73,
+        "positions": [
+          "CDM",
+          "CM",
+          "CAM"
+        ],
+        "pace": 59,
+        "shooting": 55,
+        "passing": 63,
+        "dribbling": 68,
+        "defending": 73,
+        "physical": 79
+      }
+    },
+    {
+      "id": 76145,
+      "name": "Hugo Magnetti",
+      "dob": "1998-05-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244480,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 40,
+        "shooting": 59,
+        "passing": 69,
+        "dribbling": 75,
+        "defending": 70,
+        "physical": 77
+      }
+    },
+    {
+      "id": 125677,
+      "name": "Joris Chotard",
+      "dob": "2001-09-24",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252541,
+        "overall": 73,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 61,
+        "shooting": 57,
+        "passing": 72,
+        "dribbling": 74,
+        "defending": 68,
+        "physical": 74
+      }
+    },
+    {
+      "id": 160898,
+      "name": "Mamady Diambou",
+      "dob": "2002-11-11",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 260235,
+        "overall": 65,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 74,
+        "shooting": 52,
+        "passing": 58,
+        "dribbling": 67,
+        "defending": 62,
+        "physical": 67
+      }
+    },
+    {
+      "id": 175942,
+      "name": "Kamory Doumbia",
+      "dob": "2003-02-18",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267702,
+        "overall": 75,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 67,
+        "shooting": 70,
+        "passing": 71,
+        "dribbling": 78,
+        "defending": 59,
+        "physical": 49
+      }
+    },
+    {
+      "id": 261666,
+      "name": "Joseph Nonge",
+      "dob": "2005-05-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278926,
+        "overall": 65,
+        "positions": [
+          "CM",
+          "CAM",
+          "LM",
+          "LW"
+        ],
+        "pace": 66,
+        "shooting": 52,
+        "passing": 64,
+        "dribbling": 70,
+        "defending": 62,
+        "physical": 58
+      }
+    },
+    {
+      "id": 276983,
+      "name": "Hamidou Makalou",
+      "dob": "2006-07-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 77829,
+        "overall": 68,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 58,
+        "shooting": 55,
+        "passing": 60,
+        "dribbling": 72,
+        "defending": 67,
+        "physical": 54
+      }
+    },
+    {
+      "id": 723,
+      "name": "Ludovic Ajorque",
+      "dob": "1994-02-25",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 219733,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 64,
+        "shooting": 76,
+        "passing": 62,
+        "dribbling": 68,
+        "defending": 46,
+        "physical": 85
+      }
+    },
+    {
+      "id": 43707,
+      "name": "Mama Baldé",
+      "dob": "1995-11-06",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237960,
+        "overall": 73,
+        "positions": [
+          "LW",
+          "ST",
+          "LM"
+        ],
+        "pace": 91,
+        "shooting": 71,
+        "passing": 65,
+        "dribbling": 72,
+        "defending": 49,
+        "physical": 75
+      }
+    },
+    {
+      "id": 191108,
+      "name": "Axel Camblan",
+      "dob": "2025-06-30",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 212975,
+      "name": "Noah Edjouma",
+      "dob": "2005-10-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278207,
+        "overall": 69,
+        "positions": [
+          "RM",
+          "CAM",
+          "RW"
+        ],
+        "pace": 69,
+        "shooting": 65,
+        "passing": 62,
+        "dribbling": 73,
+        "defending": 29,
+        "physical": 52
+      }
+    },
+    {
+      "id": 218249,
+      "name": "Pathé Mboup",
+      "dob": "2003-10-19",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271689,
+        "overall": 70,
+        "positions": [
+          "LM",
+          "ST",
+          "LW"
+        ],
+        "pace": 86,
+        "shooting": 65,
+        "passing": 60,
+        "dribbling": 73,
+        "defending": 27,
+        "physical": 58
+      }
+    },
+    {
+      "id": 301047,
+      "name": "Enzo Monchatre",
+      "dob": "2008-02-02",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "587774943d0543bb",
+  "generated_at": "2026-10-16T00:40:41.383516+00:00"
+}

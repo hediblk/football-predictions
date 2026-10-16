@@ -1,0 +1,83 @@
+{
+  "slug": "slovan-bratislava",
+  "club_id": 7509,
+  "name": "ŠK Slovan Bratislava",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "unavailable",
+    "observed_at": "2026-10-14T04:00:41.767417+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
+    "snapshot": "data/players/rosters/2026-10-14/CL.json"
+  },
+  "identity_overrides_sha256": "779a87fa18ef798c5959d695db70fc9b5a39e2c745a4b30a49e7b31b6f5d5e25",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 0,
+    "matched": 0
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "insufficient_coverage",
+    "mean_overall": null,
+    "slots": [
+      {
+        "role": "GK",
+        "player": null
+      },
+      {
+        "role": "LB",
+        "player": null
+      },
+      {
+        "role": "CB",
+        "player": null
+      },
+      {
+        "role": "CB",
+        "player": null
+      },
+      {
+        "role": "RB",
+        "player": null
+      },
+      {
+        "role": "CDM",
+        "player": null
+      },
+      {
+        "role": "CM",
+        "player": null
+      },
+      {
+        "role": "CM",
+        "player": null
+      },
+      {
+        "role": "LW",
+        "player": null
+      },
+      {
+        "role": "ST",
+        "player": null
+      },
+      {
+        "role": "RW",
+        "player": null
+      }
+    ]
+  },
+  "players": [],
+  "baseline_id": "8f2570431c11f3ae",
+  "generated_at": "2026-10-16T00:36:27.401842+00:00"
+}

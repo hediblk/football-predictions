@@ -351,6 +351,45 @@ def validate_notes(data):
     require(data["first_season"] == seasons[0], "first season differs from note coverage")
 
 
+def validate_squad(data):
+    players = data["players"]
+    unique(players, "id")
+    matched = [row for row in players if row["status"] == "matched"]
+    unique([row["ea"] for row in matched if row["ea"]], "id")
+    require(all((row["status"] == "matched") == (row["ea"] is not None) for row in players),
+            "only matched players can have EA ratings")
+    require(data["coverage"] == {"players": len(players), "matched": len(matched)}, "squad coverage differs")
+    require((data["roster"]["status"] == "available") == bool(players), "roster availability differs from players")
+    require(datetime.fromisoformat(data["roster"]["observed_at"]) <= datetime.fromisoformat(data["generated_at"]),
+            "squad generated before roster observation")
+    require(data["ratings"]["snapshot_date"] <= data["generated_at"][:10], "rating vintage after baseline creation")
+    formations = {
+        "4-3-3": ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CM", "LW", "ST", "RW"],
+        "4-2-3-1": ["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "CAM", "LW", "ST", "RW"],
+        "4-4-2": ["GK", "LB", "CB", "CB", "RB", "CM", "CM", "LM", "RM", "ST", "ST"],
+    }
+    xi = data["ideal_xi"]
+    require([slot["role"] for slot in xi["slots"]] == formations[xi["formation"]], "XI roles differ from formation")
+    unique(xi["slots"], "player")
+    by_id = {row["id"]: row for row in players}
+    ratings = []
+    for slot in xi["slots"]:
+        if slot["player"] is None:
+            continue
+        require(slot["player"] in by_id, "XI player absent from squad")
+        ea = by_id[slot["player"]]["ea"]
+        require(ea is not None and ea["overall"] is not None, "XI player has no rating")
+        role = slot["role"]
+        eligible = {"LW": {"LW", "LM"}, "LM": {"LW", "LM"}, "RW": {"RW", "RM"}, "RM": {"RW", "RM"}}.get(role, {role})
+        require(bool(eligible & set(ea["positions"])), "XI player ineligible for role")
+        ratings.append(ea["overall"])
+    fully_rated = all(row["ea"] is not None and row["ea"]["overall"] is not None and row["ea"]["positions"] for row in players)
+    expected = "insufficient_coverage" if len(ratings) < 11 else "complete" if fully_rated else "provisional"
+    require(xi["status"] == expected, "XI coverage status differs")
+    require(xi["mean_overall"] == (round(sum(ratings) / 11, 1) if len(ratings) == 11 else None),
+            "XI mean differs from selected players")
+
+
 def validate_payload(data, family):
     finite(data)
     errors = list(validator(family).iter_errors(data))
@@ -380,6 +419,8 @@ def validate_payload(data, family):
         validate_rating_runs(data)
     elif family == "notes":
         validate_notes(data)
+    elif family == "squad":
+        validate_squad(data)
 
 
 def file_family(path):
@@ -396,6 +437,8 @@ def file_family(path):
     if (len(parts) == 4 and parts[0] == "match" and parts[1].isdigit()
             and parts[2] in COMPETITIONS and path.stem.isdigit() and int(path.stem) > 0):
         return "match_events"
+    if len(parts) == 3 and parts[0] == "squads" and parts[1].isdigit():
+        return "squad"
     if len(parts) == 3 and parts[0] == "history" and parts[1].isdigit():
         if path.stem == "clubs":
             return "club_history"
@@ -429,6 +472,9 @@ def validate_site_data(data_dir, *, site_dir=None):
                 require(data["code"] == COMPETITIONS[path.stem], "competition code differs from slug")
             if relative.parts[0] == "history":
                 require(data["season"].split("/")[0] == relative.parts[1], "history season differs from directory")
+            if family == "squad":
+                require(data["slug"] == path.stem, "squad slug differs from filename")
+                require(data["season"] == relative.parts[1], "squad season differs from directory")
             if family == "rating_runs":
                 require(data["month"] == path.stem, "rating month differs from filename")
             if family == "match_events":
@@ -480,6 +526,13 @@ def validate_site_data(data_dir, *, site_dir=None):
             validate_match_events(data, fixture, consistency=False)
         except ValueError as exc:
             errors.append(f"{name}: {exc}")
+    clubs = {club["slug"]: club for club in files.get("clubs.json", {}).get("clubs", [])}
+    current_season = files.get("clubs.json", {}).get("season", "")[:4]
+    for name, data in files.items():
+        if Path(name).parts[0] == "squads" and data["season"] == current_season:
+            club = clubs.get(data["slug"])
+            if club is None or club["id"] != data["club_id"]:
+                errors.append(f"{name}: squad identity differs from clubs.json")
     for crest in files.get("crests.json", {}).values():
         if not (site_dir / crest["path"]).is_file():
             errors.append(f"crests.json: missing asset {crest['path']}")

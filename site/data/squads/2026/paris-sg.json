@@ -1,0 +1,632 @@
+{
+  "slug": "paris-sg",
+  "club_id": 524,
+  "name": "Paris Saint-Germain FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "url": "https://api.football-data.org/v4/competitions/FL1/teams",
+    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
+    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 24,
+    "matched": 23
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 87.7,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 49244
+      },
+      {
+        "role": "LB",
+        "player": 144570
+      },
+      {
+        "role": "CB",
+        "player": 114102
+      },
+      {
+        "role": "CB",
+        "player": 3225
+      },
+      {
+        "role": "RB",
+        "player": 53
+      },
+      {
+        "role": "CDM",
+        "player": 22
+      },
+      {
+        "role": "CM",
+        "player": 190877
+      },
+      {
+        "role": "CM",
+        "player": 178722
+      },
+      {
+        "role": "LW",
+        "player": 113285
+      },
+      {
+        "role": "ST",
+        "player": 3373
+      },
+      {
+        "role": "RW",
+        "player": 177522
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 49244,
+      "name": "Matvei Safonov",
+      "dob": "1999-02-25",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 240225,
+        "overall": 83,
+        "positions": [
+          "GK"
+        ],
+        "pace": 82,
+        "shooting": 76,
+        "passing": 80,
+        "dribbling": 86,
+        "defending": 50,
+        "physical": 83
+      },
+      "identity_override": {
+        "provider_name": "Matvei Safonov",
+        "provider_dob": "1999-02-25",
+        "verified_dob": "1999-02-25",
+        "ea_id": 240225,
+        "source": "https://www.psg.fr/en/players/matvey-safonov",
+        "observed_at": "2026-10-15",
+        "note": "PSG confirms Matvey Safonov and 25 February 1999; Matvei is an alternate transliteration."
+      }
+    },
+    {
+      "id": 147896,
+      "name": "Lucas Chevalier",
+      "dob": "2001-11-06",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 251752,
+        "overall": 80,
+        "positions": [
+          "GK"
+        ],
+        "pace": 83,
+        "shooting": 75,
+        "passing": 73,
+        "dribbling": 84,
+        "defending": 50,
+        "physical": 78
+      }
+    },
+    {
+      "id": 53,
+      "name": "Achraf Hakimi",
+      "dob": "1998-11-04",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235212,
+        "overall": 88,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 92,
+        "shooting": 79,
+        "passing": 81,
+        "dribbling": 82,
+        "defending": 82,
+        "physical": 81
+      }
+    },
+    {
+      "id": 3225,
+      "name": "Marquinhos",
+      "dob": "1994-05-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 207865,
+        "overall": 87,
+        "positions": [
+          "CB"
+        ],
+        "pace": 74,
+        "shooting": 56,
+        "passing": 75,
+        "dribbling": 73,
+        "defending": 89,
+        "physical": 78
+      }
+    },
+    {
+      "id": 3359,
+      "name": "Lucas Digne",
+      "dob": "1993-07-20",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 200458,
+        "overall": 80,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 66,
+        "shooting": 68,
+        "passing": 79,
+        "dribbling": 76,
+        "defending": 78,
+        "physical": 73
+      }
+    },
+    {
+      "id": 3365,
+      "name": "Lucas Hernández",
+      "dob": "1996-02-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 220814,
+        "overall": 81,
+        "positions": [
+          "CB",
+          "LB",
+          "LM"
+        ],
+        "pace": 71,
+        "shooting": 52,
+        "passing": 72,
+        "dribbling": 71,
+        "defending": 82,
+        "physical": 75
+      }
+    },
+    {
+      "id": 114102,
+      "name": "William Pacho",
+      "dob": "2001-10-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 256196,
+        "overall": 89,
+        "positions": [
+          "CB"
+        ],
+        "pace": 80,
+        "shooting": 34,
+        "passing": 63,
+        "dribbling": 65,
+        "defending": 90,
+        "physical": 86
+      },
+      "identity_override": {
+        "provider_name": "William Pacho",
+        "provider_dob": "2001-10-16",
+        "verified_dob": "2001-10-16",
+        "ea_id": 256196,
+        "source": "https://www.psg.fr/joueurs/willian-pacho",
+        "observed_at": "2026-10-15",
+        "note": "PSG confirms Willian Joel Pacho Tenorio and 16 October 2001; the provider spells William with an m."
+      }
+    },
+    {
+      "id": 143573,
+      "name": "Illia Zabarnyi",
+      "dob": "2002-09-01",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258781,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 77,
+        "shooting": 37,
+        "passing": 65,
+        "dribbling": 64,
+        "defending": 81,
+        "physical": 80
+      }
+    },
+    {
+      "id": 144570,
+      "name": "Nuno Mendes",
+      "dob": "2002-06-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252145,
+        "overall": 89,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 94,
+        "shooting": 77,
+        "passing": 80,
+        "dribbling": 86,
+        "defending": 84,
+        "physical": 80
+      }
+    },
+    {
+      "id": 169204,
+      "name": "Lucas Beraldo",
+      "dob": "2003-11-24",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279709,
+        "overall": 79,
+        "positions": [
+          "CDM",
+          "CB",
+          "CM"
+        ],
+        "pace": 64,
+        "shooting": 45,
+        "passing": 71,
+        "dribbling": 68,
+        "defending": 80,
+        "physical": 75
+      }
+    },
+    {
+      "id": 22,
+      "name": "Fabián Ruiz",
+      "dob": "1996-04-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 226271,
+        "overall": 86,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 60,
+        "shooting": 77,
+        "passing": 83,
+        "dribbling": 82,
+        "defending": 77,
+        "physical": 73
+      }
+    },
+    {
+      "id": 178722,
+      "name": "Vitinha",
+      "dob": "2000-02-13",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255253,
+        "overall": 90,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 72,
+        "shooting": 81,
+        "passing": 88,
+        "dribbling": 91,
+        "defending": 75,
+        "physical": 70
+      }
+    },
+    {
+      "id": 186089,
+      "name": "Warren Zaïre-Emery",
+      "dob": "2006-03-08",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270673,
+        "overall": 83,
+        "positions": [
+          "CM",
+          "RB",
+          "CDM",
+          "RM"
+        ],
+        "pace": 79,
+        "shooting": 71,
+        "passing": 78,
+        "dribbling": 81,
+        "defending": 79,
+        "physical": 85
+      }
+    },
+    {
+      "id": 190877,
+      "name": "Joao Neves",
+      "dob": "2004-09-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272834,
+        "overall": 88,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 72,
+        "shooting": 75,
+        "passing": 84,
+        "dribbling": 87,
+        "defending": 86,
+        "physical": 82
+      }
+    },
+    {
+      "id": 246066,
+      "name": "Senny Mayulu",
+      "dob": "2006-05-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70004,
+        "overall": 79,
+        "positions": [
+          "CM",
+          "ST",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 75,
+        "shooting": 75,
+        "passing": 75,
+        "dribbling": 79,
+        "defending": 64,
+        "physical": 62
+      }
+    },
+    {
+      "id": 283413,
+      "name": "Pedro Fernández",
+      "dob": "2008-01-12",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80674,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 70,
+        "shooting": 57,
+        "passing": 71,
+        "dribbling": 77,
+        "defending": 55,
+        "physical": 55
+      }
+    },
+    {
+      "id": 3373,
+      "name": "Ousmane Dembélé",
+      "dob": "1997-05-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231443,
+        "overall": 90,
+        "positions": [
+          "ST",
+          "RW",
+          "CAM",
+          "RM"
+        ],
+        "pace": 90,
+        "shooting": 89,
+        "passing": 83,
+        "dribbling": 93,
+        "defending": 55,
+        "physical": 70
+      }
+    },
+    {
+      "id": 33154,
+      "name": "Ferrán Torres",
+      "dob": "2000-02-29",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241461,
+        "overall": 84,
+        "positions": [
+          "ST",
+          "LW",
+          "LM"
+        ],
+        "pace": 88,
+        "shooting": 84,
+        "passing": 78,
+        "dribbling": 82,
+        "defending": 40,
+        "physical": 74
+      }
+    },
+    {
+      "id": 113285,
+      "name": "Khvicha Kvaratskhelia",
+      "dob": "2001-02-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247635,
+        "overall": 89,
+        "positions": [
+          "LW",
+          "RW",
+          "LM",
+          "RM"
+        ],
+        "pace": 86,
+        "shooting": 85,
+        "passing": 84,
+        "dribbling": 90,
+        "defending": 59,
+        "physical": 81
+      }
+    },
+    {
+      "id": 175701,
+      "name": "Maghnes Akliouche",
+      "dob": "2002-02-25",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 264862,
+        "overall": 81,
+        "positions": [
+          "CAM",
+          "RM",
+          "CM",
+          "RW"
+        ],
+        "pace": 74,
+        "shooting": 72,
+        "passing": 80,
+        "dribbling": 84,
+        "defending": 48,
+        "physical": 62
+      }
+    },
+    {
+      "id": 177522,
+      "name": "Desire Doue",
+      "dob": "2005-06-03",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271421,
+        "overall": 86,
+        "positions": [
+          "RW",
+          "LW",
+          "CM",
+          "RM"
+        ],
+        "pace": 83,
+        "shooting": 81,
+        "passing": 79,
+        "dribbling": 90,
+        "defending": 55,
+        "physical": 80
+      }
+    },
+    {
+      "id": 189574,
+      "name": "Mika Godts",
+      "dob": "2005-06-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258378,
+        "overall": 78,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 83,
+        "shooting": 72,
+        "passing": 71,
+        "dribbling": 84,
+        "defending": 42,
+        "physical": 65
+      }
+    },
+    {
+      "id": 278406,
+      "name": "Quentin Ndjantou",
+      "dob": "2007-07-23",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78549,
+        "overall": 70,
+        "positions": [
+          "LW",
+          "CAM",
+          "LM",
+          "CM"
+        ],
+        "pace": 76,
+        "shooting": 64,
+        "passing": 63,
+        "dribbling": 73,
+        "defending": 43,
+        "physical": 56
+      }
+    },
+    {
+      "id": 302269,
+      "name": "Adam Mouak",
+      "dob": "2009-06-01",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "c9080bcd2a003b43",
+  "generated_at": "2026-10-16T00:40:41.011877+00:00"
+}

@@ -1,0 +1,590 @@
+{
+  "slug": "nottingham-forest",
+  "club_id": 351,
+  "name": "Nottingham Forest FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:02.162730+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PL/teams",
+    "sha256": "65de11ca9362ae8e4c97c758ab4d2e4f1c7e3170b160cb9dddce5893aaf877b8",
+    "snapshot": "data/players/rosters/2026-10-16/PL.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 23,
+    "matched": 23
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "complete",
+    "mean_overall": 80.2,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 3643
+      },
+      {
+        "role": "LB",
+        "player": 133765
+      },
+      {
+        "role": "CB",
+        "player": 192637
+      },
+      {
+        "role": "CB",
+        "player": 1775
+      },
+      {
+        "role": "RB",
+        "player": 3386
+      },
+      {
+        "role": "CDM",
+        "player": 8307
+      },
+      {
+        "role": "CM",
+        "player": 16344
+      },
+      {
+        "role": "CM",
+        "player": 4091
+      },
+      {
+        "role": "LW",
+        "player": 7816
+      },
+      {
+        "role": "ST",
+        "player": 8057
+      },
+      {
+        "role": "RW",
+        "player": 22010
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 1299,
+      "name": "John",
+      "dob": "1996-02-13",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234724,
+        "overall": 71,
+        "positions": [
+          "GK"
+        ],
+        "pace": 74,
+        "shooting": 67,
+        "passing": 66,
+        "dribbling": 76,
+        "defending": 38,
+        "physical": 68
+      }
+    },
+    {
+      "id": 3643,
+      "name": "Matz Sels",
+      "dob": "1992-02-26",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 199641,
+        "overall": 81,
+        "positions": [
+          "GK"
+        ],
+        "pace": 82,
+        "shooting": 79,
+        "passing": 78,
+        "dribbling": 82,
+        "defending": 44,
+        "physical": 81
+      }
+    },
+    {
+      "id": 81055,
+      "name": "Steven Benda",
+      "dob": "1998-10-01",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241076,
+        "overall": 68,
+        "positions": [
+          "GK"
+        ],
+        "pace": 68,
+        "shooting": 65,
+        "passing": 63,
+        "dribbling": 70,
+        "defending": 37,
+        "physical": 66
+      }
+    },
+    {
+      "id": 1775,
+      "name": "Nikola Milenković",
+      "dob": "1997-10-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238095,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 53,
+        "shooting": 46,
+        "passing": 62,
+        "dribbling": 60,
+        "defending": 81,
+        "physical": 84
+      }
+    },
+    {
+      "id": 3386,
+      "name": "Ola Aina",
+      "dob": "1996-10-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224656,
+        "overall": 79,
+        "positions": [
+          "RB",
+          "LB"
+        ],
+        "pace": 87,
+        "shooting": 62,
+        "passing": 71,
+        "dribbling": 74,
+        "defending": 77,
+        "physical": 75
+      }
+    },
+    {
+      "id": 22010,
+      "name": "Daniel Muñoz",
+      "dob": "1996-05-26",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237646,
+        "overall": 82,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 76,
+        "shooting": 70,
+        "passing": 73,
+        "dribbling": 77,
+        "defending": 80,
+        "physical": 77
+      }
+    },
+    {
+      "id": 133765,
+      "name": "Neco Williams",
+      "dob": "2001-04-13",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243057,
+        "overall": 80,
+        "positions": [
+          "LB",
+          "RB"
+        ],
+        "pace": 71,
+        "shooting": 50,
+        "passing": 73,
+        "dribbling": 75,
+        "defending": 79,
+        "physical": 72
+      }
+    },
+    {
+      "id": 144361,
+      "name": "Luca Netz",
+      "dob": "2003-05-15",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256781,
+        "overall": 73,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 71,
+        "shooting": 49,
+        "passing": 70,
+        "dribbling": 73,
+        "defending": 70,
+        "physical": 66
+      }
+    },
+    {
+      "id": 179782,
+      "name": "Jair Paula",
+      "dob": "2005-03-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 79629,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 67,
+        "shooting": 38,
+        "passing": 59,
+        "dribbling": 58,
+        "defending": 74,
+        "physical": 79
+      }
+    },
+    {
+      "id": 191730,
+      "name": "Nicolò Savona",
+      "dob": "2003-03-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74310,
+        "overall": 75,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 68,
+        "shooting": 53,
+        "passing": 69,
+        "dribbling": 69,
+        "defending": 74,
+        "physical": 71
+      }
+    },
+    {
+      "id": 192637,
+      "name": "Murillo",
+      "dob": "2002-07-04",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278016,
+        "overall": 82,
+        "positions": [
+          "CB"
+        ],
+        "pace": 79,
+        "shooting": 55,
+        "passing": 67,
+        "dribbling": 71,
+        "defending": 82,
+        "physical": 83
+      }
+    },
+    {
+      "id": 4091,
+      "name": "Morgan Gibbs-White",
+      "dob": "2000-01-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236015,
+        "overall": 83,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 75,
+        "shooting": 78,
+        "passing": 83,
+        "dribbling": 85,
+        "defending": 63,
+        "physical": 74
+      }
+    },
+    {
+      "id": 5435,
+      "name": "Ryan Yates",
+      "dob": "1997-11-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235642,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 47,
+        "shooting": 61,
+        "passing": 67,
+        "dribbling": 67,
+        "defending": 75,
+        "physical": 75
+      }
+    },
+    {
+      "id": 8307,
+      "name": "Ibrahim Sangaré",
+      "dob": "1997-12-02",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235173,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 58,
+        "shooting": 66,
+        "passing": 73,
+        "dribbling": 72,
+        "defending": 77,
+        "physical": 82
+      }
+    },
+    {
+      "id": 16344,
+      "name": "Xaver Schlager",
+      "dob": "1997-09-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233195,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 66,
+        "shooting": 69,
+        "passing": 72,
+        "dribbling": 76,
+        "defending": 74,
+        "physical": 78
+      }
+    },
+    {
+      "id": 46346,
+      "name": "Nicolás Domínguez",
+      "dob": "1998-06-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237819,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM",
+          "LM",
+          "LW"
+        ],
+        "pace": 67,
+        "shooting": 65,
+        "passing": 75,
+        "dribbling": 76,
+        "defending": 76,
+        "physical": 74
+      }
+    },
+    {
+      "id": 172956,
+      "name": "James McAtee",
+      "dob": "2002-10-18",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 264349,
+        "overall": 73,
+        "positions": [
+          "RM",
+          "CAM",
+          "RW",
+          "CM"
+        ],
+        "pace": 70,
+        "shooting": 69,
+        "passing": 70,
+        "dribbling": 75,
+        "defending": 41,
+        "physical": 56
+      }
+    },
+    {
+      "id": 7816,
+      "name": "Callum Hudson-Odoi",
+      "dob": "2000-11-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 240740,
+        "overall": 78,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 77,
+        "shooting": 75,
+        "passing": 75,
+        "dribbling": 80,
+        "defending": 50,
+        "physical": 63
+      }
+    },
+    {
+      "id": 8057,
+      "name": "Chris Wood",
+      "dob": "1991-12-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 192123,
+        "overall": 81,
+        "positions": [
+          "ST"
+        ],
+        "pace": 53,
+        "shooting": 82,
+        "passing": 67,
+        "dribbling": 71,
+        "defending": 40,
+        "physical": 80
+      }
+    },
+    {
+      "id": 77641,
+      "name": "Dan Ndoye",
+      "dob": "2000-10-25",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257980,
+        "overall": 77,
+        "positions": [
+          "LM",
+          "RM",
+          "LW",
+          "RW"
+        ],
+        "pace": 88,
+        "shooting": 72,
+        "passing": 70,
+        "dribbling": 79,
+        "defending": 62,
+        "physical": 65
+      }
+    },
+    {
+      "id": 130668,
+      "name": "Arnaud Kalimuendo",
+      "dob": "2002-01-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253444,
+        "overall": 78,
+        "positions": [
+          "ST",
+          "LM",
+          "RM",
+          "CAM"
+        ],
+        "pace": 79,
+        "shooting": 79,
+        "passing": 65,
+        "dribbling": 79,
+        "defending": 34,
+        "physical": 72
+      }
+    },
+    {
+      "id": 151095,
+      "name": "Liam Delap",
+      "dob": "2003-02-08",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259031,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 76,
+        "shooting": 77,
+        "passing": 60,
+        "dribbling": 75,
+        "defending": 30,
+        "physical": 79
+      }
+    },
+    {
+      "id": 256339,
+      "name": "Igor Jesus",
+      "dob": "2001-02-25",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 79402,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 68,
+        "shooting": 77,
+        "passing": 65,
+        "dribbling": 72,
+        "defending": 36,
+        "physical": 76
+      }
+    }
+  ],
+  "baseline_id": "1d14527915174bba",
+  "generated_at": "2026-10-16T00:40:41.121436+00:00"
+}
