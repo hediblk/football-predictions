@@ -22,7 +22,7 @@ Replay the saved squad input without network access:
 PYTHONDONTWRITEBYTECODE=1 python scripts/build_squads.py --competition PD --roster-date 2026-10-15 --offline
 ```
 
-Older roster dates require `--offline`: current membership cannot reconstruct past squads. `--players` accepts another CSV with the same EA schema; supply its provenance with `--source-url`. One file must contain only one edition and snapshot. FM current ability and EA overall use different scales and are never mixed.
+Older roster dates require `--offline`: current membership cannot reconstruct past squads. `--players` accepts another CSV with the same EA schema; supply its provenance with `--source-url`. One file must contain only one edition and snapshot.
 
 ## Identities and XI selection
 
@@ -78,4 +78,4 @@ This checks the current season's Champions League heatmap files against the pilo
 
 On 15 October 2026, all **159 participating-player records, 129 heatmap-player records and 110 starter records** match across ten club-games for Barcelona, Real Madrid, Atlético Madrid, Betis and Villarreal. The remaining 26 heatmap fixtures have no La Liga pilot club and are outside this audit. A source-backed Abde/Abdessamad alias resolves the only initial gap.
 
-UEFA `positions` identifies starters from its lineup `field`; `physical.players` supplies positive playing times, including stoppage time. These accompanying records support XI history and minutes. Player heatmap grids require at least 30 minutes and include long substitute appearances (19 in this sample), so they cannot identify starters alone. Domestic sheets supply starts/minutes through Understat, without activity heatmaps. The [follow-up tasks](xi-ui-plan-2026-10-15.md) cover publication, a club Squad subtab, usage history and an offline lineup-based boosting experiment.
+UEFA `positions` identifies starters from its lineup `field`; `physical.players` supplies positive playing times, including stoppage time. These accompanying records support XI history and minutes. Player heatmap grids require at least 30 minutes and include long substitute appearances (19 in this sample), so they cannot identify starters alone. Domestic sheets supply starts/minutes through Understat, without activity heatmaps. The [squads and players plan](xi-ui-plan-2026-10-15.md) extends this to every competition, the club Squad subtab, past lineups, a pooled player-impact model and lineup-adjusted forecasts.
