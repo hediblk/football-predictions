@@ -1,4 +1,4 @@
-// Router: #<competition> (tables), #matches[/YYYY-MM-DD], #match/<competition>/<fixture id>, #clubs[/<club>], #model[/<section>].
+// Router: #<competition> (tables), #matches[/YYYY-MM-DD], #match/<competition>/<fixture id>, #clubs[/<club>[/squad | /vs/<club>]], #model[/<section>].
 import { COMPS, $, loadCrests, loadRun } from "./core.js";
 import { showTables } from "./tables.js";
 import { showMatches } from "./matches.js";
@@ -30,7 +30,7 @@ function route() {
   if (view === "tables") showTables(lastComp);
   else if (view === "matches") showMatches(arg);
   else if (view === "match") showMatch(arg, sub);
-  else if (view === "clubs") showClubs(arg, sub === "vs" ? extra : "");
+  else if (view === "clubs") showClubs(arg, sub === "vs" ? extra : "", sub === "squad");
   else showModel(arg);
 }
 

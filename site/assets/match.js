@@ -528,7 +528,7 @@ function xgLines(shots, m) {
 }
 
 /* pitch markings on a 105 × h pitch, shared by the shot map and the activity map */
-function pitchLines(h) {
+export function pitchLines(h) {
   const c = h / 2;
   const end = (x0, d) => {
     const box = (depth, half) => `<path d="M${x0} ${c - half}H${x0 + d * depth}V${c + half}H${x0}"/>`;

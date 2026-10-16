@@ -4,7 +4,8 @@
 #
 # Serves the directory on a local port with the data it ships, stops the browser clock at the newest forecast so
 # "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages,
-# an upcoming match page, finished ones in After and Before mode (one with a shot report), and the model page, at desktop and phone widths, expanding a match (which must
+# an upcoming match page, finished ones in After and Before mode (one with a shot report), club Squad views (with a squad file and
+# without one), and the model page, at desktop and phone widths, expanding a match (which must
 # link its match page) and a table row. Any console error, uncaught
 # exception, failed same-origin request or missing content fails the check. Other origins (web fonts) get empty
 # responses, so the check runs offline. Needs `pip install playwright` and `python -m playwright install chromium`.
@@ -28,6 +29,9 @@ MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-matc
 AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr"]
 # A finished league game with Understat shots adds "Chances": the shot map, the xG timeline and an openable shot list.
 CHANCES = AFTER + ["#view-match .mp-shots .mp-pitch circle.shot", "#view-match .mp-xgline svg path.xh"]
+# A club's Squad view: the ideal XI on its pitch, its text list and the squad table; without a squad file, one note.
+SQUAD = ["#p-hero h1", "#p-overview[hidden]", "#p-views [data-club-view=squad][aria-current=page]"]
+SQUAD_FILE = ["#p-squad .sq-pitch .sq-dot", "#p-squad .sq-list li", "#p-squad .sq-table tbody tr"]
 VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 375, "height": 844}}
 BROKEN = ["No signal", "could not be loaded", "unavailable right now"]
 
@@ -186,6 +190,12 @@ def routes(data):
                     content = "#p-results .pm-chart svg" if has_points_data(data, comp_slug, club["id"]) else None
                     interactions.append((button, f'{button}[aria-pressed="true"]', content))
             found.append((f"#clubs/{club['slug']}", selectors, [], None, interactions))
+    # The top club's Squad view, and the highest-ranked club with a squad file if that is another club.
+    season = json.loads((data / "clubs.json").read_text())["season"][:4]
+    has_squad = lambda club: (data / f"squads/{season}/{club['slug']}.json").exists()
+    filed = next((c for c in clubs if has_squad(c)), None)
+    for club in [clubs[0]] + ([filed] if filed and filed is not clubs[0] else []):
+        found.append((f"#clubs/{club['slug']}/squad", SQUAD + (SQUAD_FILE if has_squad(club) else ["#p-squad .sq-none"]), [], None))
     if len(clubs) > 1:
         found.append((f"#clubs/{clubs[0]['slug']}/vs/{clubs[1]['slug']}", [
             "#p-hero h1", "#p-compare optgroup", "#p-compare option:checked", "#p-rating-chart .rating-series.comparison path",
@@ -202,8 +212,8 @@ def routes(data):
 def visit(context, url, origin, selectors, rows, opened, interactions=()):
     problems = []
     page = context.new_page()
-    # A missing per-match, notes or rating-month file is a documented state (no data), so its 404 is not a failure.
-    optional = lambda url: "/data/match/" in url or "/data/notes/" in url or "/ratings/" in url
+    # A missing per-match, notes, rating-month or squad file is a documented state (no data), so its 404 is not a failure.
+    optional = lambda url: "/data/match/" in url or "/data/notes/" in url or "/ratings/" in url or "/data/squads/" in url
     page.on("console", lambda msg: msg.type == "error" and not optional(msg.location.get("url", ""))
             and problems.append(f"console: {msg.text}"))
     page.on("pageerror", lambda exc: problems.append(f"exception: {exc}"))
