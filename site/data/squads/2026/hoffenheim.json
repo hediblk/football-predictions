@@ -686,5 +686,1293 @@
     }
   ],
   "baseline_id": "1ba86c385ea5c02d",
-  "generated_at": "2026-10-16T00:40:41.224377+00:00"
+  "generated_at": "2026-10-16T00:40:41.224377+00:00",
+  "usage": {
+    "bundesliga": {
+      "source": "understat",
+      "games": 5,
+      "covered": 5,
+      "fully_mapped": 5,
+      "players": {
+        "316": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 450,
+          "share": 1.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            73
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "75703": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "220259": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "9540": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 126,
+          "share": 0.28,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            5245
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "30548": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 442,
+          "share": 0.982222,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            7376
+          ],
+          "xg": 0.6241,
+          "xa": 0.4293
+        },
+        "49031": {
+          "starts": 2,
+          "sub": 1,
+          "minutes": 187,
+          "share": 0.415556,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13859
+          ],
+          "xg": 0.0736,
+          "xa": 0.0
+        },
+        "62631": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 434,
+          "share": 0.964444,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            8965
+          ],
+          "xg": 0.0804,
+          "xa": 1.1071
+        },
+        "121279": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 17,
+          "share": 0.037778,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            7742
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "151443": {
+          "starts": 3,
+          "sub": 1,
+          "minutes": 312,
+          "share": 0.693333,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13973
+          ],
+          "xg": 0.0406,
+          "xa": 0.0786
+        },
+        "169668": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "188239": {
+          "starts": 0,
+          "sub": 3,
+          "minutes": 53,
+          "share": 0.117778,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13012
+          ],
+          "xg": 0.0617,
+          "xa": 0.0
+        },
+        "192148": {
+          "starts": 3,
+          "sub": 1,
+          "minutes": 212,
+          "share": 0.471111,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            14978
+          ],
+          "xg": 0.0707,
+          "xa": 0.7325
+        },
+        "261045": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "291967": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "76770": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 442,
+          "share": 0.982222,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13860
+          ],
+          "xg": 0.3925,
+          "xa": 0.2156
+        },
+        "113457": {
+          "starts": 0,
+          "sub": 1,
+          "minutes": 9,
+          "share": 0.02,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            12928
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "177525": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 344,
+          "share": 0.764444,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            10427
+          ],
+          "xg": 1.2156,
+          "xa": 0.6481
+        },
+        "206319": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 440,
+          "share": 0.977778,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13861
+          ],
+          "xg": 0.0565,
+          "xa": 0.2581
+        },
+        "250712": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "262477": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 26,
+          "share": 0.057778,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            14977
+          ],
+          "xg": 0.0,
+          "xa": 0.0236
+        },
+        "279699": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "318": {
+          "starts": 0,
+          "sub": 5,
+          "minutes": 49,
+          "share": 0.108889,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            956
+          ],
+          "xg": 0.0541,
+          "xa": 0.0
+        },
+        "99042": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 299,
+          "share": 0.664444,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            10774
+          ],
+          "xg": 2.086,
+          "xa": 0.091
+        },
+        "124324": {
+          "starts": 2,
+          "sub": 2,
+          "minutes": 206,
+          "share": 0.457778,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            9730
+          ],
+          "xg": 0.7077,
+          "xa": 0.9536
+        },
+        "144433": {
+          "starts": 3,
+          "sub": 1,
+          "minutes": 273,
+          "share": 0.606667,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            8407
+          ],
+          "xg": 1.7298,
+          "xa": 0.2591
+        },
+        "145562": {
+          "starts": 1,
+          "sub": 2,
+          "minutes": 82,
+          "share": 0.182222,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            10113
+          ],
+          "xg": 0.7665,
+          "xa": 0.6314
+        },
+        "182004": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 429,
+          "share": 0.953333,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            14024
+          ],
+          "xg": 0.5134,
+          "xa": 2.222
+        },
+        "248657": {
+          "starts": 1,
+          "sub": 2,
+          "minutes": 101,
+          "share": 0.224444,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            12470
+          ],
+          "xg": 1.1815,
+          "xa": 0.3691
+        }
+      },
+      "most_used_xi": {
+        "formation": "4-3-3",
+        "status": "provisional",
+        "slots": [
+          {
+            "role": "GK",
+            "player": 316
+          },
+          {
+            "role": "LB",
+            "player": 151443
+          },
+          {
+            "role": "CB",
+            "player": 49031
+          },
+          {
+            "role": "CB",
+            "player": 30548
+          },
+          {
+            "role": "RB",
+            "player": 62631
+          },
+          {
+            "role": "CDM",
+            "player": 76770
+          },
+          {
+            "role": "CM",
+            "player": 192148
+          },
+          {
+            "role": "CM",
+            "player": 318
+          },
+          {
+            "role": "LW",
+            "player": 124324
+          },
+          {
+            "role": "ST",
+            "player": 177525
+          },
+          {
+            "role": "RW",
+            "player": 182004
+          }
+        ]
+      },
+      "games_list": [
+        {
+          "fixture_id": 565783,
+          "kickoff": "2026-08-29T13:30:00+00:00",
+          "opponent_id": 1,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "d8de60ac9a48439196ca38f9f5293e73b584cadf9bd6313ba23f641df6ce2bde",
+          "appearances": [
+            {
+              "source_id": 73,
+              "name": "Oliver Baumann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 316
+            },
+            {
+              "source_id": 8965,
+              "name": "Vladimir Coufal",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.5425806641578674,
+              "player": 62631
+            },
+            {
+              "source_id": 13973,
+              "name": "Albian Hajdari",
+              "minutes": 88,
+              "starter": true,
+              "xg": 0.010050599463284016,
+              "xa": 0.0,
+              "player": 151443
+            },
+            {
+              "source_id": 7376,
+              "name": "Ozan Kabak",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.08144789189100266,
+              "xa": 0.0,
+              "player": 30548
+            },
+            {
+              "source_id": 5245,
+              "name": "Bernardo",
+              "minutes": 54,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 9540
+            },
+            {
+              "source_id": 9730,
+              "name": "Patrick Wimmer",
+              "minutes": 72,
+              "starter": true,
+              "xg": 0.05355871096253395,
+              "xa": 0.3663714826107025,
+              "player": 124324
+            },
+            {
+              "source_id": 13861,
+              "name": "Leon Avdullahu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.03628145903348923,
+              "xa": 0.0,
+              "player": 206319
+            },
+            {
+              "source_id": 13860,
+              "name": "Wouter Burger",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 76770
+            },
+            {
+              "source_id": 14024,
+              "name": "Adam Daghim",
+              "minutes": 88,
+              "starter": true,
+              "xg": 0.03134030103683472,
+              "xa": 0.031997036188840866,
+              "player": 182004
+            },
+            {
+              "source_id": 10427,
+              "name": "Bambasé Conté",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.4162904620170593,
+              "xa": 0.11713842302560806,
+              "player": 177525
+            },
+            {
+              "source_id": 10774,
+              "name": "Adam Hlozek",
+              "minutes": 54,
+              "starter": true,
+              "xg": 0.08425071835517883,
+              "xa": 0.017461976036429405,
+              "player": 99042
+            },
+            {
+              "source_id": 13012,
+              "name": "Robin Hranác",
+              "minutes": 36,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 188239
+            },
+            {
+              "source_id": 14977,
+              "name": "Nathan De Cat",
+              "minutes": 18,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.02360278181731701,
+              "player": 262477
+            },
+            {
+              "source_id": 12470,
+              "name": "Max Moerstedt",
+              "minutes": 36,
+              "starter": false,
+              "xg": 1.1814613342285156,
+              "xa": 0.0,
+              "player": 248657
+            },
+            {
+              "source_id": 956,
+              "name": "Andrej Kramaric",
+              "minutes": 2,
+              "starter": false,
+              "xg": 0.028484990820288658,
+              "xa": 0.0,
+              "player": 318
+            },
+            {
+              "source_id": 14978,
+              "name": "Mats Rots",
+              "minutes": 2,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 192148
+            }
+          ],
+          "starters": [
+            316,
+            62631,
+            151443,
+            30548,
+            9540,
+            124324,
+            206319,
+            76770,
+            182004,
+            177525,
+            99042
+          ],
+          "subs": [
+            188239,
+            262477,
+            248657,
+            318,
+            192148
+          ],
+          "ideal_started": 6
+        },
+        {
+          "fixture_id": 565787,
+          "kickoff": "2026-09-05T13:30:00+00:00",
+          "opponent_id": 4,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "c3b310f629d51789d43d7781a886144eb70032862d794cb4b39beda74b278370",
+          "appearances": [
+            {
+              "source_id": 73,
+              "name": "Oliver Baumann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 316
+            },
+            {
+              "source_id": 8965,
+              "name": "Vladimir Coufal",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.049167923629283905,
+              "xa": 0.020223496481776237,
+              "player": 62631
+            },
+            {
+              "source_id": 7376,
+              "name": "Ozan Kabak",
+              "minutes": 82,
+              "starter": true,
+              "xg": 0.43648335337638855,
+              "xa": 0.40284591913223267,
+              "player": 30548
+            },
+            {
+              "source_id": 13973,
+              "name": "Albian Hajdari",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 151443
+            },
+            {
+              "source_id": 14978,
+              "name": "Mats Rots",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.032613132148981094,
+              "xa": 0.47186845541000366,
+              "player": 192148
+            },
+            {
+              "source_id": 9730,
+              "name": "Patrick Wimmer",
+              "minutes": 76,
+              "starter": true,
+              "xg": 0.023843219503760338,
+              "xa": 0.06939923763275146,
+              "player": 124324
+            },
+            {
+              "source_id": 13860,
+              "name": "Wouter Burger",
+              "minutes": 82,
+              "starter": true,
+              "xg": 0.043077658861875534,
+              "xa": 0.07912149280309677,
+              "player": 76770
+            },
+            {
+              "source_id": 13861,
+              "name": "Leon Avdullahu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.020223496481776237,
+              "xa": 0.140419602394104,
+              "player": 206319
+            },
+            {
+              "source_id": 14024,
+              "name": "Adam Daghim",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.10559471696615219,
+              "xa": 0.7941493391990662,
+              "player": 182004
+            },
+            {
+              "source_id": 10774,
+              "name": "Adam Hlozek",
+              "minutes": 76,
+              "starter": true,
+              "xg": 0.46595698595046997,
+              "xa": 0.0,
+              "player": 99042
+            },
+            {
+              "source_id": 8407,
+              "name": "Tim Lemperle",
+              "minutes": 87,
+              "starter": true,
+              "xg": 0.9275992512702942,
+              "xa": 0.08958429843187332,
+              "player": 144433
+            },
+            {
+              "source_id": 956,
+              "name": "Andrej Kramaric",
+              "minutes": 14,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 318
+            },
+            {
+              "source_id": 10427,
+              "name": "Bambasé Conté",
+              "minutes": 14,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 177525
+            },
+            {
+              "source_id": 13012,
+              "name": "Robin Hranác",
+              "minutes": 8,
+              "starter": false,
+              "xg": 0.061706677079200745,
+              "xa": 0.0,
+              "player": 188239
+            },
+            {
+              "source_id": 14977,
+              "name": "Nathan De Cat",
+              "minutes": 8,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 262477
+            },
+            {
+              "source_id": 12470,
+              "name": "Max Moerstedt",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 248657
+            }
+          ],
+          "starters": [
+            316,
+            62631,
+            30548,
+            151443,
+            192148,
+            124324,
+            76770,
+            206319,
+            182004,
+            99042,
+            144433
+          ],
+          "subs": [
+            318,
+            177525,
+            188239,
+            262477,
+            248657
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 565794,
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "opponent_id": 10,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "f6a1afc9c6e378f668079b33cb68442919925ed14f3720ad62159c5517e922ec",
+          "appearances": [
+            {
+              "source_id": 73,
+              "name": "Oliver Baumann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 316
+            },
+            {
+              "source_id": 8965,
+              "name": "Vladimir Coufal",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 62631
+            },
+            {
+              "source_id": 13973,
+              "name": "Albian Hajdari",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 151443
+            },
+            {
+              "source_id": 7376,
+              "name": "Ozan Kabak",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.06217207387089729,
+              "xa": 0.0,
+              "player": 30548
+            },
+            {
+              "source_id": 14978,
+              "name": "Mats Rots",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.03810456767678261,
+              "xa": 0.2606009840965271,
+              "player": 192148
+            },
+            {
+              "source_id": 13861,
+              "name": "Leon Avdullahu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 206319
+            },
+            {
+              "source_id": 13860,
+              "name": "Wouter Burger",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.11659454554319382,
+              "xa": 0.0,
+              "player": 76770
+            },
+            {
+              "source_id": 10427,
+              "name": "Bambasé Conté",
+              "minutes": 60,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.32341477274894714,
+              "player": 177525
+            },
+            {
+              "source_id": 10774,
+              "name": "Adam Hlozek",
+              "minutes": 87,
+              "starter": true,
+              "xg": 1.3559365272521973,
+              "xa": 0.0,
+              "player": 99042
+            },
+            {
+              "source_id": 14024,
+              "name": "Adam Daghim",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0603838786482811,
+              "xa": 1.0417028665542603,
+              "player": 182004
+            },
+            {
+              "source_id": 8407,
+              "name": "Tim Lemperle",
+              "minutes": 88,
+              "starter": true,
+              "xg": 0.366207093000412,
+              "xa": 0.14761175215244293,
+              "player": 144433
+            },
+            {
+              "source_id": 7742,
+              "name": "Valentin Gendrey",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 121279
+            },
+            {
+              "source_id": 13859,
+              "name": "Koki Machida",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 49031
+            },
+            {
+              "source_id": 9730,
+              "name": "Patrick Wimmer",
+              "minutes": 30,
+              "starter": false,
+              "xg": 0.5024691224098206,
+              "xa": 0.5178340077400208,
+              "player": 124324
+            },
+            {
+              "source_id": 956,
+              "name": "Andrej Kramaric",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 318
+            },
+            {
+              "source_id": 10113,
+              "name": "Fisnik Asllani",
+              "minutes": 2,
+              "starter": false,
+              "xg": 0.45824286341667175,
+              "xa": 0.505211353302002,
+              "player": 145562
+            }
+          ],
+          "starters": [
+            316,
+            62631,
+            151443,
+            30548,
+            192148,
+            206319,
+            76770,
+            177525,
+            99042,
+            182004,
+            144433
+          ],
+          "subs": [
+            121279,
+            49031,
+            124324,
+            318,
+            145562
+          ],
+          "ideal_started": 6
+        },
+        {
+          "fixture_id": 565803,
+          "kickoff": "2026-09-20T17:30:00+00:00",
+          "opponent_id": 29,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "eb75bb397a98a81038102e2e01253c7587c6981c440b622ff4b451f9d31f6716",
+          "appearances": [
+            {
+              "source_id": 73,
+              "name": "Oliver Baumann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 316
+            },
+            {
+              "source_id": 8965,
+              "name": "Vladimir Coufal",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.011523408815264702,
+              "xa": 0.2534037232398987,
+              "player": 62631
+            },
+            {
+              "source_id": 13859,
+              "name": "Koki Machida",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.05617454648017883,
+              "xa": 0.0,
+              "player": 49031
+            },
+            {
+              "source_id": 7376,
+              "name": "Ozan Kabak",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 30548
+            },
+            {
+              "source_id": 14978,
+              "name": "Mats Rots",
+              "minutes": 46,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 192148
+            },
+            {
+              "source_id": 10427,
+              "name": "Bambasé Conté",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.6124634742736816,
+              "xa": 0.15144556760787964,
+              "player": 177525
+            },
+            {
+              "source_id": 13861,
+              "name": "Leon Avdullahu",
+              "minutes": 80,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.07464761286973953,
+              "player": 206319
+            },
+            {
+              "source_id": 13860,
+              "name": "Wouter Burger",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.15539675951004028,
+              "xa": 0.1364448070526123,
+              "player": 76770
+            },
+            {
+              "source_id": 14024,
+              "name": "Adam Daghim",
+              "minutes": 80,
+              "starter": true,
+              "xg": 0.31607362627983093,
+              "xa": 0.1612652987241745,
+              "player": 182004
+            },
+            {
+              "source_id": 12470,
+              "name": "Max Moerstedt",
+              "minutes": 62,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.36911696195602417,
+              "player": 248657
+            },
+            {
+              "source_id": 10774,
+              "name": "Adam Hlozek",
+              "minutes": 62,
+              "starter": true,
+              "xg": 0.1799016296863556,
+              "xa": 0.07356738299131393,
+              "player": 99042
+            },
+            {
+              "source_id": 8407,
+              "name": "Tim Lemperle",
+              "minutes": 28,
+              "starter": false,
+              "xg": 0.023455185815691948,
+              "xa": 0.021945955231785774,
+              "player": 144433
+            },
+            {
+              "source_id": 9730,
+              "name": "Patrick Wimmer",
+              "minutes": 28,
+              "starter": false,
+              "xg": 0.12784478068351746,
+              "xa": 0.0,
+              "player": 124324
+            },
+            {
+              "source_id": 10113,
+              "name": "Fisnik Asllani",
+              "minutes": 10,
+              "starter": false,
+              "xg": 0.16002903878688812,
+              "xa": 0.0,
+              "player": 145562
+            },
+            {
+              "source_id": 956,
+              "name": "Andrej Kramaric",
+              "minutes": 10,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 318
+            },
+            {
+              "source_id": 13973,
+              "name": "Albian Hajdari",
+              "minutes": 44,
+              "starter": false,
+              "xg": 0.030545977875590324,
+              "xa": 0.07859635353088379,
+              "player": 151443
+            }
+          ],
+          "starters": [
+            316,
+            62631,
+            49031,
+            30548,
+            192148,
+            177525,
+            206319,
+            76770,
+            182004,
+            248657,
+            99042
+          ],
+          "subs": [
+            144433,
+            124324,
+            145562,
+            318,
+            151443
+          ],
+          "ideal_started": 4
+        },
+        {
+          "fixture_id": 565818,
+          "kickoff": "2026-10-10T13:30:00+00:00",
+          "opponent_id": 7,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "6ca378d94eee9ec2d07131592a2d1b097999c1c52ca4ada44df568cd32fdbda0",
+          "appearances": [
+            {
+              "source_id": 73,
+              "name": "Oliver Baumann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 316
+            },
+            {
+              "source_id": 8965,
+              "name": "Vladimir Coufal",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.01966884359717369,
+              "xa": 0.2909339368343353,
+              "player": 62631
+            },
+            {
+              "source_id": 7376,
+              "name": "Ozan Kabak",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.04395893216133118,
+              "xa": 0.026463007554411888,
+              "player": 30548
+            },
+            {
+              "source_id": 13859,
+              "name": "Koki Machida",
+              "minutes": 81,
+              "starter": true,
+              "xg": 0.01743052527308464,
+              "xa": 0.0,
+              "player": 49031
+            },
+            {
+              "source_id": 5245,
+              "name": "Bernardo",
+              "minutes": 72,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 9540
+            },
+            {
+              "source_id": 13861,
+              "name": "Leon Avdullahu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.04303779825568199,
+              "player": 206319
+            },
+            {
+              "source_id": 13860,
+              "name": "Wouter Burger",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0774717628955841,
+              "xa": 0.0,
+              "player": 76770
+            },
+            {
+              "source_id": 10427,
+              "name": "Bambasé Conté",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.1868145912885666,
+              "xa": 0.05605417862534523,
+              "player": 177525
+            },
+            {
+              "source_id": 10113,
+              "name": "Fisnik Asllani",
+              "minutes": 70,
+              "starter": true,
+              "xg": 0.14823071658611298,
+              "xa": 0.12616905570030212,
+              "player": 145562
+            },
+            {
+              "source_id": 14024,
+              "name": "Adam Daghim",
+              "minutes": 81,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.19284114241600037,
+              "player": 182004
+            },
+            {
+              "source_id": 8407,
+              "name": "Tim Lemperle",
+              "minutes": 70,
+              "starter": true,
+              "xg": 0.4125676155090332,
+              "xa": 0.0,
+              "player": 144433
+            },
+            {
+              "source_id": 956,
+              "name": "Andrej Kramaric",
+              "minutes": 20,
+              "starter": false,
+              "xg": 0.02560727298259735,
+              "xa": 0.0,
+              "player": 318
+            },
+            {
+              "source_id": 7742,
+              "name": "Valentin Gendrey",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 121279
+            },
+            {
+              "source_id": 10774,
+              "name": "Adam Hlozek",
+              "minutes": 20,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 99042
+            },
+            {
+              "source_id": 12928,
+              "name": "Alexander Prass",
+              "minutes": 9,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113457
+            },
+            {
+              "source_id": 13012,
+              "name": "Robin Hranác",
+              "minutes": 9,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 188239
+            }
+          ],
+          "starters": [
+            316,
+            62631,
+            30548,
+            49031,
+            9540,
+            206319,
+            76770,
+            177525,
+            145562,
+            182004,
+            144433
+          ],
+          "subs": [
+            318,
+            121279,
+            99042,
+            113457,
+            188239
+          ],
+          "ideal_started": 6
+        }
+      ]
+    }
+  },
+  "usage_generated_at": "2026-10-16T01:16:19.162702+00:00"
 }

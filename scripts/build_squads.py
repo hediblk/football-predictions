@@ -155,6 +155,9 @@ def publish_clubs(clubs, sources, dataset, args):
     for snapshot, path, data in pending:
         if not snapshot.exists():
             write_json(snapshot, data)
+        previous = json.loads(path.read_text()) if path.exists() else {}
+        if previous.get("baseline_id") == data["baseline_id"]:
+            data = {**data, **{key: previous[key] for key in ("usage", "usage_generated_at") if key in previous}}
         if not path.exists() or json.loads(path.read_text()) != data:
             write_json(path, data)
 

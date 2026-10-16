@@ -55,6 +55,8 @@ cp -R "$candidate/data" "$squad_candidate/data" || exit 1
 if python scripts/build_squads.py --download-players --publish \
     --players .cache/players/ea/fc27-2026-09-12.csv --roster-cache .cache/players/rosters \
     --site-data "$squad_candidate/data" && \
+    python scripts/build_squad_usage.py --site-data "$squad_candidate/data" \
+    --players .cache/players/ea/fc27-2026-09-12.csv && \
     python scripts/validate_site_data.py --data "$squad_candidate/data" --site site; then
   cp -R "$squad_candidate/data/squads" "$candidate/data/" || exit 1
 else

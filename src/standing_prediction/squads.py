@@ -48,6 +48,9 @@ def name_score(name, aliases, common_name="", *, appearance=False):
             scores.append(0)
         elif len(tokens) >= 2 and (tokens < other or (appearance and len(other) >= 2 and other < tokens)):
             scores.append(1)
+        elif appearance and len(tokens) == 1 and tokens < other:
+            # Match sheets often give one name ("Remiro"); only a unique fit within the club counts.
+            scores.append(3)
         elif len(tokens) >= 2 and any(variant <= other for variant in variants):
             scores.append(2)
     # EA's explicit common name is stronger evidence than an arbitrary surname.
@@ -114,17 +117,22 @@ def match_squads(teams, by_birth, overrides=None):
     return clubs
 
 
-def select_xi(players, formation="4-3-3"):
+def select_xi(players, formation="4-3-3", *, minutes=None):
     roles = FORMATIONS[formation]
     eligible = sorted((row for row in players if row["status"] == "matched" and row["ea"]["rating"] is not None
-                       and row["ea"]["positions"]), key=lambda row: row["id"])
+                       and row["ea"]["positions"] and
+                       (minutes is None or (minutes.get(row["id"]) or 0) > 0)), key=lambda row: row["id"])
+    # One tenth of a minute outweighs the combined EA overall of eleven players.
+    values = {row["id"]: row["ea"]["rating"] if minutes is None else
+              round(minutes[row["id"]] * 10) * 1100 + row["ea"]["rating"] for row in eligible}
+    filled_score = 1e6 if minutes is None else 12 * (max(values.values(), default=0) + 1)
     scores = np.zeros((11, len(eligible) + 11))
-    scores[:, :len(eligible)] = -1e6
+    scores[:, :len(eligible)] = -filled_score
     for i, role in enumerate(roles):
         for j, player in enumerate(eligible):
             ea = player["ea"]
             if WIDE_POSITIONS.get(role, {role}) & set(ea["positions"]):
-                scores[i, j] = 1e6 + ea["rating"] + 0.001 * (ea["positions"][0] == role) + (len(eligible) - j) * 1e-9
+                scores[i, j] = filled_score + values[player["id"]] + 0.001 * (ea["positions"][0] == role) + (len(eligible) - j) * 1e-9
     rows, cols = linear_sum_assignment(scores, maximize=True)
     slots = []
     for i, j in zip(rows, cols):
