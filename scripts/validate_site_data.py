@@ -416,11 +416,12 @@ def validate_squad_usage(data, by_id, formations):
                                       row["starter"] == starter], "usage lineup differs from appearances")
             known = set(game["starters"] + game["subs"])
             expected_ideal = (len(ideal & set(game["starters"])) if len(ideal) == 11 and
-                              (game["status"] == "complete" or ideal <= known) else None)
+                              (game["status"] == "complete" or len(game["starters"]) == 11 or ideal <= known) else None)
             require(game["ideal_started"] == expected_ideal, "ideal starters count differs")
             for row in rows:
                 require(("avg_x" in row) == ("avg_y" in row), "observed coordinates need both axes")
                 require(("avg_x" in row) == (source == "uefa" and row["starter"]), "coordinates differ from source/starter")
+                require(({"xg", "xa"} <= row.keys()) == (source == "understat"), "xG/xA differ from source")
                 if row["player"] is not None:
                     require(bindings.setdefault(row["source_id"], row["player"]) == row["player"], "provider identity conflict")
         for pid, total in usage["players"].items():
@@ -442,6 +443,9 @@ def validate_squad_usage(data, by_id, formations):
                     require(key in total and total[key] == expected, "player average position differs")
             else:
                 require(not {"avg_x", "avg_y"} & total.keys(), "domestic usage cannot have UEFA positions")
+                for key in ("xg", "xa"):
+                    require(total.get(key, "missing") == (round(sum(r[key] for r in observed), 4) if known else None),
+                            f"player {key} differs from sheets")
         xi = usage["most_used_xi"]
         require([s["role"] for s in xi["slots"]] == formations[xi["formation"]], "most-used XI roles differ")
         unique(xi["slots"], "player")

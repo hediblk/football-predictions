@@ -19,7 +19,7 @@ def match_sheet(detail, side, source):
         if rows is None:
             return None
         return [{"source_id": row["id"], "name": row["player"], "minutes": row["minutes"],
-                 "starter": row["position"] != "Sub"} for row in rows]
+                 "starter": row["position"] != "Sub", "xg": row["xg"], "xa": row["xa"]} for row in rows]
     physical = detail.get("physical", {}).get(side)
     positions = detail.get("positions", {}).get(side)
     if physical is None or positions is None:
@@ -81,7 +81,7 @@ def competition_usage(club, sheets, source):
             game[key] = [row["player"] for row in rows if row["player"] is not None and row["starter"] == starter]
         known = set(game["starters"] + game["subs"])
         game["ideal_started"] = (len(ideal & set(game["starters"])) if len(ideal) == 11 and
-                                 (game["status"] == "complete" or ideal <= known) else None)
+                                 (game["status"] == "complete" or len(game["starters"]) == 11 or ideal <= known) else None)
     covered = sum(game["reason"] in (None, "unmapped_appearances") for game in games)
     totals = {}
     for player in players:
@@ -95,6 +95,9 @@ def competition_usage(club, sheets, source):
                  "minutes": minutes, "share": round(minutes / (90 * covered), 6) if known and covered else None,
                  "known_games": known, "unknown_games": len(games) - known,
                  "provider_ids": sorted({row["source_id"] for row in observed})}
+        if source == "understat":
+            # season xG and xA totals; per-90 rates are left to the reader
+            total.update({key: round(sum(row[key] for row in observed), 4) if known else None for key in ("xg", "xa")})
         if source == "uefa":
             positions = [row for row in observed if "avg_x" in row]
             total.update(avg_x=round(sum(row["avg_x"] for row in positions) / len(positions), 4) if positions else None,

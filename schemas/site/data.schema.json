@@ -1372,7 +1372,9 @@
           "type": "number",
           "minimum": 0,
           "maximum": 1
-        }
+        },
+        "xg": {"type": "number", "minimum": 0},
+        "xa": {"type": "number", "minimum": 0}
       },
       "required": [
         "source_id",
@@ -1430,6 +1432,8 @@
             }
           ]
         },
+        "xg": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "xa": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
         "known_games": {
           "type": "integer",
           "minimum": 0
