@@ -6,6 +6,7 @@ import {
 import { matchPanel, record, BIG_STAKE, stakeNow } from "./matches.js";
 import { spreadPanel } from "./tables.js";
 import { pointsComparison, rollingXg } from "./model-performance.js";
+import { showSquad } from "./squad.js";
 
 const RESULT = ["W", "D", "L"];
 const RESULT_WORD = ["Win", "Draw", "Loss"];
@@ -19,7 +20,7 @@ let ratingState = null;
 let ratingMetric = "rating";
 let compareAnchor = null; // the compare select's viewport offset, kept while a comparison redraws the profile
 
-export async function showClubs(slug, compareSlug = "") {
+export async function showClubs(slug, compareSlug = "", squad = false) {
   try {
     clubs = await getJSON("clubs.json");
   } catch (err) {
@@ -33,7 +34,7 @@ export async function showClubs(slug, compareSlug = "") {
   const comparison = club && compareSlug && clubs.clubs.find((c) => c.slug === compareSlug && c.id !== club.id);
   $("clubs-index").hidden = Boolean(club);
   $("club-profile").hidden = !club;
-  if (club) await showProfile(club, comparison || null);
+  if (club) await showProfile(club, comparison || null, squad);
   else await showIndex();
 }
 
@@ -259,8 +260,8 @@ function renderScatter() {
 }
 
 /* ---------- profile ---------- */
-async function showProfile(club, comparison) {
-  document.title = `${club.name} · Floodlight`;
+async function showProfile(club, comparison, squad) {
+  document.title = `${club.name}${squad ? " squad" : ""} · Floodlight`;
   // A club from outside the five leagues has no league table here: its page follows its Champions League season.
   const domestic = Boolean(club.league);
   const comp = compBySlug[club.league || "champions-league"];
@@ -295,6 +296,8 @@ async function showProfile(club, comparison) {
         · the big number is its strength, <b>#${club.rating_rank}</b> of ${clubs.clubs.length}: the share of points it would take off an average European top-flight side</p>
     </div>
     <div class="numeral on" role="img" aria-label="${esc(`${club.name}: rating ${dec(club.rating)}`)}">${Math.round(club.rating)}<sup>%</sup></div>`;
+  renderViews(club, comparison, squad);
+  if (squad) return showSquad(club, clubs.season.split("/")[0]);
 
   // Outlook tiles.
   const zones = Object.fromEntries((table || ucl).zones.map((z) => [z.key, z]));
@@ -323,6 +326,17 @@ async function showProfile(club, comparison) {
     window.scrollBy(0, $("p-compare").getBoundingClientRect().top - compareAnchor);
     compareAnchor = null;
   }
+}
+
+/* Overview / Squad: links, so each view has its own address and back/forward steps between them */
+function renderViews(club, comparison, squad) {
+  const focused = document.activeElement?.dataset?.clubView;
+  const views = [["overview", "Overview", `#clubs/${club.slug}${comparison ? `/vs/${comparison.slug}` : ""}`], ["squad", "Squad", `#clubs/${club.slug}/squad`]];
+  $("p-views").innerHTML = views.map(([key, label, href]) =>
+    `<a class="chip" data-club-view="${key}" href="${href}"${(key === "squad") === squad ? ' aria-current="page"' : ""}>${label}</a>`).join("");
+  if (focused) $("p-views").querySelector(`[data-club-view="${focused}"]`).focus();
+  $("p-overview").hidden = squad;
+  $("p-squad").hidden = !squad;
 }
 
 /* points, goals and xG from the club's side of a played match */
