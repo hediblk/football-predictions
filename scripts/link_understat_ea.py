@@ -135,7 +135,10 @@ def link(appearances, pools, people):
         if len(reverse[ea_id]) > 1:
             row.update(status="ambiguous", reason="ea_id_linked_to_multiple_understat_ids")
             continue
-        if len(people[ea_id]["dobs"]) > 1:
+        # One EA ID is one player; its dates drift by a day, swap day and month, or fill 1 January placeholders.
+        # Only dates over a year apart suggest a reused or mixed-up record.
+        dobs = sorted(people[ea_id]["dobs"])
+        if dobs and (pd.Timestamp(dobs[-1]) - pd.Timestamp(dobs[0])).days > 400:
             row.update(status="ambiguous", reason="ea_birth_date_conflict")
             continue
         if row["candidates"] and ea_id not in row["candidates"]:

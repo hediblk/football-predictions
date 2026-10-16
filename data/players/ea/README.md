@@ -2,7 +2,7 @@
 
 `vintages.json` catalogs men's Career Mode ratings from FIFA 15 through FC 26, one edition for each season starting in 2014–2025. Raw ZIPs and compact per-vintage CSVs stay in the ignored player cache. No site, refresh or forecast code consumes these files.
 
-The initial build links **31,419 / 33,451** club-season players. It covers **40,788,544 / 42,624,916 archived minutes (95.69%)** by identity, and **38,081,912 minutes (89.34%)** with a same-season rating available before kickoff. The 2,032 unresolved rows include 1,162 birth-date conflicts, 857 without a club/name match, 11 duplicate Understat identities for an EA ID and two ambiguous name matches. They remain in the table with reasons.
+The build links **32,541 / 33,451** club-season players. It covers **42,277,086 / 42,624,916 archived minutes (99.18%)** by identity, and **39,469,691 minutes (92.60%)** with a same-season rating available before kickoff. One EA ID is one player, so birth dates that differ across vintages by up to 400 days (a day's timezone drift, swapped day and month, 1 January placeholders later corrected) do not block a link. The 910 unresolved rows include 857 without a club/name match, 40 EA IDs whose birth dates differ by more than 400 days, 11 duplicate Understat identities for an EA ID and two ambiguous name matches. They remain in the table with reasons.
 
 ## Sources and dates
 
