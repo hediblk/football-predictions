@@ -1101,7 +1101,7 @@ table.mp-stand { min-width: 460px; }
 
 /* Task 5 · Squad playing time: competition and Ideal / Most used chips, minutes-share rings, usage columns and XI history */
 .sq-ctl { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 14px; }
-.sq-ctl .chips { margin-top: 0; }
+.sq-ctl .chips { margin-top: 0; flex-wrap: wrap; } /* phones set chip rows to nowrap; these must wrap */
 .sq-dot.used .sq-track { fill: var(--bulb-off); stroke: var(--rule); stroke-width: .7; }
 .sq-dot.used .sq-fill { fill: none; stroke: var(--amber); stroke-width: .7; }
 .sq-list li.used { grid-template-columns: 44px minmax(0, 1fr) auto auto; }
