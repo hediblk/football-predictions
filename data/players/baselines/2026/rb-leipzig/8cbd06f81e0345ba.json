@@ -1,0 +1,780 @@
+{
+  "slug": "rb-leipzig",
+  "club_id": 721,
+  "name": "RB Leipzig",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:09.822985+00:00",
+    "url": "https://api.football-data.org/v4/competitions/BL1/teams",
+    "sha256": "1c95dfdeece4df7077b5d2fbea2456a2b51c2c9f0ced94d4907ddd4a644a20a9",
+    "snapshot": "data/players/rosters/2026-10-16/BL1.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 31,
+    "matched": 31
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "complete",
+    "mean_overall": 80.0,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 75739
+      },
+      {
+        "role": "LB",
+        "player": 9905
+      },
+      {
+        "role": "CB",
+        "player": 9537
+      },
+      {
+        "role": "CB",
+        "player": 171405
+      },
+      {
+        "role": "RB",
+        "player": 156
+      },
+      {
+        "role": "CDM",
+        "player": 113038
+      },
+      {
+        "role": "CM",
+        "player": 56829
+      },
+      {
+        "role": "CM",
+        "player": 150517
+      },
+      {
+        "role": "LW",
+        "player": 169295
+      },
+      {
+        "role": "ST",
+        "player": 8484
+      },
+      {
+        "role": "RW",
+        "player": 6634
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 6843,
+      "name": "Ørjan Nyland",
+      "dob": "1990-09-10",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 185427,
+        "overall": 74,
+        "positions": [
+          "GK"
+        ],
+        "pace": 73,
+        "shooting": 73,
+        "passing": 75,
+        "dribbling": 74,
+        "defending": 45,
+        "physical": 73
+      }
+    },
+    {
+      "id": 45569,
+      "name": "Leopold Zingerle",
+      "dob": "1994-04-10",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 222546,
+        "overall": 69,
+        "positions": [
+          "GK"
+        ],
+        "pace": 70,
+        "shooting": 66,
+        "passing": 66,
+        "dribbling": 71,
+        "defending": 42,
+        "physical": 68
+      }
+    },
+    {
+      "id": 75739,
+      "name": "Maarten Vandevoordt",
+      "dob": "2002-02-26",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242879,
+        "overall": 78,
+        "positions": [
+          "GK"
+        ],
+        "pace": 80,
+        "shooting": 77,
+        "passing": 82,
+        "dribbling": 78,
+        "defending": 55,
+        "physical": 76
+      }
+    },
+    {
+      "id": 156,
+      "name": "Benjamin Henrichs",
+      "dob": "1997-02-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228579,
+        "overall": 78,
+        "positions": [
+          "RB",
+          "RM",
+          "LB",
+          "CM"
+        ],
+        "pace": 68,
+        "shooting": 54,
+        "passing": 75,
+        "dribbling": 76,
+        "defending": 77,
+        "physical": 70
+      }
+    },
+    {
+      "id": 6634,
+      "name": "Ridle Baku",
+      "dob": "1998-04-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 240709,
+        "overall": 79,
+        "positions": [
+          "RB",
+          "RM",
+          "RW",
+          "CM"
+        ],
+        "pace": 83,
+        "shooting": 72,
+        "passing": 75,
+        "dribbling": 80,
+        "defending": 75,
+        "physical": 76
+      }
+    },
+    {
+      "id": 9536,
+      "name": "Lukas Klostermann",
+      "dob": "1996-06-03",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 222331,
+        "overall": 75,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 76,
+        "shooting": 49,
+        "passing": 62,
+        "dribbling": 67,
+        "defending": 75,
+        "physical": 72
+      }
+    },
+    {
+      "id": 9537,
+      "name": "Willi Orban",
+      "dob": "1992-11-03",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 204638,
+        "overall": 83,
+        "positions": [
+          "CB"
+        ],
+        "pace": 54,
+        "shooting": 40,
+        "passing": 56,
+        "dribbling": 56,
+        "defending": 86,
+        "physical": 83
+      }
+    },
+    {
+      "id": 9905,
+      "name": "David Raum",
+      "dob": "1998-04-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236703,
+        "overall": 83,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 83,
+        "shooting": 62,
+        "passing": 82,
+        "dribbling": 81,
+        "defending": 76,
+        "physical": 79
+      }
+    },
+    {
+      "id": 171405,
+      "name": "Castello Lukeba",
+      "dob": "2002-12-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262138,
+        "overall": 81,
+        "positions": [
+          "CB",
+          "LB"
+        ],
+        "pace": 79,
+        "shooting": 43,
+        "passing": 70,
+        "dribbling": 74,
+        "defending": 82,
+        "physical": 76
+      }
+    },
+    {
+      "id": 175784,
+      "name": "Maxime Estève",
+      "dob": "2002-05-26",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262042,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 74,
+        "shooting": 40,
+        "passing": 57,
+        "dribbling": 63,
+        "defending": 76,
+        "physical": 79
+      }
+    },
+    {
+      "id": 214538,
+      "name": "Max Finkgräfe",
+      "dob": "2004-03-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277887,
+        "overall": 72,
+        "positions": [
+          "LB",
+          "LM",
+          "CM"
+        ],
+        "pace": 75,
+        "shooting": 54,
+        "passing": 67,
+        "dribbling": 75,
+        "defending": 67,
+        "physical": 68
+      }
+    },
+    {
+      "id": 251244,
+      "name": "Abdoul Koné",
+      "dob": "2005-04-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72250,
+        "overall": 69,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 82,
+        "shooting": 43,
+        "passing": 56,
+        "dribbling": 59,
+        "defending": 67,
+        "physical": 78
+      }
+    },
+    {
+      "id": 56829,
+      "name": "Christoph Baumgartner",
+      "dob": "1999-08-01",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242187,
+        "overall": 82,
+        "positions": [
+          "CAM",
+          "CM",
+          "ST",
+          "CDM"
+        ],
+        "pace": 73,
+        "shooting": 79,
+        "passing": 77,
+        "dribbling": 83,
+        "defending": 57,
+        "physical": 68
+      }
+    },
+    {
+      "id": 113038,
+      "name": "Nicolas  Seiwald",
+      "dob": "2001-05-04",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257876,
+        "overall": 81,
+        "positions": [
+          "CDM",
+          "CM",
+          "CB"
+        ],
+        "pace": 78,
+        "shooting": 62,
+        "passing": 77,
+        "dribbling": 74,
+        "defending": 80,
+        "physical": 79
+      }
+    },
+    {
+      "id": 150517,
+      "name": "Rocco Reitz",
+      "dob": "2002-05-29",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257919,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 72,
+        "shooting": 70,
+        "passing": 74,
+        "dribbling": 78,
+        "defending": 77,
+        "physical": 72
+      }
+    },
+    {
+      "id": 170647,
+      "name": "Neil El Aynaoui",
+      "dob": "2001-07-02",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262745,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 64,
+        "shooting": 63,
+        "passing": 76,
+        "dribbling": 76,
+        "defending": 72,
+        "physical": 75
+      }
+    },
+    {
+      "id": 175951,
+      "name": "Ezechiel Banzuzi",
+      "dob": "2005-02-16",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276216,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 69,
+        "shooting": 63,
+        "passing": 69,
+        "dribbling": 71,
+        "defending": 66,
+        "physical": 74
+      }
+    },
+    {
+      "id": 184146,
+      "name": "Arthur Vermeeren",
+      "dob": "2005-02-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269859,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 66,
+        "shooting": 55,
+        "passing": 78,
+        "dribbling": 77,
+        "defending": 66,
+        "physical": 66
+      }
+    },
+    {
+      "id": 191102,
+      "name": "Brajan Gruda",
+      "dob": "2004-05-31",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272612,
+        "overall": 77,
+        "positions": [
+          "CAM",
+          "RM",
+          "CM",
+          "RW"
+        ],
+        "pace": 83,
+        "shooting": 72,
+        "passing": 74,
+        "dribbling": 82,
+        "defending": 32,
+        "physical": 64
+      }
+    },
+    {
+      "id": 212636,
+      "name": "Assan Ouédraogo",
+      "dob": "2006-05-09",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276602,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 82,
+        "shooting": 72,
+        "passing": 76,
+        "dribbling": 82,
+        "defending": 59,
+        "physical": 71
+      }
+    },
+    {
+      "id": 227045,
+      "name": "Andrija Maksimović",
+      "dob": "2007-06-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 79107,
+        "overall": 71,
+        "positions": [
+          "RW",
+          "CAM",
+          "CM",
+          "RM"
+        ],
+        "pace": 70,
+        "shooting": 70,
+        "passing": 72,
+        "dribbling": 70,
+        "defending": 37,
+        "physical": 58
+      }
+    },
+    {
+      "id": 264272,
+      "name": "Viggo Gebel",
+      "dob": "2007-11-22",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74512,
+        "overall": 63,
+        "positions": [
+          "CAM",
+          "LM",
+          "RM",
+          "CM"
+        ],
+        "pace": 71,
+        "shooting": 57,
+        "passing": 61,
+        "dribbling": 69,
+        "defending": 43,
+        "physical": 47
+      }
+    },
+    {
+      "id": 289807,
+      "name": "Benno Kaltefleiter",
+      "dob": "2008-02-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82847,
+        "overall": 59,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 52,
+        "shooting": 46,
+        "passing": 55,
+        "dribbling": 56,
+        "defending": 59,
+        "physical": 58
+      }
+    },
+    {
+      "id": 8484,
+      "name": "Christopher Nkunku",
+      "dob": "1997-11-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232411,
+        "overall": 80,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 75,
+        "shooting": 83,
+        "passing": 79,
+        "dribbling": 82,
+        "defending": 41,
+        "physical": 56
+      }
+    },
+    {
+      "id": 154110,
+      "name": "Johan Bakayoko",
+      "dob": "2003-04-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 265450,
+        "overall": 76,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 80,
+        "shooting": 72,
+        "passing": 69,
+        "dribbling": 80,
+        "defending": 33,
+        "physical": 63
+      }
+    },
+    {
+      "id": 169295,
+      "name": "Antonio Nusa",
+      "dob": "2005-04-17",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262863,
+        "overall": 78,
+        "positions": [
+          "LW",
+          "LM",
+          "CAM",
+          "CM"
+        ],
+        "pace": 85,
+        "shooting": 73,
+        "passing": 70,
+        "dribbling": 85,
+        "defending": 42,
+        "physical": 64
+      }
+    },
+    {
+      "id": 178783,
+      "name": "Romulo Cruz",
+      "dob": "2002-02-08",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 73398,
+        "overall": 78,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 72,
+        "shooting": 78,
+        "passing": 69,
+        "dribbling": 77,
+        "defending": 37,
+        "physical": 81
+      }
+    },
+    {
+      "id": 207109,
+      "name": "Marc Guiu",
+      "dob": "2006-01-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278813,
+        "overall": 71,
+        "positions": [
+          "ST"
+        ],
+        "pace": 71,
+        "shooting": 70,
+        "passing": 55,
+        "dribbling": 69,
+        "defending": 36,
+        "physical": 72
+      }
+    },
+    {
+      "id": 211796,
+      "name": "Tidiam Gomis",
+      "dob": "2006-08-08",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278061,
+        "overall": 71,
+        "positions": [
+          "LM",
+          "RM",
+          "ST",
+          "LW"
+        ],
+        "pace": 82,
+        "shooting": 63,
+        "passing": 62,
+        "dribbling": 73,
+        "defending": 33,
+        "physical": 58
+      }
+    },
+    {
+      "id": 289697,
+      "name": "Samba Konaté",
+      "dob": "2009-02-27",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82689,
+        "overall": 59,
+        "positions": [
+          "ST"
+        ],
+        "pace": 68,
+        "shooting": 58,
+        "passing": 51,
+        "dribbling": 57,
+        "defending": 29,
+        "physical": 60
+      }
+    },
+    {
+      "id": 290739,
+      "name": "Suleman Sani",
+      "dob": "2006-09-01",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83137,
+        "overall": 68,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 78,
+        "shooting": 62,
+        "passing": 60,
+        "dribbling": 73,
+        "defending": 29,
+        "physical": 57
+      }
+    }
+  ],
+  "baseline_id": "8cbd06f81e0345ba",
+  "generated_at": "2026-10-16T07:26:52.105413+00:00"
+}

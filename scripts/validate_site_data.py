@@ -1,5 +1,6 @@
 import argparse
 import hashlib
+import html
 import json
 import math
 from datetime import date, datetime, timezone
@@ -380,6 +381,7 @@ def validate_usage_sheet(game, detail, source, side):
 
 
 def validate_squad_usage(data, by_id, formations):
+    ids = {str(pid): pid for pid in by_id}
     require(("usage" in data) == ("usage_generated_at" in data), "usage needs its own generation time")
     if "usage" in data:
         require(datetime.fromisoformat(data["usage_generated_at"]) >= datetime.fromisoformat(data["generated_at"]),
@@ -425,8 +427,9 @@ def validate_squad_usage(data, by_id, formations):
                 if row["player"] is not None:
                     require(bindings.setdefault(row["source_id"], row["player"]) == row["player"], "provider identity conflict")
         for pid, total in usage["players"].items():
-            observed = [row for game in games for row in game["appearances"] if row["player"] == int(pid)]
-            known = sum(g["status"] == "complete" or any(r["player"] == int(pid) for r in g["appearances"]) for g in games)
+            player_id = ids[pid]
+            observed = [row for game in games for row in game["appearances"] if row["player"] == player_id]
+            known = sum(g["status"] == "complete" or any(r["player"] == player_id for r in g["appearances"]) for g in games)
             require(total["known_games"] == known and total["unknown_games"] == len(games) - known,
                     "player known/unknown game counts differ")
             for key, expected in (("starts", sum(r["starter"] for r in observed)),
@@ -468,13 +471,16 @@ def validate_squad_usage(data, by_id, formations):
 
 def validate_squad(data):
     players = data["players"]
+    listed = [row for row in players if row["status"] != "observed"]
+    observed = [row for row in players if row["status"] == "observed"]
     unique(players, "id")
     matched = [row for row in players if row["status"] == "matched"]
-    unique([row["ea"] for row in matched if row["ea"]], "id")
-    require(all((row["status"] == "matched") == (row["ea"] is not None) for row in players),
+    unique([row["ea"] for row in players if row["ea"]], "id")
+    require(all((row["status"] == "matched") == (row["ea"] is not None) for row in listed),
             "only matched players can have EA ratings")
-    require(data["coverage"] == {"players": len(players), "matched": len(matched)}, "squad coverage differs")
-    require((data["roster"]["status"] == "available") == bool(players), "roster availability differs from players")
+    require(all(isinstance(row["id"], int) for row in listed), "listed players need provider squad IDs")
+    require(data["coverage"] == {"players": len(listed), "matched": len(matched)}, "squad coverage differs")
+    require((data["roster"]["status"] == "available") == bool(listed), "roster availability differs from players")
     require(datetime.fromisoformat(data["roster"]["observed_at"]) <= datetime.fromisoformat(data["generated_at"]),
             "squad generated before roster observation")
     require(data["ratings"]["snapshot_date"] <= data["generated_at"][:10], "rating vintage after baseline creation")
@@ -492,19 +498,43 @@ def validate_squad(data):
         if slot["player"] is None:
             continue
         require(slot["player"] in by_id, "XI player absent from squad")
+        require(by_id[slot["player"]]["status"] == "matched", "ideal XI must use listed squad players")
         ea = by_id[slot["player"]]["ea"]
         require(ea is not None and ea["overall"] is not None, "XI player has no rating")
         role = slot["role"]
         eligible = {"LW": {"LW", "LM"}, "LM": {"LW", "LM"}, "RW": {"RW", "RM"}, "RM": {"RW", "RM"}}.get(role, {role})
         require(bool(eligible & set(ea["positions"])), "XI player ineligible for role")
         ratings.append(ea["overall"])
-    fully_rated = all(row["ea"] is not None and row["ea"]["overall"] is not None and row["ea"]["positions"] for row in players)
+    fully_rated = all(row["ea"] is not None and row["ea"]["overall"] is not None and row["ea"]["positions"] for row in listed)
     expected = "insufficient_coverage" if len(ratings) < 11 else "complete" if fully_rated else "provisional"
     require(xi["status"] == expected, "XI coverage status differs")
     require(xi["mean_overall"] == (round(sum(ratings) / 11, 1) if len(ratings) == 11 else None),
             "XI mean differs from selected players")
 
     validate_squad_usage(data, by_id, formations)
+    for player in observed:
+        require(player["source"] == "match_sheet" and player["dob"] is None and player["provider_position"] is None,
+                "observed player cannot claim provider squad membership or birth date")
+        require((player["method"] in {"name_and_club", "unique_name"}) == (player["ea"] is not None),
+                "observed EA match needs its name method")
+        require(player["ea"] is not None or player.get("reason") in {"no_name_match", "ambiguous_name_match"},
+                "unrated observed player needs a reason")
+        require(player["name"].casefold() not in {p["name"].casefold() for p in listed}, "observed player duplicates listed name")
+        providers, dates, counts = {}, [], []
+        for usage in data.get("usage", {}).values():
+            appearances = [(g, r) for g in usage["games_list"] for r in g["appearances"] if r["player"] == player["id"]]
+            counts.append(len({g["fixture_id"] for g, _ in appearances}))
+            if appearances:
+                providers[usage["source"]] = {"ids": sorted({r["source_id"] for _, r in appearances}),
+                                               "names": sorted({html.unescape(r["name"]) for _, r in appearances})}
+                dates.extend(g["kickoff"][:10] for g, _ in appearances)
+        require(max(counts, default=0) >= 2, "observed player needs two games in one competition")
+        require(player["providers"] == providers and all(len(p["ids"]) == 1 for p in providers.values()),
+                "observed provider identities differ from appearances")
+        require(player["id"] in {f"observed:{source}:{sid}" for source, p in providers.items() for sid in p["ids"]},
+                "observed player ID needs a provider namespace")
+        require(player["name"] in {name for p in providers.values() for name in p["names"]}, "observed name absent from sheets")
+        require(player["first_seen"] == min(dates) and player["last_seen"] == max(dates), "observed appearance dates differ")
 
 
 def validate_payload(data, family):

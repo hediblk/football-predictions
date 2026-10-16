@@ -12,7 +12,7 @@ Historical FIFA 15–FC 26 sources, dates and hashes are cataloged separately in
 
 The initial 111-club export has the following coverage. Champions League overlaps the domestic cohorts; do not sum the rows.
 
-| Competition | Clubs | Matched / observed players | Coverage | Filled ideal XIs |
+| Competition | Clubs | Matched / listed players | Coverage | Filled ideal XIs |
 | --- | ---: | ---: | ---: | ---: |
 | Premier League | 20 | 497 / 545 | 91.2% | 20 / 20 |
 | La Liga | 20 | 470 / 520 | 90.4% | 20 / 20 |
@@ -24,5 +24,7 @@ The initial 111-club export has the following coverage. Champions League overlap
 All 111 files are present under `site/data/squads/2026/`. Slovan Bratislava's provider squad is empty and has an explicit `unavailable` file (not a fabricated roster); it contributes no players to the denominator. Sabah has too few matched positions to fill an XI; Toulouse lacks an eligible rated left-back. These slots remain unfilled. Every partially rated squad remains provisional even when it fills an XI.
 
 Yann Gboho (Coventry/Toulouse), Daniel Elfadli (Hamburg/LASK) and Mikkel Hansen (PSV/Bodø/Glimt) each occur at two clubs in the selected raw observations. All six rows remain ambiguous, unrated and excluded from XI selection. The exporter chooses the newer dated roster for clubs present in both domestic and European responses, without rewriting either archive.
+
+On 16 October, source-backed spelling overrides linked Angers' Ousman Camara to Ousmane Camara and Lilian Rao-Lisoa to Lilian Raolisoa. A new Angers baseline rates 20/22 listed players; its previous baseline remains archived. Season usage separately adds repeated match-sheet players missing from listed squads as `observed`, without changing baseline coverage or ideal XIs. Possible aliases remain unresolved pending evidence instead of becoming duplicate observed players; see the [Task 4b contract](../../docs/site-data-contract.md#squad-references).
 
 See the [publication contract](../../docs/site-data-contract.md#squad-references) and [local commands](../../docs/squad-matching.md#published-export-all-competitions). Squad refreshes are optional, reuse rosters for seven days, and keep old site files and timestamps on failure. No participation ledger or forecast adjustment is part of this export.

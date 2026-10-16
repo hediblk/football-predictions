@@ -1,13 +1,16 @@
 import argparse
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+from difflib import SequenceMatcher
+import html
 import json
 import math
 from pathlib import Path
 
 from build_squads import ROOT, load_players, sha256, write_json
-from standing_prediction.lineup_usage import identify_appearance
-from standing_prediction.squads import select_xi
+from standing_prediction.lineup_usage import aliases, identify_appearance
+from standing_prediction.squads import name_score, name_tokens, select_xi
+from standing_prediction.utils import normalize_team
 from validate_site_data import COMPETITIONS, validate_payload
 
 
@@ -51,6 +54,9 @@ def valid_sheet(rows):
 
 def competition_usage(club, sheets, source):
     players = club["players"]
+    listed = [p for p in players if p["status"] != "observed"]
+    extra = {pid: p["id"] for p in players if p["status"] == "observed"
+             for pid in p["providers"].get(source, {}).get("ids", [])}
     ideal = {slot["player"] for slot in club["ideal_xi"]["slots"] if slot["player"] is not None}
     games, bindings = [], defaultdict(set)
     for fixture, detail, digest, side in sheets:
@@ -59,7 +65,7 @@ def competition_usage(club, sheets, source):
         mapped = []
         if reason is None:
             for row in rows:
-                pid = identify_appearance(row["name"], players)
+                pid = extra.get(row["source_id"], identify_appearance(row["name"], listed))
                 mapped.append({**row, "player": pid})
                 if pid is not None:
                     bindings[row["source_id"]].add(pid)
@@ -103,7 +109,7 @@ def competition_usage(club, sheets, source):
             total.update(avg_x=round(sum(row["avg_x"] for row in positions) / len(positions), 4) if positions else None,
                          avg_y=round(sum(row["avg_y"] for row in positions) / len(positions), 4) if positions else None)
         totals[str(pid)] = total
-    selection = select_xi(players, club["ideal_xi"]["formation"], minutes={int(pid): row["minutes"] for pid, row in totals.items()})
+    selection = select_xi(players, club["ideal_xi"]["formation"], minutes={p["id"]: totals[str(p["id"])]["minutes"] for p in players})
     return {"source": source, "games": len(games), "covered": covered,
             "fully_mapped": sum(game["status"] == "complete" for game in games), "players": totals,
             "most_used_xi": {"formation": selection["formation"], "status": selection["status"],
@@ -111,10 +117,89 @@ def competition_usage(club, sheets, source):
             "games_list": games}
 
 
+def observed_ea(names, club_name, ea_records):
+    scored = []
+    for ea in ea_records.values():
+        scores = [name_score(name, [ea["name"], ea["common_name"]], appearance=True) for name in names]
+        scores = [score for score in scores if score is not None]
+        if scores:
+            scored.append((min(scores), ea))
+    local = [(score, ea) for score, ea in scored if normalize_team(ea["dataset_club"]) == normalize_team(club_name)]
+    # Without the club, only an exact full or common name is safe (a surname subset found the wrong Ricardo Rodríguez).
+    pool = local or [(score, ea) for score, ea in scored if score == 0]
+    best = [ea for score, ea in pool if score == min(s for s, _ in pool)] if pool else []
+    if len(best) != 1:
+        return None, None, "ambiguous_name_match" if best else "no_name_match"
+    return best[0], "name_and_club" if local else "unique_name", None
+
+
+def possible_listed_alias(name, player):
+    tokens = name_tokens(name)
+    if not tokens:
+        return True
+    def compact(text):
+        return "".join(sorted(name_tokens(text.replace("'", "").replace("’", "").replace("-", ""))))
+    # A veto only: similar names never establish a new identity binding.
+    for alias in filter(None, aliases(player)):
+        if (name_score(name, [alias], appearance=True) is not None or
+                name_tokens(name.split()[-1]) & name_tokens(alias) or name_tokens(alias.split()[-1]) & tokens or
+                SequenceMatcher(None, compact(name), compact(alias)).ratio() >= 0.8):
+            return True
+    return False
+
+
+def observed_players(club, usage, listed, ea_records):
+    identities = defaultdict(list)
+    for slug, cohort in usage.items():
+        for game in cohort["games_list"]:
+            for row in game["appearances"]:
+                identities[cohort["source"], row["source_id"]].append((slug, game, row))
+    groups, qualified = {}, set()
+    for (source, sid), appearances in sorted(identities.items()):
+        names = sorted({html.unescape(row["name"]) for _, _, row in appearances})
+        # An ambiguous listed name or a provider ID already bound to the squad is not a new player.
+        if (any(row["player"] is not None for _, _, row in appearances) or
+                any(possible_listed_alias(name, p) for name in names for p in listed)):
+            continue
+        games = defaultdict(set)
+        for slug, game, _ in appearances:
+            games[slug].add(game["fixture_id"])
+        ea, method, reason = observed_ea(names, club["name"], ea_records)
+        # A listed player with the candidate's birth date may be a spelling/alias gap.
+        # Leave that identity unresolved until a source-backed override settles it.
+        if ea and any(p["dob"] == ea["dob"] for p in listed):
+            continue
+        # Multiple providers can observe the same player; numbers are scoped to their source.
+        key = ("ea", ea["id"]) if ea else ("name", tuple(sorted(name_tokens(names[0]))))
+        if max(map(len, games.values())) >= 2:
+            qualified.add(key)
+        dates = [game["kickoff"][:10] for _, game, _ in appearances]
+        if key not in groups:
+            groups[key] = {"id": f"observed:{source}:{sid}", "name": names[0], "dob": None,
+                           "provider_position": None, "status": "observed", "source": "match_sheet",
+                           "method": method,
+                           "ea": ({"id": ea["id"], "overall": ea["rating"], **{k: ea[k] for k in
+                                  ("positions", "pace", "shooting", "passing", "dribbling", "defending", "physical")}}
+                                  if ea else None), "providers": {}, "first_seen": min(dates), "last_seen": max(dates)}
+            if ea is None:
+                groups[key]["reason"] = reason
+        player = groups[key]
+        provider = player["providers"].setdefault(source, {"ids": [], "names": []})
+        provider["ids"].append(sid)
+        provider["names"] = sorted(set(provider["names"]) | set(names))
+        player["first_seen"] = min(player["first_seen"], min(dates))
+        player["last_seen"] = max(player["last_seen"], max(dates))
+    assigned = {p["ea"]["id"] for p in listed if p["ea"]}
+    # Conflicting same-source identities stay unresolved; a listed EA identity is never duplicated.
+    return [p for key, p in groups.items() if key in qualified and all(len(v["ids"]) == 1 for v in p["providers"].values()) and
+            not (p["ea"] and p["ea"]["id"] in assigned)]
+
+
 def build_usage(club, data_dir, ea_records):
     players = [{**row, "ea": {**ea_records[row["ea"]["id"]], "rating": row["ea"]["overall"],
-                              "positions": row["ea"]["positions"]} if row["ea"] else None} for row in club["players"]]
-    usage = {}
+                              "positions": row["ea"]["positions"]} if row["ea"] else None}
+               for row in club["players"] if row["status"] != "observed"]
+    usage, inputs = {}, {}
     for slug in COMPETITIONS:
         table = json.loads((data_dir / f"{slug}.json").read_text())
         if table["season"][:4] != club["season"] or club["club_id"] not in {row["id"] for row in table["teams"]}:
@@ -130,8 +215,15 @@ def build_usage(club, data_dir, ea_records):
                 raise ValueError(f"Match identity differs: {path}")
             sheets.append((fixture, detail, sha256(path) if path.exists() else None,
                            "h" if fixture["home_id"] == club["club_id"] else "a"))
-        usage[slug] = competition_usage({**club, "players": players}, sheets,
-                                      "uefa" if slug == "champions-league" else "understat")
+        source = "uefa" if slug == "champions-league" else "understat"
+        inputs[slug] = (sheets, source)
+        usage[slug] = competition_usage({**club, "players": players}, sheets, source)
+    observed = observed_players(club, usage, players, ea_records)
+    club["players"] = [p for p in club["players"] if p["status"] != "observed"] + observed
+    if observed:
+        players += [{**p, "ea": {**p["ea"], "rating": p["ea"]["overall"]} if p["ea"] else None} for p in observed]
+        usage = {slug: competition_usage({**club, "players": players}, sheets, source)
+                 for slug, (sheets, source) in inputs.items()}
     return usage
 
 
@@ -153,8 +245,9 @@ def main(argv=None):
         club = json.loads(path.read_text())
         if club["ratings"]["sha256"] != digest:
             raise ValueError(f"EA aliases differ from frozen squad input: {path}")
+        old_players = club["players"]
         usage = build_usage(club, args.site_data, ea_records)
-        if club.get("usage") != usage:
+        if club.get("usage") != usage or old_players != club["players"]:
             club.update(usage=usage, usage_generated_at=datetime.now(timezone.utc).isoformat())
             pending.append((path, club))
         validate_payload(club, "squad")

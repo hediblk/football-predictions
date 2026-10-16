@@ -1,0 +1,671 @@
+{
+  "slug": "sevilla",
+  "club_id": 559,
+  "name": "Sevilla FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-15T19:46:39.321664+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "bf1f579baac7ac64c9991a2282e59215a1f14a3c1e55aeef02b3cf47e17eea79",
+    "snapshot": "data/players/rosters/2026-10-15/PD.json"
+  },
+  "identity_overrides_sha256": "de81a2ba7a3ebce65df28c0fc55ee669a90583b5c9df47e45d83ac6fd35f58b6",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 26,
+    "matched": 25
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 76.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 42871
+      },
+      {
+        "role": "LB",
+        "player": 21385
+      },
+      {
+        "role": "CB",
+        "player": 171984
+      },
+      {
+        "role": "CB",
+        "player": 178107
+      },
+      {
+        "role": "RB",
+        "player": 83351
+      },
+      {
+        "role": "CDM",
+        "player": 98223
+      },
+      {
+        "role": "CM",
+        "player": 81299
+      },
+      {
+        "role": "CM",
+        "player": 144628
+      },
+      {
+        "role": "LW",
+        "player": 31913
+      },
+      {
+        "role": "ST",
+        "player": 32324
+      },
+      {
+        "role": "RW",
+        "player": 38625
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 42871,
+      "name": "Odisseas Vlachodimos",
+      "dob": "1994-04-26",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 211990,
+        "overall": 79,
+        "positions": [
+          "GK"
+        ],
+        "pace": 78,
+        "shooting": 78,
+        "passing": 74,
+        "dribbling": 80,
+        "defending": 44,
+        "physical": 78
+      },
+      "identity_override": {
+        "provider_name": "Odisseas Vlachodimos",
+        "provider_dob": "1994-04-26",
+        "verified_dob": "1994-04-26",
+        "ea_id": 211990,
+        "source": "https://www.laliga.com/jugador/odisseas-vlachodimos",
+        "observed_at": "2026-10-15",
+        "note": "La Liga confirms the alternate spelling Odysseas Vlachodimos and birth date."
+      }
+    },
+    {
+      "id": 206826,
+      "name": "Fran Gonzalez",
+      "dob": "2005-06-24",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278394,
+        "overall": 65,
+        "positions": [
+          "GK"
+        ],
+        "pace": 64,
+        "shooting": 63,
+        "passing": 61,
+        "dribbling": 66,
+        "defending": 17,
+        "physical": 65
+      }
+    },
+    {
+      "id": 21385,
+      "name": "Gabriel Suazo",
+      "dob": "1997-08-09",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229649,
+        "overall": 74,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 74,
+        "shooting": 59,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 70,
+        "physical": 75
+      }
+    },
+    {
+      "id": 34909,
+      "name": "Fábio Cardoso",
+      "dob": "1994-04-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 213917,
+        "overall": 73,
+        "positions": [
+          "CB"
+        ],
+        "pace": 55,
+        "shooting": 32,
+        "passing": 53,
+        "dribbling": 64,
+        "defending": 73,
+        "physical": 77
+      }
+    },
+    {
+      "id": 45449,
+      "name": "Marcão",
+      "dob": "1996-06-05",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234426,
+        "overall": 73,
+        "positions": [
+          "CB"
+        ],
+        "pace": 54,
+        "shooting": 36,
+        "passing": 57,
+        "dribbling": 65,
+        "defending": 72,
+        "physical": 78
+      }
+    },
+    {
+      "id": 83351,
+      "name": "Juan Iglesias",
+      "dob": "1998-07-03",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 260178,
+        "overall": 76,
+        "positions": [
+          "RB",
+          "LB",
+          "RM",
+          "RW"
+        ],
+        "pace": 83,
+        "shooting": 39,
+        "passing": 62,
+        "dribbling": 68,
+        "defending": 73,
+        "physical": 72
+      }
+    },
+    {
+      "id": 157842,
+      "name": "Arouna Sangante",
+      "dob": "2002-04-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262237,
+        "overall": 74,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 53,
+        "shooting": 34,
+        "passing": 60,
+        "dribbling": 59,
+        "defending": 74,
+        "physical": 77
+      }
+    },
+    {
+      "id": 171984,
+      "name": "Jose Angel Carmona",
+      "dob": "2002-01-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 264172,
+        "overall": 77,
+        "positions": [
+          "RB",
+          "CB",
+          "LB"
+        ],
+        "pace": 85,
+        "shooting": 66,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 74,
+        "physical": 77
+      }
+    },
+    {
+      "id": 178107,
+      "name": "Kike Salas",
+      "dob": "2002-04-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271755,
+        "overall": 76,
+        "positions": [
+          "CB",
+          "LB",
+          "CDM"
+        ],
+        "pace": 67,
+        "shooting": 51,
+        "passing": 62,
+        "dribbling": 62,
+        "defending": 76,
+        "physical": 77
+      }
+    },
+    {
+      "id": 180165,
+      "name": "Castrin",
+      "dob": "2003-05-26",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267960,
+        "overall": 73,
+        "positions": [
+          "CB"
+        ],
+        "pace": 65,
+        "shooting": 37,
+        "passing": 50,
+        "dribbling": 57,
+        "defending": 73,
+        "physical": 75
+      }
+    },
+    {
+      "id": 291147,
+      "name": "Julio Díaz",
+      "dob": "2005-01-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82936,
+        "overall": 68,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 73,
+        "shooting": 41,
+        "passing": 61,
+        "dribbling": 66,
+        "defending": 63,
+        "physical": 59
+      }
+    },
+    {
+      "id": 33092,
+      "name": "Jon Guridi",
+      "dob": "1995-02-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238126,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CAM",
+          "ST",
+          "CDM"
+        ],
+        "pace": 54,
+        "shooting": 70,
+        "passing": 71,
+        "dribbling": 74,
+        "defending": 68,
+        "physical": 61
+      }
+    },
+    {
+      "id": 81299,
+      "name": "Youssouf Fofana",
+      "dob": "1999-01-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 245630,
+        "overall": 80,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 75,
+        "shooting": 69,
+        "passing": 76,
+        "dribbling": 79,
+        "defending": 78,
+        "physical": 74
+      }
+    },
+    {
+      "id": 98223,
+      "name": "Lucien Agoume",
+      "dob": "2002-02-09",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246683,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CM",
+          "CAM"
+        ],
+        "pace": 71,
+        "shooting": 62,
+        "passing": 71,
+        "dribbling": 74,
+        "defending": 74,
+        "physical": 79
+      }
+    },
+    {
+      "id": 144628,
+      "name": "Giorgi Kochorashvili",
+      "dob": "1999-06-29",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 260813,
+        "overall": 74,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM",
+          "CB"
+        ],
+        "pace": 71,
+        "shooting": 71,
+        "passing": 72,
+        "dribbling": 75,
+        "defending": 68,
+        "physical": 77
+      }
+    },
+    {
+      "id": 190857,
+      "name": "Manu Bueno",
+      "dob": "2004-07-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 275520,
+        "overall": 67,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 59,
+        "shooting": 62,
+        "passing": 67,
+        "dribbling": 68,
+        "defending": 62,
+        "physical": 57
+      }
+    },
+    {
+      "id": 295172,
+      "name": "Nicolás Guillén",
+      "dob": "2008-01-30",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 31913,
+      "name": "Ruben Vargas",
+      "dob": "1998-08-05",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238581,
+        "overall": 78,
+        "positions": [
+          "LW",
+          "CAM",
+          "RW",
+          "LM"
+        ],
+        "pace": 87,
+        "shooting": 72,
+        "passing": 73,
+        "dribbling": 80,
+        "defending": 56,
+        "physical": 67
+      }
+    },
+    {
+      "id": 32324,
+      "name": "Alfonso González",
+      "dob": "1999-05-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243034,
+        "overall": 75,
+        "positions": [
+          "LW",
+          "LM",
+          "CAM",
+          "ST"
+        ],
+        "pace": 76,
+        "shooting": 73,
+        "passing": 71,
+        "dribbling": 77,
+        "defending": 38,
+        "physical": 66
+      }
+    },
+    {
+      "id": 38625,
+      "name": "Chidera Ejuke",
+      "dob": "1998-01-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238050,
+        "overall": 76,
+        "positions": [
+          "LW",
+          "LM",
+          "RM",
+          "RW"
+        ],
+        "pace": 89,
+        "shooting": 68,
+        "passing": 69,
+        "dribbling": 83,
+        "defending": 40,
+        "physical": 62
+      }
+    },
+    {
+      "id": 127657,
+      "name": "Félix Correia",
+      "dob": "2001-01-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253167,
+        "overall": 75,
+        "positions": [
+          "LM",
+          "RM",
+          "LW",
+          "RW"
+        ],
+        "pace": 84,
+        "shooting": 69,
+        "passing": 69,
+        "dribbling": 76,
+        "defending": 42,
+        "physical": 64
+      }
+    },
+    {
+      "id": 185105,
+      "name": "Peque",
+      "dob": "2002-10-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270301,
+        "overall": 74,
+        "positions": [
+          "CAM",
+          "LM",
+          "ST",
+          "CM"
+        ],
+        "pace": 76,
+        "shooting": 72,
+        "passing": 71,
+        "dribbling": 75,
+        "defending": 41,
+        "physical": 51
+      }
+    },
+    {
+      "id": 187311,
+      "name": "Robbie Ure",
+      "dob": "2004-02-26",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257853,
+        "overall": 71,
+        "positions": [
+          "ST"
+        ],
+        "pace": 75,
+        "shooting": 69,
+        "passing": 55,
+        "dribbling": 68,
+        "defending": 30,
+        "physical": 75
+      }
+    },
+    {
+      "id": 188897,
+      "name": "Lucas Stassin",
+      "dob": "2004-11-29",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262657,
+        "overall": 74,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 79,
+        "shooting": 76,
+        "passing": 67,
+        "dribbling": 76,
+        "defending": 35,
+        "physical": 70
+      }
+    },
+    {
+      "id": 213043,
+      "name": "Isaac",
+      "dob": "2000-05-18",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 69967,
+        "overall": 74,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 82,
+        "shooting": 72,
+        "passing": 68,
+        "dribbling": 73,
+        "defending": 26,
+        "physical": 75
+      }
+    },
+    {
+      "id": 226950,
+      "name": "Miguel Ángel Sierra",
+      "dob": "2004-07-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80682,
+        "overall": 65,
+        "positions": [
+          "RW",
+          "LW",
+          "RM",
+          "LM"
+        ],
+        "pace": 71,
+        "shooting": 62,
+        "passing": 61,
+        "dribbling": 66,
+        "defending": 30,
+        "physical": 46
+      }
+    }
+  ],
+  "baseline_id": "2d1f5e558850b461",
+  "generated_at": "2026-10-16T07:26:52.501897+00:00"
+}
