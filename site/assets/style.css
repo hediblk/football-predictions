@@ -1098,3 +1098,39 @@ table.mp-stand { min-width: 460px; }
   .sq-table col { width: 40px; }
   .sq-table .sq-c-age, .sq-table .sq-c-ovr { width: 42px; }
 }
+
+/* Task 5 · Squad playing time: competition and Ideal / Most used chips, minutes-share rings, usage columns and XI history */
+.sq-ctl { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 14px; }
+.sq-ctl .chips { margin-top: 0; }
+.sq-dot.used .sq-track { fill: var(--bulb-off); stroke: var(--rule); stroke-width: .7; }
+.sq-dot.used .sq-fill { fill: none; stroke: var(--amber); stroke-width: .7; }
+.sq-list li.used { grid-template-columns: 44px minmax(0, 1fr) auto auto; }
+.sq-list .sq-share { color: var(--ink-2); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.sq-rn { display: block; margin-top: 3px; color: var(--dim); font: 400 10.5px/1.3 var(--mono); white-space: normal; }
+.sq-list .sq-who { padding: 6px 0; }
+.sq-table.used { min-width: 900px; }
+.sq-table .sq-c-u { width: 44px; }
+.sq-table .sq-c-u.w { width: 54px; }
+.sq-table .sq-u0 { border-left: 1px solid var(--rule-2); }
+.sq-table td.sq-u0, .sq-table th.sq-u0 { padding-left: 8px; }
+.sq-table tbody .sq-player .sq-rn { margin: 0 0 4px 28px; }
+/* keeps the hidden spoken text inside the scroller, so it never widens the page */
+.sq-hist .scroll { position: relative; }
+.sq-htable { min-width: 560px; }
+.sq-htable .sq-h-date { width: 64px; padding-left: 0; color: var(--ink); }
+.sq-htable .sq-h-opp .club-label { font: 700 13px/1 var(--sign); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.sq-htable .sq-h-rot { color: var(--dim); }
+.sq-htable abbr { text-decoration: none; cursor: help; }
+.sq-htable .sq-nr { color: var(--dim); font-style: italic; }
+.sq-htable .sq-h-go { width: 72px; }
+.sq-go { color: var(--amber-t); text-decoration: none; }
+.sq-go:hover { text-decoration: underline; }
+.sq-strip { display: inline-flex; gap: 3px; vertical-align: middle; }
+.sq-strip i { width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1px solid var(--rule); background: var(--bulb-off); }
+.sq-strip i.on { border-color: var(--amber); background: var(--amber); }
+.sq-strip i.unk { border: 1px dashed var(--dim); background: none; }
+@media (max-width: 699px) {
+  .sq-table.used { min-width: 820px; }
+  .sq-table .sq-c-u { width: 40px; }
+  .sq-table .sq-c-u.w { width: 48px; }
+}
