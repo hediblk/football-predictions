@@ -49,5 +49,19 @@ trap 'rm -rf "$candidate"' EXIT
 cp -R site/data "$candidate/data" || exit 1
 python scripts/build_site_data.py --src "$OUT" --dest "$candidate/data" || exit 1
 python scripts/fetch_match_events.py --src "$OUT" --data "$candidate/data" || warn "Match event ingestion failed; forecasts are still published."
+# Squad publication is optional: build in isolation so any failure retains every old file and timestamp.
+squad_candidate=$(mktemp -d) || exit 1
+cp -R "$candidate/data" "$squad_candidate/data" || exit 1
+if python scripts/build_squads.py --download-players --publish \
+    --players .cache/players/ea/fc27-2026-09-12.csv --roster-cache .cache/players/rosters \
+    --site-data "$squad_candidate/data" && \
+    python scripts/build_squad_usage.py --site-data "$squad_candidate/data" \
+    --players .cache/players/ea/fc27-2026-09-12.csv && \
+    python scripts/validate_site_data.py --data "$squad_candidate/data" --site site; then
+  cp -R "$squad_candidate/data/squads" "$candidate/data/" || exit 1
+else
+  warn "Squad refresh failed; keeping previous squad files and timestamps."
+fi
+rm -rf "$squad_candidate"
 python scripts/validate_site_data.py --data "$candidate/data" --site site || exit 1
 cp -R "$candidate/data/." site/data || exit 1

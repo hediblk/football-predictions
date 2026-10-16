@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import math
 from datetime import date, datetime, timezone
@@ -351,6 +352,161 @@ def validate_notes(data):
     require(data["first_season"] == seasons[0], "first season differs from note coverage")
 
 
+def validate_usage_sheet(game, detail, source, side):
+    if game["reason"] == "invalid_match_sheet":
+        return
+    if source == "understat":
+        rows = detail.get("players", {}).get(side) if source in detail.get("sources", {}) else None
+        observed = None if rows is None else {row["id"]: (row["player"], row["minutes"], row["position"] != "Sub") for row in rows}
+        positions = {}
+    else:
+        physical = detail.get("physical", {}).get(side)
+        positions = {row["id"]: row for row in detail.get("positions", {}).get(side, [])}
+        rows = physical["players"] if physical is not None and side in detail.get("positions", {}) and source in detail.get("sources", {}) else None
+        observed = None if rows is None else {row["id"]: (row["player"], row["minutes"], row["id"] in positions) for row in rows}
+    if game["status"] == "missing":
+        require(observed is None, "usage marks an available sheet missing")
+        return
+    require(observed is not None and set(observed) == {r["source_id"] for r in game["appearances"]},
+            "usage appearances differ from published sheet")
+    for row in game["appearances"]:
+        require((row["name"], row["minutes"], row["starter"]) == observed[row["source_id"]],
+                "usage participation differs from published sheet")
+        if source == "uefa" and row["starter"]:
+            position = positions[row["source_id"]]
+            for axis in ("x", "y"):
+                expected = position[axis] if side == "h" else round(1 - position[axis], 4)
+                require(row[f"avg_{axis}"] == expected, "usage position differs from published sheet")
+
+
+def validate_squad_usage(data, by_id, formations):
+    require(("usage" in data) == ("usage_generated_at" in data), "usage needs its own generation time")
+    if "usage" in data:
+        require(datetime.fromisoformat(data["usage_generated_at"]) >= datetime.fromisoformat(data["generated_at"]),
+                "usage generated before baseline")
+    for slug, usage in data.get("usage", {}).items():
+        source = "uefa" if slug == "champions-league" else "understat"
+        require(usage["source"] == source, "usage source differs from competition")
+        games = usage["games_list"]
+        unique(games, "fixture_id")
+        require([(g["kickoff"], g["fixture_id"]) for g in games] ==
+                sorted((g["kickoff"], g["fixture_id"]) for g in games), "usage games out of order")
+        require(usage["games"] == len(games), "usage game count differs")
+        require(usage["covered"] == sum(g["reason"] in (None, "unmapped_appearances") for g in games), "usage coverage differs")
+        require(usage["fully_mapped"] == sum(g["status"] == "complete" for g in games), "usage identity coverage differs")
+        require(set(usage["players"]) == {str(pid) for pid in by_id}, "usage player set differs from squad")
+        ideal = {s["player"] for s in data["ideal_xi"]["slots"] if s["player"] is not None}
+        bindings = {}
+        for game in games:
+            rows = game["appearances"]
+            unique(rows, "source_id")
+            unique(rows, "player")
+            require(all(row["player"] is None or row["player"] in by_id for row in rows), "unknown usage player")
+            reason = game["reason"]
+            expected = "missing" if reason == "missing_match_sheet" else "partial" if reason else "complete"
+            require(game["status"] == expected, "usage game status differs from reason")
+            if reason in {"missing_match_sheet", "invalid_match_sheet"}:
+                require(not rows, "unusable sheet cannot have known appearances")
+            else:
+                require(game["sheet_sha256"] is not None, "observed sheet needs provenance")
+                require(sum(row["starter"] for row in rows) == 11, "usage sheet needs eleven starters")
+                require((reason is None) == all(row["player"] is not None for row in rows), "usage mapping status differs")
+            for key, starter in (("starters", True), ("subs", False)):
+                require(game[key] == [row["player"] for row in rows if row["player"] is not None and
+                                      row["starter"] == starter], "usage lineup differs from appearances")
+            known = set(game["starters"] + game["subs"])
+            expected_ideal = (len(ideal & set(game["starters"])) if len(ideal) == 11 and
+                              (game["status"] == "complete" or len(game["starters"]) == 11 or ideal <= known) else None)
+            require(game["ideal_started"] == expected_ideal, "ideal starters count differs")
+            for row in rows:
+                require(("avg_x" in row) == ("avg_y" in row), "observed coordinates need both axes")
+                require(("avg_x" in row) == (source == "uefa" and row["starter"]), "coordinates differ from source/starter")
+                require(({"xg", "xa"} <= row.keys()) == (source == "understat"), "xG/xA differ from source")
+                if row["player"] is not None:
+                    require(bindings.setdefault(row["source_id"], row["player"]) == row["player"], "provider identity conflict")
+        for pid, total in usage["players"].items():
+            observed = [row for game in games for row in game["appearances"] if row["player"] == int(pid)]
+            known = sum(g["status"] == "complete" or any(r["player"] == int(pid) for r in g["appearances"]) for g in games)
+            require(total["known_games"] == known and total["unknown_games"] == len(games) - known,
+                    "player known/unknown game counts differ")
+            for key, expected in (("starts", sum(r["starter"] for r in observed)),
+                                  ("sub", sum(not r["starter"] for r in observed)),
+                                  ("minutes", round(sum(r["minutes"] for r in observed), 1))):
+                require(total[key] == (expected if known else None), f"player {key} differs from sheets")
+            expected_share = round(total["minutes"] / (90 * usage["covered"]), 6) if known and usage["covered"] else None
+            require(total["share"] == expected_share, "player share differs from covered games")
+            require(total["provider_ids"] == sorted({r["source_id"] for r in observed}), "player provider IDs differ")
+            if source == "uefa":
+                positions = [r for r in observed if "avg_x" in r]
+                for key in ("avg_x", "avg_y"):
+                    expected = round(sum(r[key] for r in positions) / len(positions), 4) if positions else None
+                    require(key in total and total[key] == expected, "player average position differs")
+            else:
+                require(not {"avg_x", "avg_y"} & total.keys(), "domestic usage cannot have UEFA positions")
+                for key in ("xg", "xa"):
+                    require(total.get(key, "missing") == (round(sum(r[key] for r in observed), 4) if known else None),
+                            f"player {key} differs from sheets")
+        xi = usage["most_used_xi"]
+        require([s["role"] for s in xi["slots"]] == formations[xi["formation"]], "most-used XI roles differ")
+        unique(xi["slots"], "player")
+        for slot in xi["slots"]:
+            pid = slot["player"]
+            if pid is None:
+                continue
+            require(pid in by_id, "most-used XI player absent from squad")
+            ea = by_id[pid]["ea"]
+            require(ea is not None and ea["overall"] is not None and (usage["players"][str(pid)]["minutes"] or 0) > 0,
+                    "most-used XI player needs rated positions and observed minutes")
+            eligible = {"LW": {"LW", "LM"}, "LM": {"LW", "LM"}, "RW": {"RW", "RM"}, "RM": {"RW", "RM"}}.get(slot["role"], {slot["role"]})
+            require(bool(eligible & set(ea["positions"])), "most-used XI player ineligible for role")
+        filled = sum(s["player"] is not None for s in xi["slots"])
+        eligible_count = sum(bool(p["ea"] is not None and p["ea"]["overall"] is not None and p["ea"]["positions"] and
+                                  (usage["players"][str(pid)]["minutes"] or 0) > 0) for pid, p in by_id.items())
+        expected = "insufficient_coverage" if filled < 11 else "provisional" if eligible_count < len(by_id) else "complete"
+        require(xi["status"] == expected, "most-used XI coverage differs")
+
+
+def validate_squad(data):
+    players = data["players"]
+    unique(players, "id")
+    matched = [row for row in players if row["status"] == "matched"]
+    unique([row["ea"] for row in matched if row["ea"]], "id")
+    require(all((row["status"] == "matched") == (row["ea"] is not None) for row in players),
+            "only matched players can have EA ratings")
+    require(data["coverage"] == {"players": len(players), "matched": len(matched)}, "squad coverage differs")
+    require((data["roster"]["status"] == "available") == bool(players), "roster availability differs from players")
+    require(datetime.fromisoformat(data["roster"]["observed_at"]) <= datetime.fromisoformat(data["generated_at"]),
+            "squad generated before roster observation")
+    require(data["ratings"]["snapshot_date"] <= data["generated_at"][:10], "rating vintage after baseline creation")
+    formations = {
+        "4-3-3": ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CM", "LW", "ST", "RW"],
+        "4-2-3-1": ["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "CAM", "LW", "ST", "RW"],
+        "4-4-2": ["GK", "LB", "CB", "CB", "RB", "CM", "CM", "LM", "RM", "ST", "ST"],
+    }
+    xi = data["ideal_xi"]
+    require([slot["role"] for slot in xi["slots"]] == formations[xi["formation"]], "XI roles differ from formation")
+    unique(xi["slots"], "player")
+    by_id = {row["id"]: row for row in players}
+    ratings = []
+    for slot in xi["slots"]:
+        if slot["player"] is None:
+            continue
+        require(slot["player"] in by_id, "XI player absent from squad")
+        ea = by_id[slot["player"]]["ea"]
+        require(ea is not None and ea["overall"] is not None, "XI player has no rating")
+        role = slot["role"]
+        eligible = {"LW": {"LW", "LM"}, "LM": {"LW", "LM"}, "RW": {"RW", "RM"}, "RM": {"RW", "RM"}}.get(role, {role})
+        require(bool(eligible & set(ea["positions"])), "XI player ineligible for role")
+        ratings.append(ea["overall"])
+    fully_rated = all(row["ea"] is not None and row["ea"]["overall"] is not None and row["ea"]["positions"] for row in players)
+    expected = "insufficient_coverage" if len(ratings) < 11 else "complete" if fully_rated else "provisional"
+    require(xi["status"] == expected, "XI coverage status differs")
+    require(xi["mean_overall"] == (round(sum(ratings) / 11, 1) if len(ratings) == 11 else None),
+            "XI mean differs from selected players")
+
+    validate_squad_usage(data, by_id, formations)
+
+
 def validate_payload(data, family):
     finite(data)
     errors = list(validator(family).iter_errors(data))
@@ -380,6 +536,8 @@ def validate_payload(data, family):
         validate_rating_runs(data)
     elif family == "notes":
         validate_notes(data)
+    elif family == "squad":
+        validate_squad(data)
 
 
 def file_family(path):
@@ -396,6 +554,8 @@ def file_family(path):
     if (len(parts) == 4 and parts[0] == "match" and parts[1].isdigit()
             and parts[2] in COMPETITIONS and path.stem.isdigit() and int(path.stem) > 0):
         return "match_events"
+    if len(parts) == 3 and parts[0] == "squads" and parts[1].isdigit():
+        return "squad"
     if len(parts) == 3 and parts[0] == "history" and parts[1].isdigit():
         if path.stem == "clubs":
             return "club_history"
@@ -429,6 +589,9 @@ def validate_site_data(data_dir, *, site_dir=None):
                 require(data["code"] == COMPETITIONS[path.stem], "competition code differs from slug")
             if relative.parts[0] == "history":
                 require(data["season"].split("/")[0] == relative.parts[1], "history season differs from directory")
+            if family == "squad":
+                require(data["slug"] == path.stem, "squad slug differs from filename")
+                require(data["season"] == relative.parts[1], "squad season differs from directory")
             if family == "rating_runs":
                 require(data["month"] == path.stem, "rating month differs from filename")
             if family == "match_events":
@@ -478,6 +641,39 @@ def validate_site_data(data_dir, *, site_dir=None):
         try:
             require(fixture is not None, "match events have no current-season fixture")
             validate_match_events(data, fixture, consistency=False)
+        except ValueError as exc:
+            errors.append(f"{name}: {exc}")
+    clubs = {club["slug"]: club for club in files.get("clubs.json", {}).get("clubs", [])}
+    current_season = files.get("clubs.json", {}).get("season", "")[:4]
+    for name, data in files.items():
+        if Path(name).parts[0] == "squads" and data["season"] == current_season:
+            club = clubs.get(data["slug"])
+            if club is None or club["id"] != data["club_id"]:
+                errors.append(f"{name}: squad identity differs from clubs.json")
+    for name, squad in files.items():
+        if Path(name).parts[0] != "squads" or "usage" not in squad:
+            continue
+        try:
+            supported = {slug for slug in COMPETITIONS if files.get(f"{slug}.json", {}).get("season", "")[:4] == squad["season"]
+                         and squad["club_id"] in {t["id"] for t in files[f"{slug}.json"]["teams"]}}
+            if squad["season"] == current_season:
+                require(set(squad["usage"]) == supported, "usage competition set differs from club participation")
+            for slug, usage in squad["usage"].items():
+                if slug not in supported:
+                    continue  # Historical seasons need not have today's fixtures.
+                fixtures = {f["id"]: f for f in files.get(f"matches/{slug}.json", {}).get("matches", [])}
+                for game in usage["games_list"]:
+                    fixture = fixtures.get(game["fixture_id"])
+                    require(fixture is not None and fixture["status"] == "FINISHED", "usage game has no finished fixture")
+                    require(fixture["kickoff"] == game["kickoff"], "usage kickoff differs from fixture")
+                    require(squad["club_id"] in (fixture["home_id"], fixture["away_id"]), "usage club absent from fixture")
+                    side = "h" if squad["club_id"] == fixture["home_id"] else "a"
+                    require(game["opponent_id"] == fixture["away_id" if side == "h" else "home_id"], "usage opponent differs")
+                    match_name = f"match/{squad['season']}/{slug}/{game['fixture_id']}.json"
+                    if match_name in files and game["sheet_sha256"] is not None:
+                        digest = hashlib.sha256((data_dir / match_name).read_bytes()).hexdigest()
+                        if digest == game["sheet_sha256"]:
+                            validate_usage_sheet(game, files[match_name], usage["source"], side)
         except ValueError as exc:
             errors.append(f"{name}: {exc}")
     for crest in files.get("crests.json", {}).values():

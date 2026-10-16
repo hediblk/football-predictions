@@ -1114,6 +1114,762 @@
         "runs": {"type":"array","items":{"$ref":"#/$defs/ratingRun"},"minItems":1}
       },
       "required": ["season","month","fields","runs"]
+    },
+    "squadEa": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "overall": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/string"
+          }
+        },
+        "pace": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "shooting": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "passing": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dribbling": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "defending": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "physical": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "overall",
+        "positions",
+        "pace",
+        "shooting",
+        "passing",
+        "dribbling",
+        "defending",
+        "physical"
+      ]
+    },
+    "squadPlayer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "$ref": "#/$defs/string"
+        },
+        "dob": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provider_position": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "matched",
+            "unmatched",
+            "ambiguous"
+          ]
+        },
+        "method": {
+          "anyOf": [
+            {
+              "enum": [
+                "verified_override",
+                "name_and_birth_date"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ea": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/squadEa"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "dob",
+        "provider_position",
+        "status",
+        "method",
+        "ea"
+      ]
+    },
+    "squadSlot": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "enum": [
+            "GK",
+            "LB",
+            "CB",
+            "RB",
+            "CDM",
+            "CM",
+            "CAM",
+            "LW",
+            "LM",
+            "RW",
+            "RM",
+            "ST"
+          ]
+        },
+        "player": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "role",
+        "player"
+      ]
+    },
+    "squadAppearance": {
+      "type": "object",
+      "properties": {
+        "source_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "$ref": "#/$defs/string"
+        },
+        "player": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minutes": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 130
+        },
+        "starter": {
+          "type": "boolean"
+        },
+        "avg_x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "avg_y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "xg": {"type": "number", "minimum": 0},
+        "xa": {"type": "number", "minimum": 0}
+      },
+      "required": [
+        "source_id",
+        "name",
+        "player",
+        "minutes",
+        "starter"
+      ],
+      "additionalProperties": false
+    },
+    "squadUsagePlayer": {
+      "type": "object",
+      "properties": {
+        "starts": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sub": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "minutes": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "share": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "xg": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "xa": {"anyOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "known_games": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unknown_games": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "provider_ids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uniqueItems": true
+        },
+        "avg_x": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "avg_y": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "starts",
+        "sub",
+        "minutes",
+        "share",
+        "known_games",
+        "unknown_games",
+        "provider_ids"
+      ],
+      "additionalProperties": false
+    },
+    "squadUsageGame": {
+      "type": "object",
+      "properties": {
+        "fixture_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kickoff": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "opponent_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "missing"
+          ]
+        },
+        "reason": {
+          "enum": [
+            null,
+            "missing_match_sheet",
+            "invalid_match_sheet",
+            "unmapped_appearances"
+          ]
+        },
+        "sheet_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "appearances": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/squadAppearance"
+          }
+        },
+        "starters": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uniqueItems": true
+        },
+        "subs": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "uniqueItems": true
+        },
+        "ideal_started": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 11
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "fixture_id",
+        "kickoff",
+        "opponent_id",
+        "status",
+        "reason",
+        "sheet_sha256",
+        "appearances",
+        "starters",
+        "subs",
+        "ideal_started"
+      ],
+      "additionalProperties": false
+    },
+    "squadUsage": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "enum": [
+            "understat",
+            "uefa"
+          ]
+        },
+        "games": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "covered": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fully_mapped": {"type": "integer", "minimum": 0},
+        "players": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": {
+              "$ref": "#/$defs/squadUsagePlayer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "most_used_xi": {
+          "type": "object",
+          "properties": {
+            "formation": {
+              "enum": [
+                "4-3-3",
+                "4-2-3-1",
+                "4-4-2"
+              ]
+            },
+            "status": {
+              "enum": [
+                "complete",
+                "provisional",
+                "insufficient_coverage"
+              ]
+            },
+            "slots": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/squadSlot"
+              },
+              "minItems": 11,
+              "maxItems": 11
+            }
+          },
+          "required": [
+            "formation",
+            "status",
+            "slots"
+          ],
+          "additionalProperties": false
+        },
+        "games_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/squadUsageGame"
+          }
+        }
+      },
+      "required": [
+        "source",
+        "games",
+        "covered",
+        "fully_mapped",
+        "players",
+        "most_used_xi",
+        "games_list"
+      ],
+      "additionalProperties": false
+    },
+    "squad": {
+      "type": "object",
+      "properties": {
+        "usage": {
+          "type": "object",
+          "properties": {
+            "premier-league": {
+              "$ref": "#/$defs/squadUsage"
+            },
+            "la-liga": {
+              "$ref": "#/$defs/squadUsage"
+            },
+            "bundesliga": {
+              "$ref": "#/$defs/squadUsage"
+            },
+            "serie-a": {
+              "$ref": "#/$defs/squadUsage"
+            },
+            "ligue-1": {
+              "$ref": "#/$defs/squadUsage"
+            },
+            "champions-league": {
+              "$ref": "#/$defs/squadUsage"
+            }
+          },
+          "additionalProperties": false
+        },
+        "usage_generated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "slug": {
+          "$ref": "#/$defs/slug"
+        },
+        "club_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "$ref": "#/$defs/string"
+        },
+        "season": {
+          "type": "string",
+          "pattern": "^[0-9]{4}$"
+        },
+        "baseline_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{16}$"
+        },
+        "generated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "method": {
+          "const": "ea-position-assignment-v1"
+        },
+        "identity_overrides_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ratings": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "const": "EA SPORTS FC"
+            },
+            "edition": {
+              "$ref": "#/$defs/string"
+            },
+            "snapshot_date": {
+              "$ref": "#/$defs/date"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "file": {
+              "$ref": "#/$defs/string"
+            },
+            "rows": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "source",
+            "edition",
+            "snapshot_date",
+            "url",
+            "sha256",
+            "file",
+            "rows"
+          ]
+        },
+        "roster": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "const": "football-data.org"
+            },
+            "status": {
+              "enum": [
+                "available",
+                "unavailable"
+              ]
+            },
+            "observed_at": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "snapshot": {
+              "type": "string",
+              "pattern": "^data/players/rosters/\\d{4}-\\d{2}-\\d{2}/(PL|PD|BL1|SA|FL1|CL)\\.json$"
+            }
+          },
+          "required": [
+            "source",
+            "status",
+            "observed_at",
+            "url",
+            "sha256",
+            "snapshot"
+          ]
+        },
+        "coverage": {
+          "type": "object",
+          "properties": {
+            "players": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "matched": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "players",
+            "matched"
+          ]
+        },
+        "ideal_xi": {
+          "type": "object",
+          "properties": {
+            "formation": {
+              "enum": [
+                "4-3-3",
+                "4-2-3-1",
+                "4-4-2"
+              ]
+            },
+            "status": {
+              "enum": [
+                "complete",
+                "provisional",
+                "insufficient_coverage"
+              ]
+            },
+            "mean_overall": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 99
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "slots": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/squadSlot"
+              },
+              "minItems": 11,
+              "maxItems": 11
+            }
+          },
+          "required": [
+            "formation",
+            "status",
+            "mean_overall",
+            "slots"
+          ]
+        },
+        "players": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/squadPlayer"
+          }
+        }
+      },
+      "required": [
+        "slug",
+        "club_id",
+        "name",
+        "season",
+        "baseline_id",
+        "generated_at",
+        "method",
+        "identity_overrides_sha256",
+        "ratings",
+        "roster",
+        "coverage",
+        "ideal_xi",
+        "players"
+      ]
     }
   }
 }

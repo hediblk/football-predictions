@@ -1,0 +1,1911 @@
+{
+  "slug": "marseille",
+  "club_id": 516,
+  "name": "Olympique de Marseille",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "url": "https://api.football-data.org/v4/competitions/FL1/teams",
+    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
+    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 22,
+    "matched": 19
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 76.4,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 67880
+      },
+      {
+        "role": "LB",
+        "player": 7809
+      },
+      {
+        "role": "CB",
+        "player": 81191
+      },
+      {
+        "role": "CB",
+        "player": 179721
+      },
+      {
+        "role": "RB",
+        "player": 8492
+      },
+      {
+        "role": "CDM",
+        "player": 8093
+      },
+      {
+        "role": "CM",
+        "player": 33149
+      },
+      {
+        "role": "CM",
+        "player": 7910
+      },
+      {
+        "role": "LW",
+        "player": 119703
+      },
+      {
+        "role": "ST",
+        "player": 8476
+      },
+      {
+        "role": "RW",
+        "player": 250795
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 67880,
+      "name": "Jeffrey De Lange",
+      "dob": "1998-04-01",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239559,
+        "overall": 74,
+        "positions": [
+          "GK"
+        ],
+        "pace": 73,
+        "shooting": 72,
+        "passing": 74,
+        "dribbling": 73,
+        "defending": 56,
+        "physical": 74
+      }
+    },
+    {
+      "id": 130271,
+      "name": "Théo Vermot",
+      "dob": "1997-01-27",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 245854,
+        "overall": 60,
+        "positions": [
+          "GK"
+        ],
+        "pace": 62,
+        "shooting": 57,
+        "passing": 61,
+        "dribbling": 64,
+        "defending": 24,
+        "physical": 56
+      }
+    },
+    {
+      "id": 178114,
+      "name": "Jelle Van Neck",
+      "dob": "2004-03-07",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278095,
+        "overall": 63,
+        "positions": [
+          "GK"
+        ],
+        "pace": 66,
+        "shooting": 60,
+        "passing": 55,
+        "dribbling": 66,
+        "defending": 28,
+        "physical": 57
+      }
+    },
+    {
+      "id": 238,
+      "name": "Ulisses Garcia",
+      "dob": "1996-01-11",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 223143,
+        "overall": 73,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 77,
+        "shooting": 49,
+        "passing": 64,
+        "dribbling": 70,
+        "defending": 70,
+        "physical": 66
+      }
+    },
+    {
+      "id": 7809,
+      "name": "Emerson",
+      "dob": "1994-08-03",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 210736,
+        "overall": 77,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 71,
+        "shooting": 63,
+        "passing": 75,
+        "dribbling": 76,
+        "defending": 74,
+        "physical": 71
+      }
+    },
+    {
+      "id": 8492,
+      "name": "Tim Weah",
+      "dob": "2000-02-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 241496,
+        "overall": 78,
+        "positions": [
+          "RM",
+          "RB"
+        ],
+        "pace": 87,
+        "shooting": 75,
+        "passing": 72,
+        "dribbling": 77,
+        "defending": 68,
+        "physical": 67
+      },
+      "identity_override": {
+        "provider_name": "Tim Weah",
+        "provider_dob": "2000-02-22",
+        "verified_dob": "2000-02-22",
+        "ea_id": 241496,
+        "source": "https://www.ussoccer.com/players/w/tim-weah",
+        "observed_at": "2026-10-15",
+        "note": "US Soccer confirms Tim Weah and 22 February 2000; EA expands the given name to Timothy."
+      }
+    },
+    {
+      "id": 81191,
+      "name": "Nayef Aguerd",
+      "dob": "1996-03-30",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244749,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 75,
+        "shooting": 50,
+        "passing": 66,
+        "dribbling": 65,
+        "defending": 81,
+        "physical": 81
+      }
+    },
+    {
+      "id": 113228,
+      "name": "Derek Cornelius",
+      "dob": "1997-11-25",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243009,
+        "overall": 74,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 45,
+        "passing": 55,
+        "dribbling": 59,
+        "defending": 71,
+        "physical": 84
+      }
+    },
+    {
+      "id": 179596,
+      "name": "Bamo Meité",
+      "dob": "2001-06-20",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 179721,
+      "name": "CJ Egan-Riley",
+      "dob": "2003-01-02",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268131,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 80,
+        "shooting": 32,
+        "passing": 61,
+        "dribbling": 66,
+        "defending": 74,
+        "physical": 79
+      }
+    },
+    {
+      "id": 7910,
+      "name": "Angel Gomes",
+      "dob": "2000-08-31",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 240507,
+        "overall": 75,
+        "positions": [
+          "CAM",
+          "CDM",
+          "CM"
+        ],
+        "pace": 71,
+        "shooting": 70,
+        "passing": 74,
+        "dribbling": 78,
+        "defending": 72,
+        "physical": 60
+      }
+    },
+    {
+      "id": 8093,
+      "name": "Pierre Emile Højbjerg",
+      "dob": "1995-08-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 213648,
+        "overall": 80,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 49,
+        "shooting": 71,
+        "passing": 75,
+        "dribbling": 74,
+        "defending": 76,
+        "physical": 82
+      }
+    },
+    {
+      "id": 33149,
+      "name": "Geoffrey Kondogbia",
+      "dob": "1993-02-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 201455,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CB",
+          "CM"
+        ],
+        "pace": 58,
+        "shooting": 66,
+        "passing": 70,
+        "dribbling": 70,
+        "defending": 77,
+        "physical": 80
+      }
+    },
+    {
+      "id": 80754,
+      "name": "Himad Abdelli",
+      "dob": "1999-11-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246297,
+        "overall": 75,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 59,
+        "shooting": 72,
+        "passing": 76,
+        "dribbling": 77,
+        "defending": 59,
+        "physical": 71
+      }
+    },
+    {
+      "id": 183544,
+      "name": "Tochukwu Nadi",
+      "dob": "2003-06-30",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 3714,
+      "name": "Amine Harit",
+      "dob": "1997-06-18",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232097,
+        "overall": 74,
+        "positions": [
+          "LM",
+          "CM",
+          "LW",
+          "CDM"
+        ],
+        "pace": 75,
+        "shooting": 64,
+        "passing": 71,
+        "dribbling": 79,
+        "defending": 59,
+        "physical": 57
+      }
+    },
+    {
+      "id": 4443,
+      "name": "Neal Maupay",
+      "dob": "1996-08-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 211784,
+        "overall": 74,
+        "positions": [
+          "ST"
+        ],
+        "pace": 70,
+        "shooting": 74,
+        "passing": 68,
+        "dribbling": 74,
+        "defending": 42,
+        "physical": 70
+      }
+    },
+    {
+      "id": 8476,
+      "name": "Amine Gouiri",
+      "dob": "2000-02-16",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 240753,
+        "overall": 80,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 77,
+        "shooting": 82,
+        "passing": 77,
+        "dribbling": 81,
+        "defending": 45,
+        "physical": 71
+      }
+    },
+    {
+      "id": 119703,
+      "name": "Igor Paixão",
+      "dob": "2000-06-28",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271400,
+        "overall": 79,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 87,
+        "shooting": 78,
+        "passing": 75,
+        "dribbling": 80,
+        "defending": 32,
+        "physical": 70
+      }
+    },
+    {
+      "id": 144651,
+      "name": "Faris Moumbagna",
+      "dob": "2000-07-01",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256669,
+        "overall": 71,
+        "positions": [
+          "ST"
+        ],
+        "pace": 83,
+        "shooting": 71,
+        "passing": 57,
+        "dribbling": 65,
+        "defending": 28,
+        "physical": 68
+      }
+    },
+    {
+      "id": 250795,
+      "name": "Keyliane Abdallah",
+      "dob": "2006-04-05",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72020,
+        "overall": 66,
+        "positions": [
+          "RM",
+          "ST",
+          "RW"
+        ],
+        "pace": 77,
+        "shooting": 60,
+        "passing": 58,
+        "dribbling": 67,
+        "defending": 27,
+        "physical": 52
+      }
+    },
+    {
+      "id": 288624,
+      "name": "Tadjidine M'Madi",
+      "dob": "2007-03-03",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "44d76a3e247d69c4",
+  "generated_at": "2026-10-16T00:40:41.242718+00:00",
+  "usage": {
+    "ligue-1": {
+      "source": "understat",
+      "games": 6,
+      "covered": 6,
+      "fully_mapped": 0,
+      "players": {
+        "67880": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            12772
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "130271": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "178114": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "238": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 3,
+          "share": 0.005556,
+          "known_games": 2,
+          "unknown_games": 4,
+          "provider_ids": [
+            399
+          ],
+          "xg": 0.1374,
+          "xa": 0.0
+        },
+        "7809": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 538,
+          "share": 0.996296,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            1245
+          ],
+          "xg": 0.1145,
+          "xa": 0.6706
+        },
+        "8492": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 441,
+          "share": 0.816667,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            6601
+          ],
+          "xg": 0.3041,
+          "xa": 0.2949
+        },
+        "81191": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "113228": {
+          "starts": 0,
+          "sub": 3,
+          "minutes": 23,
+          "share": 0.042593,
+          "known_games": 3,
+          "unknown_games": 3,
+          "provider_ids": [
+            12769
+          ],
+          "xg": 0.0639,
+          "xa": 0.0
+        },
+        "179596": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "179721": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 525,
+          "share": 0.972222,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            10174
+          ],
+          "xg": 0.0,
+          "xa": 0.0854
+        },
+        "7910": {
+          "starts": 5,
+          "sub": 1,
+          "minutes": 466,
+          "share": 0.862963,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            5598
+          ],
+          "xg": 1.7878,
+          "xa": 0.6775
+        },
+        "8093": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 450,
+          "share": 0.833333,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            343
+          ],
+          "xg": 0.7262,
+          "xa": 0.2963
+        },
+        "33149": {
+          "starts": 2,
+          "sub": 1,
+          "minutes": 146,
+          "share": 0.27037,
+          "known_games": 3,
+          "unknown_games": 3,
+          "provider_ids": [
+            1516
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "80754": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 478,
+          "share": 0.885185,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            10923
+          ],
+          "xg": 0.8506,
+          "xa": 0.0765
+        },
+        "183544": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "3714": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 483,
+          "share": 0.894444,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            5717
+          ],
+          "xg": 0.5356,
+          "xa": 1.1933
+        },
+        "4443": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 142,
+          "share": 0.262963,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            3621
+          ],
+          "xg": 0.6819,
+          "xa": 0.0412
+        },
+        "8476": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 512,
+          "share": 0.948148,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            6401
+          ],
+          "xg": 2.6664,
+          "xa": 1.5411
+        },
+        "119703": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 369,
+          "share": 0.683333,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            14010
+          ],
+          "xg": 0.2915,
+          "xa": 0.191
+        },
+        "144651": {
+          "starts": 0,
+          "sub": 5,
+          "minutes": 10,
+          "share": 0.018519,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            12425
+          ],
+          "xg": 0.6714,
+          "xa": 0.4983
+        },
+        "250795": {
+          "starts": 0,
+          "sub": 6,
+          "minutes": 138,
+          "share": 0.255556,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            12587
+          ],
+          "xg": 0.3188,
+          "xa": 0.7096
+        },
+        "288624": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        }
+      },
+      "most_used_xi": {
+        "formation": "4-3-3",
+        "status": "provisional",
+        "slots": [
+          {
+            "role": "GK",
+            "player": 67880
+          },
+          {
+            "role": "LB",
+            "player": 7809
+          },
+          {
+            "role": "CB",
+            "player": 179721
+          },
+          {
+            "role": "CB",
+            "player": 33149
+          },
+          {
+            "role": "RB",
+            "player": 8492
+          },
+          {
+            "role": "CDM",
+            "player": 8093
+          },
+          {
+            "role": "CM",
+            "player": 80754
+          },
+          {
+            "role": "CM",
+            "player": 7910
+          },
+          {
+            "role": "LW",
+            "player": 3714
+          },
+          {
+            "role": "ST",
+            "player": 8476
+          },
+          {
+            "role": "RW",
+            "player": 250795
+          }
+        ]
+      },
+      "games_list": [
+        {
+          "fixture_id": 559715,
+          "kickoff": "2026-08-21T18:45:00+00:00",
+          "opponent_id": 576,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "db3fefd979133f61c443d8b738cd761a45cb8a24155b0f6a9f483e40c822059d",
+          "appearances": [
+            {
+              "source_id": 12772,
+              "name": "Jeffrey de Lange",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67880
+            },
+            {
+              "source_id": 6601,
+              "name": "Timothy Weah",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.027188247069716454,
+              "player": 8492
+            },
+            {
+              "source_id": 10174,
+              "name": "CJ Egan-Riley",
+              "minutes": 75,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0854356661438942,
+              "player": 179721
+            },
+            {
+              "source_id": 1516,
+              "name": "Geoffrey Kondogbia",
+              "minutes": 83,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 33149
+            },
+            {
+              "source_id": 1245,
+              "name": "Emerson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7809
+            },
+            {
+              "source_id": 10923,
+              "name": "Himad Abdelli",
+              "minutes": 83,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 80754
+            },
+            {
+              "source_id": 343,
+              "name": "Pierre-Emile Højbjerg",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.06950755417346954,
+              "xa": 0.02486288547515869,
+              "player": 8093
+            },
+            {
+              "source_id": 5717,
+              "name": "Amine Harit",
+              "minutes": 83,
+              "starter": true,
+              "xg": 0.02486288547515869,
+              "xa": 0.05684520676732063,
+              "player": 3714
+            },
+            {
+              "source_id": 5598,
+              "name": "Angel Gomes",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.6995624899864197,
+              "xa": 0.5777740478515625,
+              "player": 7910
+            },
+            {
+              "source_id": 14010,
+              "name": "Igor Paixão",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.05684520676732063,
+              "xa": 0.0,
+              "player": 119703
+            },
+            {
+              "source_id": 6401,
+              "name": "Amine Gouiri",
+              "minutes": 90,
+              "starter": true,
+              "xg": 1.445839524269104,
+              "xa": 0.017307519912719727,
+              "player": 8476
+            },
+            {
+              "source_id": 3621,
+              "name": "Neal Maupay",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 4443
+            },
+            {
+              "source_id": 14499,
+              "name": "Tochukwu Nnadi",
+              "minutes": 7,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 12587,
+              "name": "Keyliane Abdallah",
+              "minutes": 7,
+              "starter": false,
+              "xg": 0.05552750080823898,
+              "xa": 0.0,
+              "player": 250795
+            },
+            {
+              "source_id": 12769,
+              "name": "Derek Cornelius",
+              "minutes": 7,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113228
+            },
+            {
+              "source_id": 6935,
+              "name": "Naif Aguerd",
+              "minutes": 15,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            }
+          ],
+          "starters": [
+            67880,
+            8492,
+            179721,
+            33149,
+            7809,
+            80754,
+            8093,
+            3714,
+            7910,
+            119703,
+            8476
+          ],
+          "subs": [
+            4443,
+            250795,
+            113228
+          ],
+          "ideal_started": 9
+        },
+        {
+          "fixture_id": 559703,
+          "kickoff": "2026-08-30T18:45:00+00:00",
+          "opponent_id": 548,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "4e56058654cb01d04688586e705ce8a97f6f5e050466bb931b8cc8755e7a4a60",
+          "appearances": [
+            {
+              "source_id": 12772,
+              "name": "Jeffrey de Lange",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67880
+            },
+            {
+              "source_id": 6601,
+              "name": "Timothy Weah",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.04993489012122154,
+              "xa": 0.02238192781805992,
+              "player": 8492
+            },
+            {
+              "source_id": 10174,
+              "name": "CJ Egan-Riley",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 179721
+            },
+            {
+              "source_id": 1516,
+              "name": "Geoffrey Kondogbia",
+              "minutes": 60,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 33149
+            },
+            {
+              "source_id": 1245,
+              "name": "Emerson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.02238192781805992,
+              "xa": 0.13682089745998383,
+              "player": 7809
+            },
+            {
+              "source_id": 343,
+              "name": "Pierre-Emile Højbjerg",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.10089389979839325,
+              "player": 8093
+            },
+            {
+              "source_id": 10923,
+              "name": "Himad Abdelli",
+              "minutes": 48,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.03269428387284279,
+              "player": 80754
+            },
+            {
+              "source_id": 5717,
+              "name": "Amine Harit",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.09747694432735443,
+              "xa": 0.16800980269908905,
+              "player": 3714
+            },
+            {
+              "source_id": 5598,
+              "name": "Angel Gomes",
+              "minutes": 87,
+              "starter": true,
+              "xg": 0.1726468950510025,
+              "xa": 0.0,
+              "player": 7910
+            },
+            {
+              "source_id": 14376,
+              "name": "Quinten Timber",
+              "minutes": 48,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 6401,
+              "name": "Amine Gouiri",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.03611123934388161,
+              "xa": 0.0,
+              "player": 8476
+            },
+            {
+              "source_id": 12425,
+              "name": "Faris Moumbagna",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.5855764746665955,
+              "xa": 0.0,
+              "player": 144651
+            },
+            {
+              "source_id": 6935,
+              "name": "Naif Aguerd",
+              "minutes": 30,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 3621,
+              "name": "Neal Maupay",
+              "minutes": 15,
+              "starter": false,
+              "xg": 0.058055102825164795,
+              "xa": 0.0,
+              "player": 4443
+            },
+            {
+              "source_id": 14499,
+              "name": "Tochukwu Nnadi",
+              "minutes": 27,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 12587,
+              "name": "Keyliane Abdallah",
+              "minutes": 42,
+              "starter": false,
+              "xg": 0.23120743036270142,
+              "xa": 0.620505154132843,
+              "player": 250795
+            }
+          ],
+          "starters": [
+            67880,
+            8492,
+            179721,
+            33149,
+            7809,
+            8093,
+            80754,
+            3714,
+            7910,
+            8476
+          ],
+          "subs": [
+            144651,
+            4443,
+            250795
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 559694,
+          "kickoff": "2026-09-06T18:45:00+00:00",
+          "opponent_id": 1045,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "3e487f6b9d9deeeef7f88eff9206b1943194934cd43aa5560070a82b634ef334",
+          "appearances": [
+            {
+              "source_id": 12772,
+              "name": "Jeffrey de Lange",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67880
+            },
+            {
+              "source_id": 6601,
+              "name": "Timothy Weah",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.2331152856349945,
+              "xa": 0.190412238240242,
+              "player": 8492
+            },
+            {
+              "source_id": 10174,
+              "name": "CJ Egan-Riley",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 179721
+            },
+            {
+              "source_id": 6935,
+              "name": "Naif Aguerd",
+              "minutes": 75,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 1245,
+              "name": "Emerson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.07394417375326157,
+              "xa": 0.0168768223375082,
+              "player": 7809
+            },
+            {
+              "source_id": 343,
+              "name": "Pierre-Emile Højbjerg",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.09859845787286758,
+              "xa": 0.10337873548269272,
+              "player": 8093
+            },
+            {
+              "source_id": 5717,
+              "name": "Amine Harit",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.8274085521697998,
+              "player": 3714
+            },
+            {
+              "source_id": 5598,
+              "name": "Angel Gomes",
+              "minutes": 75,
+              "starter": true,
+              "xg": 0.03526872396469116,
+              "xa": 0.0,
+              "player": 7910
+            },
+            {
+              "source_id": 10923,
+              "name": "Himad Abdelli",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.022574014961719513,
+              "xa": 0.0,
+              "player": 80754
+            },
+            {
+              "source_id": 14010,
+              "name": "Igor Paixão",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.05890897288918495,
+              "xa": 0.09233607351779938,
+              "player": 119703
+            },
+            {
+              "source_id": 6401,
+              "name": "Amine Gouiri",
+              "minutes": 90,
+              "starter": true,
+              "xg": 1.0904077291488647,
+              "xa": 0.0,
+              "player": 8476
+            },
+            {
+              "source_id": 12769,
+              "name": "Derek Cornelius",
+              "minutes": 15,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113228
+            },
+            {
+              "source_id": 14159,
+              "name": "Tadjidine Mmadi",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.10337873548269272,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 12425,
+              "name": "Faris Moumbagna",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 144651
+            },
+            {
+              "source_id": 399,
+              "name": "Ulisses García",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 238
+            },
+            {
+              "source_id": 12587,
+              "name": "Keyliane Abdallah",
+              "minutes": 15,
+              "starter": false,
+              "xg": 0.0069567556492984295,
+              "xa": 0.08905370533466339,
+              "player": 250795
+            }
+          ],
+          "starters": [
+            67880,
+            8492,
+            179721,
+            7809,
+            8093,
+            3714,
+            7910,
+            80754,
+            119703,
+            8476
+          ],
+          "subs": [
+            113228,
+            144651,
+            238,
+            250795
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 559689,
+          "kickoff": "2026-09-11T18:45:00+00:00",
+          "opponent_id": 529,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "05d209ce6b9a3cd0df388b57d1728798f7697fc29d3e6f317cb43b34063621e7",
+          "appearances": [
+            {
+              "source_id": 12772,
+              "name": "Jeffrey de Lange",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67880
+            },
+            {
+              "source_id": 6601,
+              "name": "Timothy Weah",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.011887582018971443,
+              "xa": 0.0548994243144989,
+              "player": 8492
+            },
+            {
+              "source_id": 6935,
+              "name": "Naif Aguerd",
+              "minutes": 89,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 10174,
+              "name": "CJ Egan-Riley",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 179721
+            },
+            {
+              "source_id": 1245,
+              "name": "Emerson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.01817399077117443,
+              "xa": 0.10540150105953217,
+              "player": 7809
+            },
+            {
+              "source_id": 343,
+              "name": "Pierre-Emile Højbjerg",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.4999002516269684,
+              "xa": 0.06714247167110443,
+              "player": 8093
+            },
+            {
+              "source_id": 5717,
+              "name": "Amine Harit",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.08761972188949585,
+              "xa": 0.0639253631234169,
+              "player": 3714
+            },
+            {
+              "source_id": 5598,
+              "name": "Angel Gomes",
+              "minutes": 66,
+              "starter": true,
+              "xg": 0.38655656576156616,
+              "xa": 0.07984773069620132,
+              "player": 7910
+            },
+            {
+              "source_id": 10923,
+              "name": "Himad Abdelli",
+              "minutes": 79,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0120517173781991,
+              "player": 80754
+            },
+            {
+              "source_id": 14010,
+              "name": "Igor Paixão",
+              "minutes": 89,
+              "starter": true,
+              "xg": 0.14447930455207825,
+              "xa": 0.09865793585777283,
+              "player": 119703
+            },
+            {
+              "source_id": 6401,
+              "name": "Amine Gouiri",
+              "minutes": 89,
+              "starter": true,
+              "xg": 0.09400231391191483,
+              "xa": 0.4261747896671295,
+              "player": 8476
+            },
+            {
+              "source_id": 12425,
+              "name": "Faris Moumbagna",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 144651
+            },
+            {
+              "source_id": 3621,
+              "name": "Neal Maupay",
+              "minutes": 11,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 4443
+            },
+            {
+              "source_id": 12587,
+              "name": "Keyliane Abdallah",
+              "minutes": 24,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 250795
+            },
+            {
+              "source_id": 12769,
+              "name": "Derek Cornelius",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0639253631234169,
+              "xa": 0.0,
+              "player": 113228
+            },
+            {
+              "source_id": 14159,
+              "name": "Tadjidine Mmadi",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            }
+          ],
+          "starters": [
+            67880,
+            8492,
+            179721,
+            7809,
+            8093,
+            3714,
+            7910,
+            80754,
+            119703,
+            8476
+          ],
+          "subs": [
+            144651,
+            4443,
+            250795,
+            113228
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 559675,
+          "kickoff": "2026-09-20T18:45:00+00:00",
+          "opponent_id": 524,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "26ae4184702396c14fc1c1d26bbf97c7ce3b7ce388ce9b126da8ce38023bd1db",
+          "appearances": [
+            {
+              "source_id": 12772,
+              "name": "Jeffrey de Lange",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67880
+            },
+            {
+              "source_id": 6601,
+              "name": "Timothy Weah",
+              "minutes": 81,
+              "starter": true,
+              "xg": 0.009133698418736458,
+              "xa": 0.0,
+              "player": 8492
+            },
+            {
+              "source_id": 10174,
+              "name": "CJ Egan-Riley",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 179721
+            },
+            {
+              "source_id": 6935,
+              "name": "Naif Aguerd",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.5182240009307861,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 1245,
+              "name": "Emerson",
+              "minutes": 88,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7809
+            },
+            {
+              "source_id": 5717,
+              "name": "Amine Harit",
+              "minutes": 67,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.009133698418736458,
+              "player": 3714
+            },
+            {
+              "source_id": 343,
+              "name": "Pierre-Emile Højbjerg",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.05818384140729904,
+              "xa": 0.0,
+              "player": 8093
+            },
+            {
+              "source_id": 10923,
+              "name": "Himad Abdelli",
+              "minutes": 88,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.03177604079246521,
+              "player": 80754
+            },
+            {
+              "source_id": 14010,
+              "name": "Igor Paixão",
+              "minutes": 29,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 119703
+            },
+            {
+              "source_id": 3621,
+              "name": "Neal Maupay",
+              "minutes": 88,
+              "starter": true,
+              "xg": 0.6238300800323486,
+              "xa": 0.04115130379796028,
+              "player": 4443
+            },
+            {
+              "source_id": 6401,
+              "name": "Amine Gouiri",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 1.0976488590240479,
+              "player": 8476
+            },
+            {
+              "source_id": 12587,
+              "name": "Keyliane Abdallah",
+              "minutes": 23,
+              "starter": false,
+              "xg": 0.02512757107615471,
+              "xa": 0.0,
+              "player": 250795
+            },
+            {
+              "source_id": 14602,
+              "name": "Kelyann Bezahaf",
+              "minutes": 2,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 399,
+              "name": "Ulisses García",
+              "minutes": 2,
+              "starter": false,
+              "xg": 0.13743388652801514,
+              "xa": 0.0,
+              "player": 238
+            },
+            {
+              "source_id": 12425,
+              "name": "Faris Moumbagna",
+              "minutes": 2,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.49832025170326233,
+              "player": 144651
+            },
+            {
+              "source_id": 5598,
+              "name": "Angel Gomes",
+              "minutes": 61,
+              "starter": false,
+              "xg": 0.4938119351863861,
+              "xa": 0.01990378461778164,
+              "player": 7910
+            }
+          ],
+          "starters": [
+            67880,
+            8492,
+            179721,
+            7809,
+            3714,
+            8093,
+            80754,
+            119703,
+            4443,
+            8476
+          ],
+          "subs": [
+            250795,
+            238,
+            144651,
+            7910
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 559671,
+          "kickoff": "2026-10-11T18:45:00+00:00",
+          "opponent_id": 531,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "28dabf2e1ae75f1d6afaf1c0efa2e64394e43a451d06256c130503970ba39ff6",
+          "appearances": [
+            {
+              "source_id": 12772,
+              "name": "Jeffrey de Lange",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67880
+            },
+            {
+              "source_id": 14602,
+              "name": "Kelyann Bezahaf",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 6935,
+              "name": "Naif Aguerd",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 10174,
+              "name": "CJ Egan-Riley",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 179721
+            },
+            {
+              "source_id": 1245,
+              "name": "Emerson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.41145557165145874,
+              "player": 7809
+            },
+            {
+              "source_id": 10923,
+              "name": "Himad Abdelli",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.8280344009399414,
+              "xa": 0.0,
+              "player": 80754
+            },
+            {
+              "source_id": 14577,
+              "name": "Nouhoum Kamissoko",
+              "minutes": 73,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 5717,
+              "name": "Amine Harit",
+              "minutes": 63,
+              "starter": true,
+              "xg": 0.3256428837776184,
+              "xa": 0.06793927401304245,
+              "player": 3714
+            },
+            {
+              "source_id": 5598,
+              "name": "Angel Gomes",
+              "minutes": 87,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7910
+            },
+            {
+              "source_id": 14010,
+              "name": "Igor Paixão",
+              "minutes": 87,
+              "starter": true,
+              "xg": 0.0312398299574852,
+              "xa": 0.0,
+              "player": 119703
+            },
+            {
+              "source_id": 6401,
+              "name": "Amine Gouiri",
+              "minutes": 63,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 8476
+            },
+            {
+              "source_id": 12587,
+              "name": "Keyliane Abdallah",
+              "minutes": 27,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 250795
+            },
+            {
+              "source_id": 12425,
+              "name": "Faris Moumbagna",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.08581268042325974,
+              "xa": 0.0,
+              "player": 144651
+            },
+            {
+              "source_id": 3621,
+              "name": "Neal Maupay",
+              "minutes": 27,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 4443
+            },
+            {
+              "source_id": 1516,
+              "name": "Geoffrey Kondogbia",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 33149
+            },
+            {
+              "source_id": 14499,
+              "name": "Tochukwu Nnadi",
+              "minutes": 17,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            }
+          ],
+          "starters": [
+            67880,
+            179721,
+            7809,
+            80754,
+            3714,
+            7910,
+            119703,
+            8476
+          ],
+          "subs": [
+            250795,
+            144651,
+            4443,
+            33149
+          ],
+          "ideal_started": null
+        }
+      ]
+    }
+  },
+  "usage_generated_at": "2026-10-16T01:16:20.215812+00:00"
+}

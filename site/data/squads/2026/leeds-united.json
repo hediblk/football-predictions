@@ -1,0 +1,1974 @@
+{
+  "slug": "leeds-united",
+  "club_id": 341,
+  "name": "Leeds United FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:02.162730+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PL/teams",
+    "sha256": "65de11ca9362ae8e4c97c758ab4d2e4f1c7e3170b160cb9dddce5893aaf877b8",
+    "snapshot": "data/players/rosters/2026-10-16/PL.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 24,
+    "matched": 23
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 78.3,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 153874
+      },
+      {
+        "role": "LB",
+        "player": 31531
+      },
+      {
+        "role": "CB",
+        "player": 5714
+      },
+      {
+        "role": "CB",
+        "player": 3475
+      },
+      {
+        "role": "RB",
+        "player": 4184
+      },
+      {
+        "role": "CDM",
+        "player": 7815
+      },
+      {
+        "role": "CM",
+        "player": 4955
+      },
+      {
+        "role": "CM",
+        "player": 65843
+      },
+      {
+        "role": "LW",
+        "player": 16058
+      },
+      {
+        "role": "ST",
+        "player": 7839
+      },
+      {
+        "role": "RW",
+        "player": 11777
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 5315,
+      "name": "Alex Cairns",
+      "dob": "1993-01-04",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 203215,
+        "overall": 62,
+        "positions": [
+          "GK"
+        ],
+        "pace": 63,
+        "shooting": 61,
+        "passing": 61,
+        "dribbling": 62,
+        "defending": 49,
+        "physical": 62
+      }
+    },
+    {
+      "id": 9438,
+      "name": "Michael Zetterer",
+      "dob": "1995-07-12",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 227370,
+        "overall": 75,
+        "positions": [
+          "GK"
+        ],
+        "pace": 74,
+        "shooting": 71,
+        "passing": 81,
+        "dribbling": 77,
+        "defending": 41,
+        "physical": 74
+      }
+    },
+    {
+      "id": 153874,
+      "name": "James Trafford",
+      "dob": "2002-10-10",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263063,
+        "overall": 79,
+        "positions": [
+          "GK"
+        ],
+        "pace": 79,
+        "shooting": 77,
+        "passing": 78,
+        "dribbling": 80,
+        "defending": 48,
+        "physical": 78
+      }
+    },
+    {
+      "id": 3475,
+      "name": "Nico Elvedi",
+      "dob": "1996-09-30",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 221491,
+        "overall": 78,
+        "positions": [
+          "CB"
+        ],
+        "pace": 70,
+        "shooting": 39,
+        "passing": 62,
+        "dribbling": 64,
+        "defending": 79,
+        "physical": 78
+      }
+    },
+    {
+      "id": 4184,
+      "name": "Jayden Bogle",
+      "dob": "2000-07-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244591,
+        "overall": 76,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 77,
+        "shooting": 56,
+        "passing": 70,
+        "dribbling": 75,
+        "defending": 71,
+        "physical": 72
+      }
+    },
+    {
+      "id": 5613,
+      "name": "James Justin",
+      "dob": "1998-02-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231554,
+        "overall": 76,
+        "positions": [
+          "RB",
+          "LB",
+          "CB"
+        ],
+        "pace": 75,
+        "shooting": 53,
+        "passing": 70,
+        "dribbling": 72,
+        "defending": 73,
+        "physical": 72
+      }
+    },
+    {
+      "id": 5714,
+      "name": "Joe Rodon",
+      "dob": "1997-10-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229266,
+        "overall": 77,
+        "positions": [
+          "CB"
+        ],
+        "pace": 76,
+        "shooting": 40,
+        "passing": 58,
+        "dribbling": 59,
+        "defending": 77,
+        "physical": 79
+      }
+    },
+    {
+      "id": 31531,
+      "name": "Gabriel Gudmundsson",
+      "dob": "1999-04-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236822,
+        "overall": 78,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 87,
+        "shooting": 64,
+        "passing": 73,
+        "dribbling": 77,
+        "defending": 72,
+        "physical": 75
+      }
+    },
+    {
+      "id": 74688,
+      "name": "Jaka Bijol",
+      "dob": "1999-02-05",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244238,
+        "overall": 77,
+        "positions": [
+          "CB"
+        ],
+        "pace": 63,
+        "shooting": 59,
+        "passing": 64,
+        "dribbling": 62,
+        "defending": 78,
+        "physical": 81
+      }
+    },
+    {
+      "id": 136721,
+      "name": "Melvin Bard",
+      "dob": "2000-11-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 254548,
+        "overall": 76,
+        "positions": [
+          "LB",
+          "LM",
+          "CB",
+          "CDM"
+        ],
+        "pace": 83,
+        "shooting": 52,
+        "passing": 68,
+        "dribbling": 73,
+        "defending": 72,
+        "physical": 75
+      }
+    },
+    {
+      "id": 189153,
+      "name": "Tarik Muharemović",
+      "dob": "2003-02-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262027,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 57,
+        "shooting": 23,
+        "passing": 54,
+        "dribbling": 61,
+        "defending": 76,
+        "physical": 78
+      }
+    },
+    {
+      "id": 4955,
+      "name": "Sean Longstaff",
+      "dob": "1997-10-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237161,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 55,
+        "shooting": 69,
+        "passing": 77,
+        "dribbling": 73,
+        "defending": 72,
+        "physical": 67
+      }
+    },
+    {
+      "id": 7815,
+      "name": "Ethan Ampadu",
+      "dob": "2000-09-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235735,
+        "overall": 80,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 68,
+        "shooting": 55,
+        "passing": 75,
+        "dribbling": 73,
+        "defending": 78,
+        "physical": 79
+      }
+    },
+    {
+      "id": 49105,
+      "name": "Ao Tanaka",
+      "dob": "1998-09-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236764,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 67,
+        "shooting": 70,
+        "passing": 74,
+        "dribbling": 77,
+        "defending": 72,
+        "physical": 68
+      }
+    },
+    {
+      "id": 65843,
+      "name": "Anton Stach",
+      "dob": "1998-11-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257191,
+        "overall": 80,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 67,
+        "shooting": 72,
+        "passing": 81,
+        "dribbling": 76,
+        "defending": 78,
+        "physical": 79
+      }
+    },
+    {
+      "id": 75284,
+      "name": "Ilia Gruev",
+      "dob": "2000-05-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 248384,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 64,
+        "shooting": 57,
+        "passing": 74,
+        "dribbling": 72,
+        "defending": 72,
+        "physical": 69
+      }
+    },
+    {
+      "id": 113262,
+      "name": "Brenden Aaronson",
+      "dob": "2000-10-22",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247361,
+        "overall": 76,
+        "positions": [
+          "RW",
+          "CAM",
+          "RM",
+          "CM"
+        ],
+        "pace": 78,
+        "shooting": 71,
+        "passing": 74,
+        "dribbling": 77,
+        "defending": 60,
+        "physical": 62
+      }
+    },
+    {
+      "id": 7839,
+      "name": "Dominic Calvert-Lewin",
+      "dob": "1997-03-16",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 221479,
+        "overall": 79,
+        "positions": [
+          "ST"
+        ],
+        "pace": 73,
+        "shooting": 77,
+        "passing": 65,
+        "dribbling": 73,
+        "defending": 39,
+        "physical": 83
+      }
+    },
+    {
+      "id": 7892,
+      "name": "Lukas Nmecha",
+      "dob": "1998-12-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 230084,
+        "overall": 76,
+        "positions": [
+          "ST"
+        ],
+        "pace": 77,
+        "shooting": 76,
+        "passing": 66,
+        "dribbling": 73,
+        "defending": 40,
+        "physical": 74
+      }
+    },
+    {
+      "id": 7974,
+      "name": "Daniel James",
+      "dob": "1997-11-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232104,
+        "overall": 75,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 89,
+        "shooting": 71,
+        "passing": 69,
+        "dribbling": 76,
+        "defending": 50,
+        "physical": 58
+      }
+    },
+    {
+      "id": 11777,
+      "name": "Harry Wilson",
+      "dob": "1997-03-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 220710,
+        "overall": 81,
+        "positions": [
+          "RW",
+          "RM",
+          "CAM"
+        ],
+        "pace": 76,
+        "shooting": 82,
+        "passing": 81,
+        "dribbling": 82,
+        "defending": 46,
+        "physical": 59
+      }
+    },
+    {
+      "id": 16058,
+      "name": "Noah Okafor",
+      "dob": "2000-05-24",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242530,
+        "overall": 77,
+        "positions": [
+          "LW",
+          "ST",
+          "LM",
+          "CAM"
+        ],
+        "pace": 88,
+        "shooting": 76,
+        "passing": 70,
+        "dribbling": 78,
+        "defending": 32,
+        "physical": 68
+      }
+    },
+    {
+      "id": 185178,
+      "name": "Mateo Fernandez",
+      "dob": "2003-10-19",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 185882,
+      "name": "Jean Bahoya",
+      "dob": "2005-05-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269728,
+        "overall": 76,
+        "positions": [
+          "LM",
+          "CAM",
+          "LW",
+          "CM"
+        ],
+        "pace": 94,
+        "shooting": 67,
+        "passing": 68,
+        "dribbling": 78,
+        "defending": 46,
+        "physical": 59
+      }
+    }
+  ],
+  "baseline_id": "9d525dcbb8886c96",
+  "generated_at": "2026-10-16T00:40:41.108511+00:00",
+  "usage": {
+    "premier-league": {
+      "source": "understat",
+      "games": 6,
+      "covered": 6,
+      "fully_mapped": 4,
+      "players": {
+        "5315": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "9438": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "153874": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            9077
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "3475": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 416,
+          "share": 0.77037,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            212
+          ],
+          "xg": 0.1575,
+          "xa": 0.7818
+        },
+        "4184": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 465,
+          "share": 0.861111,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            9205
+          ],
+          "xg": 1.7225,
+          "xa": 0.0958
+        },
+        "5613": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 532,
+          "share": 0.985185,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            7753
+          ],
+          "xg": 0.4562,
+          "xa": 0.6313
+        },
+        "5714": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 123,
+          "share": 0.227778,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            6377
+          ],
+          "xg": 0.0336,
+          "xa": 0.0978
+        },
+        "31531": {
+          "starts": 4,
+          "sub": 0,
+          "minutes": 345,
+          "share": 0.638889,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            9944
+          ],
+          "xg": 0.0357,
+          "xa": 0.5654
+        },
+        "74688": {
+          "starts": 2,
+          "sub": 2,
+          "minutes": 168,
+          "share": 0.311111,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            6807
+          ],
+          "xg": 0.0831,
+          "xa": 0.0
+        },
+        "136721": {
+          "starts": 0,
+          "sub": 1,
+          "minutes": 15,
+          "share": 0.027778,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            8190
+          ],
+          "xg": 0.0,
+          "xa": 0.0416
+        },
+        "189153": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            13879
+          ],
+          "xg": 0.3753,
+          "xa": 0.4843
+        },
+        "4955": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 7,
+          "share": 0.012963,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            7078
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "7815": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            6369
+          ],
+          "xg": 0.0537,
+          "xa": 0.3021
+        },
+        "49105": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 331,
+          "share": 0.612963,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            13834
+          ],
+          "xg": 0.8344,
+          "xa": 0.9669
+        },
+        "65843": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            9910
+          ],
+          "xg": 1.4184,
+          "xa": 0.3097
+        },
+        "75284": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "113262": {
+          "starts": 2,
+          "sub": 4,
+          "minutes": 214,
+          "share": 0.396296,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            10751
+          ],
+          "xg": 0.0185,
+          "xa": 0.0
+        },
+        "7839": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 514,
+          "share": 0.951852,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            5555
+          ],
+          "xg": 3.3394,
+          "xa": 0.1637
+        },
+        "7892": {
+          "starts": 0,
+          "sub": 5,
+          "minutes": 65,
+          "share": 0.12037,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            6544
+          ],
+          "xg": 0.2016,
+          "xa": 0.86
+        },
+        "7974": {
+          "starts": 0,
+          "sub": 3,
+          "minutes": 46,
+          "share": 0.085185,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            5595
+          ],
+          "xg": 0.2653,
+          "xa": 0.0
+        },
+        "11777": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 157,
+          "share": 0.290741,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            5596
+          ],
+          "xg": 0.0127,
+          "xa": 0.2122
+        },
+        "16058": {
+          "starts": 5,
+          "sub": 1,
+          "minutes": 382,
+          "share": 0.707407,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            11966
+          ],
+          "xg": 0.2594,
+          "xa": 0.1206
+        },
+        "185178": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "185882": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        }
+      },
+      "most_used_xi": {
+        "formation": "4-3-3",
+        "status": "provisional",
+        "slots": [
+          {
+            "role": "GK",
+            "player": 153874
+          },
+          {
+            "role": "LB",
+            "player": 31531
+          },
+          {
+            "role": "CB",
+            "player": 3475
+          },
+          {
+            "role": "CB",
+            "player": 189153
+          },
+          {
+            "role": "RB",
+            "player": 5613
+          },
+          {
+            "role": "CDM",
+            "player": 7815
+          },
+          {
+            "role": "CM",
+            "player": 65843
+          },
+          {
+            "role": "CM",
+            "player": 49105
+          },
+          {
+            "role": "LW",
+            "player": 16058
+          },
+          {
+            "role": "ST",
+            "player": 7839
+          },
+          {
+            "role": "RW",
+            "player": 4184
+          }
+        ]
+      },
+      "games_list": [
+        {
+          "fixture_id": 560545,
+          "kickoff": "2026-08-22T14:00:00+00:00",
+          "opponent_id": 351,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "bfa53f51ad42dbda81589c696cef75daf414ef013564abb1c3d50de58dfd1b6c",
+          "appearances": [
+            {
+              "source_id": 9077,
+              "name": "James Trafford",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 153874
+            },
+            {
+              "source_id": 13879,
+              "name": "Tarik Muharemovic",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.06015468388795853,
+              "xa": 0.0,
+              "player": 189153
+            },
+            {
+              "source_id": 6377,
+              "name": "Joe Rodon",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.033589523285627365,
+              "xa": 0.09783720225095749,
+              "player": 5714
+            },
+            {
+              "source_id": 6807,
+              "name": "Jaka Bijol",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0831441581249237,
+              "xa": 0.0,
+              "player": 74688
+            },
+            {
+              "source_id": 9205,
+              "name": "Jayden Bogle",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 4184
+            },
+            {
+              "source_id": 7753,
+              "name": "James Justin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 5613
+            },
+            {
+              "source_id": 6369,
+              "name": "Ethan Ampadu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0797523707151413,
+              "player": 7815
+            },
+            {
+              "source_id": 9910,
+              "name": "Anton Stach",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.11048509925603867,
+              "xa": 0.0,
+              "player": 65843
+            },
+            {
+              "source_id": 5596,
+              "name": "Harry Wilson",
+              "minutes": 68,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.018504053354263306,
+              "player": 11777
+            },
+            {
+              "source_id": 10751,
+              "name": "Brenden Aaronson",
+              "minutes": 84,
+              "starter": true,
+              "xg": 0.018504053354263306,
+              "xa": 0.0,
+              "player": 113262
+            },
+            {
+              "source_id": 5555,
+              "name": "Dominic Calvert-Lewin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.16036929190158844,
+              "xa": 0.0,
+              "player": 7839
+            },
+            {
+              "source_id": 7078,
+              "name": "Sean Longstaff",
+              "minutes": 6,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 4955
+            },
+            {
+              "source_id": 11966,
+              "name": "Noah Okafor",
+              "minutes": 22,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.06015468388795853,
+              "player": 16058
+            }
+          ],
+          "starters": [
+            153874,
+            189153,
+            5714,
+            74688,
+            4184,
+            5613,
+            7815,
+            65843,
+            11777,
+            113262,
+            7839
+          ],
+          "subs": [
+            4955,
+            16058
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 560559,
+          "kickoff": "2026-08-30T13:00:00+00:00",
+          "opponent_id": 402,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "bf4002c09569c1152b029e159e099313f2b879a099c7076d4325d5a95899e44f",
+          "appearances": [
+            {
+              "source_id": 9077,
+              "name": "James Trafford",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 153874
+            },
+            {
+              "source_id": 6377,
+              "name": "Joe Rodon",
+              "minutes": 33,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 5714
+            },
+            {
+              "source_id": 13879,
+              "name": "Tarik Muharemovic",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 189153
+            },
+            {
+              "source_id": 6807,
+              "name": "Jaka Bijol",
+              "minutes": 49,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 74688
+            },
+            {
+              "source_id": 9205,
+              "name": "Jayden Bogle",
+              "minutes": 71,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.017495492473244667,
+              "player": 4184
+            },
+            {
+              "source_id": 7753,
+              "name": "James Justin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.017495492473244667,
+              "xa": 0.04296794906258583,
+              "player": 5613
+            },
+            {
+              "source_id": 9910,
+              "name": "Anton Stach",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.05973026528954506,
+              "xa": 0.025073213502764702,
+              "player": 65843
+            },
+            {
+              "source_id": 6369,
+              "name": "Ethan Ampadu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.013367724604904652,
+              "xa": 0.039398178458213806,
+              "player": 7815
+            },
+            {
+              "source_id": 10751,
+              "name": "Brenden Aaronson",
+              "minutes": 49,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113262
+            },
+            {
+              "source_id": 11966,
+              "name": "Noah Okafor",
+              "minutes": 72,
+              "starter": true,
+              "xg": 0.07809663563966751,
+              "xa": 0.0,
+              "player": 16058
+            },
+            {
+              "source_id": 5555,
+              "name": "Dominic Calvert-Lewin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.7724223732948303,
+              "xa": 0.0,
+              "player": 7839
+            },
+            {
+              "source_id": 13834,
+              "name": "Ao Tanaka",
+              "minutes": 41,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 49105
+            },
+            {
+              "source_id": 5595,
+              "name": "Daniel James",
+              "minutes": 19,
+              "starter": false,
+              "xg": 0.18716515600681305,
+              "xa": 0.0,
+              "player": 7974
+            },
+            {
+              "source_id": 212,
+              "name": "Nico Elvedi",
+              "minutes": 57,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 3475
+            },
+            {
+              "source_id": 6544,
+              "name": "Lukas Nmecha",
+              "minutes": 18,
+              "starter": false,
+              "xg": 0.039398178458213806,
+              "xa": 0.8600444793701172,
+              "player": 7892
+            },
+            {
+              "source_id": 5596,
+              "name": "Harry Wilson",
+              "minutes": 41,
+              "starter": false,
+              "xg": 0.012687337584793568,
+              "xa": 0.03146717697381973,
+              "player": 11777
+            }
+          ],
+          "starters": [
+            153874,
+            5714,
+            189153,
+            74688,
+            4184,
+            5613,
+            65843,
+            7815,
+            113262,
+            16058,
+            7839
+          ],
+          "subs": [
+            49105,
+            7974,
+            3475,
+            7892,
+            11777
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 560564,
+          "kickoff": "2026-09-05T14:00:00+00:00",
+          "opponent_id": 397,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "a75844d0650b81172c77ad3ee3fff4ccde9950bbb94f03740c4f7b4ebb5d78ff",
+          "appearances": [
+            {
+              "source_id": 9077,
+              "name": "James Trafford",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 153874
+            },
+            {
+              "source_id": 13879,
+              "name": "Tarik Muharemovic",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 189153
+            },
+            {
+              "source_id": 212,
+              "name": "Nico Elvedi",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.7818162441253662,
+              "player": 3475
+            },
+            {
+              "source_id": 7753,
+              "name": "James Justin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.10290300846099854,
+              "xa": 0.0,
+              "player": 5613
+            },
+            {
+              "source_id": 9205,
+              "name": "Jayden Bogle",
+              "minutes": 62,
+              "starter": true,
+              "xg": 0.9668696522712708,
+              "xa": 0.0,
+              "player": 4184
+            },
+            {
+              "source_id": 9944,
+              "name": "Gabriel Gudmundsson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 31531
+            },
+            {
+              "source_id": 9910,
+              "name": "Anton Stach",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.4997932016849518,
+              "xa": 0.019414307549595833,
+              "player": 65843
+            },
+            {
+              "source_id": 13834,
+              "name": "Ao Tanaka",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.6082804203033447,
+              "xa": 0.9668696522712708,
+              "player": 49105
+            },
+            {
+              "source_id": 6369,
+              "name": "Ethan Ampadu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7815
+            },
+            {
+              "source_id": 11966,
+              "name": "Noah Okafor",
+              "minutes": 63,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 16058
+            },
+            {
+              "source_id": 5555,
+              "name": "Dominic Calvert-Lewin",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.6989061236381531,
+              "xa": 0.08348869532346725,
+              "player": 7839
+            },
+            {
+              "source_id": 6807,
+              "name": "Jaka Bijol",
+              "minutes": 28,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 74688
+            },
+            {
+              "source_id": 10751,
+              "name": "Brenden Aaronson",
+              "minutes": 27,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113262
+            },
+            {
+              "source_id": 6544,
+              "name": "Lukas Nmecha",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.16220442950725555,
+              "xa": 0.0,
+              "player": 7892
+            },
+            {
+              "source_id": 5596,
+              "name": "Harry Wilson",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.16220442950725555,
+              "player": 11777
+            }
+          ],
+          "starters": [
+            153874,
+            189153,
+            3475,
+            5613,
+            4184,
+            31531,
+            65843,
+            49105,
+            7815,
+            16058,
+            7839
+          ],
+          "subs": [
+            74688,
+            113262,
+            7892,
+            11777
+          ],
+          "ideal_started": 8
+        },
+        {
+          "fixture_id": 560579,
+          "kickoff": "2026-09-14T19:00:00+00:00",
+          "opponent_id": 67,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "105586d170e84fbbb566c131c22e69ac278d576a3271cc4585aee26d8f29b941",
+          "appearances": [
+            {
+              "source_id": 9077,
+              "name": "James Trafford",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 153874
+            },
+            {
+              "source_id": 7753,
+              "name": "James Justin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.19779804348945618,
+              "player": 5613
+            },
+            {
+              "source_id": 13879,
+              "name": "Tarik Muharemovic",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.4843495786190033,
+              "player": 189153
+            },
+            {
+              "source_id": 212,
+              "name": "Nico Elvedi",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.06441646814346313,
+              "xa": 0.0,
+              "player": 3475
+            },
+            {
+              "source_id": 9205,
+              "name": "Jayden Bogle",
+              "minutes": 85,
+              "starter": true,
+              "xg": 0.2304684817790985,
+              "xa": 0.029001515358686447,
+              "player": 4184
+            },
+            {
+              "source_id": 9944,
+              "name": "Gabriel Gudmundsson",
+              "minutes": 75,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 31531
+            },
+            {
+              "source_id": 9910,
+              "name": "Anton Stach",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.41770607233047485,
+              "xa": 0.13326382637023926,
+              "player": 65843
+            },
+            {
+              "source_id": 13834,
+              "name": "Ao Tanaka",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.060482900589704514,
+              "xa": 0.0,
+              "player": 49105
+            },
+            {
+              "source_id": 6369,
+              "name": "Ethan Ampadu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.030708329752087593,
+              "xa": 0.0,
+              "player": 7815
+            },
+            {
+              "source_id": 11966,
+              "name": "Noah Okafor",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.09109403938055038,
+              "xa": 0.060482900589704514,
+              "player": 16058
+            },
+            {
+              "source_id": 5555,
+              "name": "Dominic Calvert-Lewin",
+              "minutes": 80,
+              "starter": true,
+              "xg": 1.3172327280044556,
+              "xa": 0.08016899973154068,
+              "player": 7839
+            },
+            {
+              "source_id": 6544,
+              "name": "Lukas Nmecha",
+              "minutes": 10,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7892
+            },
+            {
+              "source_id": 5595,
+              "name": "Daniel James",
+              "minutes": 5,
+              "starter": false,
+              "xg": 0.07809537649154663,
+              "xa": 0.0,
+              "player": 7974
+            },
+            {
+              "source_id": 10751,
+              "name": "Brenden Aaronson",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113262
+            },
+            {
+              "source_id": 5596,
+              "name": "Harry Wilson",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 11777
+            },
+            {
+              "source_id": 8190,
+              "name": "Melvin Bard",
+              "minutes": 15,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.04158976674079895,
+              "player": 136721
+            },
+            {
+              "source_id": 7078,
+              "name": "Sean Longstaff",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 4955
+            }
+          ],
+          "starters": [
+            153874,
+            5613,
+            189153,
+            3475,
+            4184,
+            31531,
+            65843,
+            49105,
+            7815,
+            16058,
+            7839
+          ],
+          "subs": [
+            7892,
+            7974,
+            113262,
+            11777,
+            136721,
+            4955
+          ],
+          "ideal_started": 8
+        },
+        {
+          "fixture_id": 560585,
+          "kickoff": "2026-09-20T13:00:00+00:00",
+          "opponent_id": 354,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "fe460a77c79c5a7a0fad69179ba74a4d8aeb976ab207ee0ba87cd508effea37a",
+          "appearances": [
+            {
+              "source_id": 9077,
+              "name": "James Trafford",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 153874
+            },
+            {
+              "source_id": 7753,
+              "name": "James Justin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.038637496531009674,
+              "xa": 0.3904944658279419,
+              "player": 5613
+            },
+            {
+              "source_id": 13879,
+              "name": "Tarik Muharemovic",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.31513142585754395,
+              "xa": 0.0,
+              "player": 189153
+            },
+            {
+              "source_id": 212,
+              "name": "Nico Elvedi",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.09312579035758972,
+              "xa": 0.0,
+              "player": 3475
+            },
+            {
+              "source_id": 9205,
+              "name": "Jayden Bogle",
+              "minutes": 68,
+              "starter": true,
+              "xg": 0.055056121200323105,
+              "xa": 0.0,
+              "player": 4184
+            },
+            {
+              "source_id": 9944,
+              "name": "Gabriel Gudmundsson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0400099940598011,
+              "player": 31531
+            },
+            {
+              "source_id": 9910,
+              "name": "Anton Stach",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.03398730605840683,
+              "xa": 0.10789446532726288,
+              "player": 65843
+            },
+            {
+              "source_id": 13834,
+              "name": "Ao Tanaka",
+              "minutes": 68,
+              "starter": true,
+              "xg": 0.13075971603393555,
+              "xa": 0.0,
+              "player": 49105
+            },
+            {
+              "source_id": 6369,
+              "name": "Ethan Ampadu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.12751111388206482,
+              "player": 7815
+            },
+            {
+              "source_id": 11966,
+              "name": "Noah Okafor",
+              "minutes": 77,
+              "starter": true,
+              "xg": 0.03486022353172302,
+              "xa": 0.0,
+              "player": 16058
+            },
+            {
+              "source_id": 5555,
+              "name": "Dominic Calvert-Lewin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.3904944658279419,
+              "xa": 0.0,
+              "player": 7839
+            },
+            {
+              "source_id": 6544,
+              "name": "Lukas Nmecha",
+              "minutes": 13,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7892
+            },
+            {
+              "source_id": 10751,
+              "name": "Brenden Aaronson",
+              "minutes": 22,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113262
+            },
+            {
+              "source_id": 10830,
+              "name": "Jean Négoce",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            },
+            {
+              "source_id": 5595,
+              "name": "Daniel James",
+              "minutes": 22,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7974
+            }
+          ],
+          "starters": [
+            153874,
+            5613,
+            189153,
+            3475,
+            4184,
+            31531,
+            65843,
+            49105,
+            7815,
+            16058,
+            7839
+          ],
+          "subs": [
+            7892,
+            113262,
+            7974
+          ],
+          "ideal_started": 8
+        },
+        {
+          "fixture_id": 560593,
+          "kickoff": "2026-10-10T11:30:00+00:00",
+          "opponent_id": 57,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "c8f3d51717125f15101f46866c37744297cce439ba9412f817af887b47cfa6fd",
+          "appearances": [
+            {
+              "source_id": 9077,
+              "name": "James Trafford",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 153874
+            },
+            {
+              "source_id": 7753,
+              "name": "James Justin",
+              "minutes": 82,
+              "starter": true,
+              "xg": 0.2971504330635071,
+              "xa": 0.0,
+              "player": 5613
+            },
+            {
+              "source_id": 13879,
+              "name": "Tarik Muharemovic",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 189153
+            },
+            {
+              "source_id": 212,
+              "name": "Nico Elvedi",
+              "minutes": 89,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 3475
+            },
+            {
+              "source_id": 9205,
+              "name": "Jayden Bogle",
+              "minutes": 89,
+              "starter": true,
+              "xg": 0.47015297412872314,
+              "xa": 0.04927291348576546,
+              "player": 4184
+            },
+            {
+              "source_id": 9944,
+              "name": "Gabriel Gudmundsson",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.03569298982620239,
+              "xa": 0.5253887176513672,
+              "player": 31531
+            },
+            {
+              "source_id": 13834,
+              "name": "Ao Tanaka",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.034863512963056564,
+              "xa": 0.0,
+              "player": 49105
+            },
+            {
+              "source_id": 6369,
+              "name": "Ethan Ampadu",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.009635455906391144,
+              "xa": 0.05540810525417328,
+              "player": 7815
+            },
+            {
+              "source_id": 11966,
+              "name": "Noah Okafor",
+              "minutes": 74,
+              "starter": true,
+              "xg": 0.05536128580570221,
+              "xa": 0.0,
+              "player": 16058
+            },
+            {
+              "source_id": 9910,
+              "name": "Anton Stach",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.29674071073532104,
+              "xa": 0.024073585867881775,
+              "player": 65843
+            },
+            {
+              "source_id": 5555,
+              "name": "Dominic Calvert-Lewin",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7839
+            },
+            {
+              "source_id": 6807,
+              "name": "Jaka Bijol",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 74688
+            },
+            {
+              "source_id": 5596,
+              "name": "Harry Wilson",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 11777
+            },
+            {
+              "source_id": 10751,
+              "name": "Brenden Aaronson",
+              "minutes": 16,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 113262
+            },
+            {
+              "source_id": 6544,
+              "name": "Lukas Nmecha",
+              "minutes": 8,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 7892
+            },
+            {
+              "source_id": 10830,
+              "name": "Jean Négoce",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": null
+            }
+          ],
+          "starters": [
+            153874,
+            5613,
+            189153,
+            3475,
+            4184,
+            31531,
+            49105,
+            7815,
+            16058,
+            65843,
+            7839
+          ],
+          "subs": [
+            74688,
+            11777,
+            113262,
+            7892
+          ],
+          "ideal_started": 8
+        }
+      ]
+    }
+  },
+  "usage_generated_at": "2026-10-16T01:16:19.613106+00:00"
+}

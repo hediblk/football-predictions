@@ -1,0 +1,2004 @@
+{
+  "slug": "augsburg",
+  "club_id": 16,
+  "name": "FC Augsburg",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:09.822985+00:00",
+    "url": "https://api.football-data.org/v4/competitions/BL1/teams",
+    "sha256": "1c95dfdeece4df7077b5d2fbea2456a2b51c2c9f0ced94d4907ddd4a644a20a9",
+    "snapshot": "data/players/rosters/2026-10-16/BL1.json"
+  },
+  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 29,
+    "matched": 28
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 75.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 6617
+      },
+      {
+        "role": "LB",
+        "player": 261382
+      },
+      {
+        "role": "CB",
+        "player": 147912
+      },
+      {
+        "role": "CB",
+        "player": 6645
+      },
+      {
+        "role": "RB",
+        "player": 6714
+      },
+      {
+        "role": "CDM",
+        "player": 98953
+      },
+      {
+        "role": "CM",
+        "player": 152692
+      },
+      {
+        "role": "CM",
+        "player": 23222
+      },
+      {
+        "role": "LW",
+        "player": 175963
+      },
+      {
+        "role": "ST",
+        "player": 608
+      },
+      {
+        "role": "RW",
+        "player": 65692
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 6617,
+      "name": "Finn Dahmen",
+      "dob": "1998-03-27",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242818,
+        "overall": 76,
+        "positions": [
+          "GK"
+        ],
+        "pace": 76,
+        "shooting": 70,
+        "passing": 80,
+        "dribbling": 79,
+        "defending": 52,
+        "physical": 75
+      }
+    },
+    {
+      "id": 147197,
+      "name": "Nediljko Labrović",
+      "dob": "1999-10-10",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271949,
+        "overall": 72,
+        "positions": [
+          "GK"
+        ],
+        "pace": 73,
+        "shooting": 67,
+        "passing": 63,
+        "dribbling": 75,
+        "defending": 40,
+        "physical": 72
+      }
+    },
+    {
+      "id": 295064,
+      "name": "Tom Wisbereit",
+      "dob": "2007-11-17",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 85547,
+        "overall": 56,
+        "positions": [
+          "GK"
+        ],
+        "pace": 60,
+        "shooting": 54,
+        "passing": 51,
+        "dribbling": 57,
+        "defending": 24,
+        "physical": 55
+      }
+    },
+    {
+      "id": 6645,
+      "name": "Jeffrey Gouweleeuw",
+      "dob": "1991-07-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 202201,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 68,
+        "shooting": 58,
+        "passing": 66,
+        "dribbling": 64,
+        "defending": 78,
+        "physical": 73
+      }
+    },
+    {
+      "id": 6714,
+      "name": "Marius Wolf",
+      "dob": "1995-05-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224425,
+        "overall": 73,
+        "positions": [
+          "RB",
+          "RM",
+          "RW"
+        ],
+        "pace": 73,
+        "shooting": 70,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 69,
+        "physical": 76
+      }
+    },
+    {
+      "id": 67408,
+      "name": "Calvin Brackelmann",
+      "dob": "1999-08-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269912,
+        "overall": 71,
+        "positions": [
+          "CB",
+          "LB"
+        ],
+        "pace": 80,
+        "shooting": 47,
+        "passing": 59,
+        "dribbling": 53,
+        "defending": 69,
+        "physical": 80
+      }
+    },
+    {
+      "id": 147912,
+      "name": "Chrislain Matsima",
+      "dob": "2002-05-15",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258432,
+        "overall": 77,
+        "positions": [
+          "CB"
+        ],
+        "pace": 80,
+        "shooting": 34,
+        "passing": 52,
+        "dribbling": 58,
+        "defending": 79,
+        "physical": 78
+      }
+    },
+    {
+      "id": 243858,
+      "name": "Young-woo Seol",
+      "dob": "1998-12-05",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 249428,
+      "name": "Noahkai Banks",
+      "dob": "2006-12-01",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 73731,
+        "overall": 72,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 35,
+        "passing": 54,
+        "dribbling": 59,
+        "defending": 73,
+        "physical": 73
+      }
+    },
+    {
+      "id": 261382,
+      "name": "Hennes Behrens",
+      "dob": "2005-01-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76922,
+        "overall": 73,
+        "positions": [
+          "LB",
+          "LM",
+          "CM"
+        ],
+        "pace": 70,
+        "shooting": 39,
+        "passing": 62,
+        "dribbling": 73,
+        "defending": 71,
+        "physical": 63
+      }
+    },
+    {
+      "id": 273121,
+      "name": "Juma Bah",
+      "dob": "2006-04-11",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75148,
+        "overall": 73,
+        "positions": [
+          "CB"
+        ],
+        "pace": 65,
+        "shooting": 25,
+        "passing": 53,
+        "dribbling": 54,
+        "defending": 73,
+        "physical": 75
+      }
+    },
+    {
+      "id": 608,
+      "name": "Alexis Claude Maurice",
+      "dob": "1998-06-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236477,
+        "overall": 77,
+        "positions": [
+          "CAM",
+          "ST"
+        ],
+        "pace": 75,
+        "shooting": 73,
+        "passing": 73,
+        "dribbling": 82,
+        "defending": 68,
+        "physical": 66
+      }
+    },
+    {
+      "id": 23222,
+      "name": "Kristijan Jakić",
+      "dob": "1997-05-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257889,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 63,
+        "shooting": 62,
+        "passing": 64,
+        "dribbling": 68,
+        "defending": 75,
+        "physical": 79
+      }
+    },
+    {
+      "id": 65692,
+      "name": "Robin Fellhauer",
+      "dob": "1998-01-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269305,
+        "overall": 75,
+        "positions": [
+          "RM",
+          "CM",
+          "CDM",
+          "RW"
+        ],
+        "pace": 80,
+        "shooting": 60,
+        "passing": 70,
+        "dribbling": 73,
+        "defending": 72,
+        "physical": 76
+      }
+    },
+    {
+      "id": 97120,
+      "name": "Yannik Keitel",
+      "dob": "2000-02-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256118,
+        "overall": 70,
+        "positions": [
+          "CDM",
+          "CM",
+          "CB"
+        ],
+        "pace": 62,
+        "shooting": 48,
+        "passing": 63,
+        "dribbling": 65,
+        "defending": 69,
+        "physical": 72
+      }
+    },
+    {
+      "id": 98953,
+      "name": "Han-Noah Massengo",
+      "dob": "2001-07-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246594,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 69,
+        "shooting": 53,
+        "passing": 70,
+        "dribbling": 75,
+        "defending": 73,
+        "physical": 75
+      }
+    },
+    {
+      "id": 152692,
+      "name": "Fabian Rieder",
+      "dob": "2002-02-16",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259306,
+        "overall": 76,
+        "positions": [
+          "CAM",
+          "CM",
+          "RM",
+          "CDM"
+        ],
+        "pace": 75,
+        "shooting": 71,
+        "passing": 73,
+        "dribbling": 76,
+        "defending": 55,
+        "physical": 67
+      }
+    },
+    {
+      "id": 153915,
+      "name": "Tim Breithaupt",
+      "dob": "2002-02-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259559,
+        "overall": 68,
+        "positions": [
+          "CDM",
+          "CM",
+          "CB"
+        ],
+        "pace": 53,
+        "shooting": 44,
+        "passing": 60,
+        "dribbling": 60,
+        "defending": 69,
+        "physical": 68
+      }
+    },
+    {
+      "id": 175963,
+      "name": "Anton Kade",
+      "dob": "2004-01-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 266433,
+        "overall": 76,
+        "positions": [
+          "RM",
+          "LM",
+          "CAM",
+          "RW"
+        ],
+        "pace": 81,
+        "shooting": 73,
+        "passing": 71,
+        "dribbling": 75,
+        "defending": 41,
+        "physical": 69
+      }
+    },
+    {
+      "id": 192654,
+      "name": "Mert Kömür",
+      "dob": "2005-07-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 274226,
+        "overall": 73,
+        "positions": [
+          "CAM",
+          "ST",
+          "CM"
+        ],
+        "pace": 71,
+        "shooting": 67,
+        "passing": 66,
+        "dribbling": 76,
+        "defending": 38,
+        "physical": 53
+      }
+    },
+    {
+      "id": 221763,
+      "name": "Sima Suso",
+      "dob": "2005-05-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278834,
+        "overall": 66,
+        "positions": [
+          "CDM",
+          "LB",
+          "CB",
+          "CM"
+        ],
+        "pace": 63,
+        "shooting": 46,
+        "passing": 63,
+        "dribbling": 65,
+        "defending": 65,
+        "physical": 67
+      }
+    },
+    {
+      "id": 290066,
+      "name": "Tim Schnitzer",
+      "dob": "2008-02-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82845,
+        "overall": 58,
+        "positions": [
+          "CDM",
+          "CB",
+          "CM"
+        ],
+        "pace": 54,
+        "shooting": 46,
+        "passing": 54,
+        "dribbling": 60,
+        "defending": 56,
+        "physical": 56
+      }
+    },
+    {
+      "id": 6661,
+      "name": "Michael Gregoritsch",
+      "dob": "1994-04-18",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 199439,
+        "overall": 76,
+        "positions": [
+          "ST"
+        ],
+        "pace": 51,
+        "shooting": 78,
+        "passing": 68,
+        "dribbling": 69,
+        "defending": 42,
+        "physical": 75
+      }
+    },
+    {
+      "id": 8193,
+      "name": "Steve Mounié",
+      "dob": "1994-09-29",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224883,
+        "overall": 70,
+        "positions": [
+          "ST"
+        ],
+        "pace": 62,
+        "shooting": 70,
+        "passing": 64,
+        "dribbling": 66,
+        "defending": 44,
+        "physical": 79
+      }
+    },
+    {
+      "id": 125668,
+      "name": "Nathanael Mbuku",
+      "dob": "2002-03-16",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253036,
+        "overall": 73,
+        "positions": [
+          "RM",
+          "LM",
+          "CM",
+          "RW"
+        ],
+        "pace": 89,
+        "shooting": 63,
+        "passing": 68,
+        "dribbling": 74,
+        "defending": 33,
+        "physical": 58
+      }
+    },
+    {
+      "id": 176899,
+      "name": "Arijon Ibrahimovic",
+      "dob": "2005-12-11",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 266236,
+        "overall": 75,
+        "positions": [
+          "LM",
+          "RM",
+          "LW",
+          "RW"
+        ],
+        "pace": 85,
+        "shooting": 68,
+        "passing": 71,
+        "dribbling": 77,
+        "defending": 30,
+        "physical": 58
+      }
+    },
+    {
+      "id": 178772,
+      "name": "Rodrigo Ribeiro",
+      "dob": "2005-04-28",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268837,
+        "overall": 69,
+        "positions": [
+          "ST",
+          "RW",
+          "RM"
+        ],
+        "pace": 72,
+        "shooting": 66,
+        "passing": 58,
+        "dribbling": 71,
+        "defending": 22,
+        "physical": 61
+      }
+    },
+    {
+      "id": 273146,
+      "name": "Faik Sakar",
+      "dob": "2008-01-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75833,
+        "overall": 58,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 62,
+        "shooting": 51,
+        "passing": 56,
+        "dribbling": 63,
+        "defending": 34,
+        "physical": 49
+      }
+    },
+    {
+      "id": 274217,
+      "name": "Uchenna Ogundu",
+      "dob": "2006-05-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80729,
+        "overall": 66,
+        "positions": [
+          "ST"
+        ],
+        "pace": 92,
+        "shooting": 64,
+        "passing": 48,
+        "dribbling": 59,
+        "defending": 25,
+        "physical": 64
+      }
+    }
+  ],
+  "baseline_id": "fa3f2542f308ed20",
+  "generated_at": "2026-10-16T00:40:41.325835+00:00",
+  "usage": {
+    "bundesliga": {
+      "source": "understat",
+      "games": 5,
+      "covered": 5,
+      "fully_mapped": 5,
+      "players": {
+        "6617": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 450,
+          "share": 1.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            6596
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "147197": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "295064": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "6645": {
+          "starts": 0,
+          "sub": 4,
+          "minutes": 15,
+          "share": 0.033333,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            2665
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "6714": {
+          "starts": 4,
+          "sub": 0,
+          "minutes": 318,
+          "share": 0.706667,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            2693
+          ],
+          "xg": 0.145,
+          "xa": 2.7188
+        },
+        "67408": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 440,
+          "share": 0.977778,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            15010
+          ],
+          "xg": 0.3115,
+          "xa": 0.1072
+        },
+        "147912": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 450,
+          "share": 1.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            8643
+          ],
+          "xg": 0.0935,
+          "xa": 0.6091
+        },
+        "243858": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 109,
+          "share": 0.242222,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            15011
+          ],
+          "xg": 0.0797,
+          "xa": 0.2291
+        },
+        "249428": {
+          "starts": 4,
+          "sub": 0,
+          "minutes": 360,
+          "share": 0.8,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13149
+          ],
+          "xg": 0.6678,
+          "xa": 0.1241
+        },
+        "261382": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 450,
+          "share": 1.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13414
+          ],
+          "xg": 0.1291,
+          "xa": 0.6452
+        },
+        "273121": {
+          "starts": 1,
+          "sub": 0,
+          "minutes": 86,
+          "share": 0.191111,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13100
+          ],
+          "xg": 0.5897,
+          "xa": 0.0
+        },
+        "608": {
+          "starts": 0,
+          "sub": 3,
+          "minutes": 93,
+          "share": 0.206667,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            5752
+          ],
+          "xg": 0.1655,
+          "xa": 0.2724
+        },
+        "23222": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "65692": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 398,
+          "share": 0.884444,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            13865
+          ],
+          "xg": 1.6656,
+          "xa": 0.4056
+        },
+        "97120": {
+          "starts": 0,
+          "sub": 3,
+          "minutes": 45,
+          "share": 0.1,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            8206
+          ],
+          "xg": 0.0,
+          "xa": 0.0
+        },
+        "98953": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 411,
+          "share": 0.913333,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            7264
+          ],
+          "xg": 0.1426,
+          "xa": 0.9146
+        },
+        "152692": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 444,
+          "share": 0.986667,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            12038
+          ],
+          "xg": 0.2515,
+          "xa": 1.136
+        },
+        "153915": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "175963": {
+          "starts": 1,
+          "sub": 1,
+          "minutes": 114,
+          "share": 0.253333,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            10288
+          ],
+          "xg": 1.9725,
+          "xa": 0.9803
+        },
+        "192654": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 117,
+          "share": 0.26,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            11604
+          ],
+          "xg": 0.5857,
+          "xa": 0.0306
+        },
+        "221763": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "290066": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "6661": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 303,
+          "share": 0.673333,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            171
+          ],
+          "xg": 2.248,
+          "xa": 0.2101
+        },
+        "8193": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "125668": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "176899": {
+          "starts": 3,
+          "sub": 0,
+          "minutes": 209,
+          "share": 0.464444,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            10248
+          ],
+          "xg": 0.4021,
+          "xa": 0.0927
+        },
+        "178772": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 140,
+          "share": 0.311111,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [
+            12418
+          ],
+          "xg": 1.2098,
+          "xa": 0.0
+        },
+        "273146": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "274217": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        }
+      },
+      "most_used_xi": {
+        "formation": "4-3-3",
+        "status": "provisional",
+        "slots": [
+          {
+            "role": "GK",
+            "player": 6617
+          },
+          {
+            "role": "LB",
+            "player": 67408
+          },
+          {
+            "role": "CB",
+            "player": 147912
+          },
+          {
+            "role": "CB",
+            "player": 249428
+          },
+          {
+            "role": "RB",
+            "player": 6714
+          },
+          {
+            "role": "CDM",
+            "player": 98953
+          },
+          {
+            "role": "CM",
+            "player": 152692
+          },
+          {
+            "role": "CM",
+            "player": 65692
+          },
+          {
+            "role": "LW",
+            "player": 261382
+          },
+          {
+            "role": "ST",
+            "player": 6661
+          },
+          {
+            "role": "RW",
+            "player": 176899
+          }
+        ]
+      },
+      "games_list": [
+        {
+          "fixture_id": 565782,
+          "kickoff": "2026-08-30T15:30:00+00:00",
+          "opponent_id": 6,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "e9a5774663b98a7d554326d944185c13e9e351e5813282b10838b7b39e5bd099",
+          "appearances": [
+            {
+              "source_id": 6596,
+              "name": "Finn Dahmen",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6617
+            },
+            {
+              "source_id": 13149,
+              "name": "Noahkai Banks",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.6678217053413391,
+              "xa": 0.028838180005550385,
+              "player": 249428
+            },
+            {
+              "source_id": 8643,
+              "name": "Chrislain Matsima",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.01935875043272972,
+              "player": 147912
+            },
+            {
+              "source_id": 15010,
+              "name": "Calvin Brackelmann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.07039452344179153,
+              "xa": 0.08589690923690796,
+              "player": 67408
+            },
+            {
+              "source_id": 2693,
+              "name": "Marius Wolf",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.14498259127140045,
+              "xa": 2.5865206718444824,
+              "player": 6714
+            },
+            {
+              "source_id": 13414,
+              "name": "Hennes Behrens",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.08812958002090454,
+              "player": 261382
+            },
+            {
+              "source_id": 7264,
+              "name": "Han-Noah Massengo",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.7644591927528381,
+              "player": 98953
+            },
+            {
+              "source_id": 12038,
+              "name": "Fabian Rieder",
+              "minutes": 84,
+              "starter": true,
+              "xg": 0.05000254884362221,
+              "xa": 0.6341941356658936,
+              "player": 152692
+            },
+            {
+              "source_id": 13865,
+              "name": "Robin Fellhauer",
+              "minutes": 77,
+              "starter": true,
+              "xg": 0.20518840849399567,
+              "xa": 0.0,
+              "player": 65692
+            },
+            {
+              "source_id": 10288,
+              "name": "Anton Kade",
+              "minutes": 90,
+              "starter": true,
+              "xg": 1.9308350086212158,
+              "xa": 0.9802594780921936,
+              "player": 175963
+            },
+            {
+              "source_id": 171,
+              "name": "Michael Gregoritsch",
+              "minutes": 84,
+              "starter": true,
+              "xg": 1.492366909980774,
+              "xa": 0.06699365377426147,
+              "player": 6661
+            },
+            {
+              "source_id": 8206,
+              "name": "Yannik Keitel",
+              "minutes": 6,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 97120
+            },
+            {
+              "source_id": 15011,
+              "name": "Seol Young-Woo",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.08339644223451614,
+              "player": 243858
+            },
+            {
+              "source_id": 12418,
+              "name": "Rodrigo Ribeiro",
+              "minutes": 6,
+              "starter": false,
+              "xg": 0.5468937754631042,
+              "xa": 0.0,
+              "player": 178772
+            },
+            {
+              "source_id": 2665,
+              "name": "Jeffrey Gouweleeuw",
+              "minutes": 1,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6645
+            },
+            {
+              "source_id": 11604,
+              "name": "Mert Kömür",
+              "minutes": 13,
+              "starter": false,
+              "xg": 0.4280000627040863,
+              "xa": 0.0,
+              "player": 192654
+            }
+          ],
+          "starters": [
+            6617,
+            249428,
+            147912,
+            67408,
+            6714,
+            261382,
+            98953,
+            152692,
+            65692,
+            175963,
+            6661
+          ],
+          "subs": [
+            97120,
+            243858,
+            178772,
+            6645,
+            192654
+          ],
+          "ideal_started": 8
+        },
+        {
+          "fixture_id": 565786,
+          "kickoff": "2026-09-06T15:30:00+00:00",
+          "opponent_id": 19,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "316a557a36e7de2f452de766189127cf50eda4d6beafc4d8484c668d4d9025be",
+          "appearances": [
+            {
+              "source_id": 6596,
+              "name": "Finn Dahmen",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6617
+            },
+            {
+              "source_id": 2693,
+              "name": "Marius Wolf",
+              "minutes": 73,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.07556328177452087,
+              "player": 6714
+            },
+            {
+              "source_id": 15010,
+              "name": "Calvin Brackelmann",
+              "minutes": 85,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.021335385739803314,
+              "player": 67408
+            },
+            {
+              "source_id": 13149,
+              "name": "Noahkai Banks",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.067734494805336,
+              "player": 249428
+            },
+            {
+              "source_id": 8643,
+              "name": "Chrislain Matsima",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.02500389702618122,
+              "xa": 0.0,
+              "player": 147912
+            },
+            {
+              "source_id": 13414,
+              "name": "Hennes Behrens",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.04739174619317055,
+              "xa": 0.0,
+              "player": 261382
+            },
+            {
+              "source_id": 12038,
+              "name": "Fabian Rieder",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.139528289437294,
+              "xa": 0.0,
+              "player": 152692
+            },
+            {
+              "source_id": 7264,
+              "name": "Han-Noah Massengo",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.14256209135055542,
+              "xa": 0.07233606278896332,
+              "player": 98953
+            },
+            {
+              "source_id": 13865,
+              "name": "Robin Fellhauer",
+              "minutes": 62,
+              "starter": true,
+              "xg": 0.6179882884025574,
+              "xa": 0.0,
+              "player": 65692
+            },
+            {
+              "source_id": 171,
+              "name": "Michael Gregoritsch",
+              "minutes": 73,
+              "starter": true,
+              "xg": 0.06769882142543793,
+              "xa": 0.07141329348087311,
+              "player": 6661
+            },
+            {
+              "source_id": 10248,
+              "name": "Arijon Ibrahimovic",
+              "minutes": 63,
+              "starter": true,
+              "xg": 0.19586926698684692,
+              "xa": 0.092702716588974,
+              "player": 176899
+            },
+            {
+              "source_id": 5752,
+              "name": "Alexis Claude Maurice",
+              "minutes": 28,
+              "starter": false,
+              "xg": 0.12182202935218811,
+              "xa": 0.18766479194164276,
+              "player": 608
+            },
+            {
+              "source_id": 11604,
+              "name": "Mert Kömür",
+              "minutes": 27,
+              "starter": false,
+              "xg": 0.1301964670419693,
+              "xa": 0.030644157901406288,
+              "player": 192654
+            },
+            {
+              "source_id": 2665,
+              "name": "Jeffrey Gouweleeuw",
+              "minutes": 5,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6645
+            },
+            {
+              "source_id": 15011,
+              "name": "Seol Young-Woo",
+              "minutes": 17,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.08509376645088196,
+              "player": 243858
+            },
+            {
+              "source_id": 12418,
+              "name": "Rodrigo Ribeiro",
+              "minutes": 17,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 178772
+            }
+          ],
+          "starters": [
+            6617,
+            6714,
+            67408,
+            249428,
+            147912,
+            261382,
+            152692,
+            98953,
+            65692,
+            6661,
+            176899
+          ],
+          "subs": [
+            608,
+            192654,
+            6645,
+            243858,
+            178772
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 565796,
+          "kickoff": "2026-09-12T13:30:00+00:00",
+          "opponent_id": 3,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "e193db97d70fb970dcc1018f5fafc4a0c44dd9e822b27a4f7ffe94da24950da3",
+          "appearances": [
+            {
+              "source_id": 6596,
+              "name": "Finn Dahmen",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6617
+            },
+            {
+              "source_id": 13149,
+              "name": "Noahkai Banks",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.027542205527424812,
+              "player": 249428
+            },
+            {
+              "source_id": 8643,
+              "name": "Chrislain Matsima",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 147912
+            },
+            {
+              "source_id": 15010,
+              "name": "Calvin Brackelmann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 67408
+            },
+            {
+              "source_id": 2693,
+              "name": "Marius Wolf",
+              "minutes": 79,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.05669795721769333,
+              "player": 6714
+            },
+            {
+              "source_id": 13414,
+              "name": "Hennes Behrens",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0816970020532608,
+              "xa": 0.45442628860473633,
+              "player": 261382
+            },
+            {
+              "source_id": 7264,
+              "name": "Han-Noah Massengo",
+              "minutes": 87,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 98953
+            },
+            {
+              "source_id": 12038,
+              "name": "Fabian Rieder",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.08983154594898224,
+              "player": 152692
+            },
+            {
+              "source_id": 13865,
+              "name": "Robin Fellhauer",
+              "minutes": 79,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.14229634404182434,
+              "player": 65692
+            },
+            {
+              "source_id": 10248,
+              "name": "Arijon Ibrahimovic",
+              "minutes": 60,
+              "starter": true,
+              "xg": 0.12841641902923584,
+              "xa": 0.0,
+              "player": 176899
+            },
+            {
+              "source_id": 171,
+              "name": "Michael Gregoritsch",
+              "minutes": 87,
+              "starter": true,
+              "xg": 0.6048572063446045,
+              "xa": 0.07171846926212311,
+              "player": 6661
+            },
+            {
+              "source_id": 8206,
+              "name": "Yannik Keitel",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 97120
+            },
+            {
+              "source_id": 15011,
+              "name": "Seol Young-Woo",
+              "minutes": 11,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 243858
+            },
+            {
+              "source_id": 12418,
+              "name": "Rodrigo Ribeiro",
+              "minutes": 3,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 178772
+            },
+            {
+              "source_id": 5752,
+              "name": "Alexis Claude Maurice",
+              "minutes": 30,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 608
+            },
+            {
+              "source_id": 11604,
+              "name": "Mert Kömür",
+              "minutes": 11,
+              "starter": false,
+              "xg": 0.027542205527424812,
+              "xa": 0.0,
+              "player": 192654
+            }
+          ],
+          "starters": [
+            6617,
+            249428,
+            147912,
+            67408,
+            6714,
+            261382,
+            98953,
+            152692,
+            65692,
+            176899,
+            6661
+          ],
+          "subs": [
+            97120,
+            243858,
+            178772,
+            608,
+            192654
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 565810,
+          "kickoff": "2026-09-19T13:30:00+00:00",
+          "opponent_id": 12,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "7c9b099f16cff589e99ff31be041a04ffcab787244ca8c754d20c4e1c732fd3c",
+          "appearances": [
+            {
+              "source_id": 6596,
+              "name": "Finn Dahmen",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6617
+            },
+            {
+              "source_id": 13149,
+              "name": "Noahkai Banks",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 249428
+            },
+            {
+              "source_id": 8643,
+              "name": "Chrislain Matsima",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 147912
+            },
+            {
+              "source_id": 15010,
+              "name": "Calvin Brackelmann",
+              "minutes": 85,
+              "starter": true,
+              "xg": 0.08471138030290604,
+              "xa": 0.0,
+              "player": 67408
+            },
+            {
+              "source_id": 2693,
+              "name": "Marius Wolf",
+              "minutes": 76,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6714
+            },
+            {
+              "source_id": 13414,
+              "name": "Hennes Behrens",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 261382
+            },
+            {
+              "source_id": 7264,
+              "name": "Han-Noah Massengo",
+              "minutes": 54,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 98953
+            },
+            {
+              "source_id": 12038,
+              "name": "Fabian Rieder",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.06199730560183525,
+              "xa": 0.41194096207618713,
+              "player": 152692
+            },
+            {
+              "source_id": 13865,
+              "name": "Robin Fellhauer",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.3682287633419037,
+              "xa": 0.183587908744812,
+              "player": 65692
+            },
+            {
+              "source_id": 11604,
+              "name": "Mert Kömür",
+              "minutes": 55,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 192654
+            },
+            {
+              "source_id": 171,
+              "name": "Michael Gregoritsch",
+              "minutes": 55,
+              "starter": true,
+              "xg": 0.083052858710289,
+              "xa": 0.0,
+              "player": 6661
+            },
+            {
+              "source_id": 5752,
+              "name": "Alexis Claude Maurice",
+              "minutes": 35,
+              "starter": false,
+              "xg": 0.04371221736073494,
+              "xa": 0.08471138030290604,
+              "player": 608
+            },
+            {
+              "source_id": 12418,
+              "name": "Rodrigo Ribeiro",
+              "minutes": 35,
+              "starter": false,
+              "xg": 0.10053505003452301,
+              "xa": 0.0,
+              "player": 178772
+            },
+            {
+              "source_id": 8206,
+              "name": "Yannik Keitel",
+              "minutes": 36,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 97120
+            },
+            {
+              "source_id": 15011,
+              "name": "Seol Young-Woo",
+              "minutes": 14,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 243858
+            },
+            {
+              "source_id": 2665,
+              "name": "Jeffrey Gouweleeuw",
+              "minutes": 5,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6645
+            }
+          ],
+          "starters": [
+            6617,
+            249428,
+            147912,
+            67408,
+            6714,
+            261382,
+            98953,
+            152692,
+            65692,
+            192654,
+            6661
+          ],
+          "subs": [
+            608,
+            178772,
+            97120,
+            243858,
+            6645
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 565819,
+          "kickoff": "2026-10-10T13:30:00+00:00",
+          "opponent_id": 5,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "fcfb83a2e0b0b7d4d2b8e43b8e1c4ffcecf3b6154d8ab4d89e8a683cf4ffb627",
+          "appearances": [
+            {
+              "source_id": 6596,
+              "name": "Finn Dahmen",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6617
+            },
+            {
+              "source_id": 13100,
+              "name": "Juma Bah",
+              "minutes": 86,
+              "starter": true,
+              "xg": 0.5896929502487183,
+              "xa": 0.0,
+              "player": 273121
+            },
+            {
+              "source_id": 8643,
+              "name": "Chrislain Matsima",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0685451477766037,
+              "xa": 0.5896929502487183,
+              "player": 147912
+            },
+            {
+              "source_id": 15010,
+              "name": "Calvin Brackelmann",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.1564188301563263,
+              "xa": 0.0,
+              "player": 67408
+            },
+            {
+              "source_id": 15011,
+              "name": "Seol Young-Woo",
+              "minutes": 66,
+              "starter": true,
+              "xg": 0.07967042922973633,
+              "xa": 0.060575876384973526,
+              "player": 243858
+            },
+            {
+              "source_id": 13414,
+              "name": "Hennes Behrens",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.10265026241540909,
+              "player": 261382
+            },
+            {
+              "source_id": 7264,
+              "name": "Han-Noah Massengo",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0778181403875351,
+              "player": 98953
+            },
+            {
+              "source_id": 12038,
+              "name": "Fabian Rieder",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 152692
+            },
+            {
+              "source_id": 13865,
+              "name": "Robin Fellhauer",
+              "minutes": 90,
+              "starter": true,
+              "xg": 0.4741987884044647,
+              "xa": 0.07967042922973633,
+              "player": 65692
+            },
+            {
+              "source_id": 10248,
+              "name": "Arijon Ibrahimovic",
+              "minutes": 86,
+              "starter": true,
+              "xg": 0.0778181403875351,
+              "xa": 0.0,
+              "player": 176899
+            },
+            {
+              "source_id": 12418,
+              "name": "Rodrigo Ribeiro",
+              "minutes": 79,
+              "starter": true,
+              "xg": 0.5623720288276672,
+              "xa": 0.0,
+              "player": 178772
+            },
+            {
+              "source_id": 10288,
+              "name": "Anton Kade",
+              "minutes": 24,
+              "starter": false,
+              "xg": 0.041632816195487976,
+              "xa": 0.0,
+              "player": 175963
+            },
+            {
+              "source_id": 2665,
+              "name": "Jeffrey Gouweleeuw",
+              "minutes": 4,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6645
+            },
+            {
+              "source_id": 171,
+              "name": "Michael Gregoritsch",
+              "minutes": 4,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 6661
+            },
+            {
+              "source_id": 11604,
+              "name": "Mert Kömür",
+              "minutes": 11,
+              "starter": false,
+              "xg": 0.0,
+              "xa": 0.0,
+              "player": 192654
+            }
+          ],
+          "starters": [
+            6617,
+            273121,
+            147912,
+            67408,
+            243858,
+            261382,
+            98953,
+            152692,
+            65692,
+            176899,
+            178772
+          ],
+          "subs": [
+            175963,
+            6645,
+            6661,
+            192654
+          ],
+          "ideal_started": 6
+        }
+      ]
+    }
+  },
+  "usage_generated_at": "2026-10-16T01:16:17.721119+00:00"
+}

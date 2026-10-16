@@ -61,7 +61,7 @@ jobs:
         run: scripts/refresh_site.sh
       - name: Commit refreshed data
         run: |
-          git add site/data data/odds data/results
+          git add site/data data/odds data/results data/players/rosters data/players/baselines
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

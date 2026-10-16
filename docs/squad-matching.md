@@ -1,10 +1,10 @@
 # Ideal XI and match usage pilot
 
-The La Liga pilot uses a fixed EA FC 27 rating snapshot, current football-data.org squads, and collected Understat appearances. It produces local review reports in `out/squads/`. It does not alter forecast probabilities or publish player data.
+The La Liga pilot uses a fixed EA FC 27 rating snapshot, current football-data.org squads, and collected Understat appearances. It produces local review reports in `out/squads/`. It does not alter forecast probabilities. Task 1 now publishes checked per-club references for all supported competitions; the pilot comparison reports remain local, while Task 4 publishes retrospective season usage.
 
 ## Inputs and setup
 
-The selected [EA FC dataset](https://github.com/LakshmiKanth11/EA_FC_ANALYSIS) is a CSV mirror of a publisher-labelled 12 September 2026 snapshot. The pinned revision below contains 17,849 men's players with full/common names, birth dates, overall ratings, primary positions and alternative positions. Its date fields use day-month-year despite the README describing ISO dates; the loader normalizes both explicit formats. The publisher's original scraper link is unavailable, so its EA provenance remains a publisher claim. Raw EA data stays in the ignored cache; public redistribution has not been authorized by downloading the file.
+The selected [EA FC dataset](https://github.com/LakshmiKanth11/EA_FC_ANALYSIS) is a CSV mirror of a publisher-labelled 12 September 2026 snapshot. The pinned revision below contains 17,849 men's players with full/common names, birth dates, overall ratings, primary positions and alternative positions. Its date fields use day-month-year despite the README describing ISO dates; the loader normalizes both explicit formats. The publisher's original scraper link is unavailable, so its EA provenance remains a publisher claim. Raw EA data stays in the ignored cache. The [agreed plan](xi-ui-plan-2026-10-15.md#decisions) authorizes publication of EA player ratings with attribution; this records the project decision, not a claim of a publisher licence.
 
 ```bash
 mkdir -p .cache/players/ea
@@ -12,9 +12,9 @@ curl -fL 'https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b254
 PYTHONDONTWRITEBYTECODE=1 python scripts/build_squads.py --competition PD
 ```
 
-Use the existing Python environment and package dependencies. No new dependency is needed. `FOOTBALL_DATA_API_KEY` comes from the environment or repository `.env`. One request per competition fetches `/v4/competitions/<code>/teams`; its payload and actual observation time are saved at `.cache/players/rosters/<UTC date>/<code>.json`. Same-day reruns reuse that observation. The script checks the season, competition and all supported club IDs against committed site data, and rejects empty squads, conflicting snapshots and repeated provider player IDs.
+Use the existing Python environment and package dependencies. No new dependency is needed. `FOOTBALL_DATA_API_KEY` comes from the environment or repository `.env`. One request per competition fetches `/v4/competitions/<code>/teams`; its payload and actual observation time are saved at `.cache/players/rosters/<UTC date>/<code>.json`. Online runs reuse the latest observation for seven days, consulting the committed archive as well as the cache. The script checks the season, competition and all supported club IDs against committed site data, and rejects empty squads, conflicting snapshots and repeated provider player IDs.
 
-Other supported codes are `PL PD BL1 SA FL1 CL`, accepted together after `--competition`. A club present in both domestic and European responses is matched once. La Liga is the tested pilot. API squads are provider observations rather than independently verified registrations or availability.
+Other supported codes are `PL PD BL1 SA FL1 CL`, accepted together after `--competition`. A club present in both domestic and European responses is matched once. The original pilot tested La Liga; the published export now covers the entire club catalog. API squads are provider observations rather than independently verified registrations or availability.
 
 Replay the saved squad input without network access:
 
@@ -79,3 +79,28 @@ This checks the current season's Champions League heatmap files against the pilo
 On 15 October 2026, all **159 participating-player records, 129 heatmap-player records and 110 starter records** match across ten club-games for Barcelona, Real Madrid, Atlético Madrid, Betis and Villarreal. The remaining 26 heatmap fixtures have no La Liga pilot club and are outside this audit. A source-backed Abde/Abdessamad alias resolves the only initial gap.
 
 UEFA `positions` identifies starters from its lineup `field`; `physical.players` supplies positive playing times, including stoppage time. These accompanying records support XI history and minutes. Player heatmap grids require at least 30 minutes and include long substitute appearances (19 in this sample), so they cannot identify starters alone. Domestic sheets supply starts/minutes through Understat, without activity heatmaps. The [squads and players plan](xi-ui-plan-2026-10-15.md) extends this to every competition, the club Squad subtab, past lineups, a pooled player-impact model and lineup-adjusted forecasts.
+
+## Published export (all competitions)
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python scripts/build_squads.py --publish --offline \
+  --players /Users/hedibelkahia/codes/football/.cache/players/ea/fc27-2026-09-12.csv \
+  --roster-cache /Users/hedibelkahia/codes/football/.cache/players/rosters
+```
+
+The default competition set is `PL PD BL1 SA FL1 CL`; `--publish` requires exactly the club set in `clubs.json`. The pinned EA CSV is verified against `data/players/ea.sha256`. CI uses `--download-players`; a failed download or mismatch retains the previous publication. Online rosters are reused for seven days and archived immutably under `data/players/rosters/`. Per-club baselines are frozen under `data/players/baselines/`; the [published contract](site-data-contract.md#squad-references) explains retention, dated duplicate-roster selection and ambiguous provider membership. Local aggregate reports keep candidate suggestions for identity review.
+
+The initial all-club export has 111 files, including an explicit unavailable state for Slovan Bratislava's empty provider squad. Three provider identities occur at two clubs each (Yann Gboho, Daniel Elfadli and Mikkel Hansen); all six rows remain ambiguous and unrated. Eleven additional source-backed exceptions prioritize regular first-team players: Livramento, Guirassy, Nmecha, Marcus/Khéphren Thuram, Ndicka, Pacho, Safonov, Eduardo Quaresma, Mykolenko and Weah. The evidence for each is stored alongside the exception.
+
+## Published season participation
+
+The optional refresh runs `scripts/build_squad_usage.py` after `build_squads.py`, reading only published fixtures and match details. It adds separate per-competition ledgers for every supported club, preserving the EA baseline and its creation time. To rerun without provider requests:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python scripts/build_squad_usage.py \
+  --players /Users/hedibelkahia/codes/football/.cache/players/ea/fc27-2026-09-12.csv
+```
+
+Understat supplies domestic starts/sub appearances/minutes. UEFA `positions` identifies starters, including early substitutions; `physical` supplies elapsed minutes, including long substitutes and stoppage time. UEFA coordinates are rotated for away games before computing mean starter positions and approximate role notes. The most-used XI uses the same formation-constrained assignment as the EA reference, prioritizing observed minutes then EA overall.
+
+Known observations on partial sheets are retained. Unobserved players become zero only on a fully mapped side; player `known_games` and `unknown_games` distinguish incomplete lower-bound totals from complete observations. Entirely unknown totals are null. Shares use the requested 90 × covered source games denominator, can exceed one with UEFA stoppage time, and must be read with coverage. `fully_mapped` reports the subset with complete identity mappings. See the [Squad references contract](site-data-contract.md#squad-references) for field meanings, provenance, position zones and retention rules. This season view is retrospective and never enters forecast probabilities.

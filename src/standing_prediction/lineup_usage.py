@@ -1,4 +1,5 @@
 from collections import Counter, defaultdict
+import html
 import math
 
 from standing_prediction.squads import name_score
@@ -11,6 +12,7 @@ def aliases(player):
 
 
 def identify_appearance(name, players):
+    name = html.unescape(name)  # Understat names arrive HTML-escaped (N&#039;Guessan)
     candidates = [(name_score(name, aliases(player), appearance=True), player["id"]) for player in players]
     candidates = [(score, pid) for score, pid in candidates if score is not None]
     if not candidates:
