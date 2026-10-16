@@ -34,7 +34,7 @@ Remaining work includes identity coverage, historical rating vintages, dated pre
 
 - **Repository rename:** deferred. GitHub redirects remotes but not the Pages address; preserve existing links or set up a custom domain before renaming.
 - **Elo K and season regression:** at most 0.0005 log loss in the Plan C search.
-- **Non-penalty xG:** now [model plan Task B](docs/model-plan-2026-10-16.md): npxG strengths plus a shrunk team penalty rate, judged on held-out match log loss.
+- **Non-penalty xG:** tested in [model plan Task B](docs/npxg-penalty-rate.md). npxG strengths plus a shrunk team penalty rate gain 0.0006 held-out log loss (standard error 0.0004), at the 0.0005 yardstick but within noise; npxG alone gains 0.0005 (0.0005). Worth including only if the calibration is rebuilt for another reason.
 - **Promoted teams and preseason priors:** second divisions (E1, SP2, D2, I2, F2) with a division offset. This matters for early-season tables, not title races.
 - **Dynamic, score-driven team strengths:** would replace both time decay and Elo, a bigger change.
 - **Strength uncertainty in season simulations:** tested and rejected. Title favorites already win as often as forecast, and added noise made title forecasts worse. Revisit only for points ranges or the Champions League offsets.
