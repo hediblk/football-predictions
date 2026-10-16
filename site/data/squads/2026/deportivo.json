@@ -764,13 +764,15 @@
           ]
         },
         "213277": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
-          "provider_ids": []
+          "starts": 4,
+          "sub": 0,
+          "minutes": 353,
+          "share": 0.560317,
+          "known_games": 4,
+          "unknown_games": 4,
+          "provider_ids": [
+            2278
+          ]
         },
         "226242": {
           "starts": null,
@@ -966,7 +968,7 @@
           },
           {
             "role": "CB",
-            "player": 177239
+            "player": 213277
           },
           {
             "role": "CB",
@@ -978,7 +980,7 @@
           },
           {
             "role": "CDM",
-            "player": 69837
+            "player": 177239
           },
           {
             "role": "CM",
@@ -986,11 +988,11 @@
           },
           {
             "role": "CM",
-            "player": 246474
+            "player": 69837
           },
           {
             "role": "LW",
-            "player": 225956
+            "player": 246474
           },
           {
             "role": "ST",
@@ -1462,7 +1464,7 @@
               "name": "Giménez",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 213277
             },
             {
               "source_id": 14706,
@@ -1545,6 +1547,7 @@
           "starters": [
             172628,
             3134,
+            213277,
             177239,
             124711,
             188817,
@@ -1586,7 +1589,7 @@
               "name": "Giménez",
               "minutes": 83,
               "starter": true,
-              "player": null
+              "player": 213277
             },
             {
               "source_id": 14714,
@@ -1682,6 +1685,7 @@
           ],
           "starters": [
             172628,
+            213277,
             186699,
             7646,
             176255,
@@ -1732,7 +1736,7 @@
               "name": "Giménez",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 213277
             },
             {
               "source_id": 10940,
@@ -1823,6 +1827,7 @@
             172628,
             3134,
             298636,
+            213277,
             124711,
             225956,
             69837,
@@ -1872,7 +1877,7 @@
               "name": "Giménez",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 213277
             },
             {
               "source_id": 10940,
@@ -1963,6 +1968,7 @@
             172628,
             3134,
             298636,
+            213277,
             124711,
             69837,
             226170,
@@ -1980,5 +1986,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:01:59.454570+00:00"
+  "usage_generated_at": "2026-10-16T01:14:39.446511+00:00"
 }

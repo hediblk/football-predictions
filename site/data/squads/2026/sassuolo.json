@@ -967,12 +967,14 @@
         },
         "188791": {
           "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 3,
-          "unknown_games": 3,
-          "provider_ids": []
+          "sub": 1,
+          "minutes": 27,
+          "share": 0.05,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            10985
+          ]
         },
         "189844": {
           "starts": 2,
@@ -1524,7 +1526,7 @@
               "name": "Sulemana",
               "minutes": 27,
               "starter": false,
-              "player": null
+              "player": 188791
             },
             {
               "source_id": 10994,
@@ -1563,6 +1565,7 @@
           ],
           "subs": [
             119163,
+            188791,
             44033,
             2202
           ],
@@ -2000,5 +2003,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:02.132605+00:00"
+  "usage_generated_at": "2026-10-16T01:14:42.252390+00:00"
 }

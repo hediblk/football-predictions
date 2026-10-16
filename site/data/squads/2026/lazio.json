@@ -779,13 +779,15 @@
           "provider_ids": []
         },
         "267": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
-          "provider_ids": []
+          "starts": 1,
+          "sub": 4,
+          "minutes": 125,
+          "share": 0.231481,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            2521
+          ]
         },
         "1740": {
           "starts": null,
@@ -1164,7 +1166,7 @@
               "name": "Alfonso",
               "minutes": 82,
               "starter": true,
-              "player": null
+              "player": 267
             },
             {
               "source_id": 12872,
@@ -1248,6 +1250,7 @@
             43190,
             2069,
             67886,
+            267,
             147781,
             111220,
             97537,
@@ -1360,7 +1363,7 @@
               "name": "Alfonso",
               "minutes": 23,
               "starter": false,
-              "player": null
+              "player": 267
             },
             {
               "source_id": 6180,
@@ -1397,6 +1400,7 @@
           ],
           "subs": [
             187476,
+            267,
             2358,
             128007,
             2016
@@ -1507,7 +1511,7 @@
               "name": "Alfonso",
               "minutes": 1,
               "starter": false,
-              "player": null
+              "player": 267
             },
             {
               "source_id": 9071,
@@ -1531,6 +1535,7 @@
           ],
           "subs": [
             171448,
+            267,
             152787
           ],
           "ideal_started": null
@@ -1786,7 +1791,7 @@
               "name": "Alfonso",
               "minutes": 6,
               "starter": false,
-              "player": null
+              "player": 267
             },
             {
               "source_id": 4895,
@@ -1811,6 +1816,7 @@
           "subs": [
             128007,
             2358,
+            267,
             2016
           ],
           "ideal_started": null
@@ -1912,7 +1918,7 @@
               "name": "Alfonso",
               "minutes": 13,
               "starter": false,
-              "player": null
+              "player": 267
             },
             {
               "source_id": 12872,
@@ -1950,6 +1956,7 @@
           ],
           "subs": [
             2016,
+            267,
             147781,
             134835
           ],
@@ -1958,5 +1965,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:00.395932+00:00"
+  "usage_generated_at": "2026-10-16T01:14:40.438218+00:00"
 }

@@ -930,13 +930,15 @@
           ]
         },
         "33131": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 7,
-          "provider_ids": []
+          "starts": 1,
+          "sub": 1,
+          "minutes": 66,
+          "share": 0.091667,
+          "known_games": 3,
+          "unknown_games": 5,
+          "provider_ids": [
+            5199
+          ]
         },
         "50907": {
           "starts": 1,
@@ -1433,7 +1435,7 @@
               "name": "Raba",
               "minutes": 5,
               "starter": false,
-              "player": null
+              "player": 33131
             }
           ],
           "starters": [
@@ -1452,7 +1454,8 @@
           "subs": [
             245521,
             32762,
-            9870
+            9870,
+            33131
           ],
           "ideal_started": null
         },
@@ -2084,7 +2087,7 @@
               "name": "Raba",
               "minutes": 61,
               "starter": true,
-              "player": null
+              "player": 33131
             },
             {
               "source_id": 8267,
@@ -2157,6 +2160,7 @@
             8456,
             97367,
             33146,
+            33131,
             39104,
             30802,
             177180,
@@ -2173,5 +2177,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:02.715186+00:00"
+  "usage_generated_at": "2026-10-16T01:14:42.842719+00:00"
 }

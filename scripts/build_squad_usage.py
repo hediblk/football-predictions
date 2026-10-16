@@ -7,7 +7,7 @@ from pathlib import Path
 
 from build_squads import ROOT, load_players, sha256, write_json
 from standing_prediction.lineup_usage import identify_appearance
-from standing_prediction.squads import WIDE_POSITIONS, select_xi
+from standing_prediction.squads import select_xi
 from validate_site_data import COMPETITIONS, validate_payload
 
 
@@ -47,15 +47,6 @@ def valid_sheet(rows):
             len({row["source_id"] for row in rows}) == len(rows) and all(
                 isinstance(row["minutes"], (int, float)) and not isinstance(row["minutes"], bool) and
                 math.isfinite(row["minutes"]) and 0 <= row["minutes"] <= 130 for row in rows))
-
-
-def observed_role(x, y):
-    if x < 0.2:
-        return "GK"
-    if y < 0.35 or y > 0.65:
-        flank = "L" if y < 0.35 else "R"
-        return flank + ("B" if x < 0.45 else "M" if x < 0.58 else "W")
-    return "CB" if x < 0.4 else "CDM" if x < 0.48 else "CM" if x < 0.56 else "CAM" if x < 0.64 else "ST"
 
 
 def competition_usage(club, sheets, source):
@@ -108,12 +99,6 @@ def competition_usage(club, sheets, source):
             positions = [row for row in observed if "avg_x" in row]
             total.update(avg_x=round(sum(row["avg_x"] for row in positions) / len(positions), 4) if positions else None,
                          avg_y=round(sum(row["avg_y"] for row in positions) / len(positions), 4) if positions else None)
-            ea = player.get("ea")
-            if positions and ea and ea["positions"]:
-                role = observed_role(total["avg_x"], total["avg_y"])
-                if not WIDE_POSITIONS.get(role, {role}) & set(ea["positions"]):
-                    total["role_note"] = (f"Average Champions League location suggests {role}; "
-                                          f"EA lists {', '.join(ea['positions'])}. Location-based approximation.")
         totals[str(pid)] = total
     selection = select_xi(players, club["ideal_xi"]["formation"], minutes={int(pid): row["minutes"] for pid, row in totals.items()})
     return {"source": source, "games": len(games), "covered": covered,

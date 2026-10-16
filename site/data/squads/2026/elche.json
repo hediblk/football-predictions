@@ -651,7 +651,7 @@
       "source": "understat",
       "games": 8,
       "covered": 8,
-      "fully_mapped": 0,
+      "fully_mapped": 1,
       "players": {
         "23810": {
           "starts": 8,
@@ -665,12 +665,12 @@
           ]
         },
         "175982": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         },
         "33318": {
@@ -678,19 +678,19 @@
           "sub": 2,
           "minutes": 182,
           "share": 0.252778,
-          "known_games": 4,
-          "unknown_games": 4,
+          "known_games": 5,
+          "unknown_games": 3,
           "provider_ids": [
             2353
           ]
         },
         "33516": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         },
         "151557": {
@@ -705,12 +705,12 @@
           ]
         },
         "154556": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         },
         "184121": {
@@ -751,8 +751,8 @@
           "sub": 1,
           "minutes": 6,
           "share": 0.008333,
-          "known_games": 1,
-          "unknown_games": 7,
+          "known_games": 2,
+          "unknown_games": 6,
           "provider_ids": [
             14719
           ]
@@ -817,28 +817,28 @@
           "sub": 2,
           "minutes": 223,
           "share": 0.309722,
-          "known_games": 5,
-          "unknown_games": 3,
+          "known_games": 6,
+          "unknown_games": 2,
           "provider_ids": [
             11362
           ]
         },
         "294508": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         },
         "8214": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         },
         "8414": {
@@ -846,20 +846,22 @@
           "sub": 2,
           "minutes": 115,
           "share": 0.159722,
-          "known_games": 3,
-          "unknown_games": 5,
+          "known_games": 4,
+          "unknown_games": 4,
           "provider_ids": [
             2057
           ]
         },
         "32281": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
-          "provider_ids": []
+          "starts": 0,
+          "sub": 3,
+          "minutes": 17,
+          "share": 0.023611,
+          "known_games": 3,
+          "unknown_games": 5,
+          "provider_ids": [
+            8893
+          ]
         },
         "33843": {
           "starts": 5,
@@ -917,12 +919,12 @@
           ]
         },
         "206810": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         },
         "229141": {
@@ -930,19 +932,19 @@
           "sub": 0,
           "minutes": 200,
           "share": 0.277778,
-          "known_games": 3,
-          "unknown_games": 5,
+          "known_games": 4,
+          "unknown_games": 4,
           "provider_ids": [
             13838
           ]
         },
         "229143": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 1,
+          "unknown_games": 7,
           "provider_ids": []
         }
       },
@@ -1396,7 +1398,7 @@
               "name": "Josan",
               "minutes": 3,
               "starter": false,
-              "player": null
+              "player": 32281
             }
           ],
           "starters": [
@@ -1414,7 +1416,8 @@
           "subs": [
             8414,
             33843,
-            171148
+            171148,
+            32281
           ],
           "ideal_started": null
         },
@@ -1515,7 +1518,7 @@
               "name": "Josan",
               "minutes": 6,
               "starter": false,
-              "player": null
+              "player": 32281
             },
             {
               "source_id": 3425,
@@ -1553,6 +1556,7 @@
           ],
           "subs": [
             171148,
+            32281,
             3369,
             179011,
             184121
@@ -1705,8 +1709,8 @@
           "fixture_id": 564681,
           "kickoff": "2026-09-15T19:30:00+00:00",
           "opponent_id": 86,
-          "status": "partial",
-          "reason": "unmapped_appearances",
+          "status": "complete",
+          "reason": null,
           "sheet_sha256": "1c5b5782a2bd8c526193180218a45501a51cfc463064e60aaf5f983f873beb4b",
           "appearances": [
             {
@@ -1819,7 +1823,7 @@
               "name": "Josan",
               "minutes": 8,
               "starter": false,
-              "player": null
+              "player": 32281
             }
           ],
           "starters": [
@@ -1839,9 +1843,10 @@
             3369,
             137997,
             191165,
-            171148
+            171148,
+            32281
           ],
-          "ideal_started": null
+          "ideal_started": 7
         },
         {
           "fixture_id": 564692,
@@ -2122,5 +2127,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:01:59.591926+00:00"
+  "usage_generated_at": "2026-10-16T01:14:39.587426+00:00"
 }

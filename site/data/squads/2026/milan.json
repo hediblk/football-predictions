@@ -667,15 +667,15 @@
       "source": "understat",
       "games": 6,
       "covered": 6,
-      "fully_mapped": 0,
+      "fully_mapped": 2,
       "players": {
         "2476": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "8390": {
@@ -690,12 +690,12 @@
           ]
         },
         "251128": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "1753": {
@@ -703,29 +703,31 @@
           "sub": 2,
           "minutes": 34,
           "share": 0.062963,
-          "known_games": 3,
-          "unknown_games": 3,
+          "known_games": 5,
+          "unknown_games": 1,
           "provider_ids": [
             4920
           ]
         },
         "11528": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "32642": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
-          "provider_ids": []
+          "starts": 5,
+          "sub": 1,
+          "minutes": 334,
+          "share": 0.618519,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            5136
+          ]
         },
         "112969": {
           "starts": 6,
@@ -743,8 +745,8 @@
           "sub": 1,
           "minutes": 1,
           "share": 0.001852,
-          "known_games": 1,
-          "unknown_games": 5,
+          "known_games": 3,
+          "unknown_games": 3,
           "provider_ids": [
             8512
           ]
@@ -776,19 +778,19 @@
           "sub": 2,
           "minutes": 128,
           "share": 0.237037,
-          "known_games": 3,
-          "unknown_games": 3,
+          "known_games": 4,
+          "unknown_games": 2,
           "provider_ids": [
             11967
           ]
         },
         "264215": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "43": {
@@ -829,19 +831,19 @@
           "sub": 2,
           "minutes": 185,
           "share": 0.342593,
-          "known_games": 4,
-          "unknown_games": 2,
+          "known_games": 5,
+          "unknown_games": 1,
           "provider_ids": [
             8297
           ]
         },
         "144909": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "150669": {
@@ -856,12 +858,12 @@
           ]
         },
         "156527": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "182192": {
@@ -880,19 +882,19 @@
           "sub": 2,
           "minutes": 238,
           "share": 0.440741,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             11418
           ]
         },
         "275197": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 4,
           "provider_ids": []
         },
         "145": {
@@ -933,8 +935,8 @@
           "sub": 2,
           "minutes": 12,
           "share": 0.022222,
-          "known_games": 2,
-          "unknown_games": 4,
+          "known_games": 3,
+          "unknown_games": 3,
           "provider_ids": [
             10348
           ]
@@ -961,7 +963,7 @@
           },
           {
             "role": "LB",
-            "player": 182192
+            "player": 32642
           },
           {
             "role": "CB",
@@ -973,7 +975,7 @@
           },
           {
             "role": "RB",
-            "player": 8858
+            "player": 182192
           },
           {
             "role": "CDM",
@@ -1050,7 +1052,7 @@
               "name": "Estupiñán",
               "minutes": 66,
               "starter": true,
-              "player": null
+              "player": 32642
             },
             {
               "source_id": 13895,
@@ -1129,6 +1131,7 @@
             180139,
             112969,
             33124,
+            32642,
             150669,
             8159,
             192142,
@@ -1233,7 +1236,7 @@
               "name": "Estupiñán",
               "minutes": 1,
               "starter": false,
-              "player": null
+              "player": 32642
             },
             {
               "source_id": 13895,
@@ -1278,6 +1281,7 @@
             101431
           ],
           "subs": [
+            32642,
             3368,
             8858,
             1753
@@ -1332,7 +1336,7 @@
               "name": "Estupiñán",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32642
             },
             {
               "source_id": 8771,
@@ -1411,6 +1415,7 @@
             180139,
             112969,
             182192,
+            32642,
             150669,
             43,
             3368,
@@ -1429,8 +1434,8 @@
           "fixture_id": 558600,
           "kickoff": "2026-09-12T16:00:00+00:00",
           "opponent_id": 110,
-          "status": "partial",
-          "reason": "unmapped_appearances",
+          "status": "complete",
+          "reason": null,
           "sheet_sha256": "5b1184ac2112877fcc6d25d6f5e7c77ac51ef252c250ebebd6065265e7898230",
           "appearances": [
             {
@@ -1473,7 +1478,7 @@
               "name": "Estupiñán",
               "minutes": 48,
               "starter": true,
-              "player": null
+              "player": 32642
             },
             {
               "source_id": 3291,
@@ -1552,6 +1557,7 @@
             180139,
             153556,
             33124,
+            32642,
             3368,
             43,
             8159,
@@ -1565,14 +1571,14 @@
             182192,
             177477
           ],
-          "ideal_started": null
+          "ideal_started": 7
         },
         {
           "fixture_id": 558597,
           "kickoff": "2026-09-20T18:45:00+00:00",
           "opponent_id": 5890,
-          "status": "partial",
-          "reason": "unmapped_appearances",
+          "status": "complete",
+          "reason": null,
           "sheet_sha256": "ee0b79c40dd5f3c9120a25384acc40be4bf97d109a4a161280f03c72025fba94",
           "appearances": [
             {
@@ -1615,7 +1621,7 @@
               "name": "Estupiñán",
               "minutes": 76,
               "starter": true,
-              "player": null
+              "player": 32642
             },
             {
               "source_id": 2250,
@@ -1694,6 +1700,7 @@
             153556,
             112969,
             33124,
+            32642,
             43,
             3368,
             145,
@@ -1707,7 +1714,7 @@
             215616,
             150669
           ],
-          "ideal_started": null
+          "ideal_started": 8
         },
         {
           "fixture_id": 558580,
@@ -1750,7 +1757,7 @@
               "name": "Estupiñán",
               "minutes": 53,
               "starter": true,
-              "player": null
+              "player": 32642
             },
             {
               "source_id": 7208,
@@ -1835,6 +1842,7 @@
             180139,
             1753,
             112969,
+            32642,
             33124,
             150669,
             3368,
@@ -1853,5 +1861,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:01.171515+00:00"
+  "usage_generated_at": "2026-10-16T01:14:41.254930+00:00"
 }

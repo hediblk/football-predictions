@@ -674,13 +674,15 @@
           ]
         },
         "8479": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 6,
-          "provider_ids": []
+          "starts": 5,
+          "sub": 0,
+          "minutes": 366,
+          "share": 0.677778,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            2229
+          ]
         },
         "32579": {
           "starts": 4,
@@ -915,7 +917,7 @@
       },
       "most_used_xi": {
         "formation": "4-3-3",
-        "status": "insufficient_coverage",
+        "status": "provisional",
         "slots": [
           {
             "role": "GK",
@@ -923,7 +925,7 @@
           },
           {
             "role": "LB",
-            "player": null
+            "player": 8479
           },
           {
             "role": "CB",
@@ -1005,7 +1007,7 @@
               "name": "Yuri",
               "minutes": 10,
               "starter": true,
-              "player": null
+              "player": 8479
             },
             {
               "source_id": 14777,
@@ -1090,6 +1092,7 @@
             136000,
             151439,
             32579,
+            8479,
             279951,
             270747,
             32629,
@@ -1287,7 +1290,7 @@
               "name": "Yuri",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 8479
             },
             {
               "source_id": 9755,
@@ -1372,6 +1375,7 @@
             136000,
             151439,
             7884,
+            8479,
             32481,
             279951,
             101870,
@@ -1428,7 +1432,7 @@
               "name": "Yuri",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 8479
             },
             {
               "source_id": 14777,
@@ -1513,6 +1517,7 @@
             136000,
             7884,
             32579,
+            8479,
             279951,
             32481,
             101870,
@@ -1569,7 +1574,7 @@
               "name": "Yuri",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 8479
             },
             {
               "source_id": 14777,
@@ -1647,6 +1652,7 @@
             136000,
             32579,
             7884,
+            8479,
             279951,
             32481,
             101870,
@@ -1701,7 +1707,7 @@
               "name": "Yuri",
               "minutes": 86,
               "starter": true,
-              "player": null
+              "player": 8479
             },
             {
               "source_id": 12263,
@@ -1785,6 +1791,7 @@
             32570,
             151439,
             7884,
+            8479,
             244599,
             32481,
             101870,
@@ -1803,5 +1810,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:01:58.583728+00:00"
+  "usage_generated_at": "2026-10-16T01:14:38.620185+00:00"
 }

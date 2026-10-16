@@ -48,6 +48,9 @@ def name_score(name, aliases, common_name="", *, appearance=False):
             scores.append(0)
         elif len(tokens) >= 2 and (tokens < other or (appearance and len(other) >= 2 and other < tokens)):
             scores.append(1)
+        elif appearance and len(tokens) == 1 and tokens < other:
+            # Match sheets often give one name ("Remiro"); only a unique fit within the club counts.
+            scores.append(3)
         elif len(tokens) >= 2 and any(variant <= other for variant in variants):
             scores.append(2)
     # EA's explicit common name is stronger evidence than an arbitrary surname.

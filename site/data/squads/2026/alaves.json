@@ -599,13 +599,15 @@
           "provider_ids": []
         },
         "33622": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
-          "provider_ids": []
+          "starts": 7,
+          "sub": 0,
+          "minutes": 607,
+          "share": 0.843056,
+          "known_games": 7,
+          "unknown_games": 1,
+          "provider_ids": [
+            2280
+          ]
         },
         "45831": {
           "starts": null,
@@ -911,7 +913,7 @@
               "name": "Jonny",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 10364,
@@ -1014,6 +1016,7 @@
           ],
           "starters": [
             283,
+            33622,
             46123,
             146969,
             298633,
@@ -1066,7 +1069,7 @@
               "name": "Jonny",
               "minutes": 73,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 10364,
@@ -1157,6 +1160,7 @@
             283,
             298633,
             146969,
+            33622,
             46123,
             290184,
             173617,
@@ -1207,7 +1211,7 @@
               "name": "Jonny",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 10364,
@@ -1298,6 +1302,7 @@
             283,
             298633,
             146969,
+            33622,
             46123,
             173617,
             157626,
@@ -1334,7 +1339,7 @@
               "name": "Jonny",
               "minutes": 84,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 10364,
@@ -1437,6 +1442,7 @@
           ],
           "starters": [
             283,
+            33622,
             46123,
             146969,
             298633,
@@ -1474,7 +1480,7 @@
               "name": "Jonny",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 10364,
@@ -1584,6 +1590,7 @@
           ],
           "starters": [
             283,
+            33622,
             46123,
             146969,
             298633,
@@ -1779,7 +1786,7 @@
               "name": "Jonny",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 13313,
@@ -1870,6 +1877,7 @@
             283,
             46123,
             146969,
+            33622,
             169089,
             28663,
             173617,
@@ -1906,7 +1914,7 @@
               "name": "Jonny",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 33622
             },
             {
               "source_id": 13313,
@@ -2009,6 +2017,7 @@
           ],
           "starters": [
             283,
+            33622,
             169089,
             46123,
             298633,
@@ -2030,5 +2039,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:01:58.344428+00:00"
+  "usage_generated_at": "2026-10-16T01:14:38.399686+00:00"
 }

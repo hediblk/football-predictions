@@ -440,10 +440,8 @@ def validate_squad_usage(data, by_id, formations):
                 for key in ("avg_x", "avg_y"):
                     expected = round(sum(r[key] for r in positions) / len(positions), 4) if positions else None
                     require(key in total and total[key] == expected, "player average position differs")
-                if "role_note" in total:
-                    require(bool(positions) and by_id[int(pid)]["ea"] is not None, "role note needs positions and EA identity")
             else:
-                require(not {"avg_x", "avg_y", "role_note"} & total.keys(), "domestic usage cannot have UEFA positions")
+                require(not {"avg_x", "avg_y"} & total.keys(), "domestic usage cannot have UEFA positions")
         xi = usage["most_used_xi"]
         require([s["role"] for s in xi["slots"]] == formations[xi["formation"]], "most-used XI roles differ")
         unique(xi["slots"], "player")

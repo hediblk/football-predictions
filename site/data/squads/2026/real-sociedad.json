@@ -585,13 +585,15 @@
       "fully_mapped": 0,
       "players": {
         "32413": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 8,
-          "provider_ids": []
+          "starts": 7,
+          "sub": 0,
+          "minutes": 630,
+          "share": 0.875,
+          "known_games": 7,
+          "unknown_games": 1,
+          "provider_ids": [
+            2555
+          ]
         },
         "157040": {
           "starts": 1,
@@ -849,7 +851,7 @@
         "slots": [
           {
             "role": "GK",
-            "player": 157040
+            "player": 32413
           },
           {
             "role": "LB",
@@ -907,7 +909,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 12182,
@@ -1016,6 +1018,7 @@
             }
           ],
           "starters": [
+            32413,
             141571,
             29,
             245442,
@@ -1048,7 +1051,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 12182,
@@ -1157,6 +1160,7 @@
             }
           ],
           "starters": [
+            32413,
             141571,
             245442,
             164,
@@ -1173,7 +1177,7 @@
             3259,
             101182
           ],
-          "ideal_started": null
+          "ideal_started": 8
         },
         {
           "fixture_id": 564653,
@@ -1188,7 +1192,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 12182,
@@ -1297,6 +1301,7 @@
             }
           ],
           "starters": [
+            32413,
             141571,
             29,
             245442,
@@ -1314,7 +1319,7 @@
             48555,
             77734
           ],
-          "ideal_started": null
+          "ideal_started": 8
         },
         {
           "fixture_id": 564682,
@@ -1329,7 +1334,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 12182,
@@ -1438,6 +1443,7 @@
             }
           ],
           "starters": [
+            32413,
             141571,
             29,
             245442,
@@ -1455,7 +1461,7 @@
             33148,
             82516
           ],
-          "ideal_started": null
+          "ideal_started": 9
         },
         {
           "fixture_id": 564658,
@@ -1611,7 +1617,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 12182,
@@ -1720,6 +1726,7 @@
             }
           ],
           "starters": [
+            32413,
             141571,
             190866,
             164,
@@ -1751,7 +1758,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 12182,
@@ -1860,6 +1867,7 @@
             }
           ],
           "starters": [
+            32413,
             141571,
             245442,
             164,
@@ -1891,7 +1899,7 @@
               "name": "Remiro",
               "minutes": 90,
               "starter": true,
-              "player": null
+              "player": 32413
             },
             {
               "source_id": 11185,
@@ -1993,6 +2001,7 @@
             }
           ],
           "starters": [
+            32413,
             172786,
             245442,
             190866,
@@ -2014,5 +2023,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:01.984890+00:00"
+  "usage_generated_at": "2026-10-16T01:14:42.098695+00:00"
 }

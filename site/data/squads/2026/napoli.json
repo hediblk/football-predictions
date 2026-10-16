@@ -647,15 +647,15 @@
       "source": "understat",
       "games": 6,
       "covered": 6,
-      "fully_mapped": 5,
+      "fully_mapped": 6,
       "players": {
         "2275": {
           "starts": 2,
           "sub": 0,
           "minutes": 180,
           "share": 0.333333,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             6167
           ]
@@ -676,8 +676,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": []
         },
         "301044": {
@@ -685,8 +685,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": []
         },
         "1842": {
@@ -705,8 +705,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": []
         },
         "2487": {
@@ -736,8 +736,8 @@
           "sub": 2,
           "minutes": 160,
           "share": 0.296296,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             6368
           ]
@@ -747,8 +747,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": []
         },
         "170426": {
@@ -778,8 +778,8 @@
           "sub": 2,
           "minutes": 57,
           "share": 0.105556,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             11138
           ]
@@ -789,8 +789,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": []
         },
         "3654": {
@@ -820,8 +820,8 @@
           "sub": 1,
           "minutes": 242,
           "share": 0.448148,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             6434
           ]
@@ -853,8 +853,8 @@
           "sub": 1,
           "minutes": 138,
           "share": 0.255556,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             10241
           ]
@@ -916,20 +916,22 @@
         },
         "181795": {
           "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
-          "provider_ids": []
+          "sub": 1,
+          "minutes": 17,
+          "share": 0.031481,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            13961
+          ]
         },
         "220542": {
           "starts": 2,
           "sub": 1,
           "minutes": 180,
           "share": 0.333333,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": [
             14427
           ]
@@ -939,8 +941,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 1,
+          "known_games": 6,
+          "unknown_games": 0,
           "provider_ids": []
         }
       },
@@ -1698,8 +1700,8 @@
           "fixture_id": 558586,
           "kickoff": "2026-10-10T18:45:00+00:00",
           "opponent_id": 470,
-          "status": "partial",
-          "reason": "unmapped_appearances",
+          "status": "complete",
+          "reason": null,
           "sheet_sha256": "0ff12f555b08872921a7110f082ba964c8f49c50e96809000004c3e5f2ffadae",
           "appearances": [
             {
@@ -1791,7 +1793,7 @@
               "name": "Giovane",
               "minutes": 17,
               "starter": false,
-              "player": null
+              "player": 181795
             },
             {
               "source_id": 7988,
@@ -1830,11 +1832,12 @@
           ],
           "subs": [
             2193,
+            181795,
             126289,
             40305,
             7905
           ],
-          "ideal_started": null
+          "ideal_started": 8
         }
       ]
     },
@@ -1842,7 +1845,7 @@
       "source": "uefa",
       "games": 2,
       "covered": 2,
-      "fully_mapped": 1,
+      "fully_mapped": 2,
       "players": {
         "2275": {
           "starts": 1,
@@ -1862,8 +1865,8 @@
           "sub": 0,
           "minutes": 47.0,
           "share": 0.261111,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [
             250066753
           ],
@@ -1875,8 +1878,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -1886,8 +1889,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -1910,8 +1913,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -1947,8 +1950,8 @@
           "sub": 0,
           "minutes": 96.1,
           "share": 0.533889,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [
             250134196
           ],
@@ -1960,8 +1963,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -1997,8 +2000,8 @@
           "sub": 1,
           "minutes": 37.0,
           "share": 0.205556,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [
             250175777
           ],
@@ -2010,8 +2013,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -2027,8 +2030,7 @@
             250008901
           ],
           "avg_x": 0.4786,
-          "avg_y": 0.5057,
-          "role_note": "Average Champions League location suggests CDM; EA lists CAM, CM. Location-based approximation."
+          "avg_y": 0.5057
         },
         "7905": {
           "starts": 1,
@@ -2048,8 +2050,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -2065,8 +2067,7 @@
             250055982
           ],
           "avg_x": 0.3594,
-          "avg_y": 0.3925,
-          "role_note": "Average Champions League location suggests CB; EA lists CM, CDM. Location-based approximation."
+          "avg_y": 0.3925
         },
         "126289": {
           "starts": 2,
@@ -2086,8 +2087,8 @@
           "sub": 1,
           "minutes": 36.9,
           "share": 0.205,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [
             250165363
           ],
@@ -2157,41 +2158,41 @@
             250130221
           ],
           "avg_x": 0.5544,
-          "avg_y": 0.4887,
-          "role_note": "Average Champions League location suggests CM; EA lists ST. Location-based approximation."
+          "avg_y": 0.4887
         },
         "181795": {
-          "starts": 0,
+          "starts": 1,
           "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
-          "provider_ids": [],
-          "avg_x": null,
-          "avg_y": null
+          "minutes": 61.8,
+          "share": 0.343333,
+          "known_games": 2,
+          "unknown_games": 0,
+          "provider_ids": [
+            250222131
+          ],
+          "avg_x": 0.5499,
+          "avg_y": 0.3284
         },
         "220542": {
           "starts": 1,
           "sub": 0,
           "minutes": 59.2,
           "share": 0.328889,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [
             250211008
           ],
           "avg_x": 0.4263,
-          "avg_y": 0.2388,
-          "role_note": "Average Champions League location suggests LB; EA lists CAM, ST. Location-based approximation."
+          "avg_y": 0.2388
         },
         "262653": {
           "starts": 0,
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 1,
-          "unknown_games": 1,
+          "known_games": 2,
+          "unknown_games": 0,
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
@@ -2417,8 +2418,8 @@
           "fixture_id": 575349,
           "kickoff": "2026-10-13T19:00:00+00:00",
           "opponent_id": 94,
-          "status": "partial",
-          "reason": "unmapped_appearances",
+          "status": "complete",
+          "reason": null,
           "sheet_sha256": "e46bc255b7d477bbf027877baa92039e05d4e8483100e449d53cdd26ca2422f2",
           "appearances": [
             {
@@ -2553,7 +2554,7 @@
               "starter": true,
               "avg_x": 0.5499,
               "avg_y": 0.3284,
-              "player": null
+              "player": 181795
             }
           ],
           "starters": [
@@ -2566,7 +2567,8 @@
             126289,
             170426,
             176758,
-            152770
+            152770,
+            181795
           ],
           "subs": [
             1842,
@@ -2575,10 +2577,10 @@
             7571,
             40305
           ],
-          "ideal_started": null
+          "ideal_started": 6
         }
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:02:01.301627+00:00"
+  "usage_generated_at": "2026-10-16T01:14:41.390415+00:00"
 }
