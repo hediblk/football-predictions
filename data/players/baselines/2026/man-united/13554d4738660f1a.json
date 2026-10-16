@@ -1,0 +1,733 @@
+{
+  "slug": "man-united",
+  "club_id": 66,
+  "name": "Manchester United FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:02.162730+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PL/teams",
+    "sha256": "65de11ca9362ae8e4c97c758ab4d2e4f1c7e3170b160cb9dddce5893aaf877b8",
+    "snapshot": "data/players/rosters/2026-10-16/PL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 30,
+    "matched": 29
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 82.7,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 129946
+      },
+      {
+        "role": "LB",
+        "player": 7898
+      },
+      {
+        "role": "CB",
+        "player": 3326
+      },
+      {
+        "role": "CB",
+        "player": 7549
+      },
+      {
+        "role": "RB",
+        "player": 7553
+      },
+      {
+        "role": "CDM",
+        "player": 190797
+      },
+      {
+        "role": "CM",
+        "player": 3658
+      },
+      {
+        "role": "CM",
+        "player": 3257
+      },
+      {
+        "role": "LW",
+        "player": 3331
+      },
+      {
+        "role": "ST",
+        "player": 30842
+      },
+      {
+        "role": "RW",
+        "player": 8626
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 7913,
+      "name": "Karl Darlow",
+      "dob": "1990-10-08",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 193331,
+        "overall": 76,
+        "positions": [
+          "GK"
+        ],
+        "pace": 76,
+        "shooting": 74,
+        "passing": 70,
+        "dribbling": 77,
+        "defending": 47,
+        "physical": 75
+      }
+    },
+    {
+      "id": 8035,
+      "name": "Tom Heaton",
+      "dob": "1986-04-15",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 163264,
+        "overall": 67,
+        "positions": [
+          "GK"
+        ],
+        "pace": 68,
+        "shooting": 66,
+        "passing": 65,
+        "dribbling": 67,
+        "defending": 37,
+        "physical": 68
+      }
+    },
+    {
+      "id": 129946,
+      "name": "Senne Lammens",
+      "dob": "2002-07-07",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 254803,
+        "overall": 82,
+        "positions": [
+          "GK"
+        ],
+        "pace": 80,
+        "shooting": 83,
+        "passing": 77,
+        "dribbling": 83,
+        "defending": 45,
+        "physical": 82
+      }
+    },
+    {
+      "id": 210730,
+      "name": "Dermot Mee",
+      "dob": "2002-11-20",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268415,
+        "overall": 59,
+        "positions": [
+          "GK"
+        ],
+        "pace": 60,
+        "shooting": 58,
+        "passing": 57,
+        "dribbling": 59,
+        "defending": 33,
+        "physical": 58
+      }
+    },
+    {
+      "id": 3326,
+      "name": "Harry Maguire",
+      "dob": "1993-03-05",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 203263,
+        "overall": 82,
+        "positions": [
+          "CB"
+        ],
+        "pace": 35,
+        "shooting": 57,
+        "passing": 69,
+        "dribbling": 65,
+        "defending": 83,
+        "physical": 83
+      }
+    },
+    {
+      "id": 7549,
+      "name": "Matthijs de Ligt",
+      "dob": "1999-08-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235243,
+        "overall": 82,
+        "positions": [
+          "CB"
+        ],
+        "pace": 60,
+        "shooting": 59,
+        "passing": 66,
+        "dribbling": 67,
+        "defending": 82,
+        "physical": 81
+      }
+    },
+    {
+      "id": 7553,
+      "name": "Noussair Mazraoui",
+      "dob": "1997-11-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236401,
+        "overall": 80,
+        "positions": [
+          "RB",
+          "CB"
+        ],
+        "pace": 74,
+        "shooting": 64,
+        "passing": 76,
+        "dribbling": 78,
+        "defending": 78,
+        "physical": 71
+      }
+    },
+    {
+      "id": 7898,
+      "name": "Luke Shaw",
+      "dob": "1995-07-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 205988,
+        "overall": 79,
+        "positions": [
+          "LB",
+          "CDM"
+        ],
+        "pace": 66,
+        "shooting": 58,
+        "passing": 78,
+        "dribbling": 75,
+        "defending": 79,
+        "physical": 80
+      }
+    },
+    {
+      "id": 15905,
+      "name": "Diogo Dalot",
+      "dob": "1999-03-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234574,
+        "overall": 78,
+        "positions": [
+          "RB",
+          "LB",
+          "RM",
+          "LM"
+        ],
+        "pace": 78,
+        "shooting": 63,
+        "passing": 73,
+        "dribbling": 74,
+        "defending": 74,
+        "physical": 78
+      }
+    },
+    {
+      "id": 46451,
+      "name": "Lisandro Martínez",
+      "dob": "1998-01-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239301,
+        "overall": 82,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 59,
+        "passing": 76,
+        "dribbling": 75,
+        "defending": 82,
+        "physical": 75
+      }
+    },
+    {
+      "id": 181933,
+      "name": "Leny Yoro",
+      "dob": "2005-11-13",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269087,
+        "overall": 78,
+        "positions": [
+          "CB"
+        ],
+        "pace": 69,
+        "shooting": 41,
+        "passing": 60,
+        "dribbling": 65,
+        "defending": 79,
+        "physical": 73
+      }
+    },
+    {
+      "id": 210150,
+      "name": "Harry Amass",
+      "dob": "2007-03-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 273599,
+        "overall": 69,
+        "positions": [
+          "LB",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 77,
+        "shooting": 42,
+        "passing": 62,
+        "dribbling": 70,
+        "defending": 65,
+        "physical": 59
+      }
+    },
+    {
+      "id": 247644,
+      "name": "Ayden Heaven",
+      "dob": "2006-09-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75087,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 69,
+        "shooting": 31,
+        "passing": 59,
+        "dribbling": 67,
+        "defending": 76,
+        "physical": 74
+      }
+    },
+    {
+      "id": 3257,
+      "name": "Bruno Fernandes",
+      "dob": "1994-09-08",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212198,
+        "overall": 89,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 67,
+        "shooting": 85,
+        "passing": 92,
+        "dribbling": 85,
+        "defending": 68,
+        "physical": 75
+      }
+    },
+    {
+      "id": 3658,
+      "name": "Youri Tielemans",
+      "dob": "1997-05-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 216393,
+        "overall": 85,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 53,
+        "shooting": 79,
+        "passing": 85,
+        "dribbling": 80,
+        "defending": 76,
+        "physical": 70
+      }
+    },
+    {
+      "id": 7599,
+      "name": "Mason Mount",
+      "dob": "1999-01-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233064,
+        "overall": 78,
+        "positions": [
+          "CAM",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 66,
+        "shooting": 76,
+        "passing": 80,
+        "dribbling": 79,
+        "defending": 62,
+        "physical": 61
+      }
+    },
+    {
+      "id": 28549,
+      "name": "Manuel Ugarte",
+      "dob": "2001-04-11",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253306,
+        "overall": 77,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 59,
+        "shooting": 64,
+        "passing": 71,
+        "dribbling": 73,
+        "defending": 76,
+        "physical": 75
+      }
+    },
+    {
+      "id": 166366,
+      "name": "Andrey Santos",
+      "dob": "2004-05-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 273018,
+        "overall": 80,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 69,
+        "shooting": 70,
+        "passing": 76,
+        "dribbling": 79,
+        "defending": 80,
+        "physical": 78
+      }
+    },
+    {
+      "id": 178604,
+      "name": "Carlos Baleba",
+      "dob": "2004-01-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272500,
+        "overall": 80,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 74,
+        "shooting": 70,
+        "passing": 76,
+        "dribbling": 79,
+        "defending": 78,
+        "physical": 78
+      }
+    },
+    {
+      "id": 190797,
+      "name": "Kobbie Mainoo",
+      "dob": "2005-04-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269136,
+        "overall": 81,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 66,
+        "shooting": 70,
+        "passing": 77,
+        "dribbling": 83,
+        "defending": 78,
+        "physical": 75
+      }
+    },
+    {
+      "id": 290139,
+      "name": "Tyler Fletcher",
+      "dob": "2007-03-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82899,
+        "overall": 65,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 66,
+        "shooting": 54,
+        "passing": 67,
+        "dribbling": 65,
+        "defending": 63,
+        "physical": 64
+      }
+    },
+    {
+      "id": 3331,
+      "name": "Marcus Rashford",
+      "dob": "1997-10-31",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231677,
+        "overall": 82,
+        "positions": [
+          "LW",
+          "LM",
+          "ST"
+        ],
+        "pace": 92,
+        "shooting": 83,
+        "passing": 78,
+        "dribbling": 81,
+        "defending": 33,
+        "physical": 68
+      }
+    },
+    {
+      "id": 8626,
+      "name": "Bryan Mbeumo",
+      "dob": "1999-08-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243014,
+        "overall": 84,
+        "positions": [
+          "RM",
+          "RW",
+          "ST"
+        ],
+        "pace": 89,
+        "shooting": 83,
+        "passing": 78,
+        "dribbling": 86,
+        "defending": 49,
+        "physical": 75
+      }
+    },
+    {
+      "id": 30842,
+      "name": "Matheus Cunha",
+      "dob": "1999-05-27",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 240243,
+        "overall": 84,
+        "positions": [
+          "LM",
+          "CAM",
+          "ST",
+          "LW"
+        ],
+        "pace": 77,
+        "shooting": 86,
+        "passing": 79,
+        "dribbling": 84,
+        "defending": 44,
+        "physical": 73
+      }
+    },
+    {
+      "id": 99731,
+      "name": "Joshua Zirkzee",
+      "dob": "2001-05-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 250961,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 67,
+        "shooting": 76,
+        "passing": 73,
+        "dribbling": 80,
+        "defending": 42,
+        "physical": 75
+      }
+    },
+    {
+      "id": 124244,
+      "name": "Benjamin Šeško",
+      "dob": "2003-05-31",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 260592,
+        "overall": 82,
+        "positions": [
+          "ST"
+        ],
+        "pace": 85,
+        "shooting": 82,
+        "passing": 67,
+        "dribbling": 78,
+        "defending": 46,
+        "physical": 77
+      }
+    },
+    {
+      "id": 133584,
+      "name": "Amad Diallo",
+      "dob": "2002-07-11",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 254088,
+        "overall": 79,
+        "positions": [
+          "RM",
+          "RB",
+          "RW"
+        ],
+        "pace": 83,
+        "shooting": 75,
+        "passing": 74,
+        "dribbling": 83,
+        "defending": 54,
+        "physical": 53
+      }
+    },
+    {
+      "id": 211559,
+      "name": "Patrick Dorgu",
+      "dob": "2004-10-26",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277432,
+        "overall": 78,
+        "positions": [
+          "LM",
+          "LB"
+        ],
+        "pace": 86,
+        "shooting": 73,
+        "passing": 72,
+        "dribbling": 77,
+        "defending": 72,
+        "physical": 73
+      }
+    },
+    {
+      "id": 289557,
+      "name": "Shea Lacey",
+      "dob": "2007-04-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278124,
+        "overall": 65,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 82,
+        "shooting": 59,
+        "passing": 60,
+        "dribbling": 70,
+        "defending": 35,
+        "physical": 41
+      }
+    },
+    {
+      "id": 302252,
+      "name": "Daniel Armer",
+      "dob": "2007-10-22",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "13554d4738660f1a",
+  "generated_at": "2026-10-16T07:26:52.016735+00:00"
+}

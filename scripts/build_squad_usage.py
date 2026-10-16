@@ -125,7 +125,8 @@ def observed_ea(names, club_name, ea_records):
         if scores:
             scored.append((min(scores), ea))
     local = [(score, ea) for score, ea in scored if normalize_team(ea["dataset_club"]) == normalize_team(club_name)]
-    pool = local or scored
+    # Without the club, only an exact full or common name is safe (a surname subset found the wrong Ricardo Rodríguez).
+    pool = local or [(score, ea) for score, ea in scored if score == 0]
     best = [ea for score, ea in pool if score == min(s for s, _ in pool)] if pool else []
     if len(best) != 1:
         return None, None, "ambiguous_name_match" if best else "no_name_match"

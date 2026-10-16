@@ -1,0 +1,747 @@
+{
+  "slug": "dortmund",
+  "club_id": 4,
+  "name": "Borussia Dortmund",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:09.822985+00:00",
+    "url": "https://api.football-data.org/v4/competitions/BL1/teams",
+    "sha256": "1c95dfdeece4df7077b5d2fbea2456a2b51c2c9f0ced94d4907ddd4a644a20a9",
+    "snapshot": "data/players/rosters/2026-10-16/BL1.json"
+  },
+  "identity_overrides_sha256": "abf93e43b511f43f57a4fd1cdeb31ed4837d156673f2fb6b8c33811b2f59a191",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 30,
+    "matched": 28
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 82.6,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 334
+      },
+      {
+        "role": "LB",
+        "player": 145937
+      },
+      {
+        "role": "CB",
+        "player": 75539
+      },
+      {
+        "role": "CB",
+        "player": 379
+      },
+      {
+        "role": "RB",
+        "player": 44030
+      },
+      {
+        "role": "CDM",
+        "player": 3183
+      },
+      {
+        "role": "CM",
+        "player": 53426
+      },
+      {
+        "role": "CM",
+        "player": 101074
+      },
+      {
+        "role": "LW",
+        "player": 133903
+      },
+      {
+        "role": "ST",
+        "player": 211
+      },
+      {
+        "role": "RW",
+        "player": 246522
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 334,
+      "name": "Gregor Kobel",
+      "dob": "1997-12-06",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235073,
+        "overall": 87,
+        "positions": [
+          "GK"
+        ],
+        "pace": 88,
+        "shooting": 85,
+        "passing": 64,
+        "dribbling": 88,
+        "defending": 44,
+        "physical": 86
+      }
+    },
+    {
+      "id": 7109,
+      "name": "Patrick Drewes",
+      "dob": "1993-02-04",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 210772,
+        "overall": 71,
+        "positions": [
+          "GK"
+        ],
+        "pace": 73,
+        "shooting": 70,
+        "passing": 67,
+        "dribbling": 70,
+        "defending": 30,
+        "physical": 71
+      }
+    },
+    {
+      "id": 9389,
+      "name": "Alexander Meyer",
+      "dob": "1991-04-13",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241050,
+        "overall": 74,
+        "positions": [
+          "GK"
+        ],
+        "pace": 72,
+        "shooting": 71,
+        "passing": 79,
+        "dribbling": 75,
+        "defending": 41,
+        "physical": 74
+      }
+    },
+    {
+      "id": 176268,
+      "name": "Silas Ostrzinski",
+      "dob": "2003-11-19",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 266906,
+        "overall": 63,
+        "positions": [
+          "GK"
+        ],
+        "pace": 65,
+        "shooting": 60,
+        "passing": 59,
+        "dribbling": 65,
+        "defending": 29,
+        "physical": 62
+      }
+    },
+    {
+      "id": 379,
+      "name": "Waldemar Anton",
+      "dob": "1996-07-20",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229476,
+        "overall": 84,
+        "positions": [
+          "CB"
+        ],
+        "pace": 69,
+        "shooting": 47,
+        "passing": 68,
+        "dribbling": 67,
+        "defending": 85,
+        "physical": 85
+      }
+    },
+    {
+      "id": 3183,
+      "name": "Emre Can",
+      "dob": "1994-01-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 208333,
+        "overall": 81,
+        "positions": [
+          "CB",
+          "CDM"
+        ],
+        "pace": 70,
+        "shooting": 76,
+        "passing": 71,
+        "dribbling": 72,
+        "defending": 81,
+        "physical": 82
+      }
+    },
+    {
+      "id": 8805,
+      "name": "Ramy Bensebaini",
+      "dob": "1995-04-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224196,
+        "overall": 79,
+        "positions": [
+          "CB",
+          "LB",
+          "LM"
+        ],
+        "pace": 73,
+        "shooting": 70,
+        "passing": 70,
+        "dribbling": 77,
+        "defending": 79,
+        "physical": 78
+      }
+    },
+    {
+      "id": 44030,
+      "name": "Julian Ryerson",
+      "dob": "1997-11-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229891,
+        "overall": 82,
+        "positions": [
+          "RB",
+          "LB",
+          "RM",
+          "LM"
+        ],
+        "pace": 75,
+        "shooting": 63,
+        "passing": 76,
+        "dribbling": 77,
+        "defending": 78,
+        "physical": 82
+      }
+    },
+    {
+      "id": 75539,
+      "name": "Nico Schlotterbeck",
+      "dob": "1999-12-01",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247819,
+        "overall": 87,
+        "positions": [
+          "CB"
+        ],
+        "pace": 81,
+        "shooting": 60,
+        "passing": 76,
+        "dribbling": 74,
+        "defending": 86,
+        "physical": 84
+      }
+    },
+    {
+      "id": 145937,
+      "name": "Daniel Svensson",
+      "dob": "2002-02-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259716,
+        "overall": 79,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 75,
+        "shooting": 60,
+        "passing": 76,
+        "dribbling": 77,
+        "defending": 75,
+        "physical": 75
+      }
+    },
+    {
+      "id": 246542,
+      "name": "Kouakou Gadou",
+      "dob": "2007-01-17",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 261058,
+      "name": "Filippo Mané",
+      "dob": "2005-03-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 73016,
+        "overall": 65,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 67,
+        "shooting": 25,
+        "passing": 46,
+        "dribbling": 57,
+        "defending": 65,
+        "physical": 61
+      }
+    },
+    {
+      "id": 276255,
+      "name": "Kaua Prates",
+      "dob": "2008-08-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83476,
+        "overall": 67,
+        "positions": [
+          "LB",
+          "CB",
+          "LM"
+        ],
+        "pace": 76,
+        "shooting": 37,
+        "passing": 59,
+        "dribbling": 66,
+        "defending": 61,
+        "physical": 64
+      }
+    },
+    {
+      "id": 290034,
+      "name": "Luca Reggiani",
+      "dob": "2008-01-09",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83751,
+        "overall": 67,
+        "positions": [
+          "CB"
+        ],
+        "pace": 62,
+        "shooting": 30,
+        "passing": 48,
+        "dribbling": 60,
+        "defending": 68,
+        "physical": 65
+      }
+    },
+    {
+      "id": 9551,
+      "name": "Marcel Sabitzer",
+      "dob": "1994-03-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 204923,
+        "overall": 81,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 74,
+        "shooting": 79,
+        "passing": 80,
+        "dribbling": 80,
+        "defending": 78,
+        "physical": 77
+      }
+    },
+    {
+      "id": 53426,
+      "name": "Joey Veerman",
+      "dob": "1998-11-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253109,
+        "overall": 82,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 48,
+        "shooting": 74,
+        "passing": 84,
+        "dribbling": 77,
+        "defending": 66,
+        "physical": 71
+      }
+    },
+    {
+      "id": 101074,
+      "name": "Felix Kalu Nmecha",
+      "dob": "2000-10-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 246863,
+        "overall": 85,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 83,
+        "shooting": 78,
+        "passing": 78,
+        "dribbling": 84,
+        "defending": 82,
+        "physical": 88
+      },
+      "identity_override": {
+        "provider_name": "Felix Kalu Nmecha",
+        "provider_dob": "2000-10-10",
+        "verified_dob": "2000-10-10",
+        "ea_id": 246863,
+        "source": "https://www.bvb.de/de/de/aktuelles/news/news.html/2026/10/11/Talent-Tiefe-Teamgeist-Felix-Nmecha-im-Interview.html",
+        "observed_at": "2026-10-15",
+        "note": "BVB identifies Felix Kalu Nmecha, born 10 October 2000; EA uses Felix Nmecha."
+      }
+    },
+    {
+      "id": 156906,
+      "name": "Giannis Konstantelias",
+      "dob": null,
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 167570,
+      "name": "Carney Chukwuemeka",
+      "dob": "2003-10-20",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259356,
+        "overall": 78,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 74,
+        "shooting": 69,
+        "passing": 75,
+        "dribbling": 83,
+        "defending": 65,
+        "physical": 70
+      }
+    },
+    {
+      "id": 171692,
+      "name": "Jobe Bellingham",
+      "dob": "2005-09-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270964,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 70,
+        "shooting": 69,
+        "passing": 73,
+        "dribbling": 76,
+        "defending": 80,
+        "physical": 83
+      }
+    },
+    {
+      "id": 188476,
+      "name": "Ethan Nwaneri",
+      "dob": "2007-03-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271807,
+        "overall": 75,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 81,
+        "shooting": 69,
+        "passing": 74,
+        "dribbling": 77,
+        "defending": 50,
+        "physical": 54
+      }
+    },
+    {
+      "id": 246522,
+      "name": "Konstantinos Karetsas",
+      "dob": "2007-11-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70497,
+        "overall": 76,
+        "positions": [
+          "CAM",
+          "RM",
+          "CM",
+          "RW"
+        ],
+        "pace": 76,
+        "shooting": 71,
+        "passing": 74,
+        "dribbling": 80,
+        "defending": 24,
+        "physical": 47
+      }
+    },
+    {
+      "id": 250337,
+      "name": "Justin Lerma",
+      "dob": "2008-05-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72419,
+        "overall": 66,
+        "positions": [
+          "CAM",
+          "CM",
+          "LM"
+        ],
+        "pace": 77,
+        "shooting": 59,
+        "passing": 62,
+        "dribbling": 69,
+        "defending": 58,
+        "physical": 60
+      }
+    },
+    {
+      "id": 278316,
+      "name": "Mussa Kaba",
+      "dob": "2008-11-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78577,
+        "overall": 62,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 55,
+        "shooting": 35,
+        "passing": 59,
+        "dribbling": 57,
+        "defending": 61,
+        "physical": 62
+      }
+    },
+    {
+      "id": 299456,
+      "name": "Enzo dos Santos",
+      "dob": "2009-01-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 86362,
+        "overall": 61,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 69,
+        "shooting": 40,
+        "passing": 61,
+        "dribbling": 66,
+        "defending": 51,
+        "physical": 58
+      }
+    },
+    {
+      "id": 211,
+      "name": "Sehrou Guirassy",
+      "dob": "1996-03-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 215441,
+        "overall": 85,
+        "positions": [
+          "ST"
+        ],
+        "pace": 72,
+        "shooting": 85,
+        "passing": 75,
+        "dribbling": 81,
+        "defending": 45,
+        "physical": 83
+      },
+      "identity_override": {
+        "provider_name": "Sehrou Guirassy",
+        "provider_dob": "1996-03-12",
+        "verified_dob": "1996-03-12",
+        "ea_id": 215441,
+        "source": "https://www.bvb.de/de/de/mannschaften/fussball/spieler/serhou-guirassy.html",
+        "observed_at": "2026-10-15",
+        "note": "BVB confirms Serhou Guirassy and 12 March 1996; the provider transposes letters in Sehrou."
+      }
+    },
+    {
+      "id": 125151,
+      "name": "Fábio Silva",
+      "dob": "2002-07-19",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252037,
+        "overall": 78,
+        "positions": [
+          "ST",
+          "CAM",
+          "LW",
+          "LM"
+        ],
+        "pace": 76,
+        "shooting": 75,
+        "passing": 67,
+        "dribbling": 81,
+        "defending": 33,
+        "physical": 76
+      }
+    },
+    {
+      "id": 133903,
+      "name": "Maximilian Beier",
+      "dob": "2002-10-17",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 254117,
+        "overall": 81,
+        "positions": [
+          "CAM",
+          "ST",
+          "LM",
+          "LW"
+        ],
+        "pace": 86,
+        "shooting": 80,
+        "passing": 74,
+        "dribbling": 81,
+        "defending": 56,
+        "physical": 65
+      }
+    },
+    {
+      "id": 279090,
+      "name": "Samuele Inácio",
+      "dob": "2008-04-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83748,
+        "overall": 70,
+        "positions": [
+          "CAM",
+          "ST"
+        ],
+        "pace": 73,
+        "shooting": 58,
+        "passing": 67,
+        "dribbling": 77,
+        "defending": 36,
+        "physical": 49
+      }
+    },
+    {
+      "id": 279093,
+      "name": "Mathis Albert",
+      "dob": "2009-05-21",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80873,
+        "overall": 66,
+        "positions": [
+          "LM",
+          "CAM",
+          "LW",
+          "CM"
+        ],
+        "pace": 76,
+        "shooting": 59,
+        "passing": 61,
+        "dribbling": 70,
+        "defending": 29,
+        "physical": 37
+      }
+    }
+  ],
+  "baseline_id": "05d3d007d9c977dd",
+  "generated_at": "2026-10-16T07:26:52.061983+00:00"
+}

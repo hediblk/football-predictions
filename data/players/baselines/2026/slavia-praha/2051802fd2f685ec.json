@@ -1,0 +1,696 @@
+{
+  "slug": "slavia-praha",
+  "club_id": 930,
+  "name": "SK Slavia Praha",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-14T04:00:41.767417+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
+    "snapshot": "data/players/rosters/2026-10-14/CL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 29,
+    "matched": 27
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 74.6,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 127936
+      },
+      {
+        "role": "LB",
+        "player": 146716
+      },
+      {
+        "role": "CB",
+        "player": 127813
+      },
+      {
+        "role": "CB",
+        "player": 167277
+      },
+      {
+        "role": "RB",
+        "player": 99007
+      },
+      {
+        "role": "CDM",
+        "player": 62769
+      },
+      {
+        "role": "CM",
+        "player": 67970
+      },
+      {
+        "role": "CM",
+        "player": 275012
+      },
+      {
+        "role": "LW",
+        "player": 183277
+      },
+      {
+        "role": "ST",
+        "player": 16396
+      },
+      {
+        "role": "RW",
+        "player": 120279
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 16210,
+      "name": "Ondřej Kolar",
+      "dob": "1994-10-17",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244467,
+        "overall": 65,
+        "positions": [
+          "GK"
+        ],
+        "pace": 63,
+        "shooting": 62,
+        "passing": 71,
+        "dribbling": 67,
+        "defending": 44,
+        "physical": 66
+      }
+    },
+    {
+      "id": 127936,
+      "name": "Jakub Markovič",
+      "dob": "2001-07-13",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252179,
+        "overall": 74,
+        "positions": [
+          "GK"
+        ],
+        "pace": 72,
+        "shooting": 72,
+        "passing": 75,
+        "dribbling": 77,
+        "defending": 42,
+        "physical": 74
+      }
+    },
+    {
+      "id": 263217,
+      "name": "Nazar Domchak",
+      "dob": "2007-04-06",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87268,
+        "overall": 67,
+        "positions": [
+          "GK"
+        ],
+        "pace": 65,
+        "shooting": 64,
+        "passing": 63,
+        "dribbling": 69,
+        "defending": 19,
+        "physical": 66
+      }
+    },
+    {
+      "id": 62769,
+      "name": "Tomáš Holeš",
+      "dob": "1993-03-31",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 251116,
+        "overall": 76,
+        "positions": [
+          "CB",
+          "CDM"
+        ],
+        "pace": 74,
+        "shooting": 58,
+        "passing": 69,
+        "dribbling": 69,
+        "defending": 75,
+        "physical": 80
+      }
+    },
+    {
+      "id": 99007,
+      "name": "Tomáš Vlček",
+      "dob": "2001-02-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 248169,
+        "overall": 73,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 75,
+        "shooting": 39,
+        "passing": 60,
+        "dribbling": 67,
+        "defending": 73,
+        "physical": 75
+      }
+    },
+    {
+      "id": 127813,
+      "name": "David Zima",
+      "dob": "2000-11-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255687,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 76,
+        "shooting": 39,
+        "passing": 56,
+        "dribbling": 67,
+        "defending": 77,
+        "physical": 75
+      }
+    },
+    {
+      "id": 146716,
+      "name": "David Jurásek",
+      "dob": "2000-08-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267594,
+        "overall": 74,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 83,
+        "shooting": 61,
+        "passing": 73,
+        "dribbling": 71,
+        "defending": 69,
+        "physical": 75
+      }
+    },
+    {
+      "id": 167277,
+      "name": "Igoh Ogbu",
+      "dob": "2000-02-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242635,
+        "overall": 74,
+        "positions": [
+          "CB"
+        ],
+        "pace": 76,
+        "shooting": 39,
+        "passing": 55,
+        "dribbling": 60,
+        "defending": 72,
+        "physical": 81
+      }
+    },
+    {
+      "id": 189884,
+      "name": "Ange N'Guessan",
+      "dob": "2003-09-01",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 273928,
+        "overall": 67,
+        "positions": [
+          "CB"
+        ],
+        "pace": 72,
+        "shooting": 32,
+        "passing": 50,
+        "dribbling": 58,
+        "defending": 68,
+        "physical": 68
+      }
+    },
+    {
+      "id": 249418,
+      "name": "Mikuláš Konečný",
+      "dob": "2006-06-02",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76734,
+        "overall": 66,
+        "positions": [
+          "CB"
+        ],
+        "pace": 65,
+        "shooting": 30,
+        "passing": 43,
+        "dribbling": 41,
+        "defending": 67,
+        "physical": 67
+      }
+    },
+    {
+      "id": 254530,
+      "name": "Štěpán Chaloupek",
+      "dob": "2003-03-08",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 272047,
+      "name": "Jakub Kolísek",
+      "dob": "2007-08-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87624,
+        "overall": 53,
+        "positions": [
+          "LB"
+        ],
+        "pace": 64,
+        "shooting": 23,
+        "passing": 35,
+        "dribbling": 51,
+        "defending": 51,
+        "physical": 57
+      }
+    },
+    {
+      "id": 288536,
+      "name": "Eliáš Piták",
+      "dob": "2006-03-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87629,
+        "overall": 54,
+        "positions": [
+          "RB"
+        ],
+        "pace": 60,
+        "shooting": 32,
+        "passing": 42,
+        "dribbling": 53,
+        "defending": 49,
+        "physical": 53
+      }
+    },
+    {
+      "id": 290213,
+      "name": "Hamidou Kante",
+      "dob": "2004-12-18",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 290214,
+      "name": "Samuel Isife",
+      "dob": "2004-07-13",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83019,
+        "overall": 68,
+        "positions": [
+          "RM",
+          "RB",
+          "RW"
+        ],
+        "pace": 79,
+        "shooting": 53,
+        "passing": 61,
+        "dribbling": 67,
+        "defending": 63,
+        "physical": 63
+      }
+    },
+    {
+      "id": 67970,
+      "name": "Michal Sadílek",
+      "dob": "1999-05-31",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 245209,
+        "overall": 77,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 58,
+        "shooting": 61,
+        "passing": 75,
+        "dribbling": 72,
+        "defending": 73,
+        "physical": 79
+      }
+    },
+    {
+      "id": 275012,
+      "name": "David Moses",
+      "dob": "2004-01-20",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76098,
+        "overall": 74,
+        "positions": [
+          "CM",
+          "RM",
+          "CDM"
+        ],
+        "pace": 75,
+        "shooting": 64,
+        "passing": 70,
+        "dribbling": 74,
+        "defending": 70,
+        "physical": 74
+      }
+    },
+    {
+      "id": 284558,
+      "name": "Toumani Diakité",
+      "dob": "2006-01-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87266,
+        "overall": 63,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 71,
+        "shooting": 55,
+        "passing": 58,
+        "dribbling": 62,
+        "defending": 60,
+        "physical": 67
+      }
+    },
+    {
+      "id": 292047,
+      "name": "Mubarak Suleiman",
+      "dob": "2007-04-13",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 85274,
+        "overall": 66,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 76,
+        "shooting": 58,
+        "passing": 64,
+        "dribbling": 69,
+        "defending": 58,
+        "physical": 68
+      }
+    },
+    {
+      "id": 300824,
+      "name": "Oskar Kubiak",
+      "dob": "2006-09-25",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 79237,
+        "overall": 65,
+        "positions": [
+          "LM",
+          "LB",
+          "LW"
+        ],
+        "pace": 81,
+        "shooting": 64,
+        "passing": 58,
+        "dribbling": 64,
+        "defending": 49,
+        "physical": 57
+      }
+    },
+    {
+      "id": 300825,
+      "name": "Wiktor Nowak",
+      "dob": "2004-09-20",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 77592,
+        "overall": 66,
+        "positions": [
+          "CM",
+          "ST",
+          "CDM"
+        ],
+        "pace": 69,
+        "shooting": 61,
+        "passing": 65,
+        "dribbling": 66,
+        "defending": 54,
+        "physical": 69
+      }
+    },
+    {
+      "id": 16396,
+      "name": "Tomáš Chorý",
+      "dob": "1995-01-26",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244793,
+        "overall": 75,
+        "positions": [
+          "ST"
+        ],
+        "pace": 57,
+        "shooting": 75,
+        "passing": 60,
+        "dribbling": 64,
+        "defending": 32,
+        "physical": 88
+      }
+    },
+    {
+      "id": 62511,
+      "name": "Ivan Schranz",
+      "dob": "1993-09-13",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263287,
+        "overall": 69,
+        "positions": [
+          "LM",
+          "RW",
+          "LW"
+        ],
+        "pace": 72,
+        "shooting": 72,
+        "passing": 65,
+        "dribbling": 68,
+        "defending": 61,
+        "physical": 72
+      }
+    },
+    {
+      "id": 99752,
+      "name": "Mojmír Chytil",
+      "dob": "1999-04-29",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 274906,
+        "overall": 75,
+        "positions": [
+          "ST"
+        ],
+        "pace": 73,
+        "shooting": 74,
+        "passing": 56,
+        "dribbling": 70,
+        "defending": 29,
+        "physical": 81
+      }
+    },
+    {
+      "id": 120279,
+      "name": "Lukáš Provod",
+      "dob": "1996-10-23",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253727,
+        "overall": 79,
+        "positions": [
+          "CAM",
+          "LW",
+          "RW",
+          "CM"
+        ],
+        "pace": 77,
+        "shooting": 75,
+        "passing": 79,
+        "dribbling": 78,
+        "defending": 65,
+        "physical": 83
+      }
+    },
+    {
+      "id": 183277,
+      "name": "Danijel Sturm",
+      "dob": "1999-01-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87269,
+        "overall": 69,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 71,
+        "shooting": 70,
+        "passing": 62,
+        "dribbling": 70,
+        "defending": 21,
+        "physical": 66
+      }
+    },
+    {
+      "id": 300826,
+      "name": "Pavel Kačor",
+      "dob": "2006-09-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87273,
+        "overall": 60,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 76,
+        "shooting": 53,
+        "passing": 55,
+        "dribbling": 62,
+        "defending": 32,
+        "physical": 48
+      }
+    },
+    {
+      "id": 300830,
+      "name": "Emmanuel Ayaosi",
+      "dob": "2004-10-28",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87275,
+        "overall": 68,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 82,
+        "shooting": 65,
+        "passing": 62,
+        "dribbling": 68,
+        "defending": 20,
+        "physical": 53
+      }
+    },
+    {
+      "id": 300847,
+      "name": "Adonija Ouanda",
+      "dob": "2005-04-30",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 87628,
+        "overall": 63,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 75,
+        "shooting": 61,
+        "passing": 55,
+        "dribbling": 63,
+        "defending": 25,
+        "physical": 50
+      }
+    }
+  ],
+  "baseline_id": "2051802fd2f685ec",
+  "generated_at": "2026-10-16T07:26:52.560347+00:00"
+}
