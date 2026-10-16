@@ -1,0 +1,658 @@
+{
+  "slug": "aek-athens",
+  "club_id": 1899,
+  "name": "PAE AEK",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-14T04:00:41.767417+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
+    "snapshot": "data/players/rosters/2026-10-14/CL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 30,
+    "matched": 22
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 75.1,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 2050
+      },
+      {
+        "role": "LB",
+        "player": 102417
+      },
+      {
+        "role": "CB",
+        "player": 171346
+      },
+      {
+        "role": "CB",
+        "player": 618
+      },
+      {
+        "role": "RB",
+        "player": 256335
+      },
+      {
+        "role": "CDM",
+        "player": 9237
+      },
+      {
+        "role": "CM",
+        "player": 23214
+      },
+      {
+        "role": "CM",
+        "player": 24213
+      },
+      {
+        "role": "LW",
+        "player": 8916
+      },
+      {
+        "role": "ST",
+        "player": 6723
+      },
+      {
+        "role": "RW",
+        "player": 16486
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 2050,
+      "name": "Thomas Strakosha",
+      "dob": "1995-03-19",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212151,
+        "overall": 77,
+        "positions": [
+          "GK"
+        ],
+        "pace": 79,
+        "shooting": 76,
+        "passing": 70,
+        "dribbling": 79,
+        "defending": 43,
+        "physical": 75
+      }
+    },
+    {
+      "id": 2306,
+      "name": "Alberto Brignoli",
+      "dob": "1991-08-19",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 210358,
+        "overall": 73,
+        "positions": [
+          "GK"
+        ],
+        "pace": 71,
+        "shooting": 71,
+        "passing": 78,
+        "dribbling": 74,
+        "defending": 50,
+        "physical": 75
+      }
+    },
+    {
+      "id": 281015,
+      "name": "Marios Balamotis",
+      "dob": "2005-05-06",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 618,
+      "name": "Harold Moukoudi",
+      "dob": "1997-11-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228732,
+        "overall": 77,
+        "positions": [
+          "CB",
+          "CDM",
+          "CM"
+        ],
+        "pace": 50,
+        "shooting": 35,
+        "passing": 57,
+        "dribbling": 61,
+        "defending": 77,
+        "physical": 87
+      }
+    },
+    {
+      "id": 1905,
+      "name": "Babis Lykogiannis",
+      "dob": "1993-10-22",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 3550,
+      "name": "Domagoj Vida",
+      "dob": "1989-04-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 199206,
+        "overall": 72,
+        "positions": [
+          "CB"
+        ],
+        "pace": 59,
+        "shooting": 41,
+        "passing": 58,
+        "dribbling": 55,
+        "defending": 74,
+        "physical": 72
+      }
+    },
+    {
+      "id": 102417,
+      "name": "Stavros Pilios",
+      "dob": "2000-12-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279064,
+        "overall": 71,
+        "positions": [
+          "LB"
+        ],
+        "pace": 80,
+        "shooting": 41,
+        "passing": 63,
+        "dribbling": 70,
+        "defending": 64,
+        "physical": 67
+      }
+    },
+    {
+      "id": 141441,
+      "name": "Llazaros Rota",
+      "dob": "1997-08-23",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 171346,
+      "name": "Filipe Relvas",
+      "dob": "1999-09-20",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263897,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 63,
+        "shooting": 44,
+        "passing": 68,
+        "dribbling": 60,
+        "defending": 76,
+        "physical": 80
+      }
+    },
+    {
+      "id": 256335,
+      "name": "Martin Georgiev",
+      "dob": "2005-09-24",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82893,
+        "overall": 68,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 70,
+        "shooting": 33,
+        "passing": 58,
+        "dribbling": 56,
+        "defending": 68,
+        "physical": 70
+      }
+    },
+    {
+      "id": 273853,
+      "name": "Christos Alexiou",
+      "dob": "2005-06-30",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76428,
+        "overall": 67,
+        "positions": [
+          "CB"
+        ],
+        "pace": 67,
+        "shooting": 35,
+        "passing": 52,
+        "dribbling": 50,
+        "defending": 65,
+        "physical": 74
+      }
+    },
+    {
+      "id": 301152,
+      "name": "Spyros Christakopoulos",
+      "dob": "2006-09-21",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 3253,
+      "name": "João Mário",
+      "dob": "1993-01-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212814,
+        "overall": 74,
+        "positions": [
+          "LM",
+          "RM",
+          "CAM",
+          "LW"
+        ],
+        "pace": 65,
+        "shooting": 72,
+        "passing": 76,
+        "dribbling": 77,
+        "defending": 60,
+        "physical": 64
+      }
+    },
+    {
+      "id": 3443,
+      "name": "Mijat Gaćinović",
+      "dob": "1995-02-08",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 230564,
+        "overall": 73,
+        "positions": [
+          "LM",
+          "RM",
+          "CAM",
+          "LW"
+        ],
+        "pace": 80,
+        "shooting": 61,
+        "passing": 69,
+        "dribbling": 74,
+        "defending": 64,
+        "physical": 69
+      }
+    },
+    {
+      "id": 9237,
+      "name": "Răzvan Marin",
+      "dob": "1996-05-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235813,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 65,
+        "shooting": 74,
+        "passing": 78,
+        "dribbling": 75,
+        "defending": 67,
+        "physical": 74
+      }
+    },
+    {
+      "id": 15797,
+      "name": "Petros Mantalos",
+      "dob": "1991-08-31",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 208224,
+        "overall": 75,
+        "positions": [
+          "CM",
+          "CAM",
+          "LM",
+          "CDM"
+        ],
+        "pace": 71,
+        "shooting": 67,
+        "passing": 79,
+        "dribbling": 77,
+        "defending": 62,
+        "physical": 65
+      }
+    },
+    {
+      "id": 23214,
+      "name": "Lovro Majer",
+      "dob": "1998-01-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244261,
+        "overall": 76,
+        "positions": [
+          "CAM",
+          "CM",
+          "RM",
+          "RW"
+        ],
+        "pace": 70,
+        "shooting": 71,
+        "passing": 77,
+        "dribbling": 78,
+        "defending": 60,
+        "physical": 69
+      }
+    },
+    {
+      "id": 24213,
+      "name": "Kaan Kairinen",
+      "dob": "1998-12-22",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232446,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 64,
+        "shooting": 63,
+        "passing": 77,
+        "dribbling": 74,
+        "defending": 69,
+        "physical": 73
+      }
+    },
+    {
+      "id": 106140,
+      "name": "Milán Vitális",
+      "dob": "2002-01-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78801,
+        "overall": 69,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 74,
+        "shooting": 62,
+        "passing": 69,
+        "dribbling": 67,
+        "defending": 59,
+        "physical": 71
+      }
+    },
+    {
+      "id": 177772,
+      "name": "Kervin Arriaga",
+      "dob": "1998-01-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267873,
+        "overall": 74,
+        "positions": [
+          "CDM",
+          "CM",
+          "CB"
+        ],
+        "pace": 65,
+        "shooting": 62,
+        "passing": 64,
+        "dribbling": 65,
+        "defending": 74,
+        "physical": 84
+      }
+    },
+    {
+      "id": 213520,
+      "name": "Hakim Sahabo",
+      "dob": "2005-06-16",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279509,
+        "overall": 65,
+        "positions": [
+          "CDM",
+          "CM",
+          "CAM"
+        ],
+        "pace": 70,
+        "shooting": 46,
+        "passing": 58,
+        "dribbling": 66,
+        "defending": 62,
+        "physical": 61
+      }
+    },
+    {
+      "id": 264418,
+      "name": "Dimitrios Kaloskamis",
+      "dob": "2005-03-01",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78469,
+        "overall": 69,
+        "positions": [
+          "RM",
+          "CAM",
+          "CM",
+          "RW"
+        ],
+        "pace": 71,
+        "shooting": 63,
+        "passing": 66,
+        "dribbling": 72,
+        "defending": 42,
+        "physical": 65
+      }
+    },
+    {
+      "id": 6723,
+      "name": "Luka Jović",
+      "dob": "1997-12-23",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232432,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 73,
+        "shooting": 78,
+        "passing": 68,
+        "dribbling": 76,
+        "defending": 33,
+        "physical": 73
+      }
+    },
+    {
+      "id": 8916,
+      "name": "Aboubakary Koita",
+      "dob": "1998-09-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239028,
+        "overall": 76,
+        "positions": [
+          "LM",
+          "RM",
+          "ST",
+          "LW"
+        ],
+        "pace": 85,
+        "shooting": 77,
+        "passing": 70,
+        "dribbling": 80,
+        "defending": 58,
+        "physical": 70
+      }
+    },
+    {
+      "id": 10694,
+      "name": "Barnabás Varga",
+      "dob": "1994-01-25",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 16486,
+      "name": "Oleksandr Zubkov",
+      "dob": "1996-08-03",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237055,
+        "overall": 76,
+        "positions": [
+          "RM",
+          "LM",
+          "RW",
+          "LW"
+        ],
+        "pace": 83,
+        "shooting": 75,
+        "passing": 73,
+        "dribbling": 76,
+        "defending": 30,
+        "physical": 70
+      }
+    },
+    {
+      "id": 30727,
+      "name": "Dereck Kutesa",
+      "dob": "1997-12-06",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233917,
+        "overall": 73,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 89,
+        "shooting": 71,
+        "passing": 66,
+        "dribbling": 74,
+        "defending": 40,
+        "physical": 67
+      }
+    },
+    {
+      "id": 74870,
+      "name": "Frantzdy Pierrot",
+      "dob": "1995-03-29",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 209536,
+      "name": "Zini",
+      "dob": "2002-07-03",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 289742,
+      "name": "Zois Karargyris",
+      "dob": "2007-08-18",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "28bf7be7a9b9c289",
+  "generated_at": "2026-10-16T07:26:52.346674+00:00"
+}

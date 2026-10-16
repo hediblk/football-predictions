@@ -1,0 +1,375 @@
+{
+  "slug": "sabah",
+  "club_id": 10233,
+  "name": "Sabah FK",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-14T04:00:41.767417+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
+    "snapshot": "data/players/rosters/2026-10-14/CL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 28,
+    "matched": 1
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "insufficient_coverage",
+    "mean_overall": null,
+    "slots": [
+      {
+        "role": "GK",
+        "player": null
+      },
+      {
+        "role": "LB",
+        "player": null
+      },
+      {
+        "role": "CB",
+        "player": null
+      },
+      {
+        "role": "CB",
+        "player": null
+      },
+      {
+        "role": "RB",
+        "player": null
+      },
+      {
+        "role": "CDM",
+        "player": null
+      },
+      {
+        "role": "CM",
+        "player": null
+      },
+      {
+        "role": "CM",
+        "player": null
+      },
+      {
+        "role": "LW",
+        "player": null
+      },
+      {
+        "role": "ST",
+        "player": 143820
+      },
+      {
+        "role": "RW",
+        "player": null
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 79669,
+      "name": "Stas Pokatilov",
+      "dob": "1992-12-08",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 172768,
+      "name": "Amin Ramazanov",
+      "dob": "2003-01-20",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302217,
+      "name": "Ravan Mirzammadov",
+      "dob": "2005-08-02",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 101569,
+      "name": "Akim Zedadka",
+      "dob": "1995-05-30",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 105240,
+      "name": "Tymoteusz Puchacz",
+      "dob": "1999-01-23",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 128286,
+      "name": "Steve Solvet",
+      "dob": "1996-03-20",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 146254,
+      "name": "Almeida",
+      "dob": "2000-01-15",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 192526,
+      "name": "Tellur Mutallimov",
+      "dob": "1995-04-08",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 216671,
+      "name": "Rahman Dashdamirov",
+      "dob": "1999-10-20",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 291000,
+      "name": "Godfred Boakye",
+      "dob": "2006-01-12",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 296481,
+      "name": "Aden Mccarthy",
+      "dob": "2003-12-04",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 16586,
+      "name": "Ivan Lepinjica",
+      "dob": "1999-07-09",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 133594,
+      "name": "Rodrigo Fernandes",
+      "dob": "2001-03-23",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 136385,
+      "name": "Zinédine Ould Khaled",
+      "dob": "2000-01-14",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 177640,
+      "name": "Du Queiroz",
+      "dob": "2000-01-07",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 184210,
+      "name": "Rauf Rustamli",
+      "dob": "2003-11-01",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 192490,
+      "name": "Aleksei Isayev",
+      "dob": "1995-11-09",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 212371,
+      "name": "Umarali Rahmonaliyev",
+      "dob": "2003-08-18",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 269239,
+      "name": "Abdulla Xaybulayev",
+      "dob": "2001-08-19",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 76176,
+      "name": "Veljko Simić",
+      "dob": "1995-02-17",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 96900,
+      "name": "Joy Lance Mickels",
+      "dob": "1994-03-29",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 133399,
+      "name": "Kaheem Parris",
+      "dob": "2000-01-06",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 143820,
+      "name": "Carlos Eduardo",
+      "dob": "2002-08-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277047,
+        "overall": 64,
+        "positions": [
+          "ST"
+        ],
+        "pace": 45,
+        "shooting": 66,
+        "passing": 45,
+        "dribbling": 55,
+        "defending": 25,
+        "physical": 66
+      }
+    },
+    {
+      "id": 165916,
+      "name": "Xander Severina",
+      "dob": "2001-04-12",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 254518,
+      "name": "Christian Nwachukwu",
+      "dob": "2005-12-27",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 263271,
+      "name": "Patrick Orphé Mbina",
+      "dob": "2000-11-02",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 269446,
+      "name": "Xayal Əliyev",
+      "dob": "2004-02-18",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 270794,
+      "name": "Younes Lachaab",
+      "dob": "2005-01-06",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "01bc05b44093647d",
+  "generated_at": "2026-10-16T07:26:52.689258+00:00"
+}

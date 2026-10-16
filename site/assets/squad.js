@@ -95,7 +95,8 @@ function surname(name) {
   return words.slice(i).join(" ");
 }
 const short = (s, n = 11) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);
-const rated = (p) => p && p.status === "matched" && p.ea;
+const rated = (p) => p && ["matched", "observed"].includes(p.status) && p.ea;
+const observedLabel = (p) => p.status === "observed" ? '<small class="sq-seen">seen in match sheets, not in the listed squad</small>' : "";
 
 function place(slots) {
   const count = {};
@@ -162,7 +163,7 @@ function xiFrame(u) {
     const p = byId.get(s.player);
     const minutes = u ? `<span class="sq-share">${filled(p) ? `${share(mins(p.id)?.share)}<span class="vh"> of ${esc(compLabel)} minutes</span>` : ""}</span>` : "";
     return `<li class="${[filled(p) ? "" : "empty", u ? "used" : ""].filter(Boolean).join(" ")}"><span class="sq-role">${s.role}</span>${filled(p)
-      ? `<span class="sq-who">${esc(p.name)}</span>${minutes}<b><span class="vh">EA overall </span>${ovr(p)}</b>`
+      ? `<span class="sq-who">${esc(p.name)}${observedLabel(p)}</span>${minutes}<b><span class="vh">EA overall </span>${ovr(p)}</b>`
       : `<span class="sq-who">Unfilled: no ${used ? "listed player played" : "rated player listed"} here</span>${minutes}<b aria-hidden="true">–</b>`}</li>`;
   }).join("").replaceAll('<li class="">', "<li>");
   const why = [];
@@ -256,7 +257,7 @@ function squadTable(squad, inXi, u) {
     const body = rows.map((p) => {
       const age = ageOn(p.dob, observed);
       const xi = inXi.has(p.id) ? `<span class="sq-mark" title="In the ideal XI" aria-hidden="true">XI</span><span class="vh">Ideal XI: </span>` : '<span class="sq-mark none" aria-hidden="true"></span>';
-      const head = `<th scope="row" class="l sq-player" title="${esc(p.name)}">${xi}<span class="sq-nm">${esc(p.name)}</span></th>`;
+      const head = `<th scope="row" class="l sq-player" title="${esc(p.name)}">${xi}<span class="sq-nm">${esc(p.name)}</span>${observedLabel(p)}</th>`;
       if (!rated(p)) {
         return `<tr class="unrated">${head}<td>–</td><td>${age ?? "–"}</td><td class="l">–</td>${usageCells(u, p)}<td class="l sq-nr" colspan="6">not rated${p.status === "ambiguous" ? " · EA match unclear" : ""}</td></tr>`;
       }
@@ -272,12 +273,13 @@ function squadTable(squad, inXi, u) {
         <tbody>${body}</tbody></table>`;
   }).join("");
   const unrated = squad.coverage.players - squad.coverage.matched;
+  const seen = squad.players.filter((p) => p.status === "observed").length;
   const playing = u ? `<p class="note">ST, SUB and MIN count starts, substitute appearances and minutes in the ${u.covered} of ${u.games} ${esc(compBySlug[state.comp].label)} games with a complete match sheet; MIN% is minutes ÷ (90 × ${u.covered}). A dash means participation is unknown, not zero. ${minutesSource(state.comp)}
       ${extra.length > 4 ? `xG90 and xA90 are Understat shot xG and expected assists per 90 minutes, from ${PER90_MIN} minutes up; ` : "UEFA match sheets carry no xG, so xG and xA per 90 are shown for league games only; "}league and Champions League minutes are never added together.</p>` : "";
   return `<fieldset class="frame sq-squad"><legend>Squad · EA ratings${u ? ` and ${esc(compBySlug[state.comp].label)} minutes` : ""}</legend>
     <div class="scroll sq-scroll">${tables}</div>
     <p class="note">${squad.coverage.players} players as listed by ${esc(squad.roster.source)} on ${esc(shortDate(observed))}, grouped by EA's first listed position and sorted by EA overall; ages on that date.
-      ${unrated ? `${unrated} not rated: no confident EA match by name and birth date. ` : ""}OVR and the six face stats are ${esc(squad.ratings.source)} ratings (${esc(edition(squad.ratings.edition))}); goalkeepers' six are EA's keeper stats. 80 and above are bold, below 60 dim.</p>${playing}
+      ${unrated ? `${unrated} not rated: no confident EA match by name and birth date. ` : ""}${seen ? `${seen} additional ${seen === 1 ? "player was" : "players were"} seen in at least two games in one competition's match sheets this season. Their EA matches use name and club, or a unique name alone; current membership is unknown. They count toward playing time and the most-used XI when rated, but not the ideal XI or listed squad coverage. ` : ""}OVR and the six face stats are ${esc(squad.ratings.source)} ratings (${esc(edition(squad.ratings.edition))}); goalkeepers' six are EA's keeper stats. 80 and above are bold, below 60 dim.</p>${playing}
   </fieldset>`;
 }
 
@@ -320,6 +322,6 @@ function history(u, inXi) {
     <div class="scroll"><table class="board sq-htable"><thead><tr><th scope="col" class="l">Date</th><th scope="col" class="l">Opponent</th><th scope="col" class="l">Starters</th>
       <th scope="col"><abbr title="Ideal-XI players starting">Ideal</abbr></th><th scope="col">Rotation</th><th scope="col"><span class="vh">Match page</span></th></tr></thead>
       <tbody>${rows || `<tr><td class="l sq-nr" colspan="6">No ${esc(compLabel)} games played yet.</td></tr>`}</tbody></table></div>
-    <p class="note">${esc(compLabel)} games this season, newest first. Bulbs are the starters, goalkeeper to attack; lit ones are in the ideal XI, and dashed ones are starters not in the current squad or not identified. Ideal counts ideal-XI players starting; rotation counts starters changed since the previous game whose eleven starters are all identified.${state.comp === "champions-league" ? " Heatmap links open the match page's activity map." : ""}</p>
+    <p class="note">${esc(compLabel)} games this season, newest first. Bulbs are the starters, goalkeeper to attack; lit ones are in the ideal XI, and dashed ones are starters not identified. Ideal counts ideal-XI players starting; rotation counts starters changed since the previous game whose eleven starters are all identified.${state.comp === "champions-league" ? " Heatmap links open the match page's activity map." : ""}</p>
   </fieldset>`;
 }

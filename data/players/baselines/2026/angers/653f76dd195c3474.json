@@ -1,0 +1,566 @@
+{
+  "slug": "angers",
+  "club_id": 532,
+  "name": "Angers SCO",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "url": "https://api.football-data.org/v4/competitions/FL1/teams",
+    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
+    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+  },
+  "identity_overrides_sha256": "c464e359312ed35f1995544d5a648b10a9b3d8742543346fa58944e1f956631c",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 22,
+    "matched": 20
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 73.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 3240
+      },
+      {
+        "role": "LB",
+        "player": 101297
+      },
+      {
+        "role": "CB",
+        "player": 1020
+      },
+      {
+        "role": "CB",
+        "player": 147895
+      },
+      {
+        "role": "RB",
+        "player": 191002
+      },
+      {
+        "role": "CDM",
+        "player": 746
+      },
+      {
+        "role": "CM",
+        "player": 53397
+      },
+      {
+        "role": "CM",
+        "player": 178075
+      },
+      {
+        "role": "LW",
+        "player": 185033
+      },
+      {
+        "role": "ST",
+        "player": 137515
+      },
+      {
+        "role": "RW",
+        "player": 532
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 3240,
+      "name": "Anthony Lopes",
+      "dob": "1990-10-01",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 199482,
+        "overall": 75,
+        "positions": [
+          "GK"
+        ],
+        "pace": 75,
+        "shooting": 71,
+        "passing": 64,
+        "dribbling": 79,
+        "defending": 58,
+        "physical": 72
+      }
+    },
+    {
+      "id": 186084,
+      "name": "Melvin Zinga",
+      "dob": "2002-03-16",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257395,
+        "overall": 66,
+        "positions": [
+          "GK"
+        ],
+        "pace": 66,
+        "shooting": 67,
+        "passing": 69,
+        "dribbling": 70,
+        "defending": 24,
+        "physical": 65
+      }
+    },
+    {
+      "id": 244934,
+      "name": "Oumar Pona",
+      "dob": "2006-06-21",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70541,
+        "overall": 62,
+        "positions": [
+          "GK"
+        ],
+        "pace": 62,
+        "shooting": 63,
+        "passing": 57,
+        "dribbling": 63,
+        "defending": 40,
+        "physical": 59
+      }
+    },
+    {
+      "id": 532,
+      "name": "Carlens Arcus",
+      "dob": "1996-06-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228591,
+        "overall": 74,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 79,
+        "shooting": 44,
+        "passing": 68,
+        "dribbling": 68,
+        "defending": 69,
+        "physical": 77
+      }
+    },
+    {
+      "id": 1020,
+      "name": "Jordan Lefort",
+      "dob": "1993-08-09",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234515,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 65,
+        "shooting": 26,
+        "passing": 65,
+        "dribbling": 66,
+        "defending": 77,
+        "physical": 77
+      }
+    },
+    {
+      "id": 147895,
+      "name": "Ousman Camara",
+      "dob": "2003-03-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 258439,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 47,
+        "shooting": 50,
+        "passing": 60,
+        "dribbling": 58,
+        "defending": 74,
+        "physical": 80
+      },
+      "identity_override": {
+        "provider_name": "Ousman Camara",
+        "provider_dob": "2003-03-06",
+        "verified_dob": "2003-03-06",
+        "ea_id": 258439,
+        "aliases": [
+          "Ousmane Camara"
+        ],
+        "source": "https://angers-sco.fr/ousmane-camara-est-angevin-jusquen-2026/",
+        "observed_at": "2026-10-16",
+        "note": "Angers confirms Ousmane Camara, born 6 March 2003; the squad provider omits the final e in his given name."
+      }
+    },
+    {
+      "id": 190546,
+      "name": "Emmanuel Biumla",
+      "dob": "2005-05-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 275878,
+        "overall": 70,
+        "positions": [
+          "CB"
+        ],
+        "pace": 62,
+        "shooting": 45,
+        "passing": 53,
+        "dribbling": 59,
+        "defending": 71,
+        "physical": 70
+      }
+    },
+    {
+      "id": 191002,
+      "name": "Lilian Rao-Lisoa",
+      "dob": "2000-06-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 273835,
+        "overall": 74,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 77,
+        "shooting": 54,
+        "passing": 63,
+        "dribbling": 72,
+        "defending": 71,
+        "physical": 63
+      },
+      "identity_override": {
+        "provider_name": "Lilian Rao-Lisoa",
+        "provider_dob": "2000-06-16",
+        "verified_dob": "2000-06-16",
+        "ea_id": 273835,
+        "aliases": [
+          "Lilian Raolisoa"
+        ],
+        "source": "https://angers-sco.fr/joueur/lilian-raolisoa/",
+        "observed_at": "2026-10-16",
+        "note": "Angers confirms Lilian Raolisoa, born 16 June 2000; the squad provider splits his surname with a hyphen."
+      }
+    },
+    {
+      "id": 264211,
+      "name": "Joseph Kalulu",
+      "dob": "2004-11-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74442,
+        "overall": 67,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 92,
+        "shooting": 40,
+        "passing": 54,
+        "dribbling": 59,
+        "defending": 58,
+        "physical": 74
+      }
+    },
+    {
+      "id": 271979,
+      "name": "Marius Louãr",
+      "dob": "2007-03-11",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 746,
+      "name": "Haris Belkebla",
+      "dob": "1994-01-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224444,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 43,
+        "shooting": 49,
+        "passing": 71,
+        "dribbling": 71,
+        "defending": 70,
+        "physical": 75
+      }
+    },
+    {
+      "id": 53397,
+      "name": "Branco van den Boomen",
+      "dob": "1995-07-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229158,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 43,
+        "shooting": 72,
+        "passing": 80,
+        "dribbling": 68,
+        "defending": 62,
+        "physical": 72
+      }
+    },
+    {
+      "id": 177021,
+      "name": "Louis Mouton",
+      "dob": "2002-06-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269725,
+        "overall": 73,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 71,
+        "shooting": 55,
+        "passing": 70,
+        "dribbling": 77,
+        "defending": 64,
+        "physical": 73
+      }
+    },
+    {
+      "id": 178075,
+      "name": "Yassin Belkhdim",
+      "dob": "2002-02-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269729,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CDM",
+          "RM",
+          "CAM"
+        ],
+        "pace": 55,
+        "shooting": 59,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 71,
+        "physical": 72
+      }
+    },
+    {
+      "id": 294511,
+      "name": "Bané Diatta",
+      "dob": "2008-06-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 85229,
+        "overall": 60,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 66,
+        "shooting": 42,
+        "passing": 55,
+        "dribbling": 61,
+        "defending": 57,
+        "physical": 62
+      }
+    },
+    {
+      "id": 101297,
+      "name": "Jim Allevinah",
+      "dob": "1995-02-27",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 251191,
+        "overall": 69,
+        "positions": [
+          "RM",
+          "LM",
+          "RB",
+          "LB"
+        ],
+        "pace": 80,
+        "shooting": 68,
+        "passing": 64,
+        "dribbling": 71,
+        "defending": 47,
+        "physical": 49
+      }
+    },
+    {
+      "id": 137515,
+      "name": "Amine El Ouazzani",
+      "dob": "2001-07-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272668,
+        "overall": 72,
+        "positions": [
+          "ST"
+        ],
+        "pace": 70,
+        "shooting": 70,
+        "passing": 61,
+        "dribbling": 69,
+        "defending": 20,
+        "physical": 73
+      }
+    },
+    {
+      "id": 170416,
+      "name": "Mamadou Usman Simbakoli",
+      "dob": "2001-04-19",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 185033,
+      "name": "Amine Sbaï",
+      "dob": "2000-11-05",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 273666,
+        "overall": 73,
+        "positions": [
+          "LM",
+          "ST",
+          "LW"
+        ],
+        "pace": 77,
+        "shooting": 68,
+        "passing": 66,
+        "dribbling": 78,
+        "defending": 32,
+        "physical": 57
+      }
+    },
+    {
+      "id": 246160,
+      "name": "Anthony Bermont",
+      "dob": "2005-02-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70005,
+        "overall": 68,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 74,
+        "shooting": 54,
+        "passing": 63,
+        "dribbling": 71,
+        "defending": 50,
+        "physical": 56
+      }
+    },
+    {
+      "id": 278087,
+      "name": "Prosper Peter",
+      "dob": "2007-08-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 78295,
+        "overall": 72,
+        "positions": [
+          "ST"
+        ],
+        "pace": 72,
+        "shooting": 71,
+        "passing": 56,
+        "dribbling": 69,
+        "defending": 38,
+        "physical": 70
+      }
+    },
+    {
+      "id": 287857,
+      "name": "Harouna Djibirin",
+      "dob": "2006-11-05",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 81849,
+        "overall": 68,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 77,
+        "shooting": 60,
+        "passing": 63,
+        "dribbling": 70,
+        "defending": 33,
+        "physical": 50
+      }
+    }
+  ],
+  "baseline_id": "653f76dd195c3474",
+  "generated_at": "2026-10-16T07:09:53.704565+00:00"
+}

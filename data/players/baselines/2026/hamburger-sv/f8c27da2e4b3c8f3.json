@@ -1,0 +1,651 @@
+{
+  "slug": "hamburger-sv",
+  "club_id": 7,
+  "name": "Hamburger SV",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-16T00:33:09.822985+00:00",
+    "url": "https://api.football-data.org/v4/competitions/BL1/teams",
+    "sha256": "1c95dfdeece4df7077b5d2fbea2456a2b51c2c9f0ced94d4907ddd4a644a20a9",
+    "snapshot": "data/players/rosters/2026-10-16/BL1.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 29,
+    "matched": 23
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 75.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 10078
+      },
+      {
+        "role": "LB",
+        "player": 50215
+      },
+      {
+        "role": "CB",
+        "player": 6551
+      },
+      {
+        "role": "CB",
+        "player": 8847
+      },
+      {
+        "role": "RB",
+        "player": 213459
+      },
+      {
+        "role": "CDM",
+        "player": 149995
+      },
+      {
+        "role": "CM",
+        "player": 8862
+      },
+      {
+        "role": "CM",
+        "player": 170409
+      },
+      {
+        "role": "LW",
+        "player": 205467
+      },
+      {
+        "role": "ST",
+        "player": 113427
+      },
+      {
+        "role": "RW",
+        "player": 112948
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 10078,
+      "name": "Daniel Fernandes",
+      "dob": "1992-11-13",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212197,
+        "overall": 79,
+        "positions": [
+          "GK"
+        ],
+        "pace": 79,
+        "shooting": 77,
+        "passing": 84,
+        "dribbling": 80,
+        "defending": 41,
+        "physical": 79
+      }
+    },
+    {
+      "id": 146024,
+      "name": "Sander Tangvik",
+      "dob": "2002-11-29",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257568,
+        "overall": 71,
+        "positions": [
+          "GK"
+        ],
+        "pace": 73,
+        "shooting": 68,
+        "passing": 68,
+        "dribbling": 70,
+        "defending": 57,
+        "physical": 70
+      }
+    },
+    {
+      "id": 271950,
+      "name": "Elias Lahti",
+      "dob": "2009-01-09",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 274402,
+      "name": "Fernando Dickes",
+      "dob": "2007-10-13",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 77589,
+        "overall": 57,
+        "positions": [
+          "GK"
+        ],
+        "pace": 60,
+        "shooting": 56,
+        "passing": 55,
+        "dribbling": 59,
+        "defending": 34,
+        "physical": 52
+      }
+    },
+    {
+      "id": 6551,
+      "name": "Jordan Torunarigha",
+      "dob": "1997-08-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236947,
+        "overall": 74,
+        "positions": [
+          "CB"
+        ],
+        "pace": 79,
+        "shooting": 39,
+        "passing": 60,
+        "dribbling": 63,
+        "defending": 73,
+        "physical": 81
+      }
+    },
+    {
+      "id": 8847,
+      "name": "Sebastiaan Bornauw",
+      "dob": "1999-03-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242663,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 64,
+        "shooting": 45,
+        "passing": 61,
+        "dribbling": 57,
+        "defending": 75,
+        "physical": 73
+      }
+    },
+    {
+      "id": 50215,
+      "name": "Miro Muheim",
+      "dob": "1998-03-24",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232839,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 77,
+        "shooting": 66,
+        "passing": 73,
+        "dribbling": 73,
+        "defending": 71,
+        "physical": 73
+      }
+    },
+    {
+      "id": 102974,
+      "name": "Nicolás Capaldo",
+      "dob": "1997-09-14",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 135467,
+      "name": "Warmed Omari",
+      "dob": "2000-04-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256854,
+        "overall": 72,
+        "positions": [
+          "CB"
+        ],
+        "pace": 73,
+        "shooting": 34,
+        "passing": 57,
+        "dribbling": 61,
+        "defending": 72,
+        "physical": 74
+      }
+    },
+    {
+      "id": 205467,
+      "name": "David Wolfe",
+      "dob": "2002-04-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262135,
+        "overall": 73,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 75,
+        "shooting": 53,
+        "passing": 66,
+        "dribbling": 69,
+        "defending": 67,
+        "physical": 73
+      }
+    },
+    {
+      "id": 209715,
+      "name": "Joel Agyekum",
+      "dob": "2005-03-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76979,
+        "overall": 60,
+        "positions": [
+          "CB"
+        ],
+        "pace": 54,
+        "shooting": 29,
+        "passing": 46,
+        "dribbling": 39,
+        "defending": 62,
+        "physical": 64
+      }
+    },
+    {
+      "id": 213459,
+      "name": "Zakaria El Ouahdi",
+      "dob": "2001-12-31",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 275353,
+        "overall": 78,
+        "positions": [
+          "RB",
+          "RM",
+          "CM",
+          "RW"
+        ],
+        "pace": 82,
+        "shooting": 66,
+        "passing": 71,
+        "dribbling": 78,
+        "defending": 69,
+        "physical": 72
+      }
+    },
+    {
+      "id": 277579,
+      "name": "Shafiq Nandja",
+      "dob": "2007-01-15",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 82511,
+        "overall": 59,
+        "positions": [
+          "CB"
+        ],
+        "pace": 54,
+        "shooting": 33,
+        "passing": 39,
+        "dribbling": 41,
+        "defending": 60,
+        "physical": 61
+      }
+    },
+    {
+      "id": 289178,
+      "name": "Louis Lemke",
+      "dob": "2009-10-08",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 6539,
+      "name": "Bakery Jatta",
+      "dob": "1998-06-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234640,
+        "overall": 70,
+        "positions": [
+          "RM",
+          "RW",
+          "RB"
+        ],
+        "pace": 84,
+        "shooting": 66,
+        "passing": 66,
+        "dribbling": 66,
+        "defending": 47,
+        "physical": 73
+      }
+    },
+    {
+      "id": 8862,
+      "name": "Albert Sambi Lokonga",
+      "dob": "1999-10-22",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241928,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 67,
+        "shooting": 67,
+        "passing": 75,
+        "dribbling": 77,
+        "defending": 70,
+        "physical": 72
+      }
+    },
+    {
+      "id": 112948,
+      "name": "Fabio Vieira",
+      "dob": "2000-05-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256958,
+        "overall": 78,
+        "positions": [
+          "CAM",
+          "RW",
+          "CM",
+          "RM"
+        ],
+        "pace": 75,
+        "shooting": 74,
+        "passing": 79,
+        "dribbling": 79,
+        "defending": 57,
+        "physical": 57
+      }
+    },
+    {
+      "id": 144415,
+      "name": "Immanuel Pherai",
+      "dob": "2001-04-25",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243904,
+        "overall": 69,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 81,
+        "shooting": 58,
+        "passing": 65,
+        "dribbling": 73,
+        "defending": 38,
+        "physical": 50
+      }
+    },
+    {
+      "id": 144430,
+      "name": "Albert Gronbaek Erlykke",
+      "dob": "2001-05-23",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 149995,
+      "name": "Nicolai Remberg",
+      "dob": "2000-06-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276119,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 66,
+        "shooting": 59,
+        "passing": 65,
+        "dribbling": 71,
+        "defending": 74,
+        "physical": 85
+      }
+    },
+    {
+      "id": 170409,
+      "name": "Bilal Nadir",
+      "dob": "2003-11-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263602,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 56,
+        "shooting": 64,
+        "passing": 69,
+        "dribbling": 75,
+        "defending": 61,
+        "physical": 66
+      }
+    },
+    {
+      "id": 176762,
+      "name": "Martin Adeline",
+      "dob": "2003-12-02",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 266272,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CAM",
+          "ST"
+        ],
+        "pace": 69,
+        "shooting": 67,
+        "passing": 70,
+        "dribbling": 73,
+        "defending": 62,
+        "physical": 66
+      }
+    },
+    {
+      "id": 244694,
+      "name": "Kofi Amoako",
+      "dob": "2005-05-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279490,
+        "overall": 69,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 72,
+        "shooting": 49,
+        "passing": 60,
+        "dribbling": 70,
+        "defending": 67,
+        "physical": 68
+      }
+    },
+    {
+      "id": 3466,
+      "name": "Yussuf Poulsen",
+      "dob": "1994-06-16",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 16348,
+      "name": "Patson Daka",
+      "dob": "1998-10-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241202,
+        "overall": 68,
+        "positions": [
+          "ST"
+        ],
+        "pace": 86,
+        "shooting": 66,
+        "passing": 58,
+        "dribbling": 69,
+        "defending": 26,
+        "physical": 64
+      }
+    },
+    {
+      "id": 113427,
+      "name": "Terem Moffi",
+      "dob": "1999-05-25",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255000,
+        "overall": 73,
+        "positions": [
+          "ST",
+          "RW",
+          "RM"
+        ],
+        "pace": 81,
+        "shooting": 72,
+        "passing": 54,
+        "dribbling": 68,
+        "defending": 25,
+        "physical": 72
+      }
+    },
+    {
+      "id": 228008,
+      "name": "Otto Stange",
+      "dob": "2007-02-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279213,
+        "overall": 66,
+        "positions": [
+          "ST",
+          "LW"
+        ],
+        "pace": 76,
+        "shooting": 66,
+        "passing": 53,
+        "dribbling": 66,
+        "defending": 22,
+        "physical": 64
+      }
+    },
+    {
+      "id": 252883,
+      "name": "Alexander Røssing-Lelesiit",
+      "dob": "2007-01-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72319,
+        "overall": 63,
+        "positions": [
+          "LW",
+          "RM",
+          "LM",
+          "RW"
+        ],
+        "pace": 75,
+        "shooting": 55,
+        "passing": 55,
+        "dribbling": 67,
+        "defending": 23,
+        "physical": 44
+      }
+    },
+    {
+      "id": 183356,
+      "name": "Daniel Elfadli",
+      "dob": "1997-04-06",
+      "provider_position": "Defence",
+      "status": "ambiguous",
+      "method": null,
+      "ea": null,
+      "reason": "provider_id_in_multiple_clubs"
+    }
+  ],
+  "baseline_id": "f8c27da2e4b3c8f3",
+  "generated_at": "2026-10-16T07:26:52.610364+00:00"
+}

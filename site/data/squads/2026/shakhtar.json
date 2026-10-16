@@ -20,7 +20,7 @@
     "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
     "snapshot": "data/players/rosters/2026-10-14/CL.json"
   },
-  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
     "players": 32,
@@ -695,10 +695,46 @@
         "defending": 25,
         "physical": 47
       }
+    },
+    {
+      "id": "observed:uefa:250187672",
+      "name": "Pedro Henrique",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 277193,
+        "overall": 72,
+        "positions": [
+          "LB",
+          "LM",
+          "RB"
+        ],
+        "pace": 82,
+        "shooting": 34,
+        "passing": 66,
+        "dribbling": 73,
+        "defending": 66,
+        "physical": 65
+      },
+      "providers": {
+        "uefa": {
+          "ids": [
+            250187672
+          ],
+          "names": [
+            "Pedro Henrique"
+          ]
+        }
+      },
+      "first_seen": "2026-09-10",
+      "last_seen": "2026-10-14"
     }
   ],
-  "baseline_id": "328bc29f9bcb7b02",
-  "generated_at": "2026-10-16T00:40:41.273034+00:00",
+  "baseline_id": "8a6ec0cbbeaf253b",
+  "generated_at": "2026-10-16T07:26:52.279484+00:00",
   "usage": {
     "champions-league": {
       "source": "uefa",
@@ -1079,6 +1115,19 @@
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
+        },
+        "observed:uefa:250187672": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 191.7,
+          "share": 1.065,
+          "known_games": 2,
+          "unknown_games": 0,
+          "provider_ids": [
+            250187672
+          ],
+          "avg_x": 0.3914,
+          "avg_y": 0.2841
         }
       },
       "most_used_xi": {
@@ -1091,7 +1140,7 @@
           },
           {
             "role": "LB",
-            "player": null
+            "player": "observed:uefa:250187672"
           },
           {
             "role": "CB",
@@ -1107,15 +1156,15 @@
           },
           {
             "role": "CDM",
+            "player": 181465
+          },
+          {
+            "role": "CM",
             "player": 170972
           },
           {
             "role": "CM",
             "player": 273196
-          },
-          {
-            "role": "CM",
-            "player": 181465
           },
           {
             "role": "LW",
@@ -1213,7 +1262,7 @@
               "starter": true,
               "avg_x": 0.3573,
               "avg_y": 0.2629,
-              "player": null
+              "player": "observed:uefa:250187672"
             },
             {
               "source_id": 250193518,
@@ -1271,6 +1320,7 @@
           "starters": [
             98993,
             178049,
+            "observed:uefa:250187672",
             181465,
             206781,
             203300,
@@ -1369,7 +1419,7 @@
               "starter": true,
               "avg_x": 0.4256,
               "avg_y": 0.3053,
-              "player": null
+              "player": "observed:uefa:250187672"
             },
             {
               "source_id": 250193518,
@@ -1430,6 +1480,7 @@
           "starters": [
             98993,
             178049,
+            "observed:uefa:250187672",
             181465,
             206781,
             203300
@@ -1445,5 +1496,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:14:42.365468+00:00"
+  "usage_generated_at": "2026-10-16T07:27:46.987682+00:00"
 }
