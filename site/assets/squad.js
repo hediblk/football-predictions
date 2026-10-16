@@ -25,6 +25,8 @@ const SPOTS = {
 };
 const PARTICLES = new Set(["de", "da", "di", "do", "dos", "del", "der", "van", "von", "ter", "ten", "la", "le", "el", "al", "ben", "bin"]);
 let token = 0;
+// "fc27" → "FC 27"
+const edition = (e) => String(e).replace(/^fc\s*(\d+)$/i, "FC $1");
 
 export async function showSquad(club, season) {
   const mine = ++token;
@@ -43,6 +45,10 @@ export async function showSquad(club, season) {
     box.innerHTML = `<fieldset class="frame sq-none"><legend>Squad</legend><p class="note">${missing
       ? "Squad data isn't available for this club yet."
       : `Squad data could not be loaded (${esc(failed)}).`}</p></fieldset>`;
+    return;
+  }
+  if (!squad.players.length) {
+    box.innerHTML = `<fieldset class="frame sq-none"><legend>Squad</legend><p class="note">${esc(squad.roster.source)} listed no players for this club on ${esc(shortDate(squad.roster.observed_at))}.</p></fieldset>`;
     return;
   }
   const byId = new Map(squad.players.map((p) => [p.id, p]));
@@ -114,7 +120,7 @@ function idealXi(squad, byId) {
   }
   if (missingRoles.length) why.push(`No rated player fills ${missingRoles.join(", ")}.`);
   return `<fieldset class="frame sq-xi"><legend>Ideal XI · EA ratings</legend>
-    <p class="mp-key sq-sum"><span>Formation <b>${esc(xi.formation)}</b></span><span>Mean EA overall <b>${dec(xi.mean_overall)}</b></span>
+    <p class="mp-key sq-sum"><span>Formation <b>${esc(xi.formation)}</b></span>${xi.mean_overall == null ? "" : `<span>Mean EA overall <b>${dec(xi.mean_overall)}</b></span>`}
       <span>Rated <b>${squad.coverage.matched}/${squad.coverage.players}</b> of the squad</span>${status}</p>
     <div class="sq-xi-in">
       <div class="mp-pitch sq-pitch"><svg viewBox="-3 -3 74 111" role="img" aria-label="${esc(`${squad.name}'s best EA-rated XI in a ${xi.formation}, attacking upwards. The same eleven are listed with their roles.`)}">
@@ -122,7 +128,7 @@ function idealXi(squad, byId) {
       <ol class="sq-list" aria-label="Ideal XI, goalkeeper to attack">${list}</ol>
     </div>
     <p class="note">Best EA-rated XI from listed positions, everyone available: each role takes the highest EA overall among players EA lists there (LW/LM and RW/RM share wide roles). ${why.join(" ")}
-      Ratings: ${esc(r.source)}, ${esc(r.edition)} edition, snapshot ${esc(longDate(r.snapshot_date))}. EA overall is EA's player rating, not Floodlight's club strength, and a rating gap is not goals or a win chance.</p>
+      Ratings: ${esc(r.source)}, ${esc(edition(r.edition))}, snapshot ${esc(longDate(r.snapshot_date))}. EA overall is EA's player rating, not Floodlight's club strength, and a rating gap is not goals or a win chance.</p>
   </fieldset>`;
 }
 
@@ -145,31 +151,31 @@ function squadTable(squad, inXi) {
   const groups = LINES.map(([key, label]) => [key, label, squad.players.filter((p) => lineOf(p) === key)
     .sort((a, b) => (rated(b) ? b.ea.overall : -1) - (rated(a) ? a.ea.overall : -1) || a.name.localeCompare(b.name))])
     .filter(([, , rows]) => rows.length);
-  const cols = `<colgroup><col class="sq-c-name"><col class="sq-c-age"><col class="sq-c-pos"><col class="sq-c-ovr">${STATS.map(() => "<col>").join("")}</colgroup>`;
+  const cols = `<colgroup><col class="sq-c-name"><col class="sq-c-ovr"><col class="sq-c-age"><col class="sq-c-pos">${STATS.map(() => "<col>").join("")}</colgroup>`;
   const tables = groups.map(([key, label, rows]) => {
     const faces = FACES[key === "GK" ? "GK" : "out"];
     const body = rows.map((p) => {
       const age = ageOn(p.dob, observed);
       const xi = inXi.has(p.id) ? `<span class="sq-mark" title="In the ideal XI" aria-hidden="true">XI</span><span class="vh">Ideal XI: </span>` : '<span class="sq-mark none" aria-hidden="true"></span>';
-      const head = `<th scope="row" class="l sq-player" title="${esc(p.name)}">${xi}<span class="sq-nm">${esc(p.name)}</span></th><td>${age ?? "–"}</td>`;
+      const head = `<th scope="row" class="l sq-player" title="${esc(p.name)}">${xi}<span class="sq-nm">${esc(p.name)}</span></th>`;
       if (!rated(p)) {
-        return `<tr class="unrated">${head}<td class="l">–</td><td class="l sq-nr" colspan="7">not rated${p.status === "ambiguous" ? " · EA match unclear" : ""}</td></tr>`;
+        return `<tr class="unrated">${head}<td>–</td><td>${age ?? "–"}</td><td class="l">–</td><td class="l sq-nr" colspan="6">not rated${p.status === "ambiguous" ? " · EA match unclear" : ""}</td></tr>`;
       }
       const stats = STATS.map((k) => {
         const v = p.ea[k];
         return `<td${v == null ? "" : v >= 80 ? ' class="b"' : v < 60 ? ' class="off"' : ""}>${v ?? "–"}</td>`;
       }).join("");
-      return `<tr>${head}<td class="l sq-pos" title="${esc(p.ea.positions.join(" "))}">${esc(p.ea.positions.join(" "))}</td><td class="sq-ovr-c">${p.ea.overall}</td>${stats}</tr>`;
+      return `<tr>${head}<td class="sq-ovr-c">${p.ea.overall}</td><td>${age ?? "–"}</td><td class="l sq-pos" title="${esc(p.ea.positions.join(" "))}">${esc(p.ea.positions.join(" "))}</td>${stats}</tr>`;
     }).join("");
     return `<h3 class="dgroup">${label} <span>${rows.length}</span></h3>
-      <table class="board sq-table">${cols}<thead><tr><th scope="col" class="l sq-player">Player</th><th scope="col">Age</th><th scope="col" class="l">EA pos</th>
-        <th scope="col"><abbr title="EA overall">OVR</abbr></th>${faces.map(([a, t]) => `<th scope="col"><abbr title="${t}">${a}</abbr></th>`).join("")}</tr></thead>
+      <table class="board sq-table">${cols}<thead><tr><th scope="col" class="l sq-player">Player</th><th scope="col"><abbr title="EA overall">OVR</abbr></th>
+        <th scope="col">Age</th><th scope="col" class="l">EA pos</th>${faces.map(([a, t]) => `<th scope="col"><abbr title="${t}">${a}</abbr></th>`).join("")}</tr></thead>
         <tbody>${body}</tbody></table>`;
   }).join("");
   const unrated = squad.coverage.players - squad.coverage.matched;
   return `<fieldset class="frame sq-squad"><legend>Squad · EA ratings</legend>
     <div class="scroll sq-scroll">${tables}</div>
     <p class="note">${squad.coverage.players} players as listed by ${esc(squad.roster.source)} on ${esc(shortDate(observed))}, grouped by EA's first listed position and sorted by EA overall; ages on that date.
-      ${unrated ? `${unrated} not rated: no confident EA match by name and birth date. ` : ""}OVR and the six face stats are ${esc(squad.ratings.source)} ratings (${esc(squad.ratings.edition)}); goalkeepers' six are EA's keeper stats. 80 and above are bold, below 60 dim.</p>
+      ${unrated ? `${unrated} not rated: no confident EA match by name and birth date. ` : ""}OVR and the six face stats are ${esc(squad.ratings.source)} ratings (${esc(edition(squad.ratings.edition))}); goalkeepers' six are EA's keeper stats. 80 and above are bold, below 60 dim.</p>
   </fieldset>`;
 }
