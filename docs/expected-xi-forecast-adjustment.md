@@ -287,6 +287,8 @@ The rates are the existing goal/xG blended Dixon–Coles model's rates. Rebuild 
 
 Install the existing locked environment and the calibration package, then run from the repository root. The cache directory must contain saved `football-data-uk/` and `understat/` inputs; cache misses fail locally without HTTP requests.
 
+Implementation: [offline evaluation runner](../packages/forecast-calibration/src/forecast_calibration/expected_xi.py).
+
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
   python -m forecast_calibration.expected_xi \
@@ -312,3 +314,16 @@ The last two seasons are held out for this adjustment's weight/method/ridge choi
 The oracle is a ceiling for these particular effects and offsets at the same early origin. It does not evaluate an hour-before-kickoff forecast with updated strengths, injuries or timestamped confirmed-XI archives. Historical lineups and xG come from retrospectively fetched provider payloads. Missing sheets, sparse new-player history, transfers between leagues and unidentified individual effects limit what the flat prior can recover.
 
 Standings replays cover five leagues in 2024/25 and 2025/26, at three Tuesday/Friday origins around rounds 5, 15 and 25. Each run uses the production score simulator, league tie-breaks, identical fixture/team order, 10,000 simulations and seed 7. Only fixtures in the following seven days receive the chosen expected-XI offset; subsequent fixtures use the usual lineup. No future realized lineup enters these simulations. Title and top-four binary log losses average over clubs; champion log loss is also retained separately. Event probabilities use Jeffreys smoothing `(count + 0.5)/(n_sim + 1)` to avoid infinite Monte Carlo-zero losses. Season snapshots overlap, and these ten league-seasons cannot select the adjustment. The retrospective final schedule and score-derived tables are held fixed; historical postponement announcements, sanctions and disciplinary tie-break information are not reconstructed.
+
+## Verification
+
+The run uses base revision `9b86170` plus this PR, Python 3.12.5 and the locked NumPy 2.5.3, pandas 3.0.6 and SciPy 1.18.1, with one numerical worker thread. Two complete runs agree exactly across 31 decompressed CSV artifacts: effects, lineup probabilities, fixture features, every candidate's match scores, summaries, coverage and seeded standings events. The zero-weight goal model reproduces the saved calibration probabilities on all 19,749 compared fixtures within **2.8e−16**; all methods agree exactly at zero weight. Every origin precedes kickoff. `out/expected-xi-final/verification.json` and the repeat-hash files retain these checks.
+
+Focused executable checks also verified that changing future lineups leaves earlier expectations unchanged, unseen players stay out of the feature universe, missed-game decay follows the formula, an unseen-player prior receives the evaluation season and contributes with the correct sign, and no-history sides get zero offsets. The reuse manifest includes the calibration loader, model code, prior and all saved inputs, and is certified only after a complete successful run; interruption removes that certification.
+
+The existing offline suite passed **124 tests**, including numerical regressions:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python -m pytest -q -p no:cacheprovider
+```
