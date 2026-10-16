@@ -26,3 +26,5 @@ football-calibrate --dataset out/global-calibration/features/dataset.csv \
 ```
 
 Use `--help` for a smaller run or custom output location. A calibration artifact summarizes match-level performance; it cannot make the model permanently optimal or establish that standings probabilities are calibrated.
+
+`python -m forecast_calibration.npxg all` runs the same protocol for non-penalty xG and a team penalty rate ([report](../../docs/npxg-penalty-rate.md)). It writes to `out/npxg-penalty-rate` and does not touch the artifact.
