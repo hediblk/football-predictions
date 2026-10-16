@@ -15,6 +15,7 @@ from scipy import sparse
 from scipy.sparse.linalg import lsqr
 
 from standing_prediction.defaults import DEFAULT_FIT
+from standing_prediction.player_prior import CACHE, EaPrior
 from standing_prediction.xg import fit_xg_strengths
 
 DATA = Path("data/players/understat")
@@ -23,7 +24,7 @@ EPOCH = pd.Timestamp(0, tz="UTC")
 WARMUP_SEASON = 2014  # team strengths only; player rows start the season after
 
 
-# Shrink every effect to zero. A replacement (Task 6's EA prior) gets the same arguments and returns
+# Shrink every effect to zero. A replacement (`player_prior.EaPrior`) gets the same arguments and returns
 # (attack, defence) prior means in xG per 90, using only information before `before_season`.
 def flat_prior(players, before_season):
     return np.zeros(len(players)), np.zeros(len(players))
@@ -103,8 +104,9 @@ def design(games, entries, players):
                              shape=(len(games), 2 * len(players)))
 
 
-def fit_effects(X, residual, lam, prior_mean):
-    target = residual - X @ prior_mean
+# `offset` replaces X @ prior_mean when the prior varies by training season.
+def fit_effects(X, residual, lam, prior_mean, offset=None):
+    target = residual - (X @ prior_mean if offset is None else offset)
     return prior_mean + lsqr(X, target, damp=np.sqrt(lam), atol=1e-10, btol=1e-10, iter_lim=20000)[0]
 
 
@@ -114,21 +116,38 @@ def interleave(attack, defence):
     return out
 
 
+# Columns cover training and evaluation players. A player without training rows keeps his prior
+# mean, so new signings and promoted squads count once the prior is informative.
 class Fold:
     def __init__(self, games, apps, entries, train_seasons, eval_seasons, prior):
         self.train = games[games["season"].isin(train_seasons)].reset_index(drop=True)
         self.eval = games[games["season"].isin(eval_seasons)].reset_index(drop=True)
         train_apps = apps[apps["season"].isin(train_seasons)]
-        self.players = pd.Index(np.sort(train_apps["player_id"].unique()))
-        self.minutes = train_apps.groupby("player_id")["minutes"].sum().reindex(self.players).to_numpy()
+        eval_apps = apps[apps["season"].isin(eval_seasons)]
+        self.players = pd.Index(np.union1d(train_apps["player_id"].unique(), eval_apps["player_id"].unique()))
+        self.minutes = train_apps.groupby("player_id")["minutes"].sum().reindex(self.players, fill_value=0).to_numpy()
         self.X = design(self.train, entries, self.players)
         self.X_eval = design(self.eval, entries, self.players)
+        used = np.diff(self.X.tocsc().indptr) > 0
+        self.unseen = ~(used[0::2] | used[1::2])  # no training rows
         self.residual = (self.train["xg_for"] - self.train["team_pred"]).to_numpy()
-        self.prior_mean = interleave(*prior(self.players, min(eval_seasons)))
+        self.prior, self.before = prior, min(eval_seasons)
+        self.slopes = (np.nan, np.nan)
+
+    # A prior with `fit` (the EA prior) estimates its slopes on the training seasons at this ridge.
+    def beta(self, lam):
+        offset = None
+        if hasattr(self.prior, "fit"):
+            G = self.prior.fit(self.X, self.residual, lam, self.players, self.train["season"].to_numpy(), self.before)
+            self.slopes = self.prior.slopes[self.before]
+            offset = G @ np.asarray(self.slopes)
+        self.prior_mean = interleave(*self.prior(self.players, self.before))
+        return fit_effects(self.X, self.residual, lam, self.prior_mean, offset)
 
     def predict(self, lam):
-        beta = fit_effects(self.X, self.residual, lam, self.prior_mean)
-        return self.eval["team_pred"].to_numpy() + self.X_eval @ beta, beta
+        beta = self.beta(lam)
+        team = self.eval["team_pred"].to_numpy()
+        return team + self.X_eval @ beta, team + self.X_eval @ (beta * np.repeat(self.unseen, 2))
 
 
 def metrics(frame, pred_col):
@@ -137,11 +156,11 @@ def metrics(frame, pred_col):
 
 
 # Team-only against player model, with a match-clustered standard error on the MSE gain.
-def compare(frame):
+def compare(frame, column="player_pred"):
     out = {}
-    for name, column in (("team", "team_pred"), ("player", "player_pred")):
-        out.update({f"{name}_{key}": value for key, value in metrics(frame, column).items() if key != "rows"})
-    gain = (frame["team_pred"] - frame["xg_for"]) ** 2 - (frame["player_pred"] - frame["xg_for"]) ** 2
+    for name, col in (("team", "team_pred"), ("player", column)):
+        out.update({f"{name}_{key}": value for key, value in metrics(frame, col).items() if key != "rows"})
+    gain = (frame["team_pred"] - frame["xg_for"]) ** 2 - (frame[column] - frame["xg_for"]) ** 2
     per_match = gain.groupby(frame["match_id"]).sum()
     out["rows"] = len(frame)
     out["mse_gain"] = gain.mean()
@@ -149,7 +168,7 @@ def compare(frame):
     return out
 
 
-def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBDAS, reuse=True):
+def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBDAS, reuse=True, unseen_min=90):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     xi, lambda_reg = DEFAULT_FIT["xi"], DEFAULT_FIT["lambda_reg"]
@@ -164,8 +183,9 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
         # Pre-kickoff information only: a start counts as a full game, a substitute appearance as none.
         apps = apps.assign(minutes=np.where(apps["appearance"] == "starter", 90, 0))
     entries = lineup_entries(games, apps, lineup="absolute" if lineup == "absolute" else "centred", xi=xi)
-    out_dir = out_dir / lineup
-    out_dir.mkdir(exist_ok=True)
+    prior_name = getattr(prior, "name", getattr(prior, "__name__", "prior"))
+    out_dir = out_dir / lineup / prior_name
+    out_dir.mkdir(parents=True, exist_ok=True)
     games = games[games["season"] > WARMUP_SEASON].reset_index(drop=True)
     apps = apps[apps["season"] > WARMUP_SEASON]
     seasons = sorted(games["season"].unique())
@@ -175,11 +195,15 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
     for season in seasons[1:]:
         fold = Fold(games, apps, entries, seasons[:seasons.index(season)], [season], prior)
         folds[season] = fold
+        played = apps[apps["season"] == season]
+        unseen_minutes = played["minutes"].where(~played["player_id"].isin(fold.players[~fold.unseen]), 0)
+        unseen_minutes = fold.eval["match_id"].map(unseen_minutes.groupby(played["match_id"]).sum()).to_numpy()
         for lam in lambdas:
-            pred, _ = fold.predict(lam)
-            frame = fold.eval.assign(player_pred=pred)
+            pred, unseen_pred = fold.predict(lam)
+            frame = fold.eval.assign(player_pred=pred, unseen_pred=unseen_pred, unseen_minutes=unseen_minutes)
             preds[season, lam] = frame
-            fold_rows.append({"season": season, "lambda": lam, **compare(frame)})
+            fold_rows.append({"season": season, "lambda": lam, "slope_attack": fold.slopes[0],
+                              "slope_defence": fold.slopes[1], **compare(frame)})
     folds_table = pd.DataFrame(fold_rows)
 
     # Ridge strength for season s: lowest pooled MSE over the earlier one-season-ahead folds.
@@ -194,9 +218,17 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
     for season in seasons[2:]:
         fold = folds[season]
         played = apps[apps["season"] == season]
-        known.append({"season": season, "known_minutes_share":
-                      played["player_id"].isin(fold.players).mul(played["minutes"]).sum() / played["minutes"].sum()})
+        unseen = ~played["player_id"].isin(fold.players[~fold.unseen])
+        row = {"season": season, "known_minutes_share": 1 - played["minutes"][unseen].sum() / played["minutes"].sum()}
+        if hasattr(prior, "rated"):
+            rated = prior.rated(fold.players, season)["overall"].notna()
+            rated = played["player_id"].map(pd.Series(rated.to_numpy(), index=fold.players))
+            row["rated_minutes_share"] = played["minutes"][rated].sum() / played["minutes"].sum()
+            row["rated_unseen_minutes_share"] = played["minutes"][rated & unseen].sum() / played["minutes"][unseen].sum()
+        known.append(row)
     coverage = pd.DataFrame(known)
+    slopes = folds_table.merge(pd.DataFrame({"season": list(chosen), "lambda": list(chosen.values())}))
+    slopes = slopes[["season", "lambda", "slope_attack", "slope_defence"]]
 
     by_league_season = pd.DataFrame([{"league": league, "season": season, "lambda": chosen[season], **compare(frame)}
                                      for (league, season), frame in evaluated.groupby(["league", "season"])])
@@ -204,6 +236,16 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
                               for season, frame in evaluated.groupby("season")]).merge(coverage, on="season")
     by_league = pd.DataFrame([{"league": league, **compare(frame)} for league, frame in evaluated.groupby("league")])
     overall = compare(evaluated)
+    # Unseen players: their contributions alone over every team-game, and the full model on matches
+    # with at least `unseen_min` unseen-player minutes across both sides.
+    busy = evaluated[evaluated["unseen_minutes"] >= unseen_min]
+    unseen = pd.DataFrame(
+        [{"season": season, "part": "unseen_only", **compare(frame, "unseen_pred")}
+         for season, frame in evaluated.groupby("season")]
+        + [{"season": season, "part": f"matches_with_{unseen_min}_unseen_minutes", **compare(frame)}
+           for season, frame in busy.groupby("season")]
+        + [{"season": "all", "part": "unseen_only", **compare(evaluated, "unseen_pred")},
+           {"season": "all", "part": f"matches_with_{unseen_min}_unseen_minutes", **compare(busy)}])
 
     # Learning curve: the latest three seasons fitted on only their k most recent prior seasons.
     curve = []
@@ -220,7 +262,11 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
     wowy = with_or_without(games, apps, effects.head(20)["player_id"])
 
     folds_table.to_csv(out_dir / "folds.csv", index=False)
-    by_league_season.to_csv(out_dir / "by_league_season.csv", index=False)
+    unseen.to_csv(out_dir / "unseen.csv", index=False)
+    evaluated[["league", "season", "match_id", "side", "xg_for", "team_pred", "player_pred", "unseen_pred",
+               "unseen_minutes"]].to_csv(out_dir / "evaluated.csv.gz", index=False)
+    slopes.to_csv(out_dir / "slopes.csv", index=False)
+    by_league_season.merge(coverage, on="season").to_csv(out_dir / "by_league_season.csv", index=False)
     by_season.to_csv(out_dir / "by_season.csv", index=False)
     by_league.to_csv(out_dir / "by_league.csv", index=False)
     curve.to_csv(out_dir / "learning_curve.csv", index=False)
@@ -229,7 +275,7 @@ def run(out_dir, *, lineup="centred", root=DATA, prior=flat_prior, lambdas=LAMBD
     summary = {"team_model": {"function": "standing_prediction.xg.fit_xg_strengths", "xi": xi,
                               "lambda_reg": lambda_reg, "prior_seasons": DEFAULT_FIT["prior_seasons"],
                               "reference": "00:00 UTC on match day, earlier kickoffs only"},
-               "lineup": lineup, "prior": prior.__name__, "lambdas": list(lambdas),
+               "lineup": lineup, "prior": prior_name, "lambdas": list(lambdas),
                "chosen_lambda": {int(k): v for k, v in chosen.items()},
                "final_lambda": final_lambda, "final_sigma": sigma, "overall": overall,
                "team_games": len(games), "evaluated_team_games": len(evaluated)}
@@ -265,7 +311,7 @@ def final_effects(games, apps, entries, seasons, folds_table, prior, min_minutes
     pooled = folds_table.assign(mse=folds_table["player_rmse"] ** 2 * folds_table["rows"]).groupby("lambda")["mse"].sum()
     lam = float(pooled.idxmin())
     fold = Fold(games, apps, entries, seasons, [seasons[-1]], prior)
-    beta = fit_effects(fold.X, fold.residual, lam, fold.prior_mean)
+    beta = fold.beta(lam)
     fitted = fold.X @ beta
     sigma = float(np.sqrt(np.mean((fold.residual - fitted) ** 2)))
     played = apps[apps["season"].isin(seasons)]
@@ -274,7 +320,8 @@ def final_effects(games, apps, entries, seasons, folds_table, prior, min_minutes
     position = starts.groupby("player_id")["position"].agg(lambda s: s.mode().iloc[0])
     effects = pd.DataFrame({
         "player_id": fold.players, "minutes": fold.minutes,
-        "attack": beta[0::2], "defence": beta[1::2]})
+        "attack": beta[0::2], "defence": beta[1::2],
+        "prior_attack": fold.prior_mean[0::2], "prior_defence": fold.prior_mean[1::2]})
     effects["net"] = effects["attack"] - effects["defence"]
     effects = effects.join(latest[["name", "team", "league", "season"]], on="player_id")
     effects["position"] = effects["player_id"].map(position).fillna("Sub")
@@ -320,11 +367,15 @@ def main(argv=None):
     parser.add_argument("--out-dir", type=Path, default=Path("out/player-impact"))
     parser.add_argument("--lineup", nargs="+", choices=["centred", "starters", "absolute"],
                         default=["centred", "starters", "absolute"])
+    parser.add_argument("--prior", nargs="+", choices=["flat", "ea"], default=["flat", "ea"])
+    parser.add_argument("--ea-cache", type=Path, default=CACHE, help="Player cache holding ea/vintages/*.csv.")
     parser.add_argument("--refit-team", action="store_true", help="Recompute the cached team-only predictions.")
     args = parser.parse_args(argv)
     for lineup in args.lineup:
-        summary = run(args.out_dir, lineup=lineup, root=args.data, reuse=not args.refit_team)
-        print(json.dumps(summary, indent=2, default=float))
+        for name in args.prior:
+            prior = EaPrior(root=args.data.parent, cache=args.ea_cache) if name == "ea" else flat_prior
+            summary = run(args.out_dir, lineup=lineup, root=args.data, prior=prior, reuse=not args.refit_team)
+            print(json.dumps(summary, indent=2, default=float))
 
 
 if __name__ == "__main__":
