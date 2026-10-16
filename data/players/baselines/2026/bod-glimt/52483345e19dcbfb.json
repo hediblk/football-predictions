@@ -1,0 +1,585 @@
+{
+  "slug": "bod-glimt",
+  "club_id": 5721,
+  "name": "FK Bodø/Glimt",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-14T04:00:41.767417+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "8a009c0dd25cb51c091fa49d6993a89b973f6942c9d4208525e0735d7d88b77a",
+    "snapshot": "data/players/rosters/2026-10-14/CL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 27,
+    "matched": 19
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 72.3,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 167067
+      },
+      {
+        "role": "LB",
+        "player": 37913
+      },
+      {
+        "role": "CB",
+        "player": 207587
+      },
+      {
+        "role": "CB",
+        "player": 38516
+      },
+      {
+        "role": "RB",
+        "player": 180517
+      },
+      {
+        "role": "CDM",
+        "player": 37924
+      },
+      {
+        "role": "CM",
+        "player": 44413
+      },
+      {
+        "role": "CM",
+        "player": 37925
+      },
+      {
+        "role": "LW",
+        "player": 37916
+      },
+      {
+        "role": "ST",
+        "player": 37902
+      },
+      {
+        "role": "RW",
+        "player": 167108
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 44492,
+      "name": "Julian Lund",
+      "dob": "1999-05-20",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 230787,
+        "overall": 65,
+        "positions": [
+          "GK"
+        ],
+        "pace": 66,
+        "shooting": 64,
+        "passing": 64,
+        "dribbling": 68,
+        "defending": 45,
+        "physical": 64
+      }
+    },
+    {
+      "id": 167067,
+      "name": "Nikita Haikin",
+      "dob": "1995-07-11",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 222389,
+        "overall": 77,
+        "positions": [
+          "GK"
+        ],
+        "pace": 77,
+        "shooting": 72,
+        "passing": 73,
+        "dribbling": 80,
+        "defending": 48,
+        "physical": 74
+      }
+    },
+    {
+      "id": 37913,
+      "name": "Fredrik Bjørkan",
+      "dob": "1998-08-21",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233800,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 82,
+        "shooting": 53,
+        "passing": 67,
+        "dribbling": 73,
+        "defending": 68,
+        "physical": 76
+      }
+    },
+    {
+      "id": 38125,
+      "name": "Odin Lurås Bjørtuft",
+      "dob": "1998-12-19",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 38516,
+      "name": "Jostein Gundersen",
+      "dob": "1996-04-02",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228238,
+        "overall": 68,
+        "positions": [
+          "CB"
+        ],
+        "pace": 51,
+        "shooting": 45,
+        "passing": 54,
+        "dribbling": 60,
+        "defending": 68,
+        "physical": 74
+      }
+    },
+    {
+      "id": 115436,
+      "name": "Isak Määttä",
+      "dob": "2001-09-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256397,
+        "overall": 67,
+        "positions": [
+          "RW",
+          "LW",
+          "LB",
+          "RM"
+        ],
+        "pace": 86,
+        "shooting": 55,
+        "passing": 62,
+        "dribbling": 67,
+        "defending": 58,
+        "physical": 65
+      }
+    },
+    {
+      "id": 180517,
+      "name": "Fredrik Sjøvold",
+      "dob": "2003-08-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268375,
+        "overall": 73,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 84,
+        "shooting": 53,
+        "passing": 66,
+        "dribbling": 70,
+        "defending": 67,
+        "physical": 66
+      }
+    },
+    {
+      "id": 207587,
+      "name": "Haitam Aleesami",
+      "dob": "1991-07-31",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 210695,
+        "overall": 69,
+        "positions": [
+          "CB"
+        ],
+        "pace": 59,
+        "shooting": 56,
+        "passing": 66,
+        "dribbling": 61,
+        "defending": 68,
+        "physical": 72
+      }
+    },
+    {
+      "id": 250420,
+      "name": "Villads Nielsen",
+      "dob": "2005-01-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 71882,
+        "overall": 66,
+        "positions": [
+          "CB"
+        ],
+        "pace": 63,
+        "shooting": 36,
+        "passing": 59,
+        "dribbling": 55,
+        "defending": 65,
+        "physical": 71
+      }
+    },
+    {
+      "id": 278057,
+      "name": "Mathias Olsen",
+      "dob": "2007-07-20",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 297984,
+      "name": "Kasper Solhaug",
+      "dob": "2007-05-03",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 37924,
+      "name": "Patrick Berg",
+      "dob": "1997-11-24",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 222227,
+        "overall": 79,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 74,
+        "shooting": 69,
+        "passing": 78,
+        "dribbling": 73,
+        "defending": 74,
+        "physical": 83
+      }
+    },
+    {
+      "id": 37925,
+      "name": "Ulrik Saltnes",
+      "dob": "1992-11-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 221001,
+        "overall": 69,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 67,
+        "shooting": 64,
+        "passing": 67,
+        "dribbling": 67,
+        "defending": 68,
+        "physical": 77
+      }
+    },
+    {
+      "id": 38122,
+      "name": "Joshua Kitolano",
+      "dob": "2001-08-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242531,
+        "overall": 69,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 79,
+        "shooting": 59,
+        "passing": 63,
+        "dribbling": 72,
+        "defending": 63,
+        "physical": 74
+      }
+    },
+    {
+      "id": 44413,
+      "name": "Sondre Fet",
+      "dob": "1997-01-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 225077,
+        "overall": 71,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 69,
+        "shooting": 60,
+        "passing": 67,
+        "dribbling": 70,
+        "defending": 67,
+        "physical": 73
+      }
+    },
+    {
+      "id": 144662,
+      "name": "Sondre Auklend",
+      "dob": "2003-06-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256598,
+        "overall": 67,
+        "positions": [
+          "CM",
+          "RW",
+          "CDM",
+          "RM"
+        ],
+        "pace": 79,
+        "shooting": 62,
+        "passing": 65,
+        "dribbling": 71,
+        "defending": 59,
+        "physical": 66
+      }
+    },
+    {
+      "id": 180430,
+      "name": "Magnus Riisnæs",
+      "dob": "2004-11-04",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 261295,
+        "overall": 65,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 75,
+        "shooting": 60,
+        "passing": 63,
+        "dribbling": 67,
+        "defending": 58,
+        "physical": 66
+      }
+    },
+    {
+      "id": 250722,
+      "name": "Teo Ingilæ",
+      "dob": "2007-05-30",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 300828,
+      "name": "Assan Sanyang",
+      "dob": "2008-08-03",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 37902,
+      "name": "Andreas Helmersen",
+      "dob": "1998-03-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228212,
+        "overall": 68,
+        "positions": [
+          "ST"
+        ],
+        "pace": 70,
+        "shooting": 67,
+        "passing": 52,
+        "dribbling": 62,
+        "defending": 30,
+        "physical": 72
+      }
+    },
+    {
+      "id": 37916,
+      "name": "Jens Hauge",
+      "dob": "1999-10-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233848,
+        "overall": 76,
+        "positions": [
+          "LW",
+          "RW",
+          "LM",
+          "RM"
+        ],
+        "pace": 84,
+        "shooting": 72,
+        "passing": 72,
+        "dribbling": 77,
+        "defending": 44,
+        "physical": 65
+      }
+    },
+    {
+      "id": 38416,
+      "name": "Ola Brynhildsen",
+      "dob": "1999-04-27",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238236,
+        "overall": 68,
+        "positions": [
+          "ST"
+        ],
+        "pace": 79,
+        "shooting": 69,
+        "passing": 63,
+        "dribbling": 70,
+        "defending": 50,
+        "physical": 65
+      }
+    },
+    {
+      "id": 153994,
+      "name": "Joel Mugisha",
+      "dob": "2002-11-12",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 167108,
+      "name": "Ole Blomberg",
+      "dob": "2000-06-12",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258892,
+        "overall": 70,
+        "positions": [
+          "RW",
+          "LW",
+          "ST",
+          "RM"
+        ],
+        "pace": 76,
+        "shooting": 63,
+        "passing": 67,
+        "dribbling": 69,
+        "defending": 58,
+        "physical": 72
+      }
+    },
+    {
+      "id": 182005,
+      "name": "Daniel Bassi",
+      "dob": "2004-10-31",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268740,
+        "overall": 64,
+        "positions": [
+          "LW",
+          "RW",
+          "LB",
+          "LM"
+        ],
+        "pace": 85,
+        "shooting": 53,
+        "passing": 57,
+        "dribbling": 67,
+        "defending": 46,
+        "physical": 45
+      }
+    },
+    {
+      "id": 290972,
+      "name": "Hindrin Najah Chooly",
+      "dob": "2008-06-18",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 274833,
+      "name": "Mikkel Hansen",
+      "dob": "2009-01-15",
+      "provider_position": "Offence",
+      "status": "ambiguous",
+      "method": null,
+      "ea": null,
+      "reason": "provider_id_in_multiple_clubs"
+    }
+  ],
+  "baseline_id": "52483345e19dcbfb",
+  "generated_at": "2026-10-16T07:26:52.268927+00:00"
+}

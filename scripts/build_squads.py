@@ -101,6 +101,7 @@ def rosters(code, cache_dir, roster_date, offline, archive):
 
 def publish_clubs(clubs, sources, dataset, args):
     catalog = json.loads((args.site_data / "clubs.json").read_text())["clubs"]
+    overrides = json.loads(args.overrides.read_text())
     if set(clubs) != {club["id"] for club in catalog}:
         raise ValueError("Squad club set differs from clubs.json; publish all six competitions together.")
     pending = []
@@ -123,12 +124,15 @@ def publish_clubs(clubs, sources, dataset, args):
                 player["identity_override"] = row["identity_override"]
             players.append(player)
         xi = club["best_xi"]
+        # Hash only this club's reviewed exceptions, so an override elsewhere leaves its reference frozen.
+        applied = {str(row["id"]): overrides[str(row["id"])] for row in club["players"] if str(row["id"]) in overrides}
         data = {"slug": entry["slug"], "club_id": club["id"], "name": club["name"], "season": season,
                 "ratings": {"source": "EA SPORTS FC", **dataset},
                 "roster": {"source": "football-data.org", "status": "available" if players else "unavailable",
                            "observed_at": source["fetched_at"],
                            **{key: source[key] for key in ("url", "sha256", "snapshot")}},
-                "identity_overrides_sha256": sha256(args.overrides), "method": "ea-position-assignment-v1",
+                "identity_overrides_sha256": hashlib.sha256(json.dumps(applied, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
+                "method": "ea-position-assignment-v1",
                 "coverage": {"players": len(players), "matched": club["coverage"]["matched"]},
                 "ideal_xi": {"formation": xi["formation"], "status": xi["status"],
                              "mean_overall": xi["mean_rating"],
@@ -157,7 +161,10 @@ def publish_clubs(clubs, sources, dataset, args):
             write_json(snapshot, data)
         previous = json.loads(path.read_text()) if path.exists() else {}
         if previous.get("baseline_id") == data["baseline_id"]:
-            data = {**data, **{key: previous[key] for key in ("usage", "usage_generated_at") if key in previous}}
+            # Keep the usage layer, including players it observed in match sheets, until usage is rebuilt.
+            observed = [row for row in previous["players"] if row["status"] == "observed"]
+            data = {**data, "players": data["players"] + observed,
+                    **{key: previous[key] for key in ("usage", "usage_generated_at") if key in previous}}
         if not path.exists() or json.loads(path.read_text()) != data:
             write_json(path, data)
 

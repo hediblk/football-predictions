@@ -26,7 +26,7 @@ Each `<league>/<season>.csv.gz` contains only appearances from complete validate
 
 Each match requires eleven starters per side, unique positive player IDs across both sides, minutes in 0–130, matching side/team/roster IDs, resolvable roster links and finite nonnegative statistics. Each side's summed player xG must differ from the match shot xG by at most **0.001 absolute xG**, allowing provider rounding. No missing values are filled with zero. Understat records appearances, not unused bench players or reasons for absence. Its minutes exclude stoppage time and must remain separate from UEFA minutes.
 
-These are retrospective observations fetched on the dates below, not archived pre-kickoff lineups or contemporary availability records. No EA identity joins or ratings are inferred, and no site, model defaults or forecast probabilities consume this archive. Historical training must respect result availability and rating vintage dates.
+These are retrospective observations fetched on the dates below, not archived pre-kickoff lineups or contemporary availability records. The archive itself contains no EA identities or ratings; the separate [historical identity table](../ea/README.md) links club-season players to dated EA sources. No site, model defaults or forecast probabilities consume this archive. Historical training must respect result availability and rating vintage dates.
 
 ## Coverage and fetch dates
 

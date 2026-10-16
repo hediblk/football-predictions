@@ -20,7 +20,7 @@
     "sha256": "9a3b4620a927375c1e5a316a5a7ab588adf287213c71b8b3d07e1834f38a147f",
     "snapshot": "data/players/rosters/2026-10-16/SA.json"
   },
-  "identity_overrides_sha256": "213d0b6359d8e840d867c217fa74aecc7e75a2dd19bb1163212fc6543a0ae93a",
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
     "players": 33,
@@ -729,10 +729,68 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:7224",
+      "name": "Boulaye Dia",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 246242,
+        "overall": 78,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 83,
+        "shooting": 79,
+        "passing": 66,
+        "dribbling": 78,
+        "defending": 43,
+        "physical": 66
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            7224
+          ],
+          "names": [
+            "Boulaye Dia"
+          ]
+        }
+      },
+      "first_seen": "2026-08-24",
+      "last_seen": "2026-08-30"
+    },
+    {
+      "id": "observed:understat:10724",
+      "name": "Diogo Leite",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "understat": {
+          "ids": [
+            10724
+          ],
+          "names": [
+            "Diogo Leite"
+          ]
+        }
+      },
+      "first_seen": "2026-09-12",
+      "last_seen": "2026-10-11",
+      "reason": "no_name_match"
     }
   ],
-  "baseline_id": "f8458ad63819337b",
-  "generated_at": "2026-10-16T00:40:41.250836+00:00",
+  "baseline_id": "24d758406b0b589f",
+  "generated_at": "2026-10-16T07:26:52.252660+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -1138,6 +1196,32 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
+        },
+        "observed:understat:7224": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 167,
+          "share": 0.309259,
+          "known_games": 2,
+          "unknown_games": 4,
+          "provider_ids": [
+            7224
+          ],
+          "xg": 0.0,
+          "xa": 0.543
+        },
+        "observed:understat:10724": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 39,
+          "share": 0.072222,
+          "known_games": 2,
+          "unknown_games": 4,
+          "provider_ids": [
+            10724
+          ],
+          "xg": 0.0,
+          "xa": 0.0
         }
       },
       "most_used_xi": {
@@ -1287,7 +1371,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.5429759621620178,
-              "player": null
+              "player": "observed:understat:7224"
             },
             {
               "source_id": 1958,
@@ -1353,6 +1437,7 @@
             111220,
             97537,
             152787,
+            "observed:understat:7224",
             2158
           ],
           "subs": [
@@ -1460,7 +1545,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:7224"
             },
             {
               "source_id": 1958,
@@ -1526,6 +1611,7 @@
             97537,
             2200,
             152787,
+            "observed:understat:7224",
             2158
           ],
           "subs": [
@@ -1823,7 +1909,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:10724"
             },
             {
               "source_id": 4895,
@@ -1866,6 +1952,7 @@
             2158
           ],
           "subs": [
+            "observed:understat:10724",
             2016,
             128007,
             2358
@@ -2195,7 +2282,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": "observed:understat:10724"
             }
           ],
           "starters": [
@@ -2214,12 +2301,13 @@
             2016,
             267,
             147781,
-            134835
+            134835,
+            "observed:understat:10724"
           ],
           "ideal_started": null
         }
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T01:16:19.445881+00:00"
+  "usage_generated_at": "2026-10-16T07:27:37.276208+00:00"
 }

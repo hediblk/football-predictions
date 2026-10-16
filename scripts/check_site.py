@@ -207,6 +207,18 @@ def routes(data):
         interactions += [(f"#p-squad [data-sq-comp={slug}]", f"#p-squad [data-sq-comp={slug}][aria-pressed=true]", "#p-squad .sq-hist tbody tr")
                          for slug in usage(club)]
         found.append((f"#clubs/{club['slug']}/squad", SQUAD + SQUAD_FILE + SQUAD_USAGE, [], None, interactions))
+    # Observed players must remain visible when switching between most-used and ideal XIs.
+    observed = next((c for c in sorted(clubs, key=lambda c: c["slug"] != "angers") if has_squad(c) and
+                     any(p["status"] == "observed" for p in json.loads(
+                         (data / f"squads/{season}/{c['slug']}.json").read_text())["players"])), None)
+    if observed:
+        found.append((f"#clubs/{observed['slug']}/squad", SQUAD + SQUAD_FILE + SQUAD_USAGE + ["#p-squad .sq-table .sq-seen"],
+                      [], None, [("#p-squad [data-sq-mode=ideal]", "#p-squad [data-sq-mode=ideal][aria-pressed=true]", "#p-squad .sq-table .sq-seen"),
+                                 ("#p-squad [data-sq-mode=used]", "#p-squad [data-sq-mode=used][aria-pressed=true]", "#p-squad .sq-table .sq-seen")]))
+    angers = next((c for c in clubs if c["slug"] == "angers" and usage(c)), None)
+    if angers:
+        found.append(("#clubs/angers/squad", SQUAD + SQUAD_FILE + SQUAD_USAGE + [
+            '#p-squad .sq-table .sq-player[title="Ousman Camara"]'], [], None))
     if len(clubs) > 1:
         found.append((f"#clubs/{clubs[0]['slug']}/vs/{clubs[1]['slug']}", [
             "#p-hero h1", "#p-compare optgroup", "#p-compare option:checked", "#p-rating-chart .rating-series.comparison path",

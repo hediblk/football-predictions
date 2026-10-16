@@ -1132,3 +1132,7 @@ table.mp-stand { min-width: 460px; }
   .sq-table .sq-c-u { width: 40px; }
   .sq-table .sq-c-u.w { width: 48px; }
 }
+
+/* Task 4b: match-sheet observations carry a visible membership note. */
+.sq-seen { display: block; color: var(--dim); font: 400 10.5px/1.4 var(--mono); white-space: normal; }
+.sq-player .sq-seen { padding: 4px 0 6px 28px; }
