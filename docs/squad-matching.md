@@ -1,5 +1,7 @@
 # Ideal XI and match usage pilot
 
+For Task 6's historical FIFA 15–FC 26 vintages and Understat club-season identity links, see the [historical ratings guide](../data/players/ea/README.md). That offline dataset is separate from the current-squad pilot below; career identity evidence never makes a later rating available to an earlier match.
+
 The La Liga pilot uses a fixed EA FC 27 rating snapshot, current football-data.org squads, and collected Understat appearances. It produces local review reports in `out/squads/`. It does not alter forecast probabilities. Task 1 now publishes checked per-club references for all supported competitions; the pilot comparison reports remain local, while Task 4 publishes retrospective season usage.
 
 ## Inputs and setup

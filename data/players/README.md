@@ -1,5 +1,7 @@
 # Squad observations and references
 
+Historical FIFA 15–FC 26 sources, dates and hashes are cataloged separately in [`ea/vintages.json`](ea/vintages.json). [`understat_ea_links.csv`](understat_ea_links.csv) records retrospective club-season identity links with method, confidence and unresolved cases. See the [historical ratings guide](ea/README.md) for reproduction, availability rules and coverage definitions. These files do not change current squad baselines or forecast probabilities.
+
 `rosters/<UTC date>/<code>.json` archives football-data.org's `/v4/competitions/<code>/teams` response with its actual `fetched_at` and URL. A snapshot is an observation of the provider's squad, not proof of registration or availability. Never replace a dated file. The first Champions League snapshot was recovered from the existing HTTP cache with its original observation time; the La Liga pilot snapshot was copied unchanged. The other four leagues were observed on 16 October UTC (15 October in Toronto).
 
 `ea.sha256` pins the bytes of the [commit-pinned EA CSV](https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv). The raw CSV stays in `.cache/`. It contains one publisher-labelled FC 27 snapshot, 12 September 2026; the mirror's provenance is a publisher claim. Changes to that pin require reviewing a new source/vintage explicitly.
