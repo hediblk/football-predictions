@@ -87,15 +87,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* Task 4 flags an observed Champions League role that EA doesn't list, whichever cohort is shown */
-function roleNote(id) {
-  for (const slug of state.comps) {
-    const note = state.squad.usage[slug].players?.[id]?.role_note;
-    if (note) return note;
-  }
-  return "";
-}
-
 /* "Frenkie de Jong" → "de Jong"; single names stay whole */
 function surname(name) {
   const words = String(name).trim().split(/\s+/);
@@ -169,10 +160,9 @@ function xiFrame(u) {
   }).join("");
   const list = slots.map((s) => {
     const p = byId.get(s.player);
-    const note = filled(p) && u ? roleNote(p.id) : "";
     const minutes = u ? `<span class="sq-share">${filled(p) ? `${share(mins(p.id)?.share)}<span class="vh"> of ${esc(compLabel)} minutes</span>` : ""}</span>` : "";
     return `<li class="${[filled(p) ? "" : "empty", u ? "used" : ""].filter(Boolean).join(" ")}"><span class="sq-role">${s.role}</span>${filled(p)
-      ? `<span class="sq-who">${esc(p.name)}${note ? `<small class="sq-rn">${esc(note)}</small>` : ""}</span>${minutes}<b><span class="vh">EA overall </span>${ovr(p)}</b>`
+      ? `<span class="sq-who">${esc(p.name)}</span>${minutes}<b><span class="vh">EA overall </span>${ovr(p)}</b>`
       : `<span class="sq-who">Unfilled: no ${used ? "listed player played" : "rated player listed"} here</span>${minutes}<b aria-hidden="true">–</b>`}</li>`;
   }).join("").replaceAll('<li class="">', "<li>");
   const why = [];
@@ -265,9 +255,8 @@ function squadTable(squad, inXi, u) {
     const faces = FACES[key === "GK" ? "GK" : "out"];
     const body = rows.map((p) => {
       const age = ageOn(p.dob, observed);
-      const note = u ? roleNote(p.id) : "";
       const xi = inXi.has(p.id) ? `<span class="sq-mark" title="In the ideal XI" aria-hidden="true">XI</span><span class="vh">Ideal XI: </span>` : '<span class="sq-mark none" aria-hidden="true"></span>';
-      const head = `<th scope="row" class="l sq-player" title="${esc(note ? `${p.name}: ${note}` : p.name)}">${xi}<span class="sq-nm">${esc(p.name)}</span>${note ? `<small class="sq-rn">${esc(note)}</small>` : ""}</th>`;
+      const head = `<th scope="row" class="l sq-player" title="${esc(p.name)}">${xi}<span class="sq-nm">${esc(p.name)}</span></th>`;
       if (!rated(p)) {
         return `<tr class="unrated">${head}<td>–</td><td>${age ?? "–"}</td><td class="l">–</td>${usageCells(u, p)}<td class="l sq-nr" colspan="6">not rated${p.status === "ambiguous" ? " · EA match unclear" : ""}</td></tr>`;
       }
@@ -301,14 +290,14 @@ function history(u, inXi) {
   const rows = games.map((g) => {
     const starters = g.starters || [];
     let rotation = "–";
-    if (g.status === "complete") {
+    if (starters.length === 11) {
       if (previous) {
         const changes = starters.filter((id) => !previous.includes(id)).length;
         rotation = changes ? `${changes} change${changes === 1 ? "" : "s"}` : "Unchanged";
       }
       previous = starters;
     } else if (g.status === "partial") {
-      rotation = "Partial sheet";
+      rotation = "Starters not all identified";
     }
     const who = opponents.get(g.opponent_id);
     const opp = who ? clubName(g.opponent_id, who, "inline") : "Unknown opponent";
@@ -331,6 +320,6 @@ function history(u, inXi) {
     <div class="scroll"><table class="board sq-htable"><thead><tr><th scope="col" class="l">Date</th><th scope="col" class="l">Opponent</th><th scope="col" class="l">Starters</th>
       <th scope="col"><abbr title="Ideal-XI players starting">Ideal</abbr></th><th scope="col">Rotation</th><th scope="col"><span class="vh">Match page</span></th></tr></thead>
       <tbody>${rows || `<tr><td class="l sq-nr" colspan="6">No ${esc(compLabel)} games played yet.</td></tr>`}</tbody></table></div>
-    <p class="note">${esc(compLabel)} games this season, newest first. Bulbs are the starters, goalkeeper to attack; lit ones are in the ideal XI, and dashed ones are starters not in the current squad or not identified. Ideal counts ideal-XI players starting; rotation counts starters changed since the previous game with a complete sheet.${state.comp === "champions-league" ? " Heatmap links open the match page's activity map." : ""}</p>
+    <p class="note">${esc(compLabel)} games this season, newest first. Bulbs are the starters, goalkeeper to attack; lit ones are in the ideal XI, and dashed ones are starters not in the current squad or not identified. Ideal counts ideal-XI players starting; rotation counts starters changed since the previous game whose eleven starters are all identified.${state.comp === "champions-league" ? " Heatmap links open the match page's activity map." : ""}</p>
   </fieldset>`;
 }
