@@ -573,5 +573,1462 @@
     }
   ],
   "baseline_id": "eae41233ebbc8ad7",
-  "generated_at": "2026-10-16T00:40:41.291166+00:00"
+  "generated_at": "2026-10-16T00:40:41.291166+00:00",
+  "usage": {
+    "la-liga": {
+      "source": "understat",
+      "games": 8,
+      "covered": 8,
+      "fully_mapped": 5,
+      "players": {
+        "31968": {
+          "starts": 5,
+          "sub": 0,
+          "minutes": 450,
+          "share": 0.625,
+          "known_games": 5,
+          "unknown_games": 3,
+          "provider_ids": [
+            7859
+          ]
+        },
+        "32391": {
+          "starts": 3,
+          "sub": 0,
+          "minutes": 270,
+          "share": 0.375,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            4193
+          ]
+        },
+        "277": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 105,
+          "share": 0.145833,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            5065
+          ]
+        },
+        "8559": {
+          "starts": 0,
+          "sub": 1,
+          "minutes": 24,
+          "share": 0.033333,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            5615
+          ]
+        },
+        "50890": {
+          "starts": 7,
+          "sub": 0,
+          "minutes": 630,
+          "share": 0.875,
+          "known_games": 7,
+          "unknown_games": 1,
+          "provider_ids": [
+            7604
+          ]
+        },
+        "151019": {
+          "starts": 2,
+          "sub": 1,
+          "minutes": 206,
+          "share": 0.286111,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            12893
+          ]
+        },
+        "159409": {
+          "starts": 3,
+          "sub": 0,
+          "minutes": 188,
+          "share": 0.261111,
+          "known_games": 5,
+          "unknown_games": 3,
+          "provider_ids": [
+            10858
+          ]
+        },
+        "186674": {
+          "starts": 6,
+          "sub": 2,
+          "minutes": 615,
+          "share": 0.854167,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            12790
+          ]
+        },
+        "246027": {
+          "starts": 2,
+          "sub": 1,
+          "minutes": 206,
+          "share": 0.286111,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            15026
+          ]
+        },
+        "248752": {
+          "starts": 8,
+          "sub": 0,
+          "minutes": 639,
+          "share": 0.8875,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            12472
+          ]
+        },
+        "32002": {
+          "starts": 3,
+          "sub": 3,
+          "minutes": 311,
+          "share": 0.431944,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            7050
+          ]
+        },
+        "32217": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 339,
+          "share": 0.470833,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            2198
+          ]
+        },
+        "111674": {
+          "starts": 7,
+          "sub": 1,
+          "minutes": 562,
+          "share": 0.780556,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            7857
+          ]
+        },
+        "119093": {
+          "starts": 2,
+          "sub": 1,
+          "minutes": 156,
+          "share": 0.216667,
+          "known_games": 5,
+          "unknown_games": 3,
+          "provider_ids": [
+            8424
+          ]
+        },
+        "191925": {
+          "starts": 5,
+          "sub": 2,
+          "minutes": 488,
+          "share": 0.677778,
+          "known_games": 7,
+          "unknown_games": 1,
+          "provider_ids": [
+            11395
+          ]
+        },
+        "249577": {
+          "starts": 3,
+          "sub": 3,
+          "minutes": 327,
+          "share": 0.454167,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            12537
+          ]
+        },
+        "856": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 31,
+          "share": 0.043056,
+          "known_games": 6,
+          "unknown_games": 2,
+          "provider_ids": [
+            3721
+          ]
+        },
+        "2237": {
+          "starts": 6,
+          "sub": 2,
+          "minutes": 589,
+          "share": 0.818056,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            1235
+          ]
+        },
+        "32004": {
+          "starts": 3,
+          "sub": 3,
+          "minutes": 234,
+          "share": 0.325,
+          "known_games": 7,
+          "unknown_games": 1,
+          "provider_ids": [
+            5140
+          ]
+        },
+        "32212": {
+          "starts": 6,
+          "sub": 2,
+          "minutes": 458,
+          "share": 0.636111,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            2183
+          ]
+        },
+        "130324": {
+          "starts": 5,
+          "sub": 3,
+          "minutes": 436,
+          "share": 0.605556,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            8042
+          ]
+        },
+        "146128": {
+          "starts": 1,
+          "sub": 4,
+          "minutes": 165,
+          "share": 0.229167,
+          "known_games": 7,
+          "unknown_games": 1,
+          "provider_ids": [
+            8584
+          ]
+        },
+        "176600": {
+          "starts": 2,
+          "sub": 6,
+          "minutes": 254,
+          "share": 0.352778,
+          "known_games": 8,
+          "unknown_games": 0,
+          "provider_ids": [
+            14915
+          ]
+        },
+        "302159": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 5,
+          "unknown_games": 3,
+          "provider_ids": []
+        }
+      },
+      "most_used_xi": {
+        "formation": "4-3-3",
+        "status": "provisional",
+        "slots": [
+          {
+            "role": "GK",
+            "player": 31968
+          },
+          {
+            "role": "LB",
+            "player": 186674
+          },
+          {
+            "role": "CB",
+            "player": 151019
+          },
+          {
+            "role": "CB",
+            "player": 50890
+          },
+          {
+            "role": "RB",
+            "player": 248752
+          },
+          {
+            "role": "CDM",
+            "player": 32002
+          },
+          {
+            "role": "CM",
+            "player": 111674
+          },
+          {
+            "role": "CM",
+            "player": 32217
+          },
+          {
+            "role": "LW",
+            "player": 176600
+          },
+          {
+            "role": "ST",
+            "player": 2237
+          },
+          {
+            "role": "RW",
+            "player": 32212
+          }
+        ]
+      },
+      "games_list": [
+        {
+          "fixture_id": 564639,
+          "kickoff": "2026-08-24T17:30:00+00:00",
+          "opponent_id": 88,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "432f475ede96d6a1d146ab8a6427074cb9599009bd5e5c4862e5585200cc0e63",
+          "appearances": [
+            {
+              "source_id": 7859,
+              "name": "Sergio Herrera",
+              "minutes": 90,
+              "starter": true,
+              "player": 31968
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 81,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 10858,
+              "name": "Jorge Herrando",
+              "minutes": 90,
+              "starter": true,
+              "player": 159409
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 90,
+              "starter": true,
+              "player": 186674
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 72,
+              "starter": true,
+              "player": 32212
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 90,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 90,
+              "starter": true,
+              "player": 191925
+            },
+            {
+              "source_id": 2198,
+              "name": "Moi Gómez",
+              "minutes": 87,
+              "starter": true,
+              "player": 32217
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 80,
+              "starter": true,
+              "player": 2237
+            },
+            {
+              "source_id": 8424,
+              "name": "Aimar Oroz",
+              "minutes": 72,
+              "starter": true,
+              "player": 119093
+            },
+            {
+              "source_id": 7050,
+              "name": "Lucas Torró",
+              "minutes": 9,
+              "starter": false,
+              "player": 32002
+            },
+            {
+              "source_id": 8584,
+              "name": "Raul Moro",
+              "minutes": 18,
+              "starter": false,
+              "player": 146128
+            },
+            {
+              "source_id": 5140,
+              "name": "Kike Barja",
+              "minutes": 3,
+              "starter": false,
+              "player": 32004
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 10,
+              "starter": false,
+              "player": 176600
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 18,
+              "starter": false,
+              "player": 130324
+            }
+          ],
+          "starters": [
+            31968,
+            248752,
+            159409,
+            50890,
+            186674,
+            32212,
+            111674,
+            191925,
+            32217,
+            2237,
+            119093
+          ],
+          "subs": [
+            32002,
+            146128,
+            32004,
+            176600,
+            130324
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 564636,
+          "kickoff": "2026-08-27T18:30:00+00:00",
+          "opponent_id": 558,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "a3c354f5062611bbb3df5a26987d43552d319f2a02a624fb074909767918ccd4",
+          "appearances": [
+            {
+              "source_id": 7859,
+              "name": "Sergio Herrera",
+              "minutes": 90,
+              "starter": true,
+              "player": 31968
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 90,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 12537,
+              "name": "Asier Osambela",
+              "minutes": 90,
+              "starter": true,
+              "player": 249577
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 10858,
+              "name": "Jorge Herrando",
+              "minutes": 60,
+              "starter": true,
+              "player": 159409
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 90,
+              "starter": true,
+              "player": 186674
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 60,
+              "starter": true,
+              "player": 176600
+            },
+            {
+              "source_id": 7050,
+              "name": "Lucas Torró",
+              "minutes": 90,
+              "starter": true,
+              "player": 32002
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 48,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 5140,
+              "name": "Kike Barja",
+              "minutes": 76,
+              "starter": true,
+              "player": 32004
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 84,
+              "starter": true,
+              "player": 130324
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 30,
+              "starter": false,
+              "player": 32212
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 30,
+              "starter": false,
+              "player": 2237
+            },
+            {
+              "source_id": 8424,
+              "name": "Aimar Oroz",
+              "minutes": 6,
+              "starter": false,
+              "player": 119093
+            },
+            {
+              "source_id": 2198,
+              "name": "Moi Gómez",
+              "minutes": 14,
+              "starter": false,
+              "player": 32217
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 42,
+              "starter": false,
+              "player": 191925
+            }
+          ],
+          "starters": [
+            31968,
+            248752,
+            249577,
+            50890,
+            159409,
+            186674,
+            176600,
+            32002,
+            111674,
+            32004,
+            130324
+          ],
+          "subs": [
+            32212,
+            2237,
+            119093,
+            32217,
+            191925
+          ],
+          "ideal_started": 4
+        },
+        {
+          "fixture_id": 564657,
+          "kickoff": "2026-08-31T17:30:00+00:00",
+          "opponent_id": 82,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "f93f2846fb96842c983fd8fd4848e3ea382f80b32912ce3be048c0dd1b231349",
+          "appearances": [
+            {
+              "source_id": 7859,
+              "name": "Sergio Herrera",
+              "minutes": 90,
+              "starter": true,
+              "player": 31968
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 90,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 10858,
+              "name": "Jorge Herrando",
+              "minutes": 38,
+              "starter": true,
+              "player": 159409
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 90,
+              "starter": true,
+              "player": 186674
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 90,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 78,
+              "starter": true,
+              "player": 191925
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 53,
+              "starter": true,
+              "player": 32212
+            },
+            {
+              "source_id": 8424,
+              "name": "Aimar Oroz",
+              "minutes": 78,
+              "starter": true,
+              "player": 119093
+            },
+            {
+              "source_id": 2198,
+              "name": "Moi Gómez",
+              "minutes": 84,
+              "starter": true,
+              "player": 32217
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 90,
+              "starter": true,
+              "player": 2237
+            },
+            {
+              "source_id": 12893,
+              "name": "Enzo Boyomo",
+              "minutes": 52,
+              "starter": false,
+              "player": 151019
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 12,
+              "starter": false,
+              "player": 130324
+            },
+            {
+              "source_id": 7050,
+              "name": "Lucas Torró",
+              "minutes": 12,
+              "starter": false,
+              "player": 32002
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 37,
+              "starter": false,
+              "player": 176600
+            },
+            {
+              "source_id": 5140,
+              "name": "Kike Barja",
+              "minutes": 6,
+              "starter": false,
+              "player": 32004
+            }
+          ],
+          "starters": [
+            31968,
+            248752,
+            159409,
+            50890,
+            186674,
+            111674,
+            191925,
+            32212,
+            119093,
+            32217,
+            2237
+          ],
+          "subs": [
+            151019,
+            130324,
+            32002,
+            176600,
+            32004
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 564664,
+          "kickoff": "2026-09-06T16:30:00+00:00",
+          "opponent_id": 263,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "b87a066422231be9dae2481eb8a22b3f36b8c5d26136b7b40e7d6c571e8f7d1a",
+          "appearances": [
+            {
+              "source_id": 7859,
+              "name": "Sergio Herrera",
+              "minutes": 90,
+              "starter": true,
+              "player": 31968
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 89,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 12893,
+              "name": "Enzo Boyomo",
+              "minutes": 64,
+              "starter": true,
+              "player": 151019
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 90,
+              "starter": true,
+              "player": 186674
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 90,
+              "starter": true,
+              "player": 191925
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 90,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 2198,
+              "name": "Moi Gómez",
+              "minutes": 64,
+              "starter": true,
+              "player": 32217
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 64,
+              "starter": true,
+              "player": 32212
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 90,
+              "starter": true,
+              "player": 130324
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 90,
+              "starter": true,
+              "player": 2237
+            },
+            {
+              "source_id": 12537,
+              "name": "Asier Osambela",
+              "minutes": 1,
+              "starter": false,
+              "player": 249577
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 26,
+              "starter": false,
+              "player": 176600
+            },
+            {
+              "source_id": 8584,
+              "name": "Raul Moro",
+              "minutes": 26,
+              "starter": false,
+              "player": 146128
+            },
+            {
+              "source_id": 15026,
+              "name": "Rockson Yeboah",
+              "minutes": 26,
+              "starter": false,
+              "player": 246027
+            }
+          ],
+          "starters": [
+            31968,
+            248752,
+            151019,
+            50890,
+            186674,
+            191925,
+            111674,
+            32217,
+            32212,
+            130324,
+            2237
+          ],
+          "subs": [
+            249577,
+            176600,
+            146128,
+            246027
+          ],
+          "ideal_started": 7
+        },
+        {
+          "fixture_id": 564673,
+          "kickoff": "2026-09-12T14:15:00+00:00",
+          "opponent_id": 80,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "da3f1db134b4c8ca9f31f002c20cd43af218fedcc83f084d94855a7c30745689",
+          "appearances": [
+            {
+              "source_id": 7859,
+              "name": "Sergio Herrera",
+              "minutes": 90,
+              "starter": true,
+              "player": 31968
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 61,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 15026,
+              "name": "Rockson Yeboah",
+              "minutes": 90,
+              "starter": true,
+              "player": 246027
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 5065,
+              "name": "Diego Rico",
+              "minutes": 48,
+              "starter": true,
+              "player": 277
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 90,
+              "starter": true,
+              "player": 191925
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 90,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 62,
+              "starter": true,
+              "player": 32212
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 73,
+              "starter": true,
+              "player": 130324
+            },
+            {
+              "source_id": 5140,
+              "name": "Kike Barja",
+              "minutes": 62,
+              "starter": true,
+              "player": 32004
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 90,
+              "starter": true,
+              "player": 2237
+            },
+            {
+              "source_id": 8584,
+              "name": "Raul Moro",
+              "minutes": 28,
+              "starter": false,
+              "player": 146128
+            },
+            {
+              "source_id": 12537,
+              "name": "Asier Osambela",
+              "minutes": 29,
+              "starter": false,
+              "player": 249577
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 28,
+              "starter": false,
+              "player": 176600
+            },
+            {
+              "source_id": 3721,
+              "name": "Romain Del Castillo",
+              "minutes": 17,
+              "starter": false,
+              "player": 856
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 42,
+              "starter": false,
+              "player": 186674
+            }
+          ],
+          "starters": [
+            31968,
+            248752,
+            246027,
+            50890,
+            277,
+            191925,
+            111674,
+            32212,
+            130324,
+            32004,
+            2237
+          ],
+          "subs": [
+            146128,
+            249577,
+            176600,
+            856,
+            186674
+          ],
+          "ideal_started": 6
+        },
+        {
+          "fixture_id": 564684,
+          "kickoff": "2026-09-16T17:00:00+00:00",
+          "opponent_id": 78,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "570ea73c576700dcf5eb670ec5bb5f8eb0486573c044647459d5ecf27fa1d5de",
+          "appearances": [
+            {
+              "source_id": 4193,
+              "name": "Aitor Fernández",
+              "minutes": 90,
+              "starter": true,
+              "player": 32391
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 72,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 14916,
+              "name": "Unai Santos",
+              "minutes": 90,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 12893,
+              "name": "Enzo Boyomo",
+              "minutes": 90,
+              "starter": true,
+              "player": 151019
+            },
+            {
+              "source_id": 15026,
+              "name": "Rockson Yeboah",
+              "minutes": 90,
+              "starter": true,
+              "player": 246027
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 90,
+              "starter": true,
+              "player": 186674
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 60,
+              "starter": true,
+              "player": 176600
+            },
+            {
+              "source_id": 7050,
+              "name": "Lucas Torró",
+              "minutes": 90,
+              "starter": true,
+              "player": 32002
+            },
+            {
+              "source_id": 12537,
+              "name": "Asier Osambela",
+              "minutes": 76,
+              "starter": true,
+              "player": 249577
+            },
+            {
+              "source_id": 8584,
+              "name": "Raul Moro",
+              "minutes": 60,
+              "starter": true,
+              "player": 146128
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 61,
+              "starter": true,
+              "player": 130324
+            },
+            {
+              "source_id": 5140,
+              "name": "Kike Barja",
+              "minutes": 30,
+              "starter": false,
+              "player": 32004
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 29,
+              "starter": false,
+              "player": 2237
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 18,
+              "starter": false,
+              "player": 111674
+            },
+            {
+              "source_id": 3721,
+              "name": "Romain Del Castillo",
+              "minutes": 14,
+              "starter": false,
+              "player": 856
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 30,
+              "starter": false,
+              "player": 32212
+            }
+          ],
+          "starters": [
+            32391,
+            248752,
+            151019,
+            246027,
+            186674,
+            176600,
+            32002,
+            249577,
+            146128,
+            130324
+          ],
+          "subs": [
+            32004,
+            2237,
+            111674,
+            856,
+            32212
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564693,
+          "kickoff": "2026-09-19T12:00:00+00:00",
+          "opponent_id": 87,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "b863813de2ce17972c77cb529b531d5a5a9b74c965869e745d8590c969c37943",
+          "appearances": [
+            {
+              "source_id": 4193,
+              "name": "Aitor Fernández",
+              "minutes": 90,
+              "starter": true,
+              "player": 32391
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 90,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 12537,
+              "name": "Asier Osambela",
+              "minutes": 90,
+              "starter": true,
+              "player": 249577
+            },
+            {
+              "source_id": 14916,
+              "name": "Unai Santos",
+              "minutes": 74,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 5065,
+              "name": "Diego Rico",
+              "minutes": 57,
+              "starter": true,
+              "player": 277
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 70,
+              "starter": true,
+              "player": 32212
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 70,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 90,
+              "starter": true,
+              "player": 191925
+            },
+            {
+              "source_id": 5140,
+              "name": "Kike Barja",
+              "minutes": 57,
+              "starter": true,
+              "player": 32004
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 90,
+              "starter": true,
+              "player": 2237
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 16,
+              "starter": false,
+              "player": 130324
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 33,
+              "starter": false,
+              "player": 186674
+            },
+            {
+              "source_id": 8584,
+              "name": "Raul Moro",
+              "minutes": 33,
+              "starter": false,
+              "player": 146128
+            },
+            {
+              "source_id": 7050,
+              "name": "Lucas Torró",
+              "minutes": 20,
+              "starter": false,
+              "player": 32002
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 20,
+              "starter": false,
+              "player": 176600
+            }
+          ],
+          "starters": [
+            32391,
+            248752,
+            249577,
+            50890,
+            277,
+            32212,
+            111674,
+            191925,
+            32004,
+            2237
+          ],
+          "subs": [
+            130324,
+            186674,
+            146128,
+            32002,
+            176600
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564701,
+          "kickoff": "2026-10-11T16:30:00+00:00",
+          "opponent_id": 90,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "e2ee52ff1e471f092192c73a4a46a49e212c8ab47008582a302fe7834b73fbda",
+          "appearances": [
+            {
+              "source_id": 4193,
+              "name": "Aitor Fernández",
+              "minutes": 90,
+              "starter": true,
+              "player": 32391
+            },
+            {
+              "source_id": 12472,
+              "name": "Iñigo Arguibide",
+              "minutes": 66,
+              "starter": true,
+              "player": 248752
+            },
+            {
+              "source_id": 7604,
+              "name": "Alejandro Catena",
+              "minutes": 90,
+              "starter": true,
+              "player": 50890
+            },
+            {
+              "source_id": 14916,
+              "name": "Unai Santos",
+              "minutes": 49,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 12790,
+              "name": "Abel Bretones",
+              "minutes": 90,
+              "starter": true,
+              "player": 186674
+            },
+            {
+              "source_id": 2183,
+              "name": "Rubén García",
+              "minutes": 77,
+              "starter": true,
+              "player": 32212
+            },
+            {
+              "source_id": 7050,
+              "name": "Lucas Torró",
+              "minutes": 90,
+              "starter": true,
+              "player": 32002
+            },
+            {
+              "source_id": 7857,
+              "name": "Jon Moncayola",
+              "minutes": 66,
+              "starter": true,
+              "player": 111674
+            },
+            {
+              "source_id": 2198,
+              "name": "Moi Gómez",
+              "minutes": 90,
+              "starter": true,
+              "player": 32217
+            },
+            {
+              "source_id": 8042,
+              "name": "Raul García",
+              "minutes": 82,
+              "starter": true,
+              "player": 130324
+            },
+            {
+              "source_id": 1235,
+              "name": "Ante Budimir",
+              "minutes": 90,
+              "starter": true,
+              "player": 2237
+            },
+            {
+              "source_id": 12537,
+              "name": "Asier Osambela",
+              "minutes": 41,
+              "starter": false,
+              "player": 249577
+            },
+            {
+              "source_id": 14915,
+              "name": "Jonathan Dubasin",
+              "minutes": 13,
+              "starter": false,
+              "player": 176600
+            },
+            {
+              "source_id": 13849,
+              "name": "Mauro Echegoyen",
+              "minutes": 24,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 5615,
+              "name": "Valentin Rosier",
+              "minutes": 24,
+              "starter": false,
+              "player": 8559
+            },
+            {
+              "source_id": 11395,
+              "name": "Iker Muñoz",
+              "minutes": 8,
+              "starter": false,
+              "player": 191925
+            }
+          ],
+          "starters": [
+            32391,
+            248752,
+            50890,
+            186674,
+            32212,
+            32002,
+            111674,
+            32217,
+            130324,
+            2237
+          ],
+          "subs": [
+            249577,
+            176600,
+            8559,
+            191925
+          ],
+          "ideal_started": null
+        }
+      ]
+    }
+  },
+  "usage_generated_at": "2026-10-16T01:02:01.459861+00:00"
 }

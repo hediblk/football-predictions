@@ -634,5 +634,1174 @@
     }
   ],
   "baseline_id": "2ebe2e36a97d91cd",
-  "generated_at": "2026-10-16T00:40:41.164148+00:00"
+  "generated_at": "2026-10-16T00:40:41.164148+00:00",
+  "usage": {
+    "la-liga": {
+      "source": "understat",
+      "games": 6,
+      "covered": 6,
+      "fully_mapped": 0,
+      "players": {
+        "32570": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            5185
+          ]
+        },
+        "203459": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "7884": {
+          "starts": 5,
+          "sub": 1,
+          "minutes": 479,
+          "share": 0.887037,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            2498
+          ]
+        },
+        "8479": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "32579": {
+          "starts": 4,
+          "sub": 0,
+          "minutes": 321,
+          "share": 0.594444,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            5062
+          ]
+        },
+        "32618": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "136000": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 348,
+          "share": 0.644444,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            9768
+          ]
+        },
+        "151439": {
+          "starts": 3,
+          "sub": 1,
+          "minutes": 296,
+          "share": 0.548148,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            8948
+          ]
+        },
+        "229042": {
+          "starts": 1,
+          "sub": 1,
+          "minutes": 103,
+          "share": 0.190741,
+          "known_games": 2,
+          "unknown_games": 4,
+          "provider_ids": [
+            12189
+          ]
+        },
+        "261644": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "32481": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 291,
+          "share": 0.538889,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            9755
+          ]
+        },
+        "126878": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 517,
+          "share": 0.957407,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            7779
+          ]
+        },
+        "168663": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "244599": {
+          "starts": 2,
+          "sub": 3,
+          "minutes": 209,
+          "share": 0.387037,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            12263
+          ]
+        },
+        "270747": {
+          "starts": 2,
+          "sub": 2,
+          "minutes": 218,
+          "share": 0.403704,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            13123
+          ]
+        },
+        "278297": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "279951": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 372,
+          "share": 0.688889,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            14777
+          ]
+        },
+        "2294": {
+          "starts": 2,
+          "sub": 4,
+          "minutes": 271,
+          "share": 0.501852,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            5091
+          ]
+        },
+        "32629": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 406,
+          "share": 0.751852,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            2399
+          ]
+        },
+        "81565": {
+          "starts": 2,
+          "sub": 2,
+          "minutes": 178,
+          "share": 0.32963,
+          "known_games": 4,
+          "unknown_games": 2,
+          "provider_ids": [
+            7020
+          ]
+        },
+        "101870": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 320,
+          "share": 0.592593,
+          "known_games": 5,
+          "unknown_games": 1,
+          "provider_ids": [
+            8765
+          ]
+        },
+        "157135": {
+          "starts": 4,
+          "sub": 2,
+          "minutes": 368,
+          "share": 0.681481,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            9211
+          ]
+        },
+        "172027": {
+          "starts": 0,
+          "sub": 1,
+          "minutes": 4,
+          "share": 0.007407,
+          "known_games": 1,
+          "unknown_games": 5,
+          "provider_ids": [
+            9825
+          ]
+        },
+        "185137": {
+          "starts": 0,
+          "sub": 1,
+          "minutes": 5,
+          "share": 0.009259,
+          "known_games": 1,
+          "unknown_games": 5,
+          "provider_ids": [
+            13001
+          ]
+        },
+        "261580": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        },
+        "302105": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": []
+        }
+      },
+      "most_used_xi": {
+        "formation": "4-3-3",
+        "status": "insufficient_coverage",
+        "slots": [
+          {
+            "role": "GK",
+            "player": 32570
+          },
+          {
+            "role": "LB",
+            "player": null
+          },
+          {
+            "role": "CB",
+            "player": 7884
+          },
+          {
+            "role": "CB",
+            "player": 32579
+          },
+          {
+            "role": "RB",
+            "player": 136000
+          },
+          {
+            "role": "CDM",
+            "player": 32481
+          },
+          {
+            "role": "CM",
+            "player": 279951
+          },
+          {
+            "role": "CM",
+            "player": 126878
+          },
+          {
+            "role": "LW",
+            "player": 157135
+          },
+          {
+            "role": "ST",
+            "player": 32629
+          },
+          {
+            "role": "RW",
+            "player": 101870
+          }
+        ]
+      },
+      "games_list": [
+        {
+          "fixture_id": 564641,
+          "kickoff": "2026-08-22T15:00:00+00:00",
+          "opponent_id": 559,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "67fa79efb7c326ef959b9e61b50b048e9719de5afb2a0024119dc4a38902609e",
+          "appearances": [
+            {
+              "source_id": 5185,
+              "name": "Unai Simón",
+              "minutes": 90,
+              "starter": true,
+              "player": 32570
+            },
+            {
+              "source_id": 9768,
+              "name": "Jesús Areso",
+              "minutes": 61,
+              "starter": true,
+              "player": 136000
+            },
+            {
+              "source_id": 8948,
+              "name": "Aitor Paredes",
+              "minutes": 77,
+              "starter": true,
+              "player": 151439
+            },
+            {
+              "source_id": 5062,
+              "name": "Yeray Álvarez",
+              "minutes": 90,
+              "starter": true,
+              "player": 32579
+            },
+            {
+              "source_id": 2229,
+              "name": "Yuri",
+              "minutes": 10,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 14777,
+              "name": "Beñat Gerenabarrena",
+              "minutes": 86,
+              "starter": true,
+              "player": 279951
+            },
+            {
+              "source_id": 13123,
+              "name": "Peio Canales",
+              "minutes": 90,
+              "starter": true,
+              "player": 270747
+            },
+            {
+              "source_id": 2399,
+              "name": "Iñaki Williams",
+              "minutes": 61,
+              "starter": true,
+              "player": 32629
+            },
+            {
+              "source_id": 7779,
+              "name": "Oihan Sancet",
+              "minutes": 90,
+              "starter": true,
+              "player": 126878
+            },
+            {
+              "source_id": 5091,
+              "name": "Alex Berenguer",
+              "minutes": 90,
+              "starter": true,
+              "player": 2294
+            },
+            {
+              "source_id": 7020,
+              "name": "Gorka Guruzeta",
+              "minutes": 61,
+              "starter": true,
+              "player": 81565
+            },
+            {
+              "source_id": 9755,
+              "name": "Inigo Ruiz de Galarreta",
+              "minutes": 4,
+              "starter": false,
+              "player": 32481
+            },
+            {
+              "source_id": 12189,
+              "name": "Hugo Rincón",
+              "minutes": 13,
+              "starter": false,
+              "player": 229042
+            },
+            {
+              "source_id": 2498,
+              "name": "Aymeric Laporte",
+              "minutes": 29,
+              "starter": false,
+              "player": 7884
+            },
+            {
+              "source_id": 13417,
+              "name": "Maroan Sannadi",
+              "minutes": 29,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 9211,
+              "name": "Nico Williams",
+              "minutes": 29,
+              "starter": false,
+              "player": 157135
+            }
+          ],
+          "starters": [
+            32570,
+            136000,
+            151439,
+            32579,
+            279951,
+            270747,
+            32629,
+            126878,
+            2294,
+            81565
+          ],
+          "subs": [
+            32481,
+            229042,
+            7884,
+            157135
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564630,
+          "kickoff": "2026-08-27T19:00:00+00:00",
+          "opponent_id": 81,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "6335e6e7b923452f08e61225f1b4d97923f727289dcbc8e102d53786136b460f",
+          "appearances": [
+            {
+              "source_id": 5185,
+              "name": "Unai Simón",
+              "minutes": 90,
+              "starter": true,
+              "player": 32570
+            },
+            {
+              "source_id": 12189,
+              "name": "Hugo Rincón",
+              "minutes": 90,
+              "starter": true,
+              "player": 229042
+            },
+            {
+              "source_id": 5062,
+              "name": "Yeray Álvarez",
+              "minutes": 90,
+              "starter": true,
+              "player": 32579
+            },
+            {
+              "source_id": 2498,
+              "name": "Aymeric Laporte",
+              "minutes": 90,
+              "starter": true,
+              "player": 7884
+            },
+            {
+              "source_id": 10352,
+              "name": "Johaneko Louis Jean",
+              "minutes": 74,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 12263,
+              "name": "Mikel Jauregizar",
+              "minutes": 74,
+              "starter": true,
+              "player": 244599
+            },
+            {
+              "source_id": 13123,
+              "name": "Peio Canales",
+              "minutes": 90,
+              "starter": true,
+              "player": 270747
+            },
+            {
+              "source_id": 2399,
+              "name": "Iñaki Williams",
+              "minutes": 64,
+              "starter": true,
+              "player": 32629
+            },
+            {
+              "source_id": 7779,
+              "name": "Oihan Sancet",
+              "minutes": 90,
+              "starter": true,
+              "player": 126878
+            },
+            {
+              "source_id": 9211,
+              "name": "Nico Williams",
+              "minutes": 64,
+              "starter": true,
+              "player": 157135
+            },
+            {
+              "source_id": 7020,
+              "name": "Gorka Guruzeta",
+              "minutes": 85,
+              "starter": true,
+              "player": 81565
+            },
+            {
+              "source_id": 12724,
+              "name": "Adama Boiro",
+              "minutes": 16,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 8765,
+              "name": "Roberto Navarro",
+              "minutes": 26,
+              "starter": false,
+              "player": 101870
+            },
+            {
+              "source_id": 5091,
+              "name": "Alex Berenguer",
+              "minutes": 26,
+              "starter": false,
+              "player": 2294
+            },
+            {
+              "source_id": 13001,
+              "name": "Álvaro Djaló",
+              "minutes": 5,
+              "starter": false,
+              "player": 185137
+            },
+            {
+              "source_id": 14777,
+              "name": "Beñat Gerenabarrena",
+              "minutes": 16,
+              "starter": false,
+              "player": 279951
+            }
+          ],
+          "starters": [
+            32570,
+            229042,
+            32579,
+            7884,
+            244599,
+            270747,
+            32629,
+            126878,
+            157135,
+            81565
+          ],
+          "subs": [
+            101870,
+            2294,
+            185137,
+            279951
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564652,
+          "kickoff": "2026-08-30T19:30:00+00:00",
+          "opponent_id": 558,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "8009cd7bf12af5eee46bed5a33f71bbece355d3571a3e50e9f5083acfc735aef",
+          "appearances": [
+            {
+              "source_id": 5185,
+              "name": "Unai Simón",
+              "minutes": 90,
+              "starter": true,
+              "player": 32570
+            },
+            {
+              "source_id": 9768,
+              "name": "Jesús Areso",
+              "minutes": 88,
+              "starter": true,
+              "player": 136000
+            },
+            {
+              "source_id": 8948,
+              "name": "Aitor Paredes",
+              "minutes": 90,
+              "starter": true,
+              "player": 151439
+            },
+            {
+              "source_id": 2498,
+              "name": "Aymeric Laporte",
+              "minutes": 90,
+              "starter": true,
+              "player": 7884
+            },
+            {
+              "source_id": 2229,
+              "name": "Yuri",
+              "minutes": 90,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 9755,
+              "name": "Inigo Ruiz de Galarreta",
+              "minutes": 67,
+              "starter": true,
+              "player": 32481
+            },
+            {
+              "source_id": 14777,
+              "name": "Beñat Gerenabarrena",
+              "minutes": 90,
+              "starter": true,
+              "player": 279951
+            },
+            {
+              "source_id": 8765,
+              "name": "Roberto Navarro",
+              "minutes": 76,
+              "starter": true,
+              "player": 101870
+            },
+            {
+              "source_id": 7779,
+              "name": "Oihan Sancet",
+              "minutes": 67,
+              "starter": true,
+              "player": 126878
+            },
+            {
+              "source_id": 5091,
+              "name": "Alex Berenguer",
+              "minutes": 90,
+              "starter": true,
+              "player": 2294
+            },
+            {
+              "source_id": 2399,
+              "name": "Iñaki Williams",
+              "minutes": 67,
+              "starter": true,
+              "player": 32629
+            },
+            {
+              "source_id": 9211,
+              "name": "Nico Williams",
+              "minutes": 14,
+              "starter": false,
+              "player": 157135
+            },
+            {
+              "source_id": 10352,
+              "name": "Johaneko Louis Jean",
+              "minutes": 2,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 12263,
+              "name": "Mikel Jauregizar",
+              "minutes": 23,
+              "starter": false,
+              "player": 244599
+            },
+            {
+              "source_id": 7020,
+              "name": "Gorka Guruzeta",
+              "minutes": 23,
+              "starter": false,
+              "player": 81565
+            },
+            {
+              "source_id": 13123,
+              "name": "Peio Canales",
+              "minutes": 23,
+              "starter": false,
+              "player": 270747
+            }
+          ],
+          "starters": [
+            32570,
+            136000,
+            151439,
+            7884,
+            32481,
+            279951,
+            101870,
+            126878,
+            2294,
+            32629
+          ],
+          "subs": [
+            157135,
+            244599,
+            81565,
+            270747
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564663,
+          "kickoff": "2026-09-05T14:15:00+00:00",
+          "opponent_id": 78,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "3c64558bd2c6e428b14635282e1b42b6de0e3638f69a4cad1cefc53f2a1d23f8",
+          "appearances": [
+            {
+              "source_id": 5185,
+              "name": "Unai Simón",
+              "minutes": 90,
+              "starter": true,
+              "player": 32570
+            },
+            {
+              "source_id": 9768,
+              "name": "Jesús Areso",
+              "minutes": 90,
+              "starter": true,
+              "player": 136000
+            },
+            {
+              "source_id": 2498,
+              "name": "Aymeric Laporte",
+              "minutes": 90,
+              "starter": true,
+              "player": 7884
+            },
+            {
+              "source_id": 5062,
+              "name": "Yeray Álvarez",
+              "minutes": 51,
+              "starter": true,
+              "player": 32579
+            },
+            {
+              "source_id": 2229,
+              "name": "Yuri",
+              "minutes": 90,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 14777,
+              "name": "Beñat Gerenabarrena",
+              "minutes": 90,
+              "starter": true,
+              "player": 279951
+            },
+            {
+              "source_id": 9755,
+              "name": "Inigo Ruiz de Galarreta",
+              "minutes": 65,
+              "starter": true,
+              "player": 32481
+            },
+            {
+              "source_id": 8765,
+              "name": "Roberto Navarro",
+              "minutes": 71,
+              "starter": true,
+              "player": 101870
+            },
+            {
+              "source_id": 7779,
+              "name": "Oihan Sancet",
+              "minutes": 90,
+              "starter": true,
+              "player": 126878
+            },
+            {
+              "source_id": 9211,
+              "name": "Nico Williams",
+              "minutes": 81,
+              "starter": true,
+              "player": 157135
+            },
+            {
+              "source_id": 2399,
+              "name": "Iñaki Williams",
+              "minutes": 71,
+              "starter": true,
+              "player": 32629
+            },
+            {
+              "source_id": 7020,
+              "name": "Gorka Guruzeta",
+              "minutes": 9,
+              "starter": false,
+              "player": 81565
+            },
+            {
+              "source_id": 5091,
+              "name": "Alex Berenguer",
+              "minutes": 19,
+              "starter": false,
+              "player": 2294
+            },
+            {
+              "source_id": 8948,
+              "name": "Aitor Paredes",
+              "minutes": 39,
+              "starter": false,
+              "player": 151439
+            },
+            {
+              "source_id": 10352,
+              "name": "Johaneko Louis Jean",
+              "minutes": 19,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 12263,
+              "name": "Mikel Jauregizar",
+              "minutes": 25,
+              "starter": false,
+              "player": 244599
+            }
+          ],
+          "starters": [
+            32570,
+            136000,
+            7884,
+            32579,
+            279951,
+            32481,
+            101870,
+            126878,
+            157135,
+            32629
+          ],
+          "subs": [
+            81565,
+            2294,
+            151439,
+            244599
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564676,
+          "kickoff": "2026-09-12T16:30:00+00:00",
+          "opponent_id": 285,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "92f9e3465ccf31c25c9c34ea795391db47f0327868fb29b0bae33e2e0362ee2f",
+          "appearances": [
+            {
+              "source_id": 5185,
+              "name": "Unai Simón",
+              "minutes": 90,
+              "starter": true,
+              "player": 32570
+            },
+            {
+              "source_id": 9768,
+              "name": "Jesús Areso",
+              "minutes": 65,
+              "starter": true,
+              "player": 136000
+            },
+            {
+              "source_id": 5062,
+              "name": "Yeray Álvarez",
+              "minutes": 90,
+              "starter": true,
+              "player": 32579
+            },
+            {
+              "source_id": 2498,
+              "name": "Aymeric Laporte",
+              "minutes": 90,
+              "starter": true,
+              "player": 7884
+            },
+            {
+              "source_id": 2229,
+              "name": "Yuri",
+              "minutes": 90,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 14777,
+              "name": "Beñat Gerenabarrena",
+              "minutes": 90,
+              "starter": true,
+              "player": 279951
+            },
+            {
+              "source_id": 9755,
+              "name": "Inigo Ruiz de Galarreta",
+              "minutes": 65,
+              "starter": true,
+              "player": 32481
+            },
+            {
+              "source_id": 8765,
+              "name": "Roberto Navarro",
+              "minutes": 72,
+              "starter": true,
+              "player": 101870
+            },
+            {
+              "source_id": 7779,
+              "name": "Oihan Sancet",
+              "minutes": 90,
+              "starter": true,
+              "player": 126878
+            },
+            {
+              "source_id": 9211,
+              "name": "Nico Williams",
+              "minutes": 90,
+              "starter": true,
+              "player": 157135
+            },
+            {
+              "source_id": 2399,
+              "name": "Iñaki Williams",
+              "minutes": 81,
+              "starter": true,
+              "player": 32629
+            },
+            {
+              "source_id": 10352,
+              "name": "Johaneko Louis Jean",
+              "minutes": 25,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 12263,
+              "name": "Mikel Jauregizar",
+              "minutes": 25,
+              "starter": false,
+              "player": 244599
+            },
+            {
+              "source_id": 5091,
+              "name": "Alex Berenguer",
+              "minutes": 18,
+              "starter": false,
+              "player": 2294
+            },
+            {
+              "source_id": 13417,
+              "name": "Maroan Sannadi",
+              "minutes": 9,
+              "starter": false,
+              "player": null
+            }
+          ],
+          "starters": [
+            32570,
+            136000,
+            32579,
+            7884,
+            279951,
+            32481,
+            101870,
+            126878,
+            157135,
+            32629
+          ],
+          "subs": [
+            244599,
+            2294
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 564691,
+          "kickoff": "2026-09-19T14:15:00+00:00",
+          "opponent_id": 263,
+          "status": "partial",
+          "reason": "unmapped_appearances",
+          "sheet_sha256": "b314fa654cc222bf771d0ffb13714ee5bdf59a2099d06ea0cbb1855d9f20095f",
+          "appearances": [
+            {
+              "source_id": 5185,
+              "name": "Unai Simón",
+              "minutes": 90,
+              "starter": true,
+              "player": 32570
+            },
+            {
+              "source_id": 10352,
+              "name": "Johaneko Louis Jean",
+              "minutes": 46,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 8948,
+              "name": "Aitor Paredes",
+              "minutes": 90,
+              "starter": true,
+              "player": 151439
+            },
+            {
+              "source_id": 2498,
+              "name": "Aymeric Laporte",
+              "minutes": 90,
+              "starter": true,
+              "player": 7884
+            },
+            {
+              "source_id": 2229,
+              "name": "Yuri",
+              "minutes": 86,
+              "starter": true,
+              "player": null
+            },
+            {
+              "source_id": 12263,
+              "name": "Mikel Jauregizar",
+              "minutes": 62,
+              "starter": true,
+              "player": 244599
+            },
+            {
+              "source_id": 9755,
+              "name": "Inigo Ruiz de Galarreta",
+              "minutes": 90,
+              "starter": true,
+              "player": 32481
+            },
+            {
+              "source_id": 8765,
+              "name": "Roberto Navarro",
+              "minutes": 75,
+              "starter": true,
+              "player": 101870
+            },
+            {
+              "source_id": 7779,
+              "name": "Oihan Sancet",
+              "minutes": 90,
+              "starter": true,
+              "player": 126878
+            },
+            {
+              "source_id": 9211,
+              "name": "Nico Williams",
+              "minutes": 90,
+              "starter": true,
+              "player": 157135
+            },
+            {
+              "source_id": 2399,
+              "name": "Iñaki Williams",
+              "minutes": 62,
+              "starter": true,
+              "player": 32629
+            },
+            {
+              "source_id": 9768,
+              "name": "Jesús Areso",
+              "minutes": 44,
+              "starter": false,
+              "player": 136000
+            },
+            {
+              "source_id": 13417,
+              "name": "Maroan Sannadi",
+              "minutes": 28,
+              "starter": false,
+              "player": null
+            },
+            {
+              "source_id": 9825,
+              "name": "Nicolás Serrano",
+              "minutes": 4,
+              "starter": false,
+              "player": 172027
+            },
+            {
+              "source_id": 5091,
+              "name": "Alex Berenguer",
+              "minutes": 28,
+              "starter": false,
+              "player": 2294
+            },
+            {
+              "source_id": 13123,
+              "name": "Peio Canales",
+              "minutes": 15,
+              "starter": false,
+              "player": 270747
+            }
+          ],
+          "starters": [
+            32570,
+            151439,
+            7884,
+            244599,
+            32481,
+            101870,
+            126878,
+            157135,
+            32629
+          ],
+          "subs": [
+            136000,
+            172027,
+            2294,
+            270747
+          ],
+          "ideal_started": null
+        }
+      ]
+    }
+  },
+  "usage_generated_at": "2026-10-16T01:01:58.583728+00:00"
 }
