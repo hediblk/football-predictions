@@ -30,6 +30,8 @@ The [squads and players plan](docs/xi-ui-plan-2026-10-15.md) splits the next ste
 
 Remaining work includes identity coverage, historical rating vintages, dated pre-kickoff lineups, source redistribution terms and evaluation. Existing domestic match sheets and UEFA lineup/physical records supply historical starters/minutes; heatmap grids alone do not. Unused bench, injuries and suspensions need additional evidence. Task 1 now exports checked squad/EA references for every supported club, including unavailable and ambiguous source states, with seven-day roster reuse and immutable observations. Forecast probabilities are unchanged. The first [player impact experiment](docs/player-impact-xg-plus-minus.md) (Task 7, flat prior) finds a small but consistent later-season xG gain from actual lineups, but only when they are measured against each team's usual lineup. Individual player effects are within noise.
 
+The [expected-XI evaluation](docs/expected-xi-forecast-adjustment.md) (Task 8, flat prior) does not improve match forecasts on 2024/25–2025/26. Earlier seasons select recent start share with weight 2, but held-out log loss worsens by 0.00086 (clustered SE 0.00085). The actual-starters oracle has no clear match-loss gain either. Forecasts keep zero player-adjustment weight; rerun with Task 7b's EA prior once merged before considering any explicit calibration task.
+
 ## Parked
 
 - **Repository rename:** deferred. GitHub redirects remotes but not the Pages address; preserve existing links or set up a custom domain before renaming.
