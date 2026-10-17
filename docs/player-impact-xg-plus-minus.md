@@ -4,6 +4,8 @@ Task 7 of the [squads and players plan](xi-ui-plan-2026-10-15.md). This is an of
 
 **Result: yes, but only slightly.** Given the actual lineups, player effects improve later-season team-game xG predictions only when each lineup is measured against the team's usual lineup. Over 32,208 team-games in 2017/18–2025/26, mean squared error falls by **0.0018 xG² (standard error 0.0004)**, from 0.6508 to 0.6490. RMSE falls from 0.8067 to 0.8056 and MAE from 0.6252 to 0.6240. All five leagues and seven of nine seasons improve, and the gain grows with training history. The specified absolute sum (every player's full minutes added on top of pre-game team strengths) gains nothing: its ridge is pushed to the top of the grid, and it ends at −0.00005 (0.00006). Individual player effects are small and poorly identified. None of 8,978 is two posterior standard deviations from zero.
 
+[Task 7b](#task-7b-ea-prior-and-unseen-players-16-october-2026) adds an EA-rating prior and keeps players without training minutes. It roughly doubles the gain overall, but adds nothing in the latest two seasons.
+
 ## Data and model
 
 - **Data:** the [Understat match sheets](../data/players/understat/README.md) for five leagues, 2014/15–2025/26: 43,146 team-games and 629,840 appearances for 9,530 players. Excluded matches are absent from both files. The target is each side's match-payload xG (`xg_for`).
@@ -209,10 +211,118 @@ These are ever-present players at promoted or short-lived top-flight sides. Thei
 - **Timing.** Results follow the README: retrospective match sheets, with xG assumed available by the end of the match's UTC day. Ridge strengths come from earlier folds only, but 2017/18–2025/26 also shaped this design: the decision to centre was taken after seeing the absolute results on the same seasons. Treat the centred numbers as a strong replay, not an untouched holdout.
 - **Not yet tried:** time-weighting player games, ageing, position-specific priors and the EA prior (Task 6). Coverage of new players (12–15% of evaluation minutes have zero effect) is where the EA prior should help most.
 
+## Task 7b: EA prior and unseen players (16 October 2026)
+
+**Result: the EA prior roughly doubles the gain, but not in the latest two seasons.** With EA ratings as the shrinkage target, the centred lineup's MSE gain over team-only rises from +1.80 to **+4.26 (0.68)** ×1000. The starters lineup rises from +1.60 to **+3.03 (0.61)**. Against the flat prior on the same team-games, the EA prior adds +2.46 (0.54) for centred and +1.43 (0.44) for starters. It helps in all five leagues. It also helps in eight of nine seasons for centred and six of nine for starters. It does not help reliably in the latest two: in 2024/25 and 2025/26 the differences run from −0.88 to +0.56 ×1000, each within its standard error. New players' own contributions are worth +0.57 (0.22). Most of the gain comes from a better shrinkage target for players who already have minutes. The first version, which rated every training season with the evaluation season's ratings, made things worse; see "Hindsight ratings" below.
+
+### What changed
+
+- **Unseen players.** Fold columns now include every evaluation-season player. A player without training rows has only his prior mean, so his minutes count once the prior is informative. With the flat prior that mean is zero, and Task 7's numbers reproduce exactly. "Unseen" means no nonzero entry in the training design: 11–15% of evaluation minutes.
+- **EA prior** (`src/standing_prediction/player_prior.py`, `EaPrior`). The prior mean is slope × (EA overall − position-group mean), with one slope for attack and one for defence. Groups are GK, DEF, MID and ATT, from the first listed EA position. The group mean is taken over the fold's rated players. Ratings use `matched` rows of `data/players/understat_ea_links.csv`. Each player gets the latest vintage in `data/players/ea/vintages.json` with `available_from` before the season's first kickoff (across the five leagues) that lists him, looking back at most 365 days. Unlinked and unrated players get 0. The callable keeps Task 7's signature, `prior(players, before_season) -> (attack, defence)`, once its slopes are fitted, so Task 8 can import it.
+- **Slopes from earlier seasons only.** The slopes are fitted on the training seasons, jointly with the ridge: unpenalised on the two prior directions, by profiling out the ridge (Frisch–Waugh). Regressing already-shrunk effects on ratings would attenuate them. Each training row uses the ratings available before **its own** season, which is how evaluation uses them. The fitted model is therefore effect = slope × rating(season) + a constant per-player deviation. The deviation is shrunk to zero, and the rating part moves with each new vintage.
+- **Ridge re-chosen** on earlier folds for each prior. The EA prior chose 300 every season for centred; for starters it chose 300, except 1,000 for 2021/22. The flat prior chose 300 except 100 for centred 2017/18, as before.
+
+### Overall
+
+Evaluation seasons 2017/18–2025/26, 32,208 team-games, given lineups. MSE gains are ×1000 xG² against team-only, with match-clustered standard errors; positive is better. The last column compares the two priors on identical team-games.
+
+| Lineup | Prior | MAE | RMSE | Bias | Gain vs team-only | EA − flat |
+| :--- | :--- | ---: | ---: | ---: | ---: | ---: |
+| — | Team only | 0.6252 | 0.8067 | −0.0187 | | |
+| Centred | Flat | 0.6240 | 0.8056 | −0.0193 | +1.80 (0.37) | |
+| Centred | EA | **0.6233** | **0.8041** | −0.0125 | **+4.26 (0.68)** | **+2.46 (0.54)** |
+| Starters | Flat | 0.6239 | 0.8057 | −0.0202 | +1.60 (0.38) | |
+| Starters | EA | 0.6236 | 0.8048 | −0.0153 | +3.03 (0.61) | +1.43 (0.44) |
+
+The EA prior also reduces the team-only model's small under-prediction.
+
+### By season
+
+| Season | Centred, flat | Centred, EA | Centred, EA − flat | Starters, flat | Starters, EA | Starters, EA − flat |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 2017/18 | −1.49 (1.60) | +4.15 (1.73) | +5.65 (1.76) | +0.29 (0.74) | +3.65 (1.47) | +3.36 (1.25) |
+| 2018/19 | +2.02 (0.78) | +5.99 (1.86) | +3.96 (1.56) | +1.40 (0.85) | +4.47 (1.67) | +3.07 (1.32) |
+| 2019/20 | −0.27 (0.86) | +0.63 (1.88) | +0.90 (1.61) | −0.07 (1.01) | −0.17 (1.79) | −0.10 (1.39) |
+| 2020/21 | +1.14 (0.92) | +4.98 (1.92) | +3.85 (1.49) | +0.53 (1.07) | +2.63 (1.83) | +2.10 (1.26) |
+| 2021/22 | +1.62 (0.95) | +3.30 (1.89) | +1.68 (1.47) | +1.60 (1.12) | +2.40 (1.37) | +0.80 (1.36) |
+| 2022/23 | +2.35 (1.02) | +5.68 (2.09) | +3.33 (1.59) | +1.47 (1.18) | +3.12 (1.95) | +1.65 (1.27) |
+| 2023/24 | +4.36 (1.15) | +7.19 (2.23) | +2.83 (1.67) | +4.16 (1.34) | +6.53 (2.05) | +2.37 (1.32) |
+| 2024/25 | +4.04 (1.24) | +3.16 (2.49) | −0.88 (1.90) | +3.36 (1.37) | +3.01 (2.19) | −0.35 (1.51) |
+| 2025/26 | +2.53 (1.21) | +3.09 (2.11) | +0.56 (1.52) | +1.74 (1.43) | +1.50 (2.05) | −0.24 (1.23) |
+
+The flat prior's gain grows with training history, while the EA prior's does not: the EA prior matters most when there are few minutes to learn from. In the latest two seasons the flat prior has caught up. Those seasons also have the thinnest rating vintages: 2024/25 uses FC 24's single September 2023 snapshot, 11 months old at kickoff. The vintage table and coverage are in [the EA README](../data/players/ea/README.md). Task 8 should not assume the EA prior helps a current-season forecast more than the flat prior. Its averaged gain is driven by earlier seasons.
+
+### By league
+
+| League | Team-games | Centred, flat | Centred, EA | Centred, EA − flat | Starters, flat | Starters, EA | Starters, EA − flat |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Premier League | 6,838 | +3.74 (0.86) | +7.59 (1.65) | +3.86 (1.22) | +3.77 (0.89) | +6.13 (1.44) | +2.36 (0.97) |
+| Bundesliga | 5,506 | +1.53 (0.95) | +4.49 (1.63) | +2.96 (1.33) | +1.35 (1.00) | +2.82 (1.53) | +1.48 (1.11) |
+| La Liga | 6,836 | +0.77 (0.79) | +3.08 (1.39) | +2.31 (1.16) | +0.54 (0.78) | +1.64 (1.25) | +1.10 (0.93) |
+| Ligue 1 | 6,188 | +1.53 (0.78) | +3.09 (1.56) | +1.56 (1.29) | +1.51 (0.80) | +2.88 (1.38) | +1.37 (1.05) |
+| Serie A | 6,840 | +1.35 (0.76) | +2.98 (1.33) | +1.63 (1.08) | +0.77 (0.79) | +1.61 (1.24) | +0.84 (0.90) |
+
+### Unseen players
+
+"Unseen only" adds only the unseen players' contributions to the team-only prediction. It is zero by construction under the flat prior. "Matches with unseen minutes" are matches where unseen players played at least 90 minutes across both sides: 25,330 team-games for centred and 27,912 for starters. Team-games with fewer unseen minutes are listed separately.
+
+| | Centred | Starters |
+| :--- | ---: | ---: |
+| Unseen only, EA prior, all team-games | +0.57 (0.22) | +0.49 (0.20) |
+| Matches with unseen minutes: flat | +1.78 (0.40) | +1.35 (0.40) |
+| Matches with unseen minutes: EA | +4.57 (0.78) | +3.19 (0.66) |
+| Matches with unseen minutes: EA − flat | +2.78 (0.63) | +1.84 (0.49) |
+| Other team-games: EA − flat | +1.29 (1.02) | −1.25 (0.96) |
+
+By season, the unseen-only gain for centred is positive in seven of nine seasons, between −0.43 and +1.55. It is in `unseen.csv`.
+
+| Season | Unseen minutes share | Rated, all minutes | Rated, unseen minutes |
+| :--- | ---: | ---: | ---: |
+| 2017/18 | 13.8% | 97.9% | 87.0% |
+| 2018/19 | 13.9% | 98.7% | 93.1% |
+| 2019/20 | 14.2% | 98.2% | 90.4% |
+| 2020/21 | 11.9% | 97.1% | 83.0% |
+| 2021/22 | 11.5% | 97.1% | 83.7% |
+| 2022/23 | 13.3% | 96.7% | 81.1% |
+| 2023/24 | 12.5% | 95.3% | 74.5% |
+| 2024/25 | 11.7% | 95.3% | 76.5% |
+| 2025/26 | 11.9% | 96.5% | 75.8% |
+
+The figures are for centred minutes. Unseen minutes are the least often rated, and their coverage falls in later seasons: promoted squads and players new to the five leagues are linked less often.
+
+### Fitted slopes
+
+xG per 90 per EA overall point above the position-group mean, fitted on the training seasons of each evaluation season at the chosen ridge. Defence is shown as xG prevented (the negative of the defence slope).
+
+| Evaluation season | Centred: attack | Centred: prevented | Starters: attack | Starters: prevented |
+| :--- | ---: | ---: | ---: | ---: |
+| 2017/18 | 0.0023 | 0.0045 | 0.0020 | 0.0034 |
+| 2018/19 | 0.0029 | 0.0044 | 0.0025 | 0.0034 |
+| 2019/20 | 0.0028 | 0.0045 | 0.0023 | 0.0036 |
+| 2020/21 | 0.0031 | 0.0041 | 0.0025 | 0.0031 |
+| 2021/22 | 0.0033 | 0.0041 | 0.0026 | 0.0032 |
+| 2022/23 | 0.0033 | 0.0040 | 0.0025 | 0.0030 |
+| 2023/24 | 0.0033 | 0.0041 | 0.0025 | 0.0030 |
+| 2024/25 | 0.0031 | 0.0041 | 0.0024 | 0.0030 |
+| 2025/26 | 0.0029 | 0.0039 | 0.0021 | 0.0029 |
+
+The slopes are stable across folds. A player rated 10 points above his position group is worth about +0.03 xG per 90 in attack and +0.04 prevented (centred), comparable to the larger flat-prior effects in Task 7. The defensive slope is larger than the attacking one in every fold.
+
+### Hindsight ratings: a recorded negative
+
+The first version gave every training row the ratings dated before the **evaluation** season. Those ratings already reflect the training seasons' results, because EA revises ratings after good and bad seasons. In training, the slopes looked two to three times stronger: attack 0.0068–0.0092, prevented 0.0054–0.0091. In evaluation, the prior made predictions worse than team-only: centred −1.83 (1.24), starters −2.85 (1.16). Pooled over the folds, it was worse at every ridge strength. In the 2019/20 fold, for example, the prior's per-row correlation with the residual fell from 0.16 in training to 0.04 in evaluation. Matching each training row to its own season's pre-kickoff ratings fixed this. Any later use of EA ratings as features (Task 8, N3) needs the same time matching. These outputs are kept in `out/player-impact/<lineup>/ea_prior_hindsight/`.
+
+### Limits
+
+- The same replay caveats apply as for Task 7: lineups are given, match sheets are retrospective, and the design (centring, then time matching) was settled on these seasons. The time-matching fix was found by diagnosing the evaluation folds, so the EA results are a replay, not an untouched holdout.
+- Identity links are retrospective hypotheses built with all seasons' evidence (Task 6). The ratings themselves respect `available_from`. Using a link before the season it was established assumes that a club knows whom it signed.
+- One slope per direction across all positions. Goalkeeper ratings use different attributes, and a per-group slope is untested.
+- Positions are taken from the first EA listed position of the vintage used, not from match sheets.
+
 ## Reproduce
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m standing_prediction.player_impact --out-dir out/player-impact
 ```
 
-This runs all three lineup forms (`--lineup centred starters absolute`) and writes per-fold, per-season, per-league, learning-curve, effect and with-or-without CSVs plus `summary.json` under `out/player-impact/<lineup>/`. The team-only predictions take about 35 seconds and are cached as `out/player-impact/team_only.csv.gz`; `--refit-team` recomputes them. Each lineup form then takes several minutes on one thread, most of it on posterior variances. The run is deterministic (no sampling) and uses only the locked environment (NumPy, pandas, SciPy).
+This runs all three lineup forms (`--lineup centred starters absolute`) with both priors (`--prior flat ea`). It writes per-fold, per-season, per-league, learning-curve, unseen-player, slope, effect and with-or-without CSVs, row-level predictions and `summary.json` under `out/player-impact/<lineup>/<prior>/`. The EA prior reads compact vintages from `--ea-cache` (default `.cache/players`; in a worktree, pass the main checkout's `/Users/hedibelkahia/codes/football/.cache/players`). The team-only predictions take about 35 seconds and are cached as `out/player-impact/team_only.csv.gz`; `--refit-team` recomputes them. Each lineup form then takes several minutes on one thread, most of it on posterior variances. The run is deterministic (no sampling) and uses only the locked environment (NumPy, pandas, SciPy).

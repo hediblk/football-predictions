@@ -38,3 +38,5 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
 ```
 
 This requires the saved provider caches and committed Understat player archive; it makes no HTTP requests. It compares latest XI, decayed start share, missed-game decay and an actual-starters oracle, selects weights before 2024/25, and checks the last two seasons unchanged. All CSVs and input/code hashes stay under `out/`. See the [protocol, results and limits](../../docs/expected-xi-forecast-adjustment.md). `--prior module:function` accepts the Task 7b prior with the same `(players, before_season)` signature; the default is flat.
+
+`python -m forecast_calibration.npxg all` runs the same protocol for non-penalty xG and a team penalty rate ([report](../../docs/npxg-penalty-rate.md)). It writes to `out/npxg-penalty-rate` and does not touch the artifact.
