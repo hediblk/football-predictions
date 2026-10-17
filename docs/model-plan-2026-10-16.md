@@ -4,7 +4,7 @@ Two model tasks that serve the [roadmap](../ROADMAP.md) goals: good Champions Le
 
 | Task | Area | Depends on | Size | Status |
 | --- | --- | --- | --- | --- |
-| A. Europa and Conference League results as cross-league evidence | Champions League | none | L | To do |
+| A. Europa and Conference League results as cross-league evidence | Champions League | none | L | [PR #63](https://github.com/hediblk/football-predictions/pull/63) |
 | B. Non-penalty xG with a team penalty rate | Domestic model | none | M | [PR #62](https://github.com/hediblk/football-predictions/pull/62) |
 
 The tasks touch different packages and can run in parallel.
