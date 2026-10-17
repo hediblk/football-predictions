@@ -68,6 +68,8 @@ ALIASES = {
     "vitoria": "guimaraes", "gd estoril praia": "estoril", "estrela da amadora": "estrela", "cs maritimo": "maritimo",
     "heracles almelo": "heracles", "rkc waalwijk": "waalwijk",
     "heart of midlothian": "hearts",
+    # ESPN EL/ECL archive spellings; source links in docs/el-ecl-history-evaluation.md.
+    "racing genk": "genk", "rapid vienna": "rapid wien", "sint truidense": "st truiden",
 }
 
 AREA_LEAGUES = {

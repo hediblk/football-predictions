@@ -331,6 +331,10 @@ PSG's fall is league-level: without the Manchester City–PSG quote, PSG's ratin
 - Serie A stays low (57.5 against StatsUltra's 69.8); its four priced fixtures barely move it.
 - Barcelona v Arsenal on a neutral pitch is still 32% Barcelona, 42% Arsenal. Barcelona rates higher against an average side and has the best attack, but Arsenal have the best defence by far (94.5; next best 85.0) and Barcelona's ranks 13th.
 
+### Task A: ESPN EL/ECL history (17 October 2026)
+
+`--european-history both` adds covered 90-minute ESPN results for 2025/26 onward beside the existing openfootball 2024/25 supplement, with explicit aliases, exclusion counts and approximated kickoff-plus-three-hour availability. The [three-variant replay](docs/el-ecl-history-evaluation.md) leaves 2024/25 unchanged and improves 2025/26 EL/ECL log loss by 0.00606, but worsens Champions League log loss by 0.00056 (paired clustered SE 0.00352). It fails the strict no-worse-in-both-seasons gate, so openfootball remains the default. No calibration settings or published data changed; EL/ECL prices remain for the 10 December recheck.
+
 ## Other existing priorities
 
 Upcoming work is listed in [ROADMAP.md](ROADMAP.md). Dated odds are now archived daily in [data/odds](data/odds/README.md). Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. The global weights stay fixed unless explicitly recalibrated; UCL is the separate-package plan above, while larger model experiments remain outside the league package.

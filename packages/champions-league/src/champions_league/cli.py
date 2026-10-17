@@ -13,11 +13,13 @@ from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_FIT, DEFAU
 from standing_prediction.utils import normalize_team
 
 from champions_league.strengths import DEFAULT_OFFSET_RIDGE
+from champions_league.data import DEFAULT_EUROPEAN_HISTORY, EUROPEAN_HISTORY_OPTIONS
 
 
 def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
                  cache=True, odds_snapshot=None, inputs=None, offset_ridge=DEFAULT_OFFSET_RIDGE, sensitivity=True,
-                 odds_archive=Path("data/odds"), match_forecasts=True, client=None):
+                 odds_archive=Path("data/odds"), match_forecasts=True, client=None,
+                 european_history=DEFAULT_EUROPEAN_HISTORY):
     from champions_league.data import load_inputs, load_market_quotes
     from champions_league.coefficients import fetch_coefficients
     from champions_league.report import write_report
@@ -30,7 +32,7 @@ def run_forecast(*, season=None, as_of=None, n_sim=10000, seed=7, out_dir="out",
     origin = origin.tz_localize("UTC") if origin.tzinfo is None else origin.tz_convert("UTC")
     season = season if season is not None else origin.year - (origin.month < 7)
     inputs = inputs or load_inputs(season=season, as_of=origin, prior_seasons=DEFAULT_FIT["prior_seasons"], cache=cache,
-                                   client=client)
+                                   client=client, european_history=european_history)
     teams = inputs.standings["team"].tolist()
     coefficients, coefficient_metadata = fetch_coefficients(season, teams, cache=cache)
     coefficients = coefficients if coefficient_metadata["complete"] else None
@@ -184,16 +186,20 @@ def main(argv=None):
     parser.add_argument("--no-match-forecasts", action="store_true", help="Skip the per-fixture forecasts (they refit at every match day).")
     parser.add_argument("--no-sensitivity", action="store_true", help="Skip the league-offset shrinkage sensitivity reruns.")
     parser.add_argument("--evaluate", action="store_true", help="Replay 2024/25 and 2025/26 origins and compare international match forecasts.")
+    parser.add_argument("--european-history", choices=EUROPEAN_HISTORY_OPTIONS, default=DEFAULT_EUROPEAN_HISTORY,
+                        help="EL/ECL evidence: none, openfootball 2024/25 only, or both (adds ESPN 2025/26 onward); default: %(default)s.")
     args = parser.parse_args(argv)
     load_dotenv()
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     if args.evaluate:
         from champions_league.evaluate import evaluate
-        evaluate(n_sim=args.n_sim, seed=args.seed, out_dir=args.out_dir, cache=not args.no_cache)
+        evaluate(n_sim=args.n_sim, seed=args.seed, out_dir=args.out_dir, cache=not args.no_cache,
+                 european_history=args.european_history)
         return
     result = run_forecast(season=args.season, as_of=args.as_of, n_sim=args.n_sim, seed=args.seed,
                           out_dir=args.out_dir, cache=not args.no_cache, odds_snapshot=args.odds_snapshot,
                           odds_archive=None if args.no_market else args.odds_archive,
+                          european_history=args.european_history,
                           match_forecasts=not args.no_match_forecasts, sensitivity=not args.no_sensitivity)
     favorite = result.summary["title_pct"].idxmax()
     names = result.metadata["data"].get("display_names", {})
