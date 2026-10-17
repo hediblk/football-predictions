@@ -34,7 +34,7 @@ RPS, already on the scorecard, is the ordinal score the brainstorm asked for: ca
 | Task | Area | Wave | Depends on | Size | Status |
 | --- | --- | --- | --- | --- | --- |
 | 1. Eleven-season miss report | Offline analysis | 1 | none | M | To do |
-| 2. Match, round and race cards | UI | 1 | none (verdict line after 3) | L | To do |
+| 2. Match, round and race cards | UI | 1 | none (verdict line after 3) | L | PR_LINK |
 | 3. Miss breakdown in the scorecard export | Data | 2 | 1 | M | To do |
 | 4. "How we miss" on the site | UI | 2 | contract below (data from 3) | M | To do |
 

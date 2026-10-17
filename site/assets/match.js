@@ -1,10 +1,11 @@
 // Match page: everything known about one fixture before kickoff, and after full time the forecast against the result.
 import {
   COMPS, compBySlug, $, esc, getJSON, setStatus, ordinal, dec, dayKey, pick, sidePair, clubName, clubCrest, loadForm, played,
-  verdict, pct, pct1,
+  verdict, pct, pct1, num,
 } from "./core.js";
 import { forecastBlocks, stakesTable, stageLabel, probCells, PENDING, stakeKinds, stakeLines } from "./matches.js";
 import { rankTag } from "./clubs.js";
+import { cardChips, offerCard, matchCard } from "./cards.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
 const STRENGTH = [["rating", "Rating"], ["attack", "Attack"], ["defense", "Defence"]];
@@ -89,6 +90,15 @@ function hero(m, comp, slugs) {
   const post = m.score && m.p;
   const modes = post ? `<div class="chips mp-modes" role="group" aria-label="Show">${[["after", "After"], ["before", "Before"]].map(([k, label]) =>
     `<button type="button" class="chip" data-mode="${k}" aria-pressed="${page.mode === k}">${label}</button>`).join("")}</div>` : "";
+  // the preview card before kickoff (and in Before mode), the full-time card after
+  const after = post && page.mode === "after";
+  if (m.p) {
+    const [stake] = after ? [] : stakeLines(m, comp.slug);
+    const known = stake ? stake.values.filter((v) => v != null) : [];
+    offerCard("match", () => matchCard(m, { legend: stageLabel(comp, [{ m }]), mode: page.mode, pending,
+      stake: stake && `${stake.race}: ${stake.team.name} ${num(Math.min(...known))}–${num(Math.max(...known))}%` }));
+  }
+  const cards = m.p ? cardChips("match", after ? "full-time" : "match preview") : "";
   let board = "";
   if (m.score) {
     board = `<div class="numeral on" role="img" aria-label="Final score ${m.score[0]}–${m.score[1]}">${m.score[0]}–${m.score[1]}</div>`;
@@ -108,7 +118,7 @@ function hero(m, comp, slugs) {
         <div class="who">
           <h1>${side(m.home_id, m.home)}<span class="mp-v">v</span>${side(m.away_id, m.away)}</h1>
           <p class="caption">${when}${facts}</p>
-          ${modes}
+          ${modes}${cards}
         </div>
         ${board || m.p ? `<div class="mp-board">${board}${m.p ? probCells(m) : ""}${said}</div>` : ""}
       </div>

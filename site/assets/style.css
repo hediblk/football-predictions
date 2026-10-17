@@ -1136,3 +1136,12 @@ table.mp-stand { min-width: 460px; }
 /* Task 4b: match-sheet observations carry a visible membership note. */
 .sq-seen { display: block; color: var(--dim); font: 400 10.5px/1.4 var(--mono); white-space: normal; }
 .sq-player .sq-seen { padding: 4px 0 6px 28px; }
+
+/* Task 2 (evaluation plan): "Download card" chips. The cards themselves are drawn on a canvas by cards.js from the
+   tokens above; here only the chip row, which wraps on phones instead of scrolling like other chip groups. */
+.card-dl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.card-dl-lbl { font: 800 12px/1 var(--sign); letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-right: 2px; }
+.card-dl .chip { flex: none; }
+.card-dl .chip[aria-busy="true"] { border-color: var(--amber); }
+.day-head .card-dl, #race-card .card-dl { margin-top: 12px; }
+@media (max-width: 479px) { .card-dl-lbl { flex-basis: 100%; } }

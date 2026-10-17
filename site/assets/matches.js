@@ -5,6 +5,7 @@ import {
 } from "./core.js";
 
 import { renderScorecardTable } from "./scorecard.js";
+import { cardChips, offerCard, roundCard } from "./cards.js";
 
 const OUTCOMES = ["Home win", "Draw", "Away win"];
 export const PENDING = { POSTPONED: "Postponed", SUSPENDED: "Suspended", CANCELLED: "Cancelled" };
@@ -194,7 +195,14 @@ function renderDay() {
   const summary = list.length
     ? `${list.length} match${list.length > 1 ? "es" : ""}${calls.length ? ` · ${calls.length} played · model called <b>${hits} of ${calls.length}</b>` : ""}`
     : "No matches in the competitions we cover.";
-  let html = `<div class="day-head"><h1>${esc(title)}</h1><p>${summary}</p>${list.length ? "" : nearby()}</div>`;
+  // "How we did": the round card of the day's finished games with a forecast, for the competitions on show
+  const played = list.filter((x) => x.m.score && x.m.p);
+  if (played.length) {
+    const shown = comp === "all" ? COMPS.filter((c) => played.some((x) => x.comp === c.slug)) : [compBySlug[comp]];
+    const scope = shown.length > 1 ? "All competitions" : stageLabel(shown[0], played);
+    offerCard("round", () => roundCard(played.map((x) => x.m), { day: { key: day, label: title }, scope }));
+  }
+  let html = `<div class="day-head"><h1>${esc(title)}</h1><p>${summary}</p>${list.length ? "" : nearby()}${played.length ? cardChips("round", "how we did") : ""}</div>`;
   for (const c of COMPS) {
     const rows = list.filter((x) => x.comp === c.slug);
     if (!rows.length) continue;

@@ -79,6 +79,7 @@ let crests = {};
 export async function loadCrests() {
   crests = await getJSON("crests.json");
 }
+export const crestPath = (id) => crests[id]?.path || null;
 const crestSizes = { inline: 18, row: 24, card: 36, hero: 80 };
 export function clubCrest(id, size = "row") {
   const crest = crests[id];

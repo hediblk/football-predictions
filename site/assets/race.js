@@ -2,6 +2,7 @@
 import { $, esc, pct, getJSON, clubName, clubCrest } from "./core.js";
 import { stakeNow } from "./matches.js";
 import { baseWeek } from "./clubs.js";
+import { cardChips, offerCard, raceCard } from "./cards.js";
 
 const UCL_METRICS = [["top8", "Top 8"], ["top24", "Top 24"], ["last16", "Last 16"], ["qf", "Quarter-finals"], ["sf", "Semi-finals"], ["final", "Final"], ["title", "Winner"]];
 const DASHES = ["", "4 3", "1 3", "6 2 1 2", "2 2"];
@@ -32,7 +33,32 @@ export async function showRace(data) {
   if (!hist.dates || hist.dates.length < 2) { frame.hidden = true; state = null; return; }
   state = { data, hist, base: baseline(data, hist, weeks) };
   frame.hidden = false;
+  $("race-card").innerHTML = cardChips("race", "race");
+  offerCard("race", cardRaces);
   draw();
+}
+
+/* The race card: title, top-four and relegation (winner, top 8 and top 24 in the Champions League), up to four
+   contenders each, with the whole-point change since the movers' baseline Monday */
+function cardRaces() {
+  const { data, hist, base } = state, ucl = data.kind === "ucl";
+  const top = ucl ? 0 : data.zones.find((z) => z.key === "ucl")?.to ?? 4;
+  const kinds = ucl ? [["title", "Winner"], ["top8", "Top 8"], ["top24", "Top 24"]] : [["title", "Title"], ["ucl", `Top ${top}`], ["releg", "Relegation"]];
+  const past = new Map(hist.teams.map((h) => [h.id, h]));
+  const races = kinds.map(([key, label]) => {
+    // the title and the drop list the likeliest clubs; place races the four nearest a coin flip
+    const place = key !== "title" && key !== "releg";
+    const rows = data.teams.map((t) => {
+      const was = base ? past.get(t.id)?.[key]?.[base.i] : null;
+      return { id: t.id, name: t.name, now: nowOf(t, key), d: was == null ? null : nowOf(t, key) - Math.round(was) };
+    }).filter((r) => (place ? r.now >= 3 && r.now <= 97 : r.now >= (key === "title" ? 1 : 3)))
+      .sort((a, b) => (place ? Math.abs(a.now - 50) - Math.abs(b.now - 50) : b.now - a.now)).slice(0, 4).sort((a, b) => b.now - a.now);
+    const empty = key === "releg" ? "Nobody in real danger." : key === "title" ? "Nobody is close." : "No close calls right now.";
+    return { key, label, red: key === "releg", place, rows, empty };
+  });
+  const date = new Date(data.generated_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+  return raceCard({ name: data.name, slug: data.slug, date, runs: `${data.n_sim.toLocaleString("en-US")} simulated ${ucl ? "tournaments" : "seasons"}`,
+    since: base ? `Monday ${fmt(base.monday, { day: "numeric", month: "short" })}` : null, races });
 }
 
 /* The Clubs ranking arrows' baseline: the Monday frozen before this run's week, and the history point on the last
