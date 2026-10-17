@@ -6,9 +6,10 @@
 # "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages,
 # an upcoming match page, finished ones in After and Before mode (one with a shot report), club Squad views (with a squad file, with season usage and
 # without one), and the model page, at desktop and phone widths, expanding a match (which must
-# link its match page) and a table row. Any console error, uncaught
+# link its match page) and a table row. It clicks every "Download card" chip (match preview, full time, the day's
+# round, the race), which must save a PNG of the chip's size. Any console error, uncaught
 # exception, failed same-origin request or missing content fails the check. Other origins (web fonts) get empty
-# responses, so the check runs offline. Needs `pip install playwright` and `python -m playwright install chromium`.
+# responses, so the check runs offline and the cards are drawn with the wider fallback fonts. Needs `pip install playwright` and `python -m playwright install chromium`.
 
 import argparse
 import json
@@ -18,15 +19,16 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeout, sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
 TABLE = ["#hero-in h1", "#table tbody tr.row", "#table th.vsm", "#table tbody tr.row td.vsm",
          # Race movers: a mover or the "no change" line; hidden without a frozen Monday before this week to compare with.
-         "#race-moves li, #race-moves[hidden]"]
-MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr"]
+         "#race-moves li, #race-moves[hidden]", "#race-card [data-card=race], #race-frame[hidden]"]
+CARD = "#view-match .mp-hero [data-card=match]"
+MATCH = ["#view-match .mp-hero h1", "#view-match .mp-hero .numeral", "#view-match .mp-fc .scores li", "#view-match .mp-sides tbody tr", CARD]
 # A finished fixture opens in After mode; pressing Before must bring back the pre-game forecast.
-AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr"]
+AFTER = ["#view-match .mp-hero h1", "#view-match .mp-modes [data-mode=after][aria-pressed=true]", "#view-match .mp-said", "#view-match .mp-vs tbody tr", CARD]
 # A finished league game with Understat shots adds "Chances": the shot map, the xG timeline and an openable shot list.
 CHANCES = AFTER + ["#view-match .mp-shots .mp-pitch circle.shot", "#view-match .mp-xgline svg path.xh"]
 # A club's Squad view: the ideal XI on its pitch, its text list and the squad table; without a squad file, one note.
@@ -35,6 +37,7 @@ SQUAD_FILE = ["#p-squad .sq-pitch .sq-dot", "#p-squad .sq-list li", "#p-squad .s
 # With season usage: competition chips with covered-game counts, minutes rings and the XI history.
 SQUAD_USAGE = ["#p-squad .sq-ctl [data-sq-comp][aria-pressed=true]", "#p-squad .sq-dot.used", "#p-squad .sq-hist tbody tr"]
 VIEWPORTS = {"desktop": {"width": 1280, "height": 900}, "phone": {"width": 375, "height": 844}}
+CARD_SIZES = {"portrait": (1080, 1350), "landscape": (1200, 675)}
 BROKEN = ["No signal", "could not be loaded", "unavailable right now"]
 
 
@@ -106,7 +109,7 @@ def routes(data):
         if played:
             slug, match = played
             label = "Published before kickoff" if published else "Reconstructed:"
-            found.append((f"#matches/{match['kickoff'][:10]}", ["#m-day .mrow"],
+            found.append((f"#matches/{match['kickoff'][:10]}", ["#m-day .mrow", "#m-day .day-head [data-card=round]"],
                           [f'#m-day .mrow[data-c="{slug}"][data-id="{match["id"]}"]'],
                           f'#m-day .panel .call .dim:has-text("{label}")'))
     def note_entry(slug, match):
@@ -232,6 +235,24 @@ def routes(data):
     return origin, found
 
 
+def download_cards(page):
+    # Each chip must save a PNG of its size; a tainted canvas or a drawing error never downloads.
+    problems = []
+    for chip in page.locator("button[data-card]").all():
+        label = chip.get_attribute("aria-label")
+        try:
+            with page.expect_download(timeout=15000) as info:
+                chip.click()
+            head = Path(info.value.path()).read_bytes()[:24]
+        except PlaywrightTimeout:
+            problems.append(f"{label}: no file downloaded")
+            continue
+        size = (int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big"))
+        if head[:8] != b"\x89PNG\r\n\x1a\n" or size != CARD_SIZES[chip.get_attribute("data-size")]:
+            problems.append(f"{label}: saved {size[0]}×{size[1]} instead of a PNG of that size")
+    return problems
+
+
 def visit(context, url, origin, selectors, rows, opened, interactions=()):
     problems = []
     page = context.new_page()
@@ -257,6 +278,7 @@ def visit(context, url, origin, selectors, rows, opened, interactions=()):
             problems.append(f"clicking {button} did not select {selected}")
         if content and not page.locator(content).count():
             problems.append(f"clicking {button} did not render {content}")
+    problems += download_cards(page)
     text = page.locator("main").inner_text()
     problems += [f"shows {phrase!r}" for phrase in BROKEN if phrase in text]
     limit = 13 if page.locator(".mp-running").count() else 10
@@ -272,8 +294,11 @@ def visit(context, url, origin, selectors, rows, opened, interactions=()):
         for selector in opened_checks:
             if not page.locator(selector).count():
                 problems.append(f"clicking a row did not open {selector}")
-        if page.locator(".mp-modes [data-mode=before][aria-pressed=true]").count() and page.locator(".mp-stats, .mp-where").count():
-            problems.append("Post-match stats are visible in Before mode")
+        if page.locator(".mp-modes [data-mode=before][aria-pressed=true]").count():
+            if page.locator(".mp-stats, .mp-where").count():
+                problems.append("Post-match stats are visible in Before mode")
+            # Before mode swaps the full-time card for the preview card.
+            problems += download_cards(page)
     page.close()
     return problems
 
