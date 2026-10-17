@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+import hashlib
 import logging
 from pathlib import Path
 
@@ -23,6 +24,9 @@ LOG = logging.getLogger(__name__)
 DOMESTIC_LEAGUES = [*CSV_LEAGUES, "AUT", "NOR", "CZ1", "SK1", "UA1", "AZ1"]
 DOMESTIC_ADAPTERS = {"CZ1": czech_matches, "SK1": slovak_matches, "UA1": ukrainian_matches, "AZ1": azerbaijan_matches}
 EUROPEAN_COMPETITIONS = {"CL", "EL", "ECL"}
+# ESPN stays opt-in after the Task A replay (docs/el-ecl-history-evaluation.md).
+DEFAULT_EUROPEAN_HISTORY = "openfootball"
+EUROPEAN_HISTORY_OPTIONS = ("none", "openfootball", "both")
 RELOCATED_VENUES = {
     2023: "Volksparkstadion, Hamburg", 2024: "Veltins-Arena, Gelsenkirchen",
     2025: "Stadion Miejski, Kraków", 2026: "Stamford Bridge, London",
@@ -181,9 +185,64 @@ def merge_refresh(csv, api):
     return merged, renamed, disagreements
 
 
-def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=None):
+def archived_european_results(seasons, team_leagues, domestic_clubs, *, as_of, archive=Path("data/results")):
+    frames, audits = [], []
+    covered_leagues = {team_leagues[team] for team in domestic_clubs}
+    for season in seasons:
+        if season < 2025:
+            continue
+        for code in ("EL", "ECL"):
+            path = Path(archive) / str(season) / f"{code}.csv"
+            if not path.exists():
+                continue
+            raw = pd.read_csv(path)
+            data = raw.rename(columns={"kickoff": "utcDate", "home_team": "homeTeam", "away_team": "awayTeam",
+                                       "home_goals": "homeGoals", "away_goals": "awayGoals"}).copy()
+            for side in ("home", "away"):
+                data[f"{side}Team"] = data[f"{side}Team"].map(canonical_team)
+                data[f"{side}League"] = data[f"{side}Team"].map(team_leagues)
+            data["utcDate"] = pd.to_datetime(data["utcDate"], utc=True, errors="coerce")
+            data["available_at"] = data["utcDate"] + pd.Timedelta(hours=3)
+            goals = data[["homeGoals", "awayGoals"]].apply(pd.to_numeric, errors="coerce")
+            reasons = pd.Series("", index=data.index)
+            checks = [
+                (data["status"].eq("after extra time"), "after_extra_time"),
+                (data["status"].eq("penalties"), "penalties"),
+                (~data["status"].eq("full time"), "unsupported_status"),
+                (data["utcDate"].isna(), "invalid_kickoff"),
+                ((goals.isna() | goals.lt(0) | goals.ne(goals.round())).any(axis=1), "invalid_score"),
+                ((data[["homeLeague", "awayLeague"]].notna()
+                  & ~data[["homeLeague", "awayLeague"]].isin(covered_leagues)).any(axis=1), "unmodelled_domestic_league"),
+                (~data[["homeTeam", "awayTeam"]].isin(domestic_clubs).all(axis=1), "no_domestic_history"),
+                (~data["available_at"].lt(as_of), "not_available_at_origin"),
+            ]
+            for mask, reason in checks:
+                reasons.loc[mask & reasons.eq("")] = reason
+            eligible = data.loc[reasons.eq("")]
+            duplicate = eligible.duplicated("espn_id") | eligible.assign(day=eligible["utcDate"].dt.date).duplicated(["homeTeam", "awayTeam", "day"])
+            reasons.loc[eligible.index[duplicate]] = "duplicate_result"
+            data = data.loc[reasons.eq("")].copy()
+            data[["homeGoals", "awayGoals"]] = goals.loc[data.index]
+            data["id"] = "espn-" + data["espn_id"].astype(str)
+            data["season"], data["competition"], data["source"] = season, code, str(path)
+            data["neutral"] = data["stage"].eq("final") | data["homeTeam"].isin(["shakhtar donetsk", "dynamo kyiv"])
+            data["status"] = "FINISHED"
+            audits.append({"competition": code, "season": season, "source": str(path),
+                           "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "rows": len(raw), "matches": len(data),
+                           "excluded": reasons[reasons.ne("")].value_counts().to_dict(),
+                           "clubs_without_domestic_history": sorted(name for name in set(raw["home_team"]) | set(raw["away_team"])
+                                                                    if canonical_team(name) not in domestic_clubs),
+                           "availability": "Approximated as kickoff plus three hours, strictly before origin; fetched_at is backfill observation time."})
+            frames.append(data)
+    return frames, audits
+
+
+def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=None,
+                european_history=DEFAULT_EUROPEAN_HISTORY, results_archive=Path("data/results")):
     if not 0 <= prior_seasons <= 2:
         raise ValueError("prior_seasons must be between 0 and 2.")
+    if european_history not in EUROPEAN_HISTORY_OPTIONS:
+        raise ValueError(f"european_history must be one of {EUROPEAN_HISTORY_OPTIONS}.")
     load_dotenv()
     origin = pd.Timestamp.now(tz="UTC") if as_of is None else pd.to_datetime(as_of, utc=True)
     client = client or FootballDataClient(use_cache=cache)
@@ -275,7 +334,7 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
             errors.append({"competition": league, "season": season, "source": "football-data.org domestic refresh", "error": str(exc)})
             LOG.warning("Current domestic API refresh unavailable: %s (%s)", league, exc)
     try:
-        supplements = european_supplement(cache=cache) if season - prior_seasons <= 2024 <= season else []
+        supplements = european_supplement(cache=cache) if european_history != "none" and season - prior_seasons <= 2024 <= season else []
     except (KeyError, ValueError, RuntimeError, OSError) as exc:
         supplements = []
         errors.append({"source": "openfootball European supplements", "error": str(exc)})
@@ -297,6 +356,14 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
         source_audits.append({"competition": "CL", "season": int(data["season"].iloc[0]),
                               "source": data["source"].iloc[0], "matches": int(data["status"].eq("FINISHED").sum()),
                               "latest_result": data.loc[data["status"].eq("FINISHED"), "utcDate"].max().isoformat()})
+    if european_history == "both":
+        domestic = pd.concat(domestic_frames, ignore_index=True)
+        domestic = domestic.loc[domestic["available_at"].lt(origin)]
+        domestic_clubs = set(domestic["homeTeam"]) | set(domestic["awayTeam"])
+        archived, audits = archived_european_results(range(season - prior_seasons, season + 1), team_leagues,
+                                                    domestic_clubs, as_of=origin, archive=results_archive)
+        supplements.extend(archived)
+        source_audits.extend(audits)
     history = pd.concat([*domestic_frames, *api_frames, *supplements], ignore_index=True)
     finished = history["status"].isna() | history["status"].eq("FINISHED")
     history = history[finished & history["available_at"].lt(origin) & history["homeGoals"].notna() & history["awayGoals"].notna()].copy()
@@ -349,12 +416,13 @@ def load_inputs(*, season=2026, as_of=None, prior_seasons=2, cache=True, client=
                      "xg_missing": xg.empty, "sparse_domestic": len(domestic) < 20})
     metadata = {
         "season": season, "as_of": origin.isoformat(), "prior_seasons": prior_seasons,
+        "european_history": european_history,
         "frequency_baseline": frequency,
         "history_matches": len(history), "display_names": display_names, "provider_team_ids": provider_ids,
         "sources": sorted(source_audits, key=lambda item: (item["competition"], item["season"])), "source_errors": errors,
         "source_versions": {"openfootball_europe": EUROPE_COMMIT, "openfootball_european_cups": EURO_CUPS_COMMIT},
         "standings_source": "official" if use_official else "reconstructed at forecast origin",
-        "availability": "Date-only domestic/supplement results and xG available next UTC day; timed API/PFL results after kickoff plus three hours.",
+        "availability": "Date-only domestic/openfootball results and xG available next UTC day; timed API/PFL and ESPN results after kickoff plus three hours (approximated, strictly before origin). ESPN fetched_at is not historical availability.",
         "relocated_venue_model": "Verified relocated Shakhtar, Dynamo Kyiv and Maccabi Tel-Aviv European home fixtures, plus Besiktas–Maccabi in Debrecen on 2024-11-28, use neutral rates; home-support effects are not estimated.",
         "venue_sources": VENUE_SOURCES,
         "domestic_reconciliation": "Slovak, Ukrainian and Azerbaijani official tables checked against parsed played and goal totals; discrepancies reported per source. Czech pinned schedules have incomplete 2025/26 coverage.",

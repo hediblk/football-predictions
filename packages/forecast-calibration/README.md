@@ -51,3 +51,16 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
 ```
 
 `--ea-cache` overrides the default `CACHE_DIR/players`. Each season's selected ridge is refitted after its candidate search so its saved effects use the selected slopes. EA columns cover the fixed matched identity catalogue plus past appearances; future evaluation sheets do not set the prior's position-group means. The manifest hashes the identity table, vintage metadata and compact rating files.
+
+## Eleven-season miss report
+
+Task 1's [report](../../docs/eleven-season-miss-report.md) and [complete tables](../../docs/eleven-season-miss-report-tables.md) describe the fixed no-odds blend without recalibration. With the saved feature dataset and provider caches:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python -m forecast_calibration.miss_report \
+  --dataset /Users/hedibelkahia/codes/football/out/global-calibration/features/dataset.csv \
+  --cache-dir /Users/hedibelkahia/codes/football/.cache --out-dir out/miss-report
+```
+
+This is offline: missing caches fail. The frequency baseline requires result caches for 2010/11 onward; model replay needs the original 2014/15+ results and Understat league listings, and the pre-goal diagnostic uses raw `understat/matches/` responses. It checks the exact dataset hash, replays goal expectations at the saved origins, verifies saved probabilities and writes coverage, per-match diagnostics, full contract tables, clustered SEs and input/output hashes under `out/`. `--workers` defaults to four and `--replay-only` prepares resumable replays. No calibration artifact or site data is written.

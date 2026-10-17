@@ -1,6 +1,6 @@
 # Europa and Conference League results coverage
 
-Initial ESPN backfill, fetched on 14 October 2026. The collector scanned every date from 1 July 2025 through 14 October 2026, separately for `uefa.europa` and `uefa.europa.conf`. See the [archive rules and columns](../data/results/README.md). Results are stored as received; no aliases, inferred scores or replacement rows were added. The model does not read this archive.
+Initial ESPN backfill, fetched on 14 October 2026. The collector scanned every date from 1 July 2025 through 14 October 2026, separately for `uefa.europa` and `uefa.europa.conf`. See the [archive rules and columns](../data/results/README.md). Results are stored as received; no aliases, inferred scores or replacement rows were added. This report predates model integration; the [Task A replay](el-ecl-history-evaluation.md) records the later alias audit, current coverage and integration decision.
 
 ## Matches per round
 
