@@ -20,6 +20,7 @@ from standing_prediction.defaults import (
 )
 from standing_prediction.dixon_coles import outcome_probs_from_matrix, score_matrix_from_rates
 from standing_prediction.ensemble import blend_probabilities
+from standing_prediction.player_prior import EaPrior
 from standing_prediction.predict_positions import build_fixture_specs, fit_prediction_models
 from standing_prediction.simulate import FixtureSimulationSpec, rank_table, simulate_season_scores
 from standing_prediction.utils import normalize_team
@@ -61,11 +62,24 @@ def player_folds(games, apps, out, prior):
     team = team[team["season"] >= 2015].reset_index(drop=True)
     starts = starts[starts["season"] >= 2015]
     rows, effects, choices = [], {}, []
+    prior_players = pd.Index([])
+    if isinstance(prior, EaPrior):
+        links = pd.read_csv(prior.root / "understat_ea_links.csv")
+        prior_players = pd.Index(links.loc[links["status"].eq("matched"), "understat_id"].unique())
     for season in range(2015, 2026):
         if season == 2015:
             effects[season] = pd.DataFrame(columns=["attack", "defence"], index=pd.Index([], name="player_id"))
             continue
-        fold = player_impact.Fold(team, starts, entries, list(range(2015, season)), [season], prior)
+        # Future appearances cannot define the prior's position-group means. The fixed identity
+        # catalogue supplies prior-only columns; only season-eligible vintages give them ratings.
+        fold = player_impact.Fold(team, starts[starts["season"] < season], entries,
+                                  list(range(2015, season)), [season], prior)
+        # Warm-up appearances can remain in the centred usual lineup of training rows. Include
+        # them for both priors; all additional EA columns then have zero training entries.
+        past_players = pd.Index(apps.loc[apps["season"] < season, "player_id"].unique())
+        fold.players = fold.players.union(past_players).union(prior_players).sort_values()
+        fold.X = player_impact.design(fold.train, entries, fold.players)
+        fold.X_eval = player_impact.design(fold.eval, entries, fold.players)
         # Neither held-out season can change the ridge selection. Coefficients still expand annually.
         earlier = pd.DataFrame(rows)
         if season >= 2017:
@@ -73,15 +87,18 @@ def player_folds(games, apps, out, prior):
             lam = float(earlier.groupby("lambda")["sse"].sum().idxmin())
         else:
             lam = 300.0  # warm-up only, not a tuned forecast result
-        _, beta = fold.predict(lam)
-        effects[season] = pd.DataFrame({"attack": beta[0::2], "defence": beta[1::2]}, index=fold.players)
-        effects[season].rename_axis("player_id").to_csv(out / f"effects_{season}.csv")
-        choices.append({"season": season, "lambda": lam, "training_last_season": season - 1})
         if season < HOLDOUT:
             for candidate in player_impact.LAMBDAS:
-                prediction, _ = fold.predict(candidate)
+                candidate_beta = fold.beta(candidate)
+                prediction = fold.eval["team_pred"].to_numpy() + fold.X_eval @ candidate_beta
                 rows.append({"season": season, "lambda": candidate,
                              "sse": float(((prediction - fold.eval["xg_for"]) ** 2).sum()), "rows": len(prediction)})
+        # Refit last at the selected ridge: the candidate loop changes the EA prior's slopes.
+        beta = fold.beta(lam)
+        effects[season] = pd.DataFrame({"attack": beta[0::2], "defence": beta[1::2]}, index=fold.players)
+        effects[season].rename_axis("player_id").to_csv(out / f"effects_{season}.csv")
+        choices.append({"season": season, "lambda": lam, "training_last_season": season - 1,
+                        "slope_attack": fold.slopes[0], "slope_defence": fold.slopes[1]})
         print(f"Player effects {season}: ridge {lam:g}, {len(fold.players)} players", flush=True)
     pd.DataFrame(rows).to_csv(out / "player_ridge_folds.csv", index=False)
     pd.DataFrame(choices).to_csv(out / "player_ridge_choices.csv", index=False)
@@ -368,7 +385,9 @@ def main(argv=None):
     parser.add_argument("--cache-dir", type=Path, required=True)
     parser.add_argument("--data", type=Path, default=player_impact.DATA)
     parser.add_argument("--out-dir", type=Path, default=Path("out/expected-xi"))
-    parser.add_argument("--prior", default="standing_prediction.player_impact:flat_prior", help="module:function(players, before_season)")
+    parser.add_argument("--prior", default="standing_prediction.player_impact:flat_prior",
+                        help="ea, or module:function(players, before_season)")
+    parser.add_argument("--ea-cache", type=Path, help="Compact EA vintages; defaults to CACHE_DIR/players.")
     parser.add_argument("--n-sim", type=int, default=10000)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--reuse", action="store_true", help="Reuse outputs only when the input/code manifest matches.")
@@ -377,8 +396,12 @@ def main(argv=None):
         parser.error("--n-sim must be positive")
     out = args.out_dir
     out.mkdir(parents=True, exist_ok=True)
-    module, function = args.prior.split(":")
-    prior = getattr(importlib.import_module(module), function)
+    if args.prior == "ea":
+        module = "standing_prediction.player_prior"
+        prior = EaPrior(root=args.data.parent, cache=args.ea_cache or args.cache_dir / "players")
+    else:
+        module, function = args.prior.split(":")
+        prior = getattr(importlib.import_module(module), function)
     history, sources = read_history(args.cache_dir)
     games, apps = player_impact.load_data(args.data)
     files = [*args.data.glob("*/*.csv.gz"), args.data / "team_games.csv.gz", Path(__file__),
@@ -387,6 +410,10 @@ def main(argv=None):
     # Include all model implementation/settings files so cached rates cannot survive a model change.
     files.extend(Path(player_impact.__file__).parent.glob("*.py"))
     files.append(Path(player_impact.__file__).with_name("calibrated_weights.json"))
+    if isinstance(prior, EaPrior):
+        files.extend([prior.root / "understat_ea_links.csv", prior.root / "ea/vintages.json"])
+        vintages = json.loads((prior.root / "ea/vintages.json").read_text())["vintages"]
+        files.extend(prior.cache / vintage["file"] for vintage in vintages)
     manifest = {"inputs": {**sources, **{str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}},
                 "prior": args.prior, "weights": WEIGHTS, "half_life_games": HALF_LIFE, "miss_decay": MISS_DECAY,
                 "holdout_start": HOLDOUT, "calibration": CALIBRATION_VERSION, "n_sim": args.n_sim, "seed": args.seed}
@@ -403,7 +430,9 @@ def main(argv=None):
     else:
         effects = player_folds(games, apps, out, prior)
     for season, frame in effects.items():
-        frame.attrs.update(prior=prior, season=season)
+        # Every matched EA identity already has a column. Missing IDs are unlinked, hence zero;
+        # re-centring the prior on just those missing IDs would change its meaning.
+        frame.attrs.update(prior=player_impact.flat_prior if isinstance(prior, EaPrior) else prior, season=season)
     games, lineups = lineup_history(games, apps, history)
     if reuse:
         features = pd.read_csv(out / "features.csv.gz")

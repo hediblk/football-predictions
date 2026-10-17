@@ -4,7 +4,7 @@ Offline evaluation for [Task 8](xi-ui-plan-2026-10-15.md#task-8-expected-xi-fore
 
 **Result: no forecast adjustment with the flat prior.** Earlier seasons selected recent start share with **w = 2**. On 3,500 matched fixtures in 2024/25–2025/26, no-odds log loss rises from **0.983295 to 0.984152**: a gain of **−0.000857 (clustered SE 0.000854)**. Brier and RPS worsen too, and log loss worsens in each held-out season. Latest XI and missed-game decay also fail to improve the pooled last-two-season result. The actual-starters oracle gains only **0.000133 (SE 0.000785)**. That is insufficient evidence for N2 or integration of this particular offset. Better XI probability prediction does not translate into better match probabilities here.
 
-Keep the production weight at zero. Task 7b remains a planned prior comparison; it must repeat the same earlier-only selection and held-out check, preserving this flat-prior result.
+Keep the production weight at zero. The [EA-prior follow-up, 17 October](expected-xi-ea-prior-comparison.md) is now complete and also fails the forecast gate. This original flat-prior result remains preserved separately.
 
 ## Coverage
 
@@ -285,7 +285,7 @@ The rates are the existing goal/xG blended Dixon–Coles model's rates. Rebuild 
 
 ## Reproduce and inspect
 
-Install the existing locked environment and the calibration package, then run from the repository root. The cache directory must contain saved `football-data-uk/` and `understat/` inputs; cache misses fail locally without HTTP requests.
+The original numbers use revision `2b0bdd5`, before the Task 7b adapter and shared warm-up player basis. Use that revision in a separate checkout to reproduce them exactly. For the updated flat/EA comparison, use the [follow-up commands](expected-xi-ea-prior-comparison.md#reproduce-and-verify). Install the existing locked environment and the calibration package, then run from the repository root. The cache directory must contain saved `football-data-uk/` and `understat/` inputs; cache misses fail locally without HTTP requests.
 
 Implementation: [offline evaluation runner](../packages/forecast-calibration/src/forecast_calibration/expected_xi.py).
 
@@ -305,7 +305,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
 - `overall.csv`, `by_league.csv`, `by_season.csv`, `by_league_season.csv`: baseline and selected variants, separated by odds availability, with losses, paired gains and clustered SEs. The league-season table contains the full cross-tabulation.
 - `standings.csv`, `standings_events.csv`: snapshot and per-club season-event probabilities.
 
-The prior remains `prior(players, before_season) -> (attack, defence)`. `--prior module:function` plugs in Task 7b's `standing_prediction.player_prior` once merged. Unknown-to-training players request prior-only effects through the same interface. That rerun needs a separate output directory and report comparison; the flat-prior result must remain identifiable.
+Plain priors retain `prior(players, before_season) -> (attack, defence)` through `--prior module:function`. The merged Task 7b prior also needs slope fitting; the updated runner supplies it through `--prior ea`, with `--ea-cache` for the compact vintages. The [follow-up](expected-xi-ea-prior-comparison.md) uses separate flat and EA output directories and preserves this original result.
 
 ## Interpretation limits
 
@@ -317,7 +317,7 @@ Standings replays cover five leagues in 2024/25 and 2025/26, at three Tuesday/Fr
 
 ## Verification
 
-The run uses base revision `9b86170` plus this PR, Python 3.12.5 and the locked NumPy 2.5.3, pandas 3.0.6 and SciPy 1.18.1, with one numerical worker thread. Two complete runs agree exactly across 31 decompressed CSV artifacts: effects, lineup probabilities, fixture features, every candidate's match scores, summaries, coverage and seeded standings events. The zero-weight goal model reproduces the saved calibration probabilities on all 19,749 compared fixtures within **2.8e−16**; all methods agree exactly at zero weight. Every origin precedes kickoff. `out/expected-xi-final/verification.json` and the repeat-hash files retain these checks.
+The original run used base revision `9b86170` plus the pre-Task-7b version of this PR (`2b0bdd5`), Python 3.12.5 and the locked NumPy 2.5.3, pandas 3.0.6 and SciPy 1.18.1, with one numerical worker thread. Two complete runs agree exactly across 31 decompressed CSV artifacts: effects, lineup probabilities, fixture features, every candidate's match scores, summaries, coverage and seeded standings events. The zero-weight goal model reproduces the saved calibration probabilities on all 19,749 compared fixtures within **2.8e−16**; all methods agree exactly at zero weight. Every origin precedes kickoff. `out/expected-xi-final/verification.json` and the repeat-hash files retain these checks.
 
 Focused executable checks also verified that changing future lineups leaves earlier expectations unchanged, unseen players stay out of the feature universe, missed-game decay follows the formula, an unseen-player prior receives the evaluation season and contributes with the correct sign, and no-history sides get zero offsets. The reuse manifest includes the calibration loader, model code, prior and all saved inputs, and is certified only after a complete successful run; interruption removes that certification.
 
