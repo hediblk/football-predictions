@@ -22,7 +22,7 @@ The main fix is done (Plan D in [PLAN.md](PLAN.md)). League offsets now shrink t
 
 The Matches scorecard and Model Track record frame show log loss, RPS and Brier against each competition’s prior five-season outcome frequencies and Elo, with calibration counts and cumulative weekly scores. Published receipts and reconstructed forecasts are reported separately and together. The market comparison (feature-plan Task 14) remains pending until at least 300 published domestic fixtures have eligible archived quotes. Champions League forecasts already use earlier archived prices (Plan E), so they are not independent of the market there.
 
-The [miss-analysis and recap-card plan](docs/evaluation-plan-2026-10-17.md) adds how forecasts go wrong to the scorecard: called against actual outcomes, draws against upsets, and whether the favourite won on xG. It also adds an eleven-season report on draws and goal levels, and downloadable preview and full-time cards.
+The [miss-analysis and recap-card plan](docs/evaluation-plan-2026-10-17.md) adds how forecasts go wrong to the scorecard: called against actual outcomes, draws against upsets, and whether the favourite won on xG. An eleven-season report runs first; match, round and race cards come alongside it.
 
 ### 3. Players (phase 6): site feature done, forecasting closed
 
