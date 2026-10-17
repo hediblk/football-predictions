@@ -265,7 +265,7 @@ Every adjustment is logged and listed in the forecast metadata.
 
 ## Squad ratings pilot
 
-A local [ideal-XI pilot](docs/squad-matching.md) matches current squads to EA ratings, freezes position-constrained XIs, and compares their starters, substitute appearances and minutes with collected match data. The checked squad export covers all five leagues and Champions League clubs under `site/data/squads/<season>/`, with archived rosters and EA vintages; the refresh retains previous squads if that optional step fails. It also writes review reports under `out/squads/` and does not change forecasts. A UEFA heatmap-player identity audit and [follow-up task plan](docs/xi-ui-plan-2026-10-15.md) prepare the club Squad subtab, XI/minutes history and a later lineup-based forecasting experiment.
+A local [ideal-XI pilot](docs/squad-matching.md) matches current squads to EA ratings, freezes position-constrained XIs, and compares their starters, substitute appearances and minutes with collected match data. The checked squad export covers all five leagues and Champions League clubs under `site/data/squads/<season>/`, with archived rosters and EA vintages; the refresh retains previous squads if that optional step fails. It also writes review reports under `out/squads/` and does not change forecasts. The club **Squad** subtab shows these references with playing time and XI history. The lineup-based forecasting experiments ([player impact](docs/player-impact-xg-plus-minus.md), [expected XI](docs/expected-xi-forecast-adjustment.md)) found no match-forecast gain, so forecasts stay team-level.
 
 ## Limits
 
