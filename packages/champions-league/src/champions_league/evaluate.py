@@ -8,7 +8,7 @@ import pandas as pd
 from standing_prediction.defaults import CALIBRATION_VERSION, DEFAULT_WEIGHTS
 from standing_prediction.ensemble import blend_probabilities
 
-from champions_league.data import load_inputs
+from champions_league.data import DEFAULT_EUROPEAN_HISTORY, load_inputs
 from champions_league.coefficients import fetch_coefficients
 from champions_league.strengths import fit_strengths
 from champions_league.tournament import simulate_tournament
@@ -31,14 +31,21 @@ def _origins(fixtures):
     return sorted(origins, key=lambda item: item[1])
 
 
-def evaluate(*, seasons=(2024, 2025), n_sim=2000, seed=7, out_dir="out", cache=True):
+def evaluate(*, seasons=(2024, 2025), n_sim=2000, seed=7, out_dir="out", cache=True,
+             european_history=DEFAULT_EUROPEAN_HISTORY):
     if n_sim < 1:
         raise ValueError("n_sim must be positive.")
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    snapshots, matches = [], []
+    snapshots, matches, cross_matches = [], [], []
     for season in seasons:
-        targets = load_inputs(season=season, as_of=pd.Timestamp.now(tz="UTC"), cache=cache)
+        targets = load_inputs(season=season, as_of=pd.Timestamp.now(tz="UTC"), cache=cache, european_history="both")
+        domestic = targets.history[~targets.history.competition.isin(["CL", "EL", "ECL"])]
+        domestic_clubs = _teams(domestic)
+        cross_future = targets.history[targets.history.competition.isin(["EL", "ECL"])
+                                       & targets.history.season.eq(season)
+                                       & targets.history.homeTeam.isin(domestic_clubs)
+                                       & targets.history.awayTeam.isin(domestic_clubs)].copy()
         coefficients, coefficient_metadata = fetch_coefficients(season, targets.standings.team, cache=cache)
         coefficients = coefficients if coefficient_metadata["complete"] else None
         final_positions = targets.standings.set_index("team").position.to_dict()
@@ -58,7 +65,7 @@ def evaluate(*, seasons=(2024, 2025), n_sim=2000, seed=7, out_dir="out", cache=T
         origins = _origins(future)
         for origin_index, (label, origin) in enumerate(origins):
             logging.info("Historical Champions League %s %s (%s).", season, label, origin)
-            data = load_inputs(season=season, as_of=origin, cache=cache)
+            data = load_inputs(season=season, as_of=origin, cache=cache, european_history=european_history)
             teams = data.standings.team.tolist()
             model = fit_strengths(data.history, teams=teams, team_leagues=data.team_leagues, as_of=origin)
             result = simulate_tournament(data.fixtures, data.standings, model, season=season, n_sim=n_sim,
@@ -69,6 +76,7 @@ def evaluate(*, seasons=(2024, 2025), n_sim=2000, seed=7, out_dir="out", cache=T
             row = {"season": season, "snapshot": label, "as_of": origin.isoformat(), "history_matches": len(data.history),
                    "position_rps": float(np.square(p.cumsum(axis=1)[:, :-1] - target_cdf[:, :-1]).mean()),
                    "conservation": result.metadata.get("conservation"), "data": data.metadata,
+                   "reference_league": model.metadata["reference_league"], "league_offsets": model.metadata["league_offsets"],
                    "coefficients": coefficient_metadata}
             for event, reached in reach.items():
                 if event in result.summary:
@@ -99,17 +107,51 @@ def evaluate(*, seasons=(2024, 2025), n_sim=2000, seed=7, out_dir="out", cache=T
                     losses[name] = float(-np.log(max(prob[outcome], 1e-12)))
                 losses["elo"] = float(-np.log(max(model.elo_probs(match.homeTeam, match.awayTeam, neutral=neutral)[outcome], 1e-12)))
                 matches.append({"season": season, "snapshot": label, "id": match.id, "home": match.homeTeam, "away": match.awayTeam,
+                                "kickoff": match.utcDate.isoformat(),
                                 "xg_covered": match.homeTeam in xg_teams and match.awayTeam in xg_teams, **losses})
+            cross_heldout = cross_future[cross_future.utcDate.ge(origin) & cross_future.utcDate.lt(end)]
+            known_domestic = _teams(data.history[~data.history.competition.isin(["CL", "EL", "ECL"])])
+            cross_start = len(cross_matches)
+            for match in cross_heldout.itertuples():
+                if not {match.homeTeam, match.awayTeam} <= known_domestic:
+                    continue
+                neutral = bool(match.neutral)
+                prob = blend_probabilities(model.match_outcome_probs(match.homeTeam, match.awayTeam, neutral=neutral),
+                                           p_elo=model.elo_probs(match.homeTeam, match.awayTeam, neutral=neutral), weights=DEFAULT_WEIGHTS)
+                outcome = 0 if match.homeGoals > match.awayGoals else 1 if match.homeGoals == match.awayGoals else 2
+                cross_matches.append({"season": season, "snapshot": label, "competition": match.competition,
+                                      "kickoff": match.utcDate.isoformat(), "home": match.homeTeam, "away": match.awayTeam,
+                                      "joint": float(-np.log(max(prob[outcome], 1e-12)))})
+            row["cross_match_coverage"] = {"candidates": len(cross_heldout), "scored": len(cross_matches) - cross_start,
+                                           "excluded_no_domestic_history_at_origin": len(cross_heldout) - (len(cross_matches) - cross_start)}
             (out_dir / "cl_evaluation_snapshots.json").write_text(json.dumps(snapshots, indent=2, default=str) + "\n")
     match_frame = pd.DataFrame(matches)
     match_frame.to_csv(out_dir / "cl_evaluation_matches.csv", index=False)
+    cross_frame = pd.DataFrame(cross_matches, columns=["season", "snapshot", "competition", "kickoff", "home", "away", "joint"])
+    cross_frame.to_csv(out_dir / "cl_evaluation_cross_matches.csv", index=False)
     metrics = ["joint", "without_offsets", "goals_only", "elo"]
     active_positions = [row["position_rps"] for row in snapshots if row["snapshot"] in {"MD2", "MD4", "MD6"}]
+    by_season = {}
+    for season in seasons:
+        group, cross = match_frame[match_frame.season.eq(season)], cross_frame[cross_frame.season.eq(season)]
+        rows = [row for row in snapshots if row["season"] == season]
+        latest = rows[-1]
+        by_season[str(season)] = {
+            "matches": len(group), "match_log_loss": group[metrics].mean().to_dict(),
+            "cross_matches": len(cross), "cross_match_log_loss": float(cross.joint.mean()),
+            "tournament_metrics": pd.DataFrame(rows)[["position_rps", *[event.replace("_pct", "_brier") for event in reach]]].mean().to_dict(),
+            "position_rps_after_MD2_MD4_MD6": float(np.mean([row["position_rps"] for row in rows if row["snapshot"] in {"MD2", "MD4", "MD6"}])),
+            "latest_origin": latest["as_of"], "reference_league": latest["reference_league"], "league_offsets": latest["league_offsets"],
+        }
     report = {"seasons": list(seasons), "n_sim": n_sim, "seed": seed, "weight_calibration_version": CALIBRATION_VERSION,
+              "european_history": european_history,
               "snapshots": len(snapshots), "matches": len(matches), "match_log_loss": match_frame[metrics].mean().to_dict(),
               "match_log_loss_by_xg": {str(key): group[metrics].mean().to_dict() for key, group in match_frame.groupby("xg_covered")},
               "tournament_metrics": pd.DataFrame(snapshots).select_dtypes(include="number").drop(columns=["season", "history_matches"]).mean().to_dict(),
               "position_rps_after_MD2_MD4_MD6": float(np.mean(active_positions)),
+              "cross_matches": len(cross_frame), "cross_match_log_loss": float(cross_frame.joint.mean()),
+              "by_season": by_season,
+              "cross_match_scoring": "Same existing UCL origin intervals, 90-minute EL/ECL results from openfootball 2024/25 and ESPN 2025/26 onward; both clubs require domestic history at the origin. No direct EL/ECL prices.",
               "tournament_averaging": "All replay origins, including completed league phases with known positions and already-resolved knockout stages; see per-snapshot metrics for comparisons at equal horizons.",
               "limitations": "Retrospective replay with the fixed globally calibrated artifact, which includes these domestic seasons. Publication times and historical draw availability are approximated. Two tournament seasons do not establish calibrated title probabilities."}
     (out_dir / "cl_evaluation.json").write_text(json.dumps(report, indent=2) + "\n")

@@ -1,0 +1,1310 @@
+{
+  "origin": "2026-10-17T20:30:00+00:00",
+  "python": "3.12.5",
+  "seed": 7,
+  "replay_simulations": 2000,
+  "forecast_simulations": 10000,
+  "calibration": "global-4c0170be18f1",
+  "calibration_sha256": "6b5679eecdce7429333e249b70348ce4f77f7be0aafe703e893822974b37b802",
+  "variants": {
+    "none": {
+      "seasons": [
+        2024,
+        2025
+      ],
+      "n_sim": 2000,
+      "seed": 7,
+      "weight_calibration_version": "global-4c0170be18f1",
+      "european_history": "none",
+      "snapshots": 18,
+      "matches": 306,
+      "match_log_loss": {
+        "joint": 0.9198304404382782,
+        "without_offsets": 0.9414487300970805,
+        "goals_only": 0.9266961989292164,
+        "elo": 0.9989499122053052
+      },
+      "match_log_loss_by_xg": {
+        "False": {
+          "joint": 0.9136530936736119,
+          "without_offsets": 0.9461976445903103,
+          "goals_only": 0.9105713862749283,
+          "elo": 1.0051005702363263
+        },
+        "True": {
+          "joint": 0.9285370945396579,
+          "without_offsets": 0.9347553781735516,
+          "goals_only": 0.9494232970797492,
+          "elo": 0.990280874508039
+        }
+      },
+      "tournament_metrics": {
+        "position_rps": 0.028715969069664907,
+        "playoffs_brier": 0.0681863287037037,
+        "round16_brier": 0.07669846836419753,
+        "quarterfinal_brier": 0.06526413194444444,
+        "semifinal_brier": 0.04673768209876543,
+        "final_brier": 0.03422225308641976,
+        "title_brier": 0.0245382600308642,
+        "position_rps_xg_True": 0.029087184325396823,
+        "playoffs_brier_xg_True": 0.07520205555555555,
+        "round16_brier_xg_True": 0.0720336672979798,
+        "quarterfinal_brier_xg_True": 0.09393945075757576,
+        "semifinal_brier_xg_True": 0.07532659785353535,
+        "final_brier_xg_True": 0.05570725,
+        "title_brier_xg_True": 0.040077566919191926,
+        "position_rps_xg_False": 0.028132630810657595,
+        "playoffs_brier_xg_False": 0.05716161507936509,
+        "round16_brier_xg_False": 0.08402887003968253,
+        "quarterfinal_brier_xg_False": 0.020202916666666668,
+        "semifinal_brier_xg_False": 0.0018122430555555557,
+        "final_brier_xg_False": 0.0004601150793650795,
+        "title_brier_xg_False": 0.00011934920634920637
+      },
+      "position_rps_after_MD2_MD4_MD6": 0.08614790720899472,
+      "cross_matches": 260,
+      "cross_match_log_loss": 1.0013430325857742,
+      "by_season": {
+        "2024": {
+          "matches": 153,
+          "match_log_loss": {
+            "joint": 0.9081252482109968,
+            "without_offsets": 0.932517127732132,
+            "goals_only": 0.9179344367771151,
+            "elo": 0.974512906530226
+          },
+          "cross_matches": 123,
+          "cross_match_log_loss": 1.0462128601090652,
+          "tournament_metrics": {
+            "position_rps": 0.02762887447089947,
+            "playoffs_brier": 0.056533402777777776,
+            "round16_brier": 0.08692412654320987,
+            "quarterfinal_brier": 0.07531941203703704,
+            "semifinal_brier": 0.05421772993827161,
+            "final_brier": 0.04671029166666667,
+            "title_brier": 0.025968956790123458
+          },
+          "position_rps_after_MD2_MD4_MD6": 0.08288662341269841,
+          "latest_origin": "2025-05-31T00:00:00+00:00",
+          "reference_league": "BL1",
+          "league_offsets": {
+            "AUT": -0.580850641726831,
+            "AZ1": -0.24842985014310204,
+            "B1": -0.28739529050296664,
+            "BL1": 0.0,
+            "CH1": -0.4511951470822295,
+            "CZ1": -0.47294157133292714,
+            "DK1": -0.15213586256441514,
+            "FL1": 0.09003021211401503,
+            "G1": -0.24842985014310204,
+            "HR1": -0.11947605946563071,
+            "N1": -0.2711464377345506,
+            "NOR": -0.24842985014310204,
+            "P1": -0.2089050939734179,
+            "PD": 0.1382303191451661,
+            "PL": 0.24705140197307868,
+            "RS1": -0.18387886264507283,
+            "SA": 0.05243859982985681,
+            "SC0": -0.48713162854113085,
+            "SK1": -0.6085174752429594,
+            "T1": -0.28099578763023647,
+            "UA1": -0.3415335621750915
+          }
+        },
+        "2025": {
+          "matches": 153,
+          "match_log_loss": {
+            "joint": 0.9315356326655593,
+            "without_offsets": 0.950380332462029,
+            "goals_only": 0.935457961081318,
+            "elo": 1.0233869178803838
+          },
+          "cross_matches": 137,
+          "cross_match_log_loss": 0.9610584429115786,
+          "tournament_metrics": {
+            "position_rps": 0.029803063668430337,
+            "playoffs_brier": 0.07983925462962962,
+            "round16_brier": 0.0664728101851852,
+            "quarterfinal_brier": 0.055208851851851856,
+            "semifinal_brier": 0.03925763425925926,
+            "final_brier": 0.02173421450617284,
+            "title_brier": 0.02310756327160494
+          },
+          "position_rps_after_MD2_MD4_MD6": 0.089409191005291,
+          "latest_origin": "2026-05-30T00:00:00+00:00",
+          "reference_league": "PL",
+          "league_offsets": {
+            "AUT": -0.7183547418367646,
+            "AZ1": -0.8553268679280916,
+            "B1": -0.570605224705611,
+            "BL1": -0.2957592560632276,
+            "CH1": -0.6294978763259471,
+            "CY1": -0.31957953485883,
+            "CZ1": -0.8687370143543708,
+            "DK1": -0.442778143214194,
+            "FL1": -0.15505689569564873,
+            "G1": -0.6648170683150126,
+            "HR1": -0.4866912064551101,
+            "KZ1": -0.5764330072987873,
+            "N1": -0.5555155968406037,
+            "NOR": -0.38237672173249077,
+            "P1": -0.49289121749467757,
+            "PD": -0.21023457855238611,
+            "PL": 0.0,
+            "RS1": -0.5106990681770842,
+            "SA": -0.3331076543648101,
+            "SC0": -0.5620539719056842,
+            "SK1": -0.6686512794577344,
+            "T1": -0.5705223137960583,
+            "UA1": -0.6025110521974368
+          }
+        }
+      },
+      "cross_match_scoring": "Same existing UCL origin intervals, 90-minute EL/ECL results from openfootball 2024/25 and ESPN 2025/26 onward; both clubs require domestic history at the origin. No direct EL/ECL prices.",
+      "tournament_averaging": "All replay origins, including completed league phases with known positions and already-resolved knockout stages; see per-snapshot metrics for comparisons at equal horizons.",
+      "limitations": "Retrospective replay with the fixed globally calibrated artifact, which includes these domestic seasons. Publication times and historical draw availability are approximated. Two tournament seasons do not establish calibrated title probabilities."
+    },
+    "openfootball": {
+      "seasons": [
+        2024,
+        2025
+      ],
+      "n_sim": 2000,
+      "seed": 7,
+      "weight_calibration_version": "global-4c0170be18f1",
+      "european_history": "openfootball",
+      "snapshots": 18,
+      "matches": 306,
+      "match_log_loss": {
+        "joint": 0.9086179236274569,
+        "without_offsets": 0.9299927481233248,
+        "goals_only": 0.915656335663679,
+        "elo": 0.9899938351056202
+      },
+      "match_log_loss_by_xg": {
+        "False": {
+          "joint": 0.8949379056774609,
+          "without_offsets": 0.9267586029863302,
+          "goals_only": 0.8912801006052757,
+          "elo": 0.9911141566337393
+        },
+        "True": {
+          "joint": 0.9278992087695768,
+          "without_offsets": 0.9345511101668055,
+          "goals_only": 0.9500133913759168,
+          "elo": 0.9884147992510277
+        }
+      },
+      "tournament_metrics": {
+        "position_rps": 0.02788527894620811,
+        "playoffs_brier": 0.06725744521604939,
+        "round16_brier": 0.0765343526234568,
+        "quarterfinal_brier": 0.06587944907407407,
+        "semifinal_brier": 0.04691602546296296,
+        "final_brier": 0.03469748070987654,
+        "title_brier": 0.025309744598765435,
+        "position_rps_xg_True": 0.02892375405844156,
+        "playoffs_brier_xg_True": 0.07462572916666667,
+        "round16_brier_xg_True": 0.07255479356060607,
+        "quarterfinal_brier_xg_True": 0.0958402077020202,
+        "semifinal_brier_xg_True": 0.07591287247474748,
+        "final_brier_xg_True": 0.056589222222222214,
+        "title_brier_xg_True": 0.041367587121212114,
+        "position_rps_xg_False": 0.026253389484126984,
+        "playoffs_brier_xg_False": 0.05567871329365079,
+        "round16_brier_xg_False": 0.08278794543650794,
+        "quarterfinal_brier_xg_False": 0.018798256944444446,
+        "semifinal_brier_xg_False": 0.0013495515873015876,
+        "final_brier_xg_False": 0.0002961726190476191,
+        "title_brier_xg_False": 7.59920634920635e-05
+      },
+      "position_rps_after_MD2_MD4_MD6": 0.08365583683862433,
+      "cross_matches": 260,
+      "cross_match_log_loss": 0.9831171757728802,
+      "by_season": {
+        "2024": {
+          "matches": 153,
+          "match_log_loss": {
+            "joint": 0.9012172510359335,
+            "without_offsets": 0.930174395123107,
+            "goals_only": 0.9114813687540733,
+            "elo": 0.9739490613293523
+          },
+          "cross_matches": 123,
+          "cross_match_log_loss": 1.0297686039019411,
+          "tournament_metrics": {
+            "position_rps": 0.027584810273368607,
+            "playoffs_brier": 0.055271413580246925,
+            "round16_brier": 0.08569662345679013,
+            "quarterfinal_brier": 0.07519474691358025,
+            "semifinal_brier": 0.054196506172839505,
+            "final_brier": 0.04717106635802469,
+            "title_brier": 0.026689501543209877
+          },
+          "position_rps_after_MD2_MD4_MD6": 0.08275443082010582,
+          "latest_origin": "2025-05-31T00:00:00+00:00",
+          "reference_league": "PL",
+          "league_offsets": {
+            "AM1": -0.908804299652782,
+            "AUT": -0.8799108527302498,
+            "AZ1": -1.136372968195384,
+            "B1": -0.6165070149628326,
+            "BA1": -0.6758438865288016,
+            "BL1": -0.33480069144718616,
+            "BUL": -0.591914067594483,
+            "BY1": -0.9317130057860544,
+            "CH1": -0.7660483285355912,
+            "CY1": -0.5125066880844833,
+            "CZ1": -0.7752448658516358,
+            "DK1": -0.4715911119826927,
+            "FI1": -0.784744364328588,
+            "FL1": -0.30898381108431744,
+            "G1": -0.6938161623558141,
+            "HR1": -0.48311509315497214,
+            "HU1": -0.48842497561824705,
+            "IE1": -0.4750209786977843,
+            "IS1": -0.6816909679649171,
+            "ISR": -0.7193983449362837,
+            "KZ1": -0.6763071564160519,
+            "LV1": -0.7200032687502635,
+            "MD1": -0.868835017836362,
+            "N1": -0.5625074036828984,
+            "NI1": -0.9694163687434535,
+            "NOR": -0.7081864416626786,
+            "P1": -0.5971489859256698,
+            "PD": -0.2503105372981553,
+            "PL": 0.0,
+            "PO1": -0.2986426381914094,
+            "RO1": -0.44643404102935463,
+            "RS1": -0.7002450871680538,
+            "SA": -0.29028713037978154,
+            "SC0": -0.7391621598573092,
+            "SE1": -0.5038941718780376,
+            "SI1": -0.5360584219858795,
+            "SK1": -0.9708965540015954,
+            "T1": -0.7355376106152774,
+            "UA1": -0.9288410809619841,
+            "WA1": -0.6964929777623501
+          }
+        },
+        "2025": {
+          "matches": 153,
+          "match_log_loss": {
+            "joint": 0.9160185962189799,
+            "without_offsets": 0.9298111011235426,
+            "goals_only": 0.9198313025732848,
+            "elo": 1.0060386088818885
+          },
+          "cross_matches": 137,
+          "cross_match_log_loss": 0.9412330468686868,
+          "tournament_metrics": {
+            "position_rps": 0.028185747619047616,
+            "playoffs_brier": 0.07924347685185186,
+            "round16_brier": 0.06737208179012348,
+            "quarterfinal_brier": 0.0565641512345679,
+            "semifinal_brier": 0.03963554475308642,
+            "final_brier": 0.022223895061728394,
+            "title_brier": 0.02392998765432099
+          },
+          "position_rps_after_MD2_MD4_MD6": 0.08455724285714285,
+          "latest_origin": "2026-05-30T00:00:00+00:00",
+          "reference_league": "PL",
+          "league_offsets": {
+            "AM1": -0.6701799225515174,
+            "AUT": -0.7532522162048965,
+            "AZ1": -0.9286897668499792,
+            "B1": -0.5398531530062187,
+            "BA1": -0.6064543646759157,
+            "BL1": -0.30372657403741093,
+            "BUL": -0.599405795908216,
+            "BY1": -0.658266703560838,
+            "CH1": -0.687090150608277,
+            "CY1": -0.41522508445706224,
+            "CZ1": -0.8007327792999752,
+            "DK1": -0.4594844844656845,
+            "FI1": -0.6266074475449859,
+            "FL1": -0.18415212382535,
+            "G1": -0.6785999065281372,
+            "HR1": -0.5308247878915479,
+            "HU1": -0.5524400928079369,
+            "IE1": -0.5368826881900687,
+            "IS1": -0.6004124923784995,
+            "ISR": -0.6075247417511924,
+            "KZ1": -0.59712934040244,
+            "LV1": -0.6275966892377205,
+            "MD1": -0.6418862924274186,
+            "N1": -0.5078792312841014,
+            "NI1": -0.6692809188022425,
+            "NOR": -0.5318307225463651,
+            "P1": -0.5240974782859577,
+            "PD": -0.2340763999052819,
+            "PL": 0.0,
+            "PO1": -0.3319322436677354,
+            "RO1": -0.48295621070601175,
+            "RS1": -0.6252664170881423,
+            "SA": -0.3185203113678967,
+            "SC0": -0.602368097603989,
+            "SE1": -0.49161142814830017,
+            "SI1": -0.5064728371731912,
+            "SK1": -0.712292852205543,
+            "T1": -0.6554776768353913,
+            "UA1": -0.7596931677934555,
+            "WA1": -0.6204695717977076
+          }
+        }
+      },
+      "cross_match_scoring": "Same existing UCL origin intervals, 90-minute EL/ECL results from openfootball 2024/25 and ESPN 2025/26 onward; both clubs require domestic history at the origin. No direct EL/ECL prices.",
+      "tournament_averaging": "All replay origins, including completed league phases with known positions and already-resolved knockout stages; see per-snapshot metrics for comparisons at equal horizons.",
+      "limitations": "Retrospective replay with the fixed globally calibrated artifact, which includes these domestic seasons. Publication times and historical draw availability are approximated. Two tournament seasons do not establish calibrated title probabilities."
+    },
+    "both": {
+      "seasons": [
+        2024,
+        2025
+      ],
+      "n_sim": 2000,
+      "seed": 7,
+      "weight_calibration_version": "global-4c0170be18f1",
+      "european_history": "both",
+      "snapshots": 18,
+      "matches": 306,
+      "match_log_loss": {
+        "joint": 0.9088977513276714,
+        "without_offsets": 0.9303876545390567,
+        "goals_only": 0.9158938844591528,
+        "elo": 0.9897757253942947
+      },
+      "match_log_loss_by_xg": {
+        "False": {
+          "joint": 0.8942987970468895,
+          "without_offsets": 0.9273034778926731,
+          "goals_only": 0.8906322249406359,
+          "elo": 0.9907445202036106
+        },
+        "True": {
+          "joint": 0.92947423019586,
+          "without_offsets": 0.9347346436705734,
+          "goals_only": 0.9514989006309208,
+          "elo": 0.9884102586945503
+        }
+      },
+      "tournament_metrics": {
+        "position_rps": 0.027694558245149912,
+        "playoffs_brier": 0.06666152777777778,
+        "round16_brier": 0.07590005478395062,
+        "quarterfinal_brier": 0.06520100848765432,
+        "semifinal_brier": 0.04708062885802469,
+        "final_brier": 0.03517879706790123,
+        "title_brier": 0.025549860339506174,
+        "position_rps_xg_True": 0.028793758279220778,
+        "playoffs_brier_xg_True": 0.07426991035353536,
+        "round16_brier_xg_True": 0.07188804545454545,
+        "quarterfinal_brier_xg_True": 0.09498615277777778,
+        "semifinal_brier_xg_True": 0.07615483333333334,
+        "final_brier_xg_True": 0.057374266414141416,
+        "title_brier_xg_True": 0.04175971338383839,
+        "position_rps_xg_False": 0.025967243905895693,
+        "playoffs_brier_xg_False": 0.054705498015873016,
+        "round16_brier_xg_False": 0.08220464087301588,
+        "quarterfinal_brier_xg_False": 0.01839578174603175,
+        "semifinal_brier_xg_False": 0.001392593253968254,
+        "final_brier_xg_False": 0.000300202380952381,
+        "title_brier_xg_False": 7.723412698412699e-05
+      },
+      "position_rps_after_MD2_MD4_MD6": 0.08308367473544974,
+      "cross_matches": 260,
+      "cross_match_log_loss": 0.9799233895831927,
+      "by_season": {
+        "2024": {
+          "matches": 153,
+          "match_log_loss": {
+            "joint": 0.9012172510359335,
+            "without_offsets": 0.930174395123107,
+            "goals_only": 0.9114813687540733,
+            "elo": 0.9739490613293523
+          },
+          "cross_matches": 123,
+          "cross_match_log_loss": 1.0297686039019411,
+          "tournament_metrics": {
+            "position_rps": 0.027584810273368607,
+            "playoffs_brier": 0.055271413580246925,
+            "round16_brier": 0.08569662345679013,
+            "quarterfinal_brier": 0.07519474691358025,
+            "semifinal_brier": 0.054196506172839505,
+            "final_brier": 0.04717106635802469,
+            "title_brier": 0.026689501543209877
+          },
+          "position_rps_after_MD2_MD4_MD6": 0.08275443082010582,
+          "latest_origin": "2025-05-31T00:00:00+00:00",
+          "reference_league": "PL",
+          "league_offsets": {
+            "AM1": -0.908804299652782,
+            "AUT": -0.8799108527302498,
+            "AZ1": -1.136372968195384,
+            "B1": -0.6165070149628326,
+            "BA1": -0.6758438865288016,
+            "BL1": -0.33480069144718616,
+            "BUL": -0.591914067594483,
+            "BY1": -0.9317130057860544,
+            "CH1": -0.7660483285355912,
+            "CY1": -0.5125066880844833,
+            "CZ1": -0.7752448658516358,
+            "DK1": -0.4715911119826927,
+            "FI1": -0.784744364328588,
+            "FL1": -0.30898381108431744,
+            "G1": -0.6938161623558141,
+            "HR1": -0.48311509315497214,
+            "HU1": -0.48842497561824705,
+            "IE1": -0.4750209786977843,
+            "IS1": -0.6816909679649171,
+            "ISR": -0.7193983449362837,
+            "KZ1": -0.6763071564160519,
+            "LV1": -0.7200032687502635,
+            "MD1": -0.868835017836362,
+            "N1": -0.5625074036828984,
+            "NI1": -0.9694163687434535,
+            "NOR": -0.7081864416626786,
+            "P1": -0.5971489859256698,
+            "PD": -0.2503105372981553,
+            "PL": 0.0,
+            "PO1": -0.2986426381914094,
+            "RO1": -0.44643404102935463,
+            "RS1": -0.7002450871680538,
+            "SA": -0.29028713037978154,
+            "SC0": -0.7391621598573092,
+            "SE1": -0.5038941718780376,
+            "SI1": -0.5360584219858795,
+            "SK1": -0.9708965540015954,
+            "T1": -0.7355376106152774,
+            "UA1": -0.9288410809619841,
+            "WA1": -0.6964929777623501
+          }
+        },
+        "2025": {
+          "matches": 153,
+          "match_log_loss": {
+            "joint": 0.9165782516194091,
+            "without_offsets": 0.9306009139550064,
+            "goals_only": 0.9203064001642319,
+            "elo": 1.005602389459237
+          },
+          "cross_matches": 137,
+          "cross_match_log_loss": 0.9351718468006668,
+          "tournament_metrics": {
+            "position_rps": 0.02780430621693122,
+            "playoffs_brier": 0.07805164197530863,
+            "round16_brier": 0.06610348611111111,
+            "quarterfinal_brier": 0.0552072700617284,
+            "semifinal_brier": 0.03996475154320987,
+            "final_brier": 0.02318652777777778,
+            "title_brier": 0.024410219135802467
+          },
+          "position_rps_after_MD2_MD4_MD6": 0.08341291865079366,
+          "latest_origin": "2026-05-30T00:00:00+00:00",
+          "reference_league": "PL",
+          "league_offsets": {
+            "AM1": -0.7053325575263552,
+            "AUT": -0.7880748895685824,
+            "AZ1": -0.9672736263462454,
+            "B1": -0.5343676237468913,
+            "BA1": -0.6470523792988733,
+            "BL1": -0.2988397878931401,
+            "BUL": -0.6390461325239488,
+            "BY1": -0.6981143419339307,
+            "CH1": -0.7240930331320402,
+            "CY1": -0.4556144922097756,
+            "CZ1": -0.8122225493159697,
+            "DK1": -0.48848162552578556,
+            "FI1": -0.6642692866424665,
+            "FL1": -0.2871255508989441,
+            "G1": -0.7087017737150729,
+            "HR1": -0.570169761414858,
+            "HU1": -0.5868067880861813,
+            "IE1": -0.5741274688809871,
+            "IS1": -0.6394288587141654,
+            "ISR": -0.6389321496123539,
+            "KZ1": -0.6308894313476227,
+            "LV1": -0.6654623791290677,
+            "MD1": -0.6812796784733982,
+            "N1": -0.6122566763895883,
+            "NI1": -0.704019018711705,
+            "NOR": -0.5991251858734141,
+            "P1": -0.5009505966440679,
+            "PD": -0.265902931630587,
+            "PL": 0.0,
+            "PO1": -0.36473356090500253,
+            "RO1": -0.53749999396465,
+            "RS1": -0.6650522509066316,
+            "SA": -0.3507449470841181,
+            "SC0": -0.8372664346844654,
+            "SE1": -0.5380213579845602,
+            "SI1": -0.5395044981856295,
+            "SK1": -0.7928302051927864,
+            "T1": -0.6321501229905309,
+            "UA1": -0.8188196309762479,
+            "WA1": -0.657258894634294
+          }
+        }
+      },
+      "cross_match_scoring": "Same existing UCL origin intervals, 90-minute EL/ECL results from openfootball 2024/25 and ESPN 2025/26 onward; both clubs require domestic history at the origin. No direct EL/ECL prices.",
+      "tournament_averaging": "All replay origins, including completed league phases with known positions and already-resolved knockout stages; see per-snapshot metrics for comparisons at equal horizons.",
+      "limitations": "Retrospective replay with the fixed globally calibrated artifact, which includes these domestic seasons. Publication times and historical draw availability are approximated. Two tournament seasons do not establish calibrated title probabilities."
+    }
+  },
+  "paired_loss_changes_vs_openfootball": {
+    "matches": {
+      "none": {
+        "2024": {
+          "matches": 153,
+          "clusters": 8,
+          "delta": 0.0069079971750632095,
+          "clustered_se": 0.0049674824844335745
+        },
+        "2025": {
+          "matches": 153,
+          "clusters": 8,
+          "delta": 0.01551703644657937,
+          "clustered_se": 0.011625824437869683
+        },
+        "pooled": {
+          "matches": 306,
+          "clusters": 16,
+          "delta": 0.011212516810821289,
+          "clustered_se": 0.00644425849104908
+        }
+      },
+      "both": {
+        "2024": {
+          "matches": 153,
+          "clusters": 8,
+          "delta": 0.0,
+          "clustered_se": 0.0
+        },
+        "2025": {
+          "matches": 153,
+          "clusters": 8,
+          "delta": 0.0005596554004293618,
+          "clustered_se": 0.0035220654904257022
+        },
+        "pooled": {
+          "matches": 306,
+          "clusters": 16,
+          "delta": 0.0002798277002146809,
+          "clustered_se": 0.00169945408499423
+        }
+      }
+    },
+    "cross_matches": {
+      "none": {
+        "2024": {
+          "matches": 123,
+          "clusters": 7,
+          "delta": 0.016444256207124232,
+          "clustered_se": 0.01446947377479785
+        },
+        "2025": {
+          "matches": 137,
+          "clusters": 8,
+          "delta": 0.019825396042891623,
+          "clustered_se": 0.009669011541697041
+        },
+        "pooled": {
+          "matches": 260,
+          "clusters": 15,
+          "delta": 0.01822585681289397,
+          "clustered_se": 0.008230316683914085
+        }
+      },
+      "both": {
+        "2024": {
+          "matches": 123,
+          "clusters": 7,
+          "delta": 0.0,
+          "clustered_se": 0.0
+        },
+        "2025": {
+          "matches": 137,
+          "clusters": 8,
+          "delta": -0.00606120006802007,
+          "clustered_se": 0.010266166572192594
+        },
+        "pooled": {
+          "matches": 260,
+          "clusters": 15,
+          "delta": -0.0031937861896874976,
+          "clustered_se": 0.005456206148042806
+        }
+      }
+    }
+  },
+  "cluster_rule": "Paired match-loss differences, clusters=(season, replay origin); sqrt(G/(G-1) * sum(cluster residual sums squared))/N.",
+  "default_gate_passed": false,
+  "espn_sources": [
+    {
+      "competition": "ECL",
+      "season": 2025,
+      "source": "data/results/2025/ECL.csv",
+      "sha256": "59d600ecf528d00d5ea8e9e22bc5aefff76efcc571c65fdbca95cfba2f59bdb4",
+      "rows": 153,
+      "matches": 37,
+      "excluded": {
+        "no_domestic_history": 84,
+        "unmodelled_domestic_league": 30,
+        "after_extra_time": 2
+      },
+      "clubs_without_domestic_history": [
+        "AEK Larnaca",
+        "BK H\u00e4cken",
+        "Breidablik",
+        "CSU Craiova",
+        "Drita Gjilan",
+        "FC Noah",
+        "Hamrun Spartans",
+        "Jagiellonia Bialystok",
+        "KF Shk\u00ebndija",
+        "KuPS Kuopio",
+        "Lausanne Sports",
+        "Lech Poznan",
+        "Legia Warsaw",
+        "Lincoln Red Imps",
+        "NK Celje",
+        "Omonia Nicosia",
+        "Rak\u00f3w Czestochowa",
+        "Rijeka",
+        "Shamrock Rovers",
+        "Shelbourne",
+        "Zrinjski Mostar"
+      ],
+      "availability": "Approximated as kickoff plus three hours, strictly before origin; fetched_at is backfill observation time."
+    },
+    {
+      "competition": "ECL",
+      "season": 2026,
+      "source": "data/results/2026/ECL.csv",
+      "sha256": "1637273de1c8ba82c9c856121f5502c4c52f54e88273d2a669f71b6c2edeb5b0",
+      "rows": 18,
+      "matches": 1,
+      "excluded": {
+        "no_domestic_history": 14,
+        "unmodelled_domestic_league": 3
+      },
+      "clubs_without_domestic_history": [
+        "AGF",
+        "Borac Banja Luka",
+        "CSKA Sofia",
+        "CSU Craiova",
+        "Egnatia",
+        "F.C. K\u00f8benhavn",
+        "FC Lugano",
+        "FC Midtjylland",
+        "FC Nordsj\u00e6lland",
+        "FC Thun",
+        "Hajduk Split",
+        "Iberia 1999",
+        "Inter D'Escaldes",
+        "Kairat Almaty",
+        "Kauno Zalgiris",
+        "KuPS Kuopio",
+        "Lincoln Red Imps",
+        "Mj\u00e4llby AIF",
+        "Pafos",
+        "Red Star Belgrade",
+        "Riga FC"
+      ],
+      "availability": "Approximated as kickoff plus three hours, strictly before origin; fetched_at is backfill observation time."
+    },
+    {
+      "competition": "EL",
+      "season": 2025,
+      "source": "data/results/2025/EL.csv",
+      "sha256": "8a222b762feecbb1e682bebbcb10fc03c870fd00df65644fb4c3d087db25e963",
+      "rows": 189,
+      "matches": 109,
+      "excluded": {
+        "unmodelled_domestic_league": 56,
+        "no_domestic_history": 19,
+        "after_extra_time": 3,
+        "penalties": 2
+      },
+      "clubs_without_domestic_history": [
+        "Dinamo Zagreb",
+        "FC Basel",
+        "FC Midtjylland",
+        "FCSB",
+        "Ferencvaros",
+        "Ludogorets Razgrad",
+        "Maccabi Tel-Aviv",
+        "Malm\u00f6 FF",
+        "Red Star Belgrade",
+        "Young Boys"
+      ],
+      "availability": "Approximated as kickoff plus three hours, strictly before origin; fetched_at is backfill observation time."
+    },
+    {
+      "competition": "EL",
+      "season": 2026,
+      "source": "data/results/2026/EL.csv",
+      "sha256": "e1d47af8ec94126d72a1da8b81f1297a5c2f3754ce5585ae30afd4c70622bb7c",
+      "rows": 36,
+      "matches": 19,
+      "excluded": {
+        "no_domestic_history": 9,
+        "unmodelled_domestic_league": 8
+      },
+      "clubs_without_domestic_history": [
+        "Ararat-Armenia",
+        "Dinamo Zagreb",
+        "Ferencvaros",
+        "Hapoel Be'er",
+        "Jagiellonia Bialystok",
+        "Lech Poznan",
+        "Levski Sofia",
+        "NK Celje",
+        "Omonia Nicosia",
+        "Torreense"
+      ],
+      "availability": "Approximated as kickoff plus three hours, strictly before origin; fetched_at is backfill observation time."
+    }
+  ],
+  "today_offsets_relative_to_PL": {
+    "none": {
+      "AUT": -0.7302353042438624,
+      "AZ1": -0.9724963035181504,
+      "B1": -0.6617434362522979,
+      "BL1": -0.16115597786795194,
+      "CH1": -0.5822122334169826,
+      "CY1": -0.3578609917711427,
+      "CZ1": -0.7704179017620705,
+      "DK1": -0.4713857830126694,
+      "FL1": -0.29297636354353507,
+      "G1": -0.597761912807611,
+      "HR1": -0.5145830300528407,
+      "KZ1": -0.5581893858345215,
+      "N1": -0.6343100529082079,
+      "NOR": -0.6620324824734225,
+      "P1": -0.4716307576826869,
+      "PD": -0.15236141835901976,
+      "PL": 0.0,
+      "RS1": -0.5216388382699788,
+      "SA": -0.26137895266892563,
+      "SC0": -0.5400221592609491,
+      "SK1": -0.8310690471572879,
+      "T1": -0.5142985381664307,
+      "UA1": -0.6203875393395614
+    },
+    "openfootball": {
+      "AM1": -0.6079200992137347,
+      "AUT": -0.735944472401775,
+      "AZ1": -0.9977389294795764,
+      "B1": -0.6307473976946841,
+      "BA1": -0.5701557728232373,
+      "BL1": -0.16499269936654243,
+      "BUL": -0.5714939023449019,
+      "BY1": -0.6049385673569733,
+      "CH1": -0.6340535022595164,
+      "CY1": -0.4034606228699735,
+      "CZ1": -0.7061474036322615,
+      "DK1": -0.45137424207977245,
+      "FI1": -0.5838076032768589,
+      "FL1": -0.3034422740083984,
+      "G1": -0.6222951618664285,
+      "HR1": -0.5339987911056533,
+      "HU1": -0.5538390517766651,
+      "IE1": -0.5337203198899407,
+      "IS1": -0.5694077166404622,
+      "ISR": -0.5737504999615575,
+      "KZ1": -0.5645433959226479,
+      "LV1": -0.5849801910107191,
+      "MD1": -0.5926986790661165,
+      "N1": -0.6058398701240784,
+      "NI1": -0.6106269888853039,
+      "NOR": -0.6920105921433126,
+      "P1": -0.48493893080088096,
+      "PD": -0.16080361898429263,
+      "PL": 0.0,
+      "PO1": -0.3638633973246462,
+      "RO1": -0.5059343164139172,
+      "RS1": -0.5753361980060671,
+      "SA": -0.24017072768264136,
+      "SC0": -0.5663582521846665,
+      "SE1": -0.487723034139987,
+      "SI1": -0.5115297296275915,
+      "SK1": -0.8522039732988188,
+      "T1": -0.5244782215551222,
+      "UA1": -0.6965223945563039,
+      "WA1": -0.5837146828514855
+    },
+    "both": {
+      "AM1": -0.6289662434082104,
+      "AUT": -0.8057359872592694,
+      "AZ1": -1.0168620422311965,
+      "B1": -0.6164873724165771,
+      "BA1": -0.5957136191486996,
+      "BL1": -0.1907097322654684,
+      "BUL": -0.5931188226286892,
+      "BY1": -0.628311537784625,
+      "CH1": -0.6602519180235719,
+      "CY1": -0.42465770444081785,
+      "CZ1": -0.7009619119587173,
+      "DK1": -0.47460023956225406,
+      "FI1": -0.6051453790258596,
+      "FL1": -0.3639762641837663,
+      "G1": -0.5975035421694821,
+      "HR1": -0.5599807418968642,
+      "HU1": -0.5735417103181416,
+      "IE1": -0.5552750997556047,
+      "IS1": -0.5903939005878548,
+      "ISR": -0.5898471611081187,
+      "KZ1": -0.5813886525546421,
+      "LV1": -0.6054733482244297,
+      "MD1": -0.6165884573388676,
+      "N1": -0.6479940575513263,
+      "NI1": -0.6304822281707766,
+      "NOR": -0.7156451403596705,
+      "P1": -0.4723866161847897,
+      "PD": -0.1608516797221489,
+      "PL": 0.0,
+      "PO1": -0.3819591152148061,
+      "RO1": -0.5341176556392786,
+      "RS1": -0.5974820968748569,
+      "SA": -0.23222944435313764,
+      "SC0": -0.8251275713933444,
+      "SE1": -0.5096848884721412,
+      "SI1": -0.5275281349585056,
+      "SK1": -0.9254284197781245,
+      "T1": -0.4375675857066793,
+      "UA1": -0.7178581716278335,
+      "WA1": -0.6037131082234978
+    }
+  },
+  "today_league_mean_ratings": {
+    "none": {
+      "AUT": 31.498600000000003,
+      "AZ1": 20.57163076923077,
+      "B1": 35.03086842105263,
+      "BL1": 63.91142380952382,
+      "CZ1": 30.65105,
+      "FL1": 57.47477,
+      "G1": 39.2687,
+      "N1": 37.504128571428566,
+      "NOR": 35.14162631578947,
+      "P1": 45.944245,
+      "PD": 64.97382608695652,
+      "PL": 73.46947826086956,
+      "SA": 57.51385652173913,
+      "SC0": 41.84832307692307,
+      "SK1": 25.88562307692308,
+      "T1": 45.05040952380952,
+      "UA1": 37.631895
+    },
+    "openfootball": {
+      "AUT": 31.707846153846155,
+      "AZ1": 20.094730769230768,
+      "B1": 37.08455789473684,
+      "BL1": 63.596199999999996,
+      "CZ1": 34.52513125,
+      "FL1": 56.867065000000004,
+      "G1": 38.274525,
+      "N1": 39.43287619047619,
+      "NOR": 33.93803684210527,
+      "P1": 45.424805,
+      "PD": 64.36471739130435,
+      "PL": 73.20011304347825,
+      "SA": 58.71965217391304,
+      "SC0": 40.64900769230769,
+      "SK1": 25.414969230769234,
+      "T1": 44.70404285714286,
+      "UA1": 33.962059999999994
+    },
+    "both": {
+      "AUT": 29.439707692307692,
+      "AZ1": 20.540146153846155,
+      "B1": 38.94182631578948,
+      "BL1": 62.58192380952381,
+      "CZ1": 35.91824375,
+      "FL1": 54.048125000000006,
+      "G1": 40.67304375,
+      "N1": 38.209495238095236,
+      "NOR": 33.877821052631575,
+      "P1": 47.028485,
+      "PD": 64.69456956521739,
+      "PL": 73.28531739130435,
+      "SA": 59.66743478260869,
+      "SC0": 28.473230769230767,
+      "SK1": 23.444761538461538,
+      "T1": 50.439571428571426,
+      "UA1": 34.021755
+    }
+  },
+  "today_title_percent": [
+    {
+      "team": "FC Bayern M\u00fcnchen",
+      "none": 23.62,
+      "openfootball": 23.81,
+      "both": 21.45,
+      "delta": -2.3599999999999994
+    },
+    {
+      "team": "Arsenal FC",
+      "none": 21.74,
+      "openfootball": 21.89,
+      "both": 20.88,
+      "delta": -1.0100000000000016
+    },
+    {
+      "team": "FC Barcelona",
+      "none": 17.72,
+      "openfootball": 18.24,
+      "both": 19.24,
+      "delta": 1.0
+    },
+    {
+      "team": "Paris Saint-Germain FC",
+      "none": 12.75,
+      "openfootball": 12.43,
+      "both": 11.82,
+      "delta": -0.6099999999999994
+    },
+    {
+      "team": "Real Madrid CF",
+      "none": 10.01,
+      "openfootball": 10.25,
+      "both": 11.67,
+      "delta": 1.42
+    },
+    {
+      "team": "Manchester City FC",
+      "none": 2.12,
+      "openfootball": 2.19,
+      "both": 2.44,
+      "delta": 0.25
+    },
+    {
+      "team": "Liverpool FC",
+      "none": 3.04,
+      "openfootball": 2.73,
+      "both": 2.4,
+      "delta": -0.33000000000000007
+    },
+    {
+      "team": "Club Atl\u00e9tico de Madrid",
+      "none": 1.66,
+      "openfootball": 1.73,
+      "both": 2.05,
+      "delta": 0.31999999999999984
+    },
+    {
+      "team": "Aston Villa FC",
+      "none": 0.81,
+      "openfootball": 1.0,
+      "both": 1.97,
+      "delta": 0.97
+    },
+    {
+      "team": "FC Internazionale Milano",
+      "none": 1.53,
+      "openfootball": 1.49,
+      "both": 1.83,
+      "delta": 0.3400000000000001
+    },
+    {
+      "team": "Manchester United FC",
+      "none": 1.27,
+      "openfootball": 1.01,
+      "both": 1.3,
+      "delta": 0.29000000000000004
+    },
+    {
+      "team": "Borussia Dortmund",
+      "none": 0.97,
+      "openfootball": 0.85,
+      "both": 0.77,
+      "delta": -0.07999999999999996
+    },
+    {
+      "team": "Sporting Clube de Portugal",
+      "none": 1.0,
+      "openfootball": 0.83,
+      "both": 0.61,
+      "delta": -0.21999999999999997
+    },
+    {
+      "team": "VfB Stuttgart",
+      "none": 0.38,
+      "openfootball": 0.39,
+      "both": 0.38,
+      "delta": -0.010000000000000009
+    },
+    {
+      "team": "Como 1907",
+      "none": 0.25,
+      "openfootball": 0.34,
+      "both": 0.33,
+      "delta": -0.010000000000000009
+    },
+    {
+      "team": "AS Roma",
+      "none": 0.18,
+      "openfootball": 0.16,
+      "both": 0.24,
+      "delta": 0.07999999999999999
+    },
+    {
+      "team": "Real Betis Balompi\u00e9",
+      "none": 0.33,
+      "openfootball": 0.22,
+      "both": 0.21,
+      "delta": -0.010000000000000009
+    },
+    {
+      "team": "FC Porto",
+      "none": 0.1,
+      "openfootball": 0.12,
+      "both": 0.07,
+      "delta": -0.04999999999999999
+    },
+    {
+      "team": "Villarreal CF",
+      "none": 0.11,
+      "openfootball": 0.06,
+      "both": 0.05,
+      "delta": -0.009999999999999995
+    },
+    {
+      "team": "Fenerbah\u00e7e SK",
+      "none": 0.01,
+      "openfootball": 0.01,
+      "both": 0.05,
+      "delta": 0.04
+    },
+    {
+      "team": "RB Leipzig",
+      "none": 0.07,
+      "openfootball": 0.07,
+      "both": 0.05,
+      "delta": -0.020000000000000004
+    },
+    {
+      "team": "SSC Napoli",
+      "none": 0.06,
+      "openfootball": 0.03,
+      "both": 0.05,
+      "delta": 0.020000000000000004
+    },
+    {
+      "team": "Racing Club de Lens",
+      "none": 0.12,
+      "openfootball": 0.06,
+      "both": 0.04,
+      "delta": -0.019999999999999997
+    },
+    {
+      "team": "Club Brugge KV",
+      "none": 0.01,
+      "openfootball": 0.01,
+      "both": 0.03,
+      "delta": 0.019999999999999997
+    },
+    {
+      "team": "FK Bod\u00f8/Glimt",
+      "none": 0.04,
+      "openfootball": 0.02,
+      "both": 0.03,
+      "delta": 0.009999999999999998
+    },
+    {
+      "team": "FK Shakhtar Donetsk",
+      "none": 0.08,
+      "openfootball": 0.02,
+      "both": 0.02,
+      "delta": 0.0
+    },
+    {
+      "team": "PAE AEK",
+      "none": 0.02,
+      "openfootball": 0.01,
+      "both": 0.01,
+      "delta": 0.0
+    },
+    {
+      "team": "Lille OSC",
+      "none": 0.0,
+      "openfootball": 0.0,
+      "both": 0.01,
+      "delta": 0.01
+    },
+    {
+      "team": "Sabah FK",
+      "none": 0.0,
+      "openfootball": 0.0,
+      "both": 0.0,
+      "delta": 0.0
+    },
+    {
+      "team": "Viking FK",
+      "none": 0.0,
+      "openfootball": 0.01,
+      "both": 0.0,
+      "delta": -0.01
+    },
+    {
+      "team": "LASK Linz",
+      "none": 0.0,
+      "openfootball": 0.0,
+      "both": 0.0,
+      "delta": 0.0
+    },
+    {
+      "team": "SK Slavia Praha",
+      "none": 0.0,
+      "openfootball": 0.0,
+      "both": 0.0,
+      "delta": 0.0
+    },
+    {
+      "team": "PSV",
+      "none": 0.0,
+      "openfootball": 0.0,
+      "both": 0.0,
+      "delta": 0.0
+    },
+    {
+      "team": "Feyenoord Rotterdam",
+      "none": 0.0,
+      "openfootball": 0.01,
+      "both": 0.0,
+      "delta": -0.01
+    },
+    {
+      "team": "Galatasaray SK",
+      "none": 0.0,
+      "openfootball": 0.01,
+      "both": 0.0,
+      "delta": -0.01
+    },
+    {
+      "team": "\u0160K Slovan Bratislava",
+      "none": 0.0,
+      "openfootball": 0.0,
+      "both": 0.0,
+      "delta": 0.0
+    }
+  ],
+  "today_market_quotes": {
+    "none": 18,
+    "openfootball": 18,
+    "both": 18
+  },
+  "el_ecl_metrics_by_competition": {
+    "none": [
+      {
+        "season": 2024,
+        "competition": "ECL",
+        "matches": 22,
+        "log_loss": 0.8801703281788349
+      },
+      {
+        "season": 2024,
+        "competition": "EL",
+        "matches": 101,
+        "log_loss": 1.0823805403314917
+      },
+      {
+        "season": 2025,
+        "competition": "ECL",
+        "matches": 37,
+        "log_loss": 0.839090692994412
+      },
+      {
+        "season": 2025,
+        "competition": "EL",
+        "matches": 100,
+        "log_loss": 1.0061865103809302
+      }
+    ],
+    "openfootball": [
+      {
+        "season": 2024,
+        "competition": "ECL",
+        "matches": 22,
+        "log_loss": 0.9539225993351405
+      },
+      {
+        "season": 2024,
+        "competition": "EL",
+        "matches": 101,
+        "log_loss": 1.0462895157877787
+      },
+      {
+        "season": 2025,
+        "competition": "ECL",
+        "matches": 37,
+        "log_loss": 0.8037193382361973
+      },
+      {
+        "season": 2025,
+        "competition": "EL",
+        "matches": 100,
+        "log_loss": 0.992113119062708
+      }
+    ],
+    "both": [
+      {
+        "season": 2024,
+        "competition": "ECL",
+        "matches": 22,
+        "log_loss": 0.9539225993351405
+      },
+      {
+        "season": 2024,
+        "competition": "EL",
+        "matches": 101,
+        "log_loss": 1.0462895157877787
+      },
+      {
+        "season": 2025,
+        "competition": "ECL",
+        "matches": 37,
+        "log_loss": 0.7918126445741255
+      },
+      {
+        "season": 2025,
+        "competition": "EL",
+        "matches": 100,
+        "log_loss": 0.988214751624487
+      }
+    ]
+  },
+  "el_ecl_international_only": {
+    "none": {
+      "2024": {
+        "matches": 122,
+        "log_loss": 1.0471384559095445
+      },
+      "2025": {
+        "matches": 134,
+        "log_loss": 0.9605619681705238
+      }
+    },
+    "openfootball": {
+      "2024": {
+        "matches": 122,
+        "log_loss": 1.029664872002121
+      },
+      "2025": {
+        "matches": 134,
+        "log_loss": 0.940414843886262
+      }
+    },
+    "both": {
+      "2024": {
+        "matches": 122,
+        "log_loss": 1.029664872002121
+      },
+      "2025": {
+        "matches": 134,
+        "log_loss": 0.9343119134925343
+      }
+    }
+  }
+}
