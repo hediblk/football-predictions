@@ -1,7 +1,118 @@
 import math
 from datetime import datetime, timedelta
 
+import numpy as np
 import pandas as pd
+from scipy.stats import poisson
+
+
+MISS_KINDS = ("draw", "upset", "called", "missed_draw_call")
+XG_VERDICTS = ("won", "level", "lost", "unknown")
+GOAL_METRICS = ("predicted", "goals", "xg", "mae_goals", "mae_xg")
+
+
+def valid_pair(pair):
+    return pair is not None and len(pair) == 2 and all(
+        value is not None and math.isfinite(value) and value >= 0 for value in pair)
+
+
+def on_chances(xg):
+    if not valid_pair(xg):
+        return None
+    k = np.arange(int(poisson.ppf(1 - 1e-15, max(xg))) + 1)
+    home, away = (poisson.pmf(k, mean) for mean in xg)
+    p = np.array([(home * poisson.cdf(k - 1, xg[1])).sum(),
+                  (home * away).sum(), (away * poisson.cdf(k - 1, xg[0])).sum()])
+    return (p / p.sum()).tolist()
+
+
+def miss_breakdown(p, result, xg):
+    call = max(range(3), key=lambda i: p[i])
+    favourite = 0 if p[0] >= p[2] else 2
+    kind = ("called" if call == result else "missed_draw_call" if call == 1
+            else "draw" if result == 1 else "upset")
+    verdict = "unknown"
+    if valid_pair(xg):
+        margin = (xg[0] - xg[1]) * (1 if favourite == 0 else -1)
+        verdict = "level" if abs(margin) <= 0.5 + 1e-12 else "won" if margin > 0 else "lost"
+    return {"kind": kind, "xg": verdict}
+
+
+def scoring_forecast(match, original):
+    if match.get("published"):
+        return {"p": match.get("p"), "elo": match.get("elo"),
+                "call": match.get("call", [])[:2], "exp": match.get("exp")}
+    if "p_home" in original:
+        return {"p": [original[key] for key in ("p_home", "p_draw", "p_away")],
+                "elo": original.get("elo"), "call": original.get("pick_score", [])[:2],
+                "exp": [original.get(key) for key in ("exp_home_goals", "exp_away_goals")]}
+    return {"p": None}
+
+
+def fixture_diagnostics(match, original):
+    if match["status"] != "FINISHED":
+        return {}
+    xg = match.get("xg")
+    p = scoring_forecast(match, original)["p"]
+    home, away = match["score"]
+    result = 0 if home > away else 1 if home == away else 2
+    fields = {"miss": miss_breakdown(p, result, xg)} if p is not None else {}
+    xg_p = on_chances(xg)
+    if xg_p is not None:
+        fields["xg_p"] = xg_p
+    return fields
+
+
+def miss_summary(rows):
+    confusion = [[0] * 3 for _ in range(3)]
+    kinds = {kind: {"xg": dict.fromkeys(XG_VERDICTS, 0)} for kind in MISS_KINDS}
+    for row in rows:
+        confusion[max(range(3), key=lambda i: row["p"][i])][row["result"]] += 1
+        miss = miss_breakdown(row["p"], row["result"], row.get("xg"))
+        kinds[miss["kind"]]["xg"][miss["xg"]] += 1
+    covered = [row for row in rows if valid_pair(row.get("xg")) and valid_pair(row.get("exp"))]
+    team_games = 2 * len(covered)
+    goals = {"team_games": team_games}
+    values = {"predicted": [v for row in covered for v in row["exp"]],
+              "goals": [v for row in covered for v in row["score"]],
+              "xg": [v for row in covered for v in row["xg"]]}
+    for key in ("goals", "xg"):
+        values[f"mae_{key}"] = [abs(p - v) for p, v in zip(values["predicted"], values[key])]
+    goals.update({key: sum(values[key]) / team_games if team_games else None for key in GOAL_METRICS})
+    xg_scored = {}
+    chances = [(row, on_chances(row.get("xg"))) for row in rows]
+    for key, field in (("model", "p"), ("elo", "elo"), ("frequency", "frequency")):
+        sample = [(row, q) for row, q in chances if q is not None and row.get(field) is not None]
+        n = len(sample)
+        xg_scored[key] = {"n": n, "log_loss": sum(
+            -sum(qi * math.log(max(pi, 1e-15)) for qi, pi in zip(q, row[field]))
+            for row, q in sample) / n if n else None,
+            "real_log_loss": sum(proper_scores(row[field], row["result"])["log_loss"]
+                                 for row, _ in sample) / n if n else None}
+    return {"confusion": confusion, "kinds": kinds, "goals": goals, "xg_scored": xg_scored,
+            "outcomes": {"expected": [sum(row["p"][i] / sum(row["p"]) for row in rows) for i in range(3)],
+                         "actual": [sum(line[i] for line in confusion) for i in range(3)]}}
+
+
+def combine_misses(records):
+    blocks = [row["misses"] for row in records]
+    team_games = sum(block["goals"]["team_games"] for block in blocks)
+    xg_scored = {}
+    for key in ("model", "elo", "frequency"):
+        samples = [block["xg_scored"][key] for block in blocks]
+        n = sum(sample["n"] for sample in samples)
+        xg_scored[key] = {"n": n, **{metric: sum(s[metric] * s["n"] for s in samples if s["n"]) / n if n else None
+                                     for metric in ("log_loss", "real_log_loss")}}
+    return {
+        "confusion": [[sum(b["confusion"][i][j] for b in blocks) for j in range(3)] for i in range(3)],
+        "outcomes": {key: [sum(b["outcomes"][key][i] for b in blocks) for i in range(3)]
+                     for key in ("expected", "actual")},
+        "kinds": {kind: {"xg": {v: sum(b["kinds"][kind]["xg"][v] for b in blocks) for v in XG_VERDICTS}}
+                  for kind in MISS_KINDS},
+        "goals": {"team_games": team_games, **{key: sum(b["goals"][key] * b["goals"]["team_games"]
+                  for b in blocks if b["goals"]["team_games"]) / team_games if team_games else None for key in GOAL_METRICS}},
+        "xg_scored": xg_scored,
+    }
 
 
 def frequency_baseline(frames, season):
@@ -76,7 +187,7 @@ def record(rows):
         "called": sum(max(range(3), key=lambda i: row["p"][i]) == row["result"] for row in rows),
         "exact": sum(row.get("call") == row["score"] for row in rows),
         "avg_chance_given": sum(row["p"][row["result"]] for row in rows) / n if n else None,
-        "calibration": bins, "weekly": series, "market": None,
+        "calibration": bins, "weekly": series, "market": None, "misses": miss_summary(rows),
     }
 
 
@@ -112,6 +223,7 @@ def combine_records(records):
         total["weekly"].append({"week": week, **{key: combine_scores([point[key] for point in latest if point])
                                                 for key in ("model", "frequency", "elo")}})
     total["market"] = None
+    total["misses"] = combine_misses(records)
     return total
 
 
@@ -128,18 +240,12 @@ def scoring_rows(matches, raw, frequency):
             continue
         original = forecasts.get(match["id"], {})
         published = match.get("published", False)
-        if published:
-            p, elo, call = match.get("p"), match.get("elo"), match.get("call", [])[:2]
-        elif "p_home" in original:
-            p = [original[key] for key in ("p_home", "p_draw", "p_away")]
-            elo, call = original.get("elo"), original.get("pick_score", [])[:2]
-        else:
-            continue
-        if p is None:
+        forecast = scoring_forecast(match, original)
+        if forecast["p"] is None:
             continue
         home, away = match["score"]
         day = datetime.fromisoformat(match["kickoff"]).date()
-        rows.append({"p": p, "elo": elo, "frequency": (frequency or {}).get("p"),
-                     "score": match["score"], "call": call, "result": 0 if home > away else 1 if home == away else 2,
+        rows.append({**forecast, "frequency": (frequency or {}).get("p"), "xg": match.get("xg"),
+                     "score": match["score"], "result": 0 if home > away else 1 if home == away else 2,
                      "published": published, "week": (day - timedelta(days=day.weekday())).isoformat()})
     return rows

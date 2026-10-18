@@ -149,6 +149,12 @@ def validate_matches(data):
         require(match["home_id"] is None or match["home_id"] != match["away_id"],
                 f"match {match['id']}: club plays itself")
         validate_forecast(match, f"match {match['id']}")
+        if "xg_p" in match:
+            require(match["status"] == "FINISHED" and "xg" in match, "on-chances probabilities require finished xG")
+            close(sum(match["xg_p"]), 1, 1e-9, f"match {match['id']}: xG probability sum")
+        if "miss" in match:
+            require(match["status"] == "FINISHED" and "p" in match, "miss requires a finished forecast")
+            require((match["miss"]["xg"] == "unknown") == ("xg" not in match), "miss xG coverage differs")
         if match.get("published"):
             require(match["status"] == "FINISHED" and "p" in match, "published match must have a finished forecast")
             require(datetime.fromisoformat(match["at"]) < datetime.fromisoformat(match["kickoff"]),
@@ -295,6 +301,36 @@ def validate_rating_runs(data):
                 for time in times), "rating run origin outside its month")
 
 
+def validate_misses(row):
+    n, misses = row["n"], row["misses"]
+    matrix = misses["confusion"]
+    require(sum(map(sum, matrix)) == n, "confusion matrix must sum to n")
+    actual = misses["outcomes"]["actual"]
+    require(sum(actual) == n, "actual outcomes must sum to n")
+    require(actual == [sum(line[i] for line in matrix) for i in range(3)], "actual outcomes differ from confusion columns")
+    close(sum(misses["outcomes"]["expected"]), n, max(1, n) * 1e-12, "expected outcomes must sum to n")
+    counts = {kind: sum(value["xg"].values()) for kind, value in misses["kinds"].items()}
+    require(sum(counts.values()) == n, "miss kinds must sum to n")
+    require(counts["called"] == row["called"] == sum(matrix[i][i] for i in range(3)), "called count differs")
+    require(counts["draw"] + counts["upset"] + counts["missed_draw_call"] == n - row["called"], "miss counts differ")
+    require(counts["draw"] == matrix[0][1] + matrix[2][1], "draw misses differ from confusion matrix")
+    require(counts["upset"] == matrix[0][2] + matrix[2][0], "upsets differ from confusion matrix")
+    require(counts["missed_draw_call"] == matrix[1][0] + matrix[1][2], "missed draw calls differ from confusion matrix")
+    xg_n = n - sum(value["xg"]["unknown"] for value in misses["kinds"].values())
+    goals = misses["goals"]
+    require(goals["team_games"] <= 2 * xg_n, "goal coverage exceeds xG coverage")
+    for key in ("predicted", "goals", "xg", "mae_goals", "mae_xg"):
+        require((goals[key] is None) == (goals["team_games"] == 0), "empty goal means must be null")
+    for key, sample in misses["xg_scored"].items():
+        require(sample["n"] <= xg_n, "xG score coverage exceeds xG coverage")
+        if key == "model":
+            require(sample["n"] == xg_n, "model xG score coverage differs")
+        else:
+            require(sample["n"] <= row["baselines"][key]["n"], "xG score coverage exceeds baseline coverage")
+        for metric in ("log_loss", "real_log_loss"):
+            require((sample[metric] is None) == (sample["n"] == 0), "empty xG scores must be null")
+
+
 def validate_score_record(row):
     n = row["n"]
     require(row["model"]["n"] == n, "scorecard model count differs")
@@ -323,6 +359,7 @@ def validate_score_record(row):
         for key in ("log_loss", "brier", "rps"):
             require((summary[key] is None) == (summary["n"] == 0), "empty score must be null")
     require((row["avg_chance_given"] is None) == (n == 0), "empty chance given must be null")
+    validate_misses(row)
 
 
 def validate_scorecard(data):
