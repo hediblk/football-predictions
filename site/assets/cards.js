@@ -59,7 +59,7 @@ function onChances([a, b]) {
 }
 
 /* the match page's card: the preview before kickoff, or full time after. `o`: { legend, mode, stake (the Stakes
-   tag's line), pending, verdict (the line Task 3 will supply from the exported `miss` field; none yet) } */
+   tag's line), pending, verdict (the match page's line from the exported `miss`, when there is one) } */
 export function matchCard(m, o) {
   const labels = OUT(m);
   const crests = [m.home_id, m.away_id];
@@ -86,10 +86,9 @@ export function matchCard(m, o) {
       heading(`Our forecast · ${m.published ? "published before kickoff" : "reconstructed"}`),
       bulbs(m.p, labels, actual),
       lamp(hit, hit ? "Called" : "Missed", `${labels[actual]} had ${pct1(m.p[actual])}`),
-      // Task 3's verdict line ("Called it", "Drew; we had the better chances", ...) goes here once `miss` is exported.
       o.verdict ? text(o.verdict, { color: "ink" }) : null,
       heading("On chances · from xG, not a forecast"),
-      m.xg ? bulbs(onChances(m.xg), labels, -1, true) : note(ucl ? "No shot xG for the Champions League, so no on-chances line." : "No shot xG for this game, so no on-chances line."),
+      m.xg ? bulbs(m.xg_p || onChances(m.xg), labels, -1, true) : note(ucl ? "No shot xG for the Champions League, so no on-chances line." : "No shot xG for this game, so no on-chances line."),
       rows([["Expected goals before kickoff", pair(m.exp, 1)], ...(m.xg ? [["Shot xG (Understat)", pair(m.xg, 2)]] : [])]),
       note((m.published ? `Published before kickoff, from the model run of ${new Date(m.at).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}, ${kickoffTime(m.at)}.`
         : "Reconstructed: forecast as of 00:00 UTC on match day, from results before then.") + (m.xg ? " On-chances shares treat each side's xG as the mean of a Poisson." : "")),

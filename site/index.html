@@ -83,6 +83,7 @@
     <fieldset class="frame" id="m-scorecard" hidden>
       <legend>Scorecard · this season</legend>
       <div class="scroll"><table class="board record" id="m-record-table"></table></div>
+      <p class="sc-line" id="m-misses" hidden></p>
       <p class="note">Lower is better. A blind one-in-three guess scores 1.099. Combined published and reconstructed forecasts; vs baseline = model minus prior frequency on the same fixtures. Called = hit rate.</p>
       <p class="more-link"><a href="#model/scorecard">Calibration and the rolling record →</a></p>
     </fieldset>
@@ -224,6 +225,7 @@
       <div id="sc-summary"></div>
       <p class="note" id="sc-counts"></p>
       <div id="sc-charts"></div>
+      <div class="sc-misses" id="misses"></div>
       <details><summary>Baselines and coverage</summary><div id="sc-baselines"></div>
         <p class="note">Prior frequency is fixed from the five seasons before this one, with seasons listed above. It is unavailable until all five are loaded. Elo compares only fixtures with a saved component from the same forecast run.</p>
       </details>

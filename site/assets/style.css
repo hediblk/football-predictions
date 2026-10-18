@@ -766,6 +766,16 @@ a.cs { color: inherit; text-decoration: none; }
 /* match page after full time: After · Before chips, the forecast against the result, what it changed */
 .mp-modes { margin-top: 18px; }
 .mp-said { margin: 12px 0 0; max-width: 36ch; text-align: right; color: var(--ink-2); font-size: 12px; line-height: 1.5; }
+/* After mode: the forecast and the on-chances shares as two rows of bulbs, then the verdict tag from `miss` */
+.mp-rows { display: grid; grid-template-columns: auto auto; align-items: center; justify-items: end; gap: 6px 12px; }
+.mp-rlbl { font: 700 11px/1 var(--sign); letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.mp-xgp { margin-top: 6px; color: var(--dim); font-size: 11px; }
+.mp-verdict { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 4px 12px; margin: 14px 0 0; color: var(--ink-2); font-size: 12px; }
+.mp-verdict .m-verdict { min-width: 0; }
+@media (max-width: 699px) {
+  .mp-rows { justify-items: start; }
+  .mp-verdict { justify-content: flex-start; }
+}
 .mp-line { margin: 0 0 8px; max-width: 90ch; color: var(--ink-2); font-size: 12.5px; line-height: 1.6; }
 .mp-line b { color: var(--ink); }
 .mp-line + .scroll { margin-top: 14px; }
@@ -845,6 +855,39 @@ table.mp-stand { min-width: 460px; }
 @media (max-width: 700px) {
   #sc-charts { grid-template-columns: minmax(0, 1fr); gap: 8px; }
   .sc-frame svg text { font-size: 18px; }
+}
+
+/* Evaluation Task 4 · How we miss: the called-against-result board, split meters of the misses, outcome counts */
+.sc-line { margin: 0 0 8px; max-width: 90ch; color: var(--ink-2); font-size: 12.5px; line-height: 1.6; }
+.sc-line b { color: var(--ink); }
+.sc-line a, #m-misses a { color: var(--amber-t); }
+#m-misses { margin: 14px 0 0; }
+.sc-misses { scroll-margin-top: 64px; }
+.sc-misses h3 { margin-top: 30px; }
+.sc-misses .board { max-width: 640px; }
+.sc-misses h4 { margin: 22px 0 10px; font: 800 12px/1 var(--sign); letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.sc-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
+.sc-confusion td small { color: var(--dim); font-size: 10.5px; }
+.sc-confusion td.lit small { color: var(--amber-t); font-weight: 400; }
+.sc-split-row { display: grid; grid-template-columns: 170px minmax(0, 1fr); align-items: center; gap: 6px 12px; padding: 10px 0; border-top: 1px solid var(--rule-2); }
+.sc-split-row .note { grid-column: 2; margin: 0; }
+.sc-split-lbl { font: 700 14px/1 var(--sign); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.sc-split-lbl b { margin-right: 6px; font: 700 15px/1 var(--mono); color: var(--amber-t); }
+.sc-split-bar { display: flex; gap: 2px; height: 10px; }
+.sc-split-bar i, .sc-k { display: block; flex: none; }
+.sc-k { width: 14px; height: 8px; }
+.sc-split-bar .won, .sc-k.won { background: var(--amber); }
+.sc-split-bar .level, .sc-k.level { background: var(--dim); }
+.sc-split-bar .lost, .sc-k.lost { background: var(--rule); }
+.sc-split-bar .unknown, .sc-k.unknown { box-sizing: border-box; border: 1px dashed var(--dim); }
+@media (max-width: 700px) {
+  .sc-pair { grid-template-columns: minmax(0, 1fr); }
+  .sc-split-row { grid-template-columns: minmax(0, 1fr); }
+  .sc-split-row .note { grid-column: 1; }
+  .sc-confusion th, .sc-confusion td { padding: 0 4px; }
+  .sc-confusion thead th { padding-bottom: 12px; }
+  .sc-confusion td { height: 48px; }
+  .sc-confusion td small { display: block; margin-top: 3px; }
 }
 
 /* Task 3 · Weekly race movers: inside "The race so far", reusing .moves rows with a diverging bar */

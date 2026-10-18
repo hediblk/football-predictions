@@ -95,7 +95,7 @@ function hero(m, comp, slugs) {
   if (m.p) {
     const [stake] = after ? [] : stakeLines(m, comp.slug);
     const known = stake ? stake.values.filter((v) => v != null) : [];
-    offerCard("match", () => matchCard(m, { legend: stageLabel(comp, [{ m }]), mode: page.mode, pending,
+    offerCard("match", () => matchCard(m, { legend: stageLabel(comp, [{ m }]), mode: page.mode, pending, verdict: after ? missVerdict(m)?.text : null,
       stake: stake && `${stake.race}: ${stake.team.name} ${num(Math.min(...known))}–${num(Math.max(...known))}%` }));
   }
   const cards = m.p ? cardChips("match", after ? "full-time" : "match preview") : "";
@@ -106,10 +106,16 @@ function hero(m, comp, slugs) {
     board = `<p class="mp-lbl">${OUTCOMES[fav]}</p>
       <div class="numeral on" role="img" aria-label="${esc(`${OUTCOMES[fav]}: ${Math.round(m.p[fav] * 100)}% chance`)}">${Math.round(m.p[fav] * 100)}<sup>%</sup></div>`;
   }
-  let said = "";
+  let said = "", probs = m.p ? probCells(m) : "";
   if (post && page.mode === "after") {
-    const v = verdict(m);
+    const v = verdict(m), tag = missVerdict(m);
     said = `<p class="mp-said">The model gave ${esc(happened(m, v))} ${pct1(v.given)}. ${m.published ? "Published before kickoff." : "Reconstructed from results before match day."}</p>`;
+    // the pre-match forecast beside the on-chances shares from the observed xG, then the verdict from `miss`
+    const noXg = comp.slug === "champions-league" ? "No xG for the Champions League" : "No xG for this game";
+    probs = `<div class="mp-rows"><span class="mp-rlbl">Forecast</span>${probs}
+      <span class="mp-rlbl">On chances</span>${m.xg_p ? probCells({ p: m.xg_p, score: m.score }) : `<span class="m-probs none">${noXg}</span>`}</div>
+      ${m.xg_p ? `<p class="mp-said mp-xgp">On chances: two independent Poissons with each side's observed xG as means. Not a forecast.</p>` : ""}
+      ${tag ? `<p class="mp-verdict"><span class="m-verdict ${tag.hit ? "hit" : "miss"}">${tag.word}</span>${tag.clause ? `<span>${esc(tag.clause)}</span>` : ""}</p>` : ""}`;
   }
   return `<p class="crumbs"><a href="#matches/${dayKey(day)}">← Matches, ${esc(day.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }))}</a></p>
     <fieldset class="frame hero mp-hero">
@@ -120,7 +126,7 @@ function hero(m, comp, slugs) {
           <p class="caption">${when}${facts}</p>
           ${modes}${cards}
         </div>
-        ${board || m.p ? `<div class="mp-board">${board}${m.p ? probCells(m) : ""}${said}</div>` : ""}
+        ${board || m.p ? `<div class="mp-board">${board}${probs}${said}</div>` : ""}
       </div>
     </fieldset>`;
 }
@@ -128,6 +134,16 @@ function hero(m, comp, slugs) {
 /* ---------- after full time ---------- */
 const dayLabel = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
 const happened = (m, v) => (v.actual === 1 ? "a draw" : `a ${v.actual ? m.away : m.home} win`);
+/* the exported miss as a verdict tag: what kind of call it was, and which side the whole-game chances favoured
+   (the favourite is the likelier winner of the two sides) */
+const MISS_WORDS = { called: "Called it", draw: "Drew", upset: "Upset", missed_draw_call: "Missed draw call" };
+function missVerdict(m) {
+  if (!m.miss || !MISS_WORDS[m.miss.kind]) return null;
+  const fav = m.p[0] >= m.p[2] ? m.home : m.away, other = fav === m.home ? m.away : m.home;
+  const clause = { won: `${fav} had the better chances`, lost: `${other} had the better chances`, level: "level on chances" }[m.miss.xg] || "";
+  const word = MISS_WORDS[m.miss.kind];
+  return { hit: m.miss.kind === "called", word, clause, text: clause ? `${word}; ${clause}` : word };
+}
 const utcDay = (iso) => new Date(iso).toISOString().slice(0, 10);
 
 function notesFrame() {

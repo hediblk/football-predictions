@@ -7,7 +7,8 @@
 # an upcoming match page, finished ones in After and Before mode (one with a shot report), club Squad views (with a squad file, with season usage and
 # without one), and the model page, at desktop and phone widths, expanding a match (which must
 # link its match page) and a table row. It clicks every "Download card" chip (match preview, full time, the day's
-# round, the race), which must save a PNG of the chip's size. Any console error, uncaught
+# round, the race), which must save a PNG of the chip's size. With the scorecard's miss breakdown it opens "How we miss"
+# for every competition and checks each finished match page's verdict tag and on-chances row. Any console error, uncaught
 # exception, failed same-origin request or missing content fails the check. Other origins (web fonts) get empty
 # responses, so the check runs offline and the cards are drawn with the wider fallback fonts. Needs `pip install playwright` and `python -m playwright install chromium`.
 
@@ -91,7 +92,10 @@ def routes(data):
             selectors.append('#table tbody tr.row td.vsm[title*="finished games with a forecast"]')
         found.append((f"#{slug}", selectors, ["#table tr.row"], "#table tr.detail"))
     # "Games that matter" is hidden when no fixture in the next seven days passes the stakes bar; open a row if shown.
-    found += [("#matches", ["#m-day .day-head", "#m-record-table tbody tr"], ["#m-matter:not([hidden]) .mrow"],
+    scorecard = json.loads((data / "scorecard.json").read_text()) if (data / "scorecard.json").exists() else None
+    missed = bool(scorecard and scorecard["all"]["n"] and scorecard["all"].get("misses"))
+    found += [("#matches", ["#m-day .day-head", "#m-record-table tbody tr"] + (["#m-misses a[href='#model/misses']"] if missed else []),
+               ["#m-matter:not([hidden]) .mrow"],
                "#m-matter .panel a[href^='#match/']"),
               ("#clubs", ["#c-hero h1", "#c-rank tbody tr", "#c-scatter svg"], [], None),
               ("#model/ratings", ["#c-factors b"], [], None)]
@@ -135,6 +139,10 @@ def routes(data):
         match = next(row for c, row in fixtures if c == slug and row["id"] == fixture_id)
         notes = note_entry(slug, match)
         selectors = AFTER + (["#view-match .mp-notes h4:has-text('What it meant')"] if notes and notes.get("post") else [])
+        if match.get("miss"):
+            # Task 4: the verdict tag, and the on-chances bulbs (or the no-xG line) beside the forecast
+            selectors += ["#view-match .mp-verdict .m-verdict",
+                          "#view-match .mp-rows .m-probs" + (":not(.none)" if match.get("xg_p") else ".none")]
         before_checks = ["#view-match .mp-fc .scores li"]
         if notes and (notes.get("pre") or notes.get("meetings")):
             before_checks.append("#view-match .mp-notes h4:has-text('On the line')")
@@ -227,11 +235,15 @@ def routes(data):
             "#p-hero h1", "#p-compare optgroup", "#p-compare option:checked", "#p-rating-chart .rating-series.comparison path",
             "#p-strength .rating-compare-tick", "#p-rating-caption"], [], None))
     # Task 8: scorecard route, with calibration and cumulative record on both widths.
-    if (data / "scorecard.json").exists():
-        scorecard = json.loads((data / "scorecard.json").read_text())
-        if scorecard["all"]["n"]:
-            found.append(("#model/scorecard", ["#sc-summary tbody tr", "#sc-charts svg", "#sc-cohorts button"],
-                          ["#sc-cohorts [data-cohort=published]"], "#sc-summary tbody tr"))
+    if scorecard and scorecard["all"]["n"]:
+        selectors, choices = ["#sc-summary tbody tr", "#sc-charts svg", "#sc-cohorts button"], []
+        if missed:
+            # "How we miss" for each competition; the Champions League has no xG and must say so.
+            selectors += ["#misses .sc-confusion tbody tr", "#misses .sc-split-row"]
+            choices = [(("#sc-competition", slug), f'#sc-competition option[value="{slug}"]:checked',
+                        "#misses:has-text('no xG for the Champions League')" if slug == "champions-league" else "#misses .sc-confusion tbody tr")
+                       for slug in COMPETITIONS if scorecard["competitions"].get(slug, {}).get("n")]
+        found.append(("#model/scorecard", selectors, ["#sc-cohorts [data-cohort=published]"], "#sc-summary tbody tr", choices))
     return origin, found
 
 
@@ -270,10 +282,15 @@ def visit(context, url, origin, selectors, rows, opened, interactions=()):
         if not page.locator(selector).count():
             problems.append(f"empty: nothing matches {selector}")
     for button, selected, content in interactions:
+        # a (select, value) pair picks that option; anything else is a button to click
+        button, value = button if isinstance(button, tuple) else (button, None)
         if not page.locator(button).count():
             problems.append(f"empty: nothing matches {button}")
             continue
-        page.locator(button).click()
+        if value is None:
+            page.locator(button).click()
+        else:
+            page.locator(button).select_option(value)
         if not page.locator(selected).count():
             problems.append(f"clicking {button} did not select {selected}")
         if content and not page.locator(content).count():
