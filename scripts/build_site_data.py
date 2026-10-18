@@ -22,7 +22,7 @@ import pandas as pd
 
 from champions_league.identities import AREA_LEAGUES, COUNTRY_LEAGUES, canonical_team
 from standing_prediction import site_history
-from standing_prediction.scorecard import combine_entries, scorecard_entry, scoring_rows
+from standing_prediction.scorecard import combine_entries, fixture_diagnostics, scorecard_entry, scoring_rows
 
 
 LEAGUES = [
@@ -249,6 +249,7 @@ def export_matches(src, slug, prefix, receipts=None):
                 if row["score"] == [home, away]:
                     row["p_score"] = p
                     break
+        row.update(fixture_diagnostics(row, match))
         matches.append(row)
     matches.sort(key=lambda row: (row["kickoff"] or "", row["id"]))
     rule = "Finished fixtures use published forecasts saved before kickoff where available; otherwise reconstructed forecasts as of 00:00 UTC on match day, from results before then."

@@ -173,6 +173,83 @@
         "elo"
       ]
     },
+    "countTriple": {
+      "type":"array", "items":{"type":"integer","minimum":0}, "minItems":3, "maxItems":3
+    },
+    "xgCounts": {
+      "type":"object",
+      "properties": {
+        "xg": {
+          "type":"object", "additionalProperties":false,
+          "properties": {
+            "won":{"type":"integer","minimum":0}, "level":{"type":"integer","minimum":0},
+            "lost":{"type":"integer","minimum":0}, "unknown":{"type":"integer","minimum":0}
+          },
+          "required":["won","level","lost","unknown"]
+        }
+      },
+      "required":["xg"]
+    },
+    "xgScore": {
+      "type":"object",
+      "properties": {
+        "n":{"type":"integer","minimum":0},
+        "log_loss":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"},
+        "real_log_loss":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"}
+      },
+      "required":["n","log_loss","real_log_loss"]
+    },
+    "misses": {
+      "type":"object",
+      "properties": {
+        "confusion":{"type":"array","items":{"$ref":"#/$defs/countTriple"},"minItems":3,"maxItems":3},
+        "outcomes": {
+          "type":"object",
+          "properties": {
+            "actual":{"$ref":"#/$defs/countTriple"},
+            "expected":{"type":"array","items":{"type":"number","minimum":0},"minItems":3,"maxItems":3}
+          },
+          "required":["actual","expected"]
+        },
+        "kinds": {
+          "type":"object", "additionalProperties":false,
+          "properties": {
+            "draw":{"$ref":"#/$defs/xgCounts"}, "upset":{"$ref":"#/$defs/xgCounts"},
+            "called":{"$ref":"#/$defs/xgCounts"}, "missed_draw_call":{"$ref":"#/$defs/xgCounts"}
+          },
+          "required":["draw","upset","called","missed_draw_call"]
+        },
+        "goals": {
+          "type":"object",
+          "properties": {
+            "team_games":{"type":"integer","minimum":0,"multipleOf":2},
+            "predicted":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"},
+            "goals":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"},
+            "xg":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"},
+            "mae_goals":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"},
+            "mae_xg":{"$ref":"#/$defs/scoreMetrics/properties/log_loss"}
+          },
+          "required":["team_games","predicted","goals","xg","mae_goals","mae_xg"]
+        },
+        "xg_scored": {
+          "type":"object",
+          "properties": {
+            "model":{"$ref":"#/$defs/xgScore"}, "elo":{"$ref":"#/$defs/xgScore"},
+            "frequency":{"$ref":"#/$defs/xgScore"}
+          },
+          "required":["model","elo","frequency"]
+        }
+      },
+      "required":["confusion","outcomes","kinds","goals","xg_scored"]
+    },
+    "miss": {
+      "type":"object",
+      "properties": {
+        "kind":{"enum":["called","draw","upset","missed_draw_call"]},
+        "xg":{"enum":["won","level","lost","unknown"]}
+      },
+      "required":["kind","xg"]
+    },
     "scoreRecord": {
       "type": "object",
       "properties": {
@@ -236,7 +313,8 @@
         },
         "market": {
           "type": "null"
-        }
+        },
+        "misses": {"$ref":"#/$defs/misses"}
       },
       "required": [
         "n",
@@ -248,7 +326,8 @@
         "avg_chance_given",
         "calibration",
         "weekly",
-        "market"
+        "market",
+        "misses"
       ]
     },
     "scoreEntry": {
@@ -649,6 +728,8 @@
         "away_id": {"$ref":"#/$defs/id"},
         "score": {"$ref":"#/$defs/score"},
         "xg": {"$ref":"#/$defs/goalPair"},
+        "miss": {"$ref":"#/$defs/miss"},
+        "xg_p": {"$ref":"#/$defs/match/properties/p"},
         "p": {
           "type": "array",
           "prefixItems": [{"$ref":"#/$defs/probability"},{"$ref":"#/$defs/probability"},{"$ref":"#/$defs/probability"}],
@@ -671,6 +752,8 @@
       "required": ["id","kickoff","status","md","home","away","home_id","away_id"],
       "allOf": [
         {"if":{"required":["p"]},"then":{"required":["exp","top","btts","o25","at"]}},
+        {"if":{"properties":{"status":{"const":"FINISHED"}},"required":["status","p"]},"then":{"required":["miss"]}},
+        {"if":{"properties":{"status":{"const":"FINISHED"}},"required":["status","xg"]},"then":{"required":["xg_p"]}},
         {
           "if": {"properties":{"status":{"const":"FINISHED"}},"required":["status"]},
           "then": {"required":["score"]}
