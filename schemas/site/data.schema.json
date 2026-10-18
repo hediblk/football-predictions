@@ -766,10 +766,11 @@
         {"type":"integer","minimum":0}, {"enum":["h","a"]},
         {"$ref":"#/$defs/probability"}, {"$ref":"#/$defs/probability"}, {"$ref":"#/$defs/probability"},
         {"$ref":"#/$defs/string"}, {"$ref":"#/$defs/string"}, {"$ref":"#/$defs/string"}, {"$ref":"#/$defs/string"},
+        {"anyOf":[{"$ref":"#/$defs/string"},{"type":"null"}]},
         {"anyOf":[{"$ref":"#/$defs/string"},{"type":"null"}]}
       ],
       "minItems": 10,
-      "maxItems": 10
+      "maxItems": 11
     },
     "matchPlayer": {
       "type": "object",
@@ -1106,6 +1107,73 @@
       "type": "object",
       "propertyNames": {"pattern":"^[1-9][0-9]*$"},
       "additionalProperties": {"$ref":"#/$defs/crest"}
+    },
+    "profileMetric": {
+      "type": "array",
+      "prefixItems": [
+        {"type":"number"}, {"type":"integer","minimum":1}, {"type":"integer","minimum":-2,"maximum":2}, {"type":"integer","minimum":1}
+      ],
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "countPair": {"type":"array","items":{"type":"integer","minimum":0},"minItems":2,"maxItems":2},
+    "profile": {
+      "type": "object",
+      "properties": {
+        "league": {"$ref":"#/$defs/leagueSlug"},
+        "games": {"type":"integer","minimum":1},
+        "seasons": {"type":"array","items":{"type":"integer","minimum":2000},"minItems":1},
+        "from": {"$ref":"#/$defs/date"},
+        "to": {"$ref":"#/$defs/date"},
+        "metrics": {"type":"object","propertyNames":{"enum":["chances","chances_against","finishing","saving","set_pieces","set_pieces_against","headers","headers_against","long_shots","crosses","crosses_against","through_balls","through_balls_against","dribbles","dribbles_against","cards","offsides","possession","fouls","offside_trap","long_shot_share","cross_share"]},"additionalProperties":{"$ref":"#/$defs/profileMetric"}},
+        "form": {
+          "type": "object",
+          "properties": {
+            "games": {"$ref":"#/$defs/countPair"},
+            "xgd": {"type":"array","items":{"type":"number"},"minItems":2,"maxItems":2},
+            "ppg": {"type":"array","items":{"type":"number","minimum":0,"maximum":3},"minItems":2,"maxItems":2}
+          },
+          "required": ["games","xgd","ppg"]
+        },
+        "state": {
+          "type": "object",
+          "properties": {
+            "minutes": {"type":"array","items":{"$ref":"#/$defs/probability"},"minItems":3,"maxItems":3},
+            "late": {"$ref":"#/$defs/countPair"},
+            "led": {"$ref":"#/$defs/countPair"},
+            "trailed": {"$ref":"#/$defs/countPair"},
+            "first": {"$ref":"#/$defs/countPair"}
+          },
+          "required": ["minutes","late","led","trailed","first"]
+        },
+        "run_in": {
+          "type": "object",
+          "properties": {
+            "played": {"anyOf":[{"$ref":"#/$defs/percentage"},{"type":"null"}]},
+            "left": {"anyOf":[{"$ref":"#/$defs/percentage"},{"type":"null"}]},
+            "games": {"type":"integer","minimum":0},
+            "rank": {"anyOf":[{"type":"integer","minimum":1},{"type":"null"}]}
+          },
+          "required": ["played","left","games","rank"]
+        }
+      },
+      "required": ["league","games","seasons","from","to","metrics","form","state","run_in"]
+    },
+    "profiles": {
+      "type": "object",
+      "properties": {
+        "generated_at": {"$ref":"#/$defs/timestamp"},
+        "season": {"$ref":"#/$defs/season"},
+        "window": {"type":"integer","minimum":1},
+        "form": {"type":"integer","minimum":1},
+        "leagues": {
+          "type": "object",
+          "propertyNames": {"$ref":"#/$defs/leagueSlug"},
+          "additionalProperties": {"type":"object","propertyNames":{"enum":["chances","chances_against","finishing","saving","set_pieces","set_pieces_against","headers","headers_against","long_shots","crosses","crosses_against","through_balls","through_balls_against","dribbles","dribbles_against","cards","offsides","possession","fouls","offside_trap","long_shot_share","cross_share"]},"additionalProperties":{"type":"number"}}
+        },
+        "clubs": {"type":"object","propertyNames":{"pattern":"^[1-9][0-9]*$"},"additionalProperties":{"$ref":"#/$defs/profile"}}
+      },
+      "required": ["generated_at","season","window","form","leagues","clubs"]
     },
     "historyTeam": {
       "type": "object",

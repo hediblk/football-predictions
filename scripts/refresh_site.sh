@@ -49,6 +49,7 @@ trap 'rm -rf "$candidate"' EXIT
 cp -R site/data "$candidate/data" || exit 1
 python scripts/build_site_data.py --src "$OUT" --dest "$candidate/data" || exit 1
 python scripts/fetch_match_events.py --src "$OUT" --data "$candidate/data" || warn "Match event ingestion failed; forecasts are still published."
+python scripts/build_club_profiles.py --data "$candidate/data" || warn "Club profiles failed; keeping the previous profiles."
 # Squad publication is optional: build in isolation so any failure retains every old file and timestamp.
 squad_candidate=$(mktemp -d) || exit 1
 cp -R "$candidate/data" "$squad_candidate/data" || exit 1

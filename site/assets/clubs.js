@@ -265,14 +265,15 @@ async function showProfile(club, comparison, squad) {
   // A club from outside the five leagues has no league table here: its page follows its Champions League season.
   const domestic = Boolean(club.league);
   const comp = compBySlug[club.league || "champions-league"];
-  const [table, leagueMatches, ucl, uclMatches, weekly] = (await Promise.all([
+  const [table, leagueMatches, ucl, uclMatches, weekly, profiles] = (await Promise.all([
     domestic ? getJSON(`${club.league}.json`) : null,
     domestic ? getJSON(`matches/${club.league}.json`).catch(() => null) : null,
     club.ucl ? getJSON("champions-league.json").catch((err) => { if (domestic) return null; throw err; }) : null,
     club.ucl ? getJSON("matches/champions-league.json").catch(() => null) : null,
     getJSON(`history/${clubs.season.split("/")[0]}/clubs.json`).catch(() => null),
+    domestic ? getJSON("profiles.json").catch(() => null) : null,
     loadForm().catch(() => {}),
-  ])).slice(0, 5);
+  ])).slice(0, 6);
   const uclTeam = ucl ? ucl.teams.find((t) => t.id === club.id) : null;
   const team = domestic ? table.teams.find((t) => t.id === club.id) : uclTeam;
   const mine = (file, slug) => (file ? file.matches : [])
@@ -314,6 +315,7 @@ async function showProfile(club, comparison, squad) {
 
   renderSeason(club, main, domestic ? "League" : "Champions League", domestic ? europe : [], uclTeam);
   renderGoals(main, domestic ? "League games" : "Champions League games", club.name);
+  renderProfile(club, profiles?.season === clubs.season ? profiles : null);
   renderNext(all);
   renderStakes(club, [
     domestic && leagueMatches && { label: comp.label, team, file: leagueMatches, keys: [leagueMetric(team)].filter(Boolean), words: STAKE_WORDS.league },
@@ -387,6 +389,80 @@ function renderGoals(league, label, clubName) {
     <tbody>${line("Scored at home", true, 0)}${line("Scored away", false, 0)}${line("Conceded at home", true, 1)}${line("Conceded away", false, 1)}</tbody></table></div>
     <p class="note">${label}. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>
     ${rollingXg({ name: clubName }, league)}`;
+}
+
+/* ---------- how they play ---------- */
+const xgRate = (v) => `${dec(v, 2)} xG`;
+const signed = (v, d = 2) => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(d)}`;
+/* key: [name, what is measured, value format]; per game unless the format says otherwise */
+const TRAITS = {
+  chances: ["Creating chances", "non-penalty xG", xgRate],
+  chances_against: ["Stopping chances", "non-penalty xG conceded", xgRate],
+  finishing: ["Finishing", "non-penalty goals minus their xG", (v) => signed(v)],
+  saving: ["Keeping shots out", "non-penalty goals conceded minus their xG", (v) => signed(v)],
+  set_pieces: ["Attacking set pieces", "xG from corners and free kicks", xgRate],
+  set_pieces_against: ["Defending set pieces", "set-piece xG conceded", xgRate],
+  headers: ["Headed chances", "xG from headers", xgRate],
+  headers_against: ["Defending headers", "headed xG conceded", xgRate],
+  long_shots: ["Long-shot chances", "xG from outside the box", xgRate],
+  crosses: ["Chances from crosses", "open-play xG straight after a cross", xgRate],
+  crosses_against: ["Defending crosses", "open-play xG conceded after a cross", xgRate],
+  through_balls: ["Chances from through balls", "open-play xG straight after a through ball", xgRate],
+  through_balls_against: ["Defending through balls", "open-play xG conceded after a through ball", xgRate],
+  dribbles: ["Chances from dribbles", "open-play xG straight after a take-on", xgRate],
+  dribbles_against: ["Defending against dribblers", "open-play xG conceded after a take-on", xgRate],
+  cards: ["Avoiding cards", "yellow and red cards", (v) => dec(v, 1)],
+  offsides: ["Avoiding offside", "times caught offside", (v) => dec(v, 1)],
+};
+/* key: [tag when high, tag when low (none: no tag), what is measured, value format] */
+const STYLES = {
+  possession: ["Keep the ball", "Play without the ball", "possession", (v) => `${dec(v, 1)}%`],
+  fouls: ["Aggressive", "Non-aggressive", "fouls a game", (v) => dec(v, 1)],
+  offside_trap: ["Play the offside trap", null, "opponents caught offside a game", (v) => dec(v, 1)],
+  long_shot_share: ["Shoot from distance", "Work the ball into the box", "share of shots from outside the box", (v) => `${Math.round(v * 100)}%`],
+  cross_share: ["Attack with crosses", "Attack through the middle", "share of open-play shots straight after a cross", (v) => `${Math.round(v * 100)}%`],
+};
+const LEVELS = { 2: "Very strong", 1: "Strong", "-1": "Weak", "-2": "Very weak" };
+
+function renderProfile(club, profiles) {
+  const p = profiles?.clubs[club.id];
+  $("p-profile-frame").hidden = !p;
+  if (!p) return;
+  const league = profiles.leagues[p.league];
+  const members = clubs.clubs.filter((c) => c.league === p.league).length;
+  const trait = ([key, [value, rank, level]]) => `<li><span class="pf-name">${TRAITS[key][0]}<small>${TRAITS[key][2](value)} a game · ${ordinal(rank)} of ${members}</small></span>
+    <span class="pf-lv l${level}">${LEVELS[level]}</span></li>`;
+  const traits = Object.entries(p.metrics).filter(([key, m]) => TRAITS[key] && m[2]);
+  const order = (sign) => traits.filter(([, m]) => m[2] * sign > 0).sort((a, b) => (b[1][2] - a[1][2]) * sign || a[1][1] - b[1][1]);
+  const list = (rows, empty) => rows.length ? `<ul class="pf-traits">${rows.map(trait).join("")}</ul>` : `<p class="note">${empty}</p>`;
+  const tags = Object.entries(p.metrics).filter(([key, m]) => STYLES[key] && STYLES[key][m[2] > 0 ? 0 : 1] && m[2])
+    .map(([key, [value, , level]]) => `<li data-tip="${esc(`${STYLES[key][2]}: <b>${STYLES[key][3](value)}</b> · league average ${STYLES[key][3](league[key])}`)}" tabindex="0">${STYLES[key][level > 0 ? 0 : 1]}</li>`);
+  const box = p.metrics.possession?.[3] || 0;
+  const r = p.run_in, s = p.state, f = p.form;
+  const share = (v) => `${Math.round(v * 100)}%`;
+  const context = [
+    r.left != null && ["Run-in", `Opponents still to play rate <b>${dec(r.left)}</b> on average, against <b>${dec(r.played)}</b> so far: the <b>${ordinal(r.rank)}</b>-hardest run-in of ${members}, with ${r.games} league game${r.games === 1 ? "" : "s"} left.`],
+    ["Form", `Last ${f.games[0]}: <b>${signed(f.xgd[0])}</b> non-penalty xG difference and <b>${dec(f.ppg[0], 2)}</b> points a game. Over all ${f.games[1]}: ${signed(f.xgd[1])} and ${dec(f.ppg[1], 2)}.`],
+    ["Game state", `Ahead for <b>${share(s.minutes[0])}</b> of the minutes, level ${share(s.minutes[1])}, behind ${share(s.minutes[2])}. Won ${s.led[1]} of the ${s.led[0]} games they led, avoided defeat in ${s.trailed[1]} of the ${s.trailed[0]} they trailed, and won ${s.first[1]} of ${s.first[0]} after scoring first.`],
+    ["After 75'", `Late goals won <b>${s.late[0]}</b> point${s.late[0] === 1 ? "" : "s"} and lost <b>${s.late[1]}</b> against the score at 75 minutes.`],
+  ].filter(Boolean);
+  const every = Object.entries(p.metrics).map(([key, [value, rank, level, games]]) => {
+    const [name, what, fmt] = TRAITS[key] ? [TRAITS[key][0], `${TRAITS[key][1]} a game`, TRAITS[key][2]] : [STYLES[key][0], STYLES[key][2], STYLES[key][3]];
+    return `<tr><td class="l">${name}<small>${what}</small></td><td class="b">${fmt(value)}</td><td>${fmt(league[key])}</td><td>${ordinal(rank)}</td><td>${level ? (TRAITS[key] ? LEVELS[level] : STYLES[key][level > 0 ? 0 : 1] || "–") : "–"}</td><td>${games}</td></tr>`;
+  }).join("");
+  const day = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+  const span = `${day(p.from)} – ${day(p.to)}`;
+  $("p-profile").innerHTML = `<p class="lead">Last <b>${p.games}</b> ${esc(leagueName(p.league))} game${p.games === 1 ? "" : "s"} · ${span} · against the other ${members - 1} clubs</p>
+    <div class="pair">
+      <section><h3 class="dgroup">Strengths</h3>${list(order(1), "Nothing stands out yet.")}</section>
+      <section><h3 class="dgroup">Weaknesses</h3>${list(order(-1), "Nothing stands out yet.")}</section>
+    </div>
+    <h3 class="dgroup">Style</h3>${tags.length ? `<ul class="pf-style">${tags.join("")}</ul>` : `<p class="note">Close to the league average in every style measure.</p>`}
+    <dl class="pf-context">${context.map(([term, text]) => `<dt>${term}</dt><dd>${text}</dd>`).join("")}</dl>
+    <details class="pf-every"><summary>Every measure</summary><div class="scroll"><table class="board stats pf-table">
+      <thead><tr><th class="l">Measure</th><th>Club</th><th>League</th><th>Rank</th><th>Label</th><th>Games</th></tr></thead>
+      <tbody>${every}</tbody></table></div></details>
+    <p class="note">From Understat's shots (xG, situation, body part and the action just before each shot) in league games, and ESPN's match stats for possession, fouls, offsides and cards${box < p.games ? `, which cover ${box} of these games` : ""}. Each rate is pulled toward the league average by how much it swings from game to game, so a short run rarely earns a label, and ranks use those pulled rates (best first; highest first for style measures). A label marks a club at least 0.8 (strong) or 1.5 (very strong) standard deviations of the real spread between clubs from its league's average. Not adjusted for opponents; game state is approximate, from Understat's shot minutes. Strength ratings in the run-in are the live ones shown above. Nothing here feeds the forecasts.</p>`;
 }
 
 function clubRow(m) {
