@@ -279,6 +279,19 @@ def validate_clubs(data):
             set(data["featured"]) <= {club["id"] for club in clubs}, "invalid featured club reference")
 
 
+def validate_profiles(data):
+    for club, profile in data["clubs"].items():
+        require(profile["from"] <= profile["to"], f"profile {club} dates are reversed")
+        require(profile["form"]["games"][0] <= profile["form"]["games"][1] == profile["games"] <= data["window"],
+                f"profile {club} game counts are inconsistent")
+        close(sum(profile["state"]["minutes"]), 1, 1e-3, f"profile {club} game-state minute shares")
+        for key in ("led", "trailed", "first"):
+            require(profile["state"][key][1] <= profile["state"][key][0], f"profile {club} {key} count exceeds its games")
+        for key, (_, rank, _, games) in profile["metrics"].items():
+            require(games <= profile["games"], f"profile {club} {key} covers more games than the window")
+            require(key in data["leagues"][profile["league"]], f"profile {club} {key} has no league mean")
+
+
 def validate_history(data):
     unique(data["teams"], "id")
     require(data["dates"] == sorted(set(data["dates"])), "history dates must strictly increase")
@@ -595,6 +608,8 @@ def validate_payload(data, family):
         validate_scorecard(data)
     elif family == "clubs":
         validate_clubs(data)
+    elif family == "profiles":
+        validate_profiles(data)
     elif family == "history":
         validate_history(data)
     elif family == "club_history":
@@ -610,7 +625,7 @@ def validate_payload(data, family):
 def file_family(path):
     parts = path.parts
     if len(parts) == 1:
-        if path.stem in ("index", "clubs", "crests", "scorecard"):
+        if path.stem in ("index", "clubs", "crests", "scorecard", "profiles"):
             return path.stem
         if path.stem in COMPETITIONS:
             return "ucl" if path.stem == "champions-league" else "league"
@@ -694,6 +709,11 @@ def validate_site_data(data_dir, *, site_dir=None):
     for club in files.get("clubs.json", {}).get("clubs", []):
         if club["league"] is not None and f"{club['league']}.json" not in files:
             errors.append(f"clubs.json: unresolved league {club['league']}")
+    profiles = files.get("profiles.json")
+    if profiles and profiles["season"] == files.get("clubs.json", {}).get("season"):
+        leagues = {club["id"]: club["league"] for club in files["clubs.json"]["clubs"]}
+        if any(leagues.get(int(club)) != profile["league"] for club, profile in profiles["clubs"].items()):
+            errors.append("profiles.json: club identity or league differs from clubs.json")
     for name, data in files.items():
         parts = Path(name).parts
         if parts[0] != "match":

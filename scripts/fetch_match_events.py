@@ -37,7 +37,8 @@ def derive(payload, fixture, understat_id, fetched_at):
             if int(shot["match_id"]) != understat_id or shot["h_a"] != side:
                 raise ValueError("shot identity differs from requested match or side")
             shots.append([int(shot["minute"]), side, float(shot["X"]), float(shot["Y"]), float(shot["xG"]),
-                          shot["result"], shot["situation"], shot["shotType"], shot["player"], shot["player_assisted"]])
+                          shot["result"], shot["situation"], shot["shotType"], shot["player"], shot["player_assisted"],
+                          shot.get("lastAction")])
         players[side] = [{
             "id": int(row["player_id"]), "player": row["player"], "minutes": int(row["time"]),
             "position": row["position"], "shots": int(row["shots"]), "goals": int(row["goals"]),
@@ -94,7 +95,8 @@ def fetch_events(src, data_dir, cache_dir):
                         raise ValueError("published fixture differs from model output")
                     path = data_dir / "match" / season / slug / f"{fixture['id']}.json"
                     existing = json.loads(path.read_text()) if path.exists() else {}
-                    if "understat" in existing.get("sources", {}):
+                    # Files derived before shots kept Understat's last action are derived once more.
+                    if "understat" in existing.get("sources", {}) and all(len(shot) == 11 for shot in existing.get("shots", [])):
                         continue
                     understat_id = int(row["understat_id"])
                     cache_path = cache_dir / f"{understat_id}.json"
