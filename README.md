@@ -11,6 +11,8 @@ Floodlight is a website with forecasts for the Premier League, La Liga, Bundesli
 
 This repository holds both the site (`site/`, see [Website](#website)) and the model behind it (`src/standing_prediction` and `packages/`). The rest of this README describes the model.
 
+The [project opportunities research](docs/project-opportunities-2026-10-19.md) explores additional features, model experiments, data sources and UI ideas, separately from the implementation roadmap.
+
 ## The model
 
 ![La Liga final-position probability heatmap](docs/laliga-forecast.png)
