@@ -190,3 +190,40 @@ Browser preferences, search, comparison controls and additional Python-generated
 | Build a larger football product | P7/P10: qualification paths and a live race centre | More competition rules, timely data and execution support |
 
 These are choices to evaluate, not an ordered backlog. P1 is the clearest candidate for a signature feature because it lets supporters explore the questions that brought them to Floodlight; M1 is the clearest new modeling study. Neither requires assuming that every additional statistic or a more complex model will improve forecasts.
+
+**8. Feasibility check against the code**
+
+A second review on 19 October 2026 checked the proposals above against the implementation and current exports.
+
+| Item | Finding |
+| --- | --- |
+| P1 sandbox | `simulate_season_scores(..., track=...)` already returns each simulation's tracked fixture outcomes and final places, and `stakes.py` builds on them. Exporting joint paths is therefore an exporter change inside [ADR 0001](adr/0001-site-model-boundary.md). Size limits the scope: a league publishes 10,000 simulations, so the next two rounds (about 20 fixtures) take roughly 200 KB as one byte per outcome, while all 311 remaining Premier League fixtures would take about 3 MB. Each fixed result keeps about a third of the paths: about 370 remain after three selections and about 40 after five. Start with the next one or two rounds, add simulated points if tables are shown, and display the remaining sample. |
+| P4 points targets | Simulated final points are already returned with `return_details`, so a final-points distribution and the chances of reaching set totals are small exporter additions. Clinching dates need tables for every remaining round and remain large. |
+| P5 matchup lab | A first version limited to the 36 Champions League clubs is about 3,800 ordered matchups across three venue types, a small precomputed file. Wider coverage grows quadratically. |
+| P8 time machine | Dated `site/data/history` snapshots already exist from the backfill and every refresh, so this is mainly a browsing feature. |
+| M1 context-adjusted xG | The committed [shot archive](../data/shots/README.md) covers 2025/26 only; earlier seasons need the local Understat match cache. Shot rows have minutes but no dismissals, so red-card timing must come from match sheets or ESPN events first. The confirmed reference is the same authors' [2025 JQAS paper](https://www.degruyterbrill.com/document/doi/10.1515/jqas-2024-0162/pdf). The Sage link above returned HTTP 403 and was not verified. |
+| Sources | The football-data.co.uk Pinnacle notice (23 July 2025) and its private-use restriction, and Sports Reference's FBref announcement (20 January 2026), are confirmed. The Sports Reference link is a blog category page that may rotate; the post is titled "FBref & Stathead Data Update". |
+
+On 19 October 2026 the user decided not to pursue in-play probabilities (P10) or a rest and congestion adjustment (M4).
+
+**9. Additional opportunities**
+
+These complement the catalogue above and avoid repeating its items.
+
+**M6. Three more domestic leagues for the European model — medium.** football-data.org's free tier, already used here, [also covers](https://www.thestatsapi.com/blog/football-data-org-free-tier-limits-2026) the Championship (`ELC`), Eredivisie (`DED`) and Primeira Liga (`PPL`). Domestic results for clubs such as PSV, Feyenoord, Ajax, Benfica, Porto and Sporting would join the connected Champions League fit, which today rates them mainly through European games. The Championship also supplies evidence for the parked promoted-team priors. Understat has no xG for these leagues, so they stay goals and Elo only; compare Champions League replay log loss with and without them on identical fixtures. Check the current competition list and request quota before building on it.
+
+**M7. Pi-rating benchmark — small.** The ML literature finds [pi-ratings with gradient-boosted trees strongest when only goals are available](https://arxiv.org/abs/2403.07669), and they ranked well in the [2017 and 2023 Soccer Prediction Challenges](https://mlanthology.org/mlj/2024/yeung2024mlj-evaluating). Add pi-ratings as a calibration-dataset benchmark and as a candidate fourth blend component, judged on log loss over the existing week-ahead dataset. It is a cheap check that the current blend is not missing a known signal.
+
+**M8. Goal-total calibration against total-goals markets — small.** The site publishes `o25` and `btts`, but scoring has focused on 1X2. football-data.co.uk still records market-average total-goals and Asian handicap prices outside its unreliable Pinnacle columns. Use them to check whether the score distribution's totals are calibrated, within that source's private-use terms. Treat this as evaluation, not a new forecast input.
+
+**P13. Prediction-market prices as an outside yardstick — small to medium.** The roadmap parks title outrights because The Odds API has none. Polymarket's public Gamma API needs no key and currently lists, for example, a [Ligue 1 2027 champion market](https://polymarket.com/event/ligue-1-2027-champion-20260701201053335) and Premier League and Ligue 1 Champions League qualification markets; its 2025/26 Premier League winner market traded over US$300 million. Kalshi lists [soccer futures](https://kalshi.com/category/sports/soccer/all/futures) as well. Archive dated snapshots like `data/odds/`, keep only quoted outcomes with real bids and asks (placeholder outcomes show 0.50), normalise each event, and record liquidity. Coverage and depth vary by league and market, so use these prices for comparison and a "market says" column before any modeling role.
+
+**P14. Forecast ingredients — small.** Upcoming fixtures already export the blended `p` and the Elo `elo` probabilities. Also exporting the Dixon–Coles, xG and market components would let the match page show what each part of the model says before blending. This is a single-forecast view, distinct from P2's explanation of changes between dates.
+
+**P15. Automatic social posts — small.** Matches, rounds and races already have downloadable cards. A step after the daily refresh could post the day's cards to Bluesky through its API, with an app password stored as a repository secret, following [scheduled GitHub Actions bot examples](https://dev.to/philnash/building-bluesky-bots-with-github-actions-19nl). Posting publishes externally, so the account, cadence and wording are the user's decision.
+
+| Additional source | Use | Limits |
+| --- | --- | --- |
+| [ClubElo CSV API](https://soccerdata.readthedocs.io/en/latest/datasources/ClubElo.html) | Independent European club ratings and history for comparing the connected model's league levels and clubs outside the five leagues. | No published terms or rate limits found; cache politely. |
+| Polymarket and Kalshi public market data | Title, qualification and Champions League winner yardsticks (P13). | Uneven liquidity, placeholder outcomes and possible regional restrictions; record observation times. |
+| [Transfermarkt squad values](https://arxiv.org/html/2411.09085v1) | Possible preseason or promoted-team prior: studies find signal roughly at Elo level, below betting odds. | Scraping terms risk; only worth testing if the parked promoted-team work resumes. |
