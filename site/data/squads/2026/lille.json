@@ -15,16 +15,16 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:24.954517+00:00",
-    "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
-    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+    "observed_at": "2026-10-21T06:06:14.726379+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
+    "snapshot": "data/players/rosters/2026-10-21/CL.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 27,
-    "matched": 23
+    "players": 26,
+    "matched": 22
   },
   "ideal_xi": {
     "formation": "4-3-3",
@@ -78,27 +78,6 @@
     ]
   },
   "players": [
-    {
-      "id": 9222,
-      "name": "Arnaud Bodart",
-      "dob": "1998-03-11",
-      "provider_position": "Goalkeeper",
-      "status": "matched",
-      "method": "name_and_birth_date",
-      "ea": {
-        "id": 237525,
-        "overall": 72,
-        "positions": [
-          "GK"
-        ],
-        "pace": 72,
-        "shooting": 69,
-        "passing": 70,
-        "dribbling": 72,
-        "defending": 55,
-        "physical": 72
-      }
-    },
     {
       "id": 29890,
       "name": "Berke Özer",
@@ -303,6 +282,16 @@
       }
     },
     {
+      "id": 283794,
+      "name": "Maxima Goffi",
+      "dob": "2008-01-23",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
       "id": 6503,
       "name": "Nabil Bentaleb",
       "dob": "1994-11-24",
@@ -403,16 +392,6 @@
         "defending": 70,
         "physical": 75
       }
-    },
-    {
-      "id": 728,
-      "name": "Mohamed Bayo",
-      "dob": "1993-09-15",
-      "provider_position": "Offence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
     },
     {
       "id": 914,
@@ -630,37 +609,6 @@
       }
     },
     {
-      "id": "observed:uefa:250201725",
-      "name": "Maxima Goffi",
-      "dob": null,
-      "provider_position": null,
-      "status": "observed",
-      "source": "match_sheet",
-      "method": null,
-      "ea": null,
-      "providers": {
-        "uefa": {
-          "ids": [
-            250201725
-          ],
-          "names": [
-            "Maxima Goffi"
-          ]
-        },
-        "understat": {
-          "ids": [
-            13784
-          ],
-          "names": [
-            "Maxima Goffi"
-          ]
-        }
-      },
-      "first_seen": "2026-10-10",
-      "last_seen": "2026-10-17",
-      "reason": "no_name_match"
-    },
-    {
       "id": "observed:understat:9444",
       "name": "Felix Correia",
       "dob": null,
@@ -698,8 +646,8 @@
       "last_seen": "2026-08-28"
     }
   ],
-  "baseline_id": "444e076a24a95323",
-  "generated_at": "2026-10-16T07:26:52.290693+00:00",
+  "baseline_id": "6538c04246a4eb89",
+  "generated_at": "2026-10-21T06:06:22.681647+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -707,17 +655,6 @@
       "covered": 7,
       "fully_mapped": 7,
       "players": {
-        "9222": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 7,
-          "unknown_games": 0,
-          "provider_ids": [],
-          "xg": 0,
-          "xa": 0
-        },
         "29890": {
           "starts": 6,
           "sub": 0,
@@ -846,6 +783,19 @@
           "xg": 0.0,
           "xa": 0.0
         },
+        "283794": {
+          "starts": 1,
+          "sub": 1,
+          "minutes": 159,
+          "share": 0.252381,
+          "known_games": 7,
+          "unknown_games": 0,
+          "provider_ids": [
+            13784
+          ],
+          "xg": 0.102,
+          "xa": 0.0675
+        },
         "6503": {
           "starts": 6,
           "sub": 1,
@@ -910,17 +860,6 @@
           ],
           "xg": 0.0983,
           "xa": 0.0
-        },
-        "728": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 7,
-          "unknown_games": 0,
-          "provider_ids": [],
-          "xg": 0,
-          "xa": 0
         },
         "914": {
           "starts": 1,
@@ -1047,19 +986,6 @@
           ],
           "xg": 0.0,
           "xa": 0.0
-        },
-        "observed:uefa:250201725": {
-          "starts": 1,
-          "sub": 1,
-          "minutes": 159,
-          "share": 0.252381,
-          "known_games": 7,
-          "unknown_games": 0,
-          "provider_ids": [
-            13784
-          ],
-          "xg": 0.102,
-          "xa": 0.0675
         },
         "observed:understat:9444": {
           "starts": 1,
@@ -2132,7 +2058,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": "observed:uefa:250201725"
+              "player": 283794
             },
             {
               "source_id": 12801,
@@ -2161,7 +2087,7 @@
             119460,
             117908,
             9861,
-            "observed:uefa:250201725",
+            283794,
             99722
           ],
           "ideal_started": 7
@@ -2190,7 +2116,7 @@
               "starter": true,
               "xg": 0.10198599100112915,
               "xa": 0.06752936542034149,
-              "player": "observed:uefa:250201725"
+              "player": 283794
             },
             {
               "source_id": 7981,
@@ -2312,7 +2238,7 @@
           ],
           "starters": [
             270728,
-            "observed:uefa:250201725",
+            283794,
             127127,
             192677,
             8435,
@@ -2339,17 +2265,6 @@
       "covered": 2,
       "fully_mapped": 2,
       "players": {
-        "9222": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 2,
-          "unknown_games": 0,
-          "provider_ids": [],
-          "avg_x": null,
-          "avg_y": null
-        },
         "29890": {
           "starts": 2,
           "sub": 0,
@@ -2472,6 +2387,19 @@
           "avg_x": null,
           "avg_y": null
         },
+        "283794": {
+          "starts": 1,
+          "sub": 0,
+          "minutes": 94.5,
+          "share": 0.525,
+          "known_games": 2,
+          "unknown_games": 0,
+          "provider_ids": [
+            250201725
+          ],
+          "avg_x": 0.2794,
+          "avg_y": 0.7314
+        },
         "6503": {
           "starts": 2,
           "sub": 0,
@@ -2536,17 +2464,6 @@
           ],
           "avg_x": 0.3729,
           "avg_y": 0.6168
-        },
-        "728": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 2,
-          "unknown_games": 0,
-          "provider_ids": [],
-          "avg_x": null,
-          "avg_y": null
         },
         "914": {
           "starts": 1,
@@ -2673,19 +2590,6 @@
           ],
           "avg_x": null,
           "avg_y": null
-        },
-        "observed:uefa:250201725": {
-          "starts": 1,
-          "sub": 0,
-          "minutes": 94.5,
-          "share": 0.525,
-          "known_games": 2,
-          "unknown_games": 0,
-          "provider_ids": [
-            250201725
-          ],
-          "avg_x": 0.2794,
-          "avg_y": 0.7314
         },
         "observed:understat:9444": {
           "starts": 0,
@@ -3055,7 +2959,7 @@
               "starter": true,
               "avg_x": 0.2794,
               "avg_y": 0.7314,
-              "player": "observed:uefa:250201725"
+              "player": 283794
             }
           ],
           "starters": [
@@ -3069,7 +2973,7 @@
             119460,
             185196,
             192666,
-            "observed:uefa:250201725"
+            283794
           ],
           "subs": [
             3371,
@@ -3083,5 +2987,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:24.133676+00:00"
+  "usage_generated_at": "2026-10-21T06:06:51.423563+00:00"
 }

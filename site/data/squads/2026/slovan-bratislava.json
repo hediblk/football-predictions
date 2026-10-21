@@ -98,7 +98,30 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
+      "reason": "no_name_match"
+    },
+    {
+      "id": "observed:uefa:250043066",
+      "name": "Kevin Wimmer",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "uefa": {
+          "ids": [
+            250043066
+          ],
+          "names": [
+            "Kevin Wimmer"
+          ]
+        }
+      },
+      "first_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -144,7 +167,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -167,7 +190,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -190,7 +213,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -213,7 +236,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -236,7 +259,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -259,7 +282,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -282,7 +305,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -305,7 +328,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -328,7 +351,76 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
+      "reason": "no_name_match"
+    },
+    {
+      "id": "observed:uefa:250193070",
+      "name": "Alexej Maroš",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "uefa": {
+          "ids": [
+            250193070
+          ],
+          "names": [
+            "Alexej Maroš"
+          ]
+        }
+      },
+      "first_seen": "2026-09-09",
+      "last_seen": "2026-10-20",
+      "reason": "no_name_match"
+    },
+    {
+      "id": "observed:uefa:250210294",
+      "name": "Rahim Ibrahim",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "uefa": {
+          "ids": [
+            250210294
+          ],
+          "names": [
+            "Rahim Ibrahim"
+          ]
+        }
+      },
+      "first_seen": "2026-09-09",
+      "last_seen": "2026-10-20",
+      "reason": "no_name_match"
+    },
+    {
+      "id": "observed:uefa:250210296",
+      "name": "Alasana Yirajang",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": null,
+      "ea": null,
+      "providers": {
+        "uefa": {
+          "ids": [
+            250210296
+          ],
+          "names": [
+            "Alasana Yirajang"
+          ]
+        }
+      },
+      "first_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -351,7 +443,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     },
     {
@@ -374,7 +466,7 @@
         }
       },
       "first_seen": "2026-09-09",
-      "last_seen": "2026-10-14",
+      "last_seen": "2026-10-20",
       "reason": "no_name_match"
     }
   ],
@@ -383,29 +475,42 @@
   "usage": {
     "champions-league": {
       "source": "uefa",
-      "games": 2,
-      "covered": 2,
-      "fully_mapped": 0,
+      "games": 3,
+      "covered": 3,
+      "fully_mapped": 1,
       "players": {
         "observed:uefa:250013022": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 141.1,
-          "share": 0.783889,
-          "known_games": 2,
+          "minutes": 196.3,
+          "share": 0.727037,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250013022
           ],
-          "avg_x": 0.4788,
-          "avg_y": 0.7084
+          "avg_x": 0.4616,
+          "avg_y": 0.7197
+        },
+        "observed:uefa:250043066": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 31.0,
+          "share": 0.114815,
+          "known_games": 2,
+          "unknown_games": 1,
+          "provider_ids": [
+            250043066
+          ],
+          "avg_x": null,
+          "avg_y": null
         },
         "observed:uefa:250050391": {
           "starts": 2,
           "sub": 0,
           "minutes": 161.3,
-          "share": 0.896111,
-          "known_games": 2,
+          "share": 0.597407,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250050391
@@ -414,63 +519,63 @@
           "avg_y": 0.4778
         },
         "observed:uefa:250061721": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 117.2,
-          "share": 0.651111,
-          "known_games": 2,
+          "minutes": 210.3,
+          "share": 0.778889,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250061721
           ],
-          "avg_x": 0.2936,
-          "avg_y": 0.5753
+          "avg_x": 0.2842,
+          "avg_y": 0.5779
         },
         "observed:uefa:250105502": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 188.8,
-          "share": 1.048889,
-          "known_games": 2,
+          "minutes": 281.9,
+          "share": 1.044074,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250105502
           ],
-          "avg_x": 0.2999,
-          "avg_y": 0.4274
+          "avg_x": 0.288,
+          "avg_y": 0.435
         },
         "observed:uefa:250114171": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 188.8,
-          "share": 1.048889,
-          "known_games": 2,
+          "minutes": 281.9,
+          "share": 1.044074,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250114171
           ],
-          "avg_x": 0.373,
-          "avg_y": 0.4991
+          "avg_x": 0.3572,
+          "avg_y": 0.515
         },
         "observed:uefa:250116653": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 168.5,
-          "share": 0.936111,
-          "known_games": 2,
+          "minutes": 250.9,
+          "share": 0.929259,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250116653
           ],
-          "avg_x": 0.3346,
-          "avg_y": 0.2892
+          "avg_x": 0.32,
+          "avg_y": 0.3001
         },
         "observed:uefa:250116759": {
           "starts": 1,
-          "sub": 1,
-          "minutes": 128.5,
-          "share": 0.713889,
-          "known_games": 2,
+          "sub": 2,
+          "minutes": 152.4,
+          "share": 0.564444,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250116759
@@ -479,63 +584,102 @@
           "avg_y": 0.4609
         },
         "observed:uefa:250131541": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 188.8,
-          "share": 1.048889,
-          "known_games": 2,
+          "minutes": 281.9,
+          "share": 1.044074,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250131541
           ],
-          "avg_x": 0.3483,
-          "avg_y": 0.7276
+          "avg_x": 0.3333,
+          "avg_y": 0.7289
         },
         "observed:uefa:250139101": {
-          "starts": 0,
+          "starts": 1,
           "sub": 2,
-          "minutes": 33.1,
-          "share": 0.183889,
-          "known_games": 2,
+          "minutes": 102.6,
+          "share": 0.38,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250139101
           ],
-          "avg_x": null,
-          "avg_y": null
+          "avg_x": 0.3438,
+          "avg_y": 0.4535
         },
         "observed:uefa:250157134": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 188.8,
-          "share": 1.048889,
-          "known_games": 2,
+          "minutes": 281.9,
+          "share": 1.044074,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250157134
           ],
-          "avg_x": 0.0948,
-          "avg_y": 0.5041
+          "avg_x": 0.0876,
+          "avg_y": 0.5052
         },
         "observed:uefa:250183092": {
-          "starts": 0,
+          "starts": 1,
           "sub": 2,
-          "minutes": 47.4,
-          "share": 0.263333,
-          "known_games": 2,
+          "minutes": 140.5,
+          "share": 0.52037,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250183092
+          ],
+          "avg_x": 0.4675,
+          "avg_y": 0.4788
+        },
+        "observed:uefa:250193070": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 36.6,
+          "share": 0.135556,
+          "known_games": 2,
+          "unknown_games": 1,
+          "provider_ids": [
+            250193070
+          ],
+          "avg_x": null,
+          "avg_y": null
+        },
+        "observed:uefa:250210294": {
+          "starts": 2,
+          "sub": 0,
+          "minutes": 129.5,
+          "share": 0.47963,
+          "known_games": 2,
+          "unknown_games": 1,
+          "provider_ids": [
+            250210294
+          ],
+          "avg_x": 0.3916,
+          "avg_y": 0.4933
+        },
+        "observed:uefa:250210296": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 52.7,
+          "share": 0.195185,
+          "known_games": 2,
+          "unknown_games": 1,
+          "provider_ids": [
+            250210296
           ],
           "avg_x": null,
           "avg_y": null
         },
         "observed:uefa:250221031": {
           "starts": 2,
-          "sub": 0,
-          "minutes": 155.6,
-          "share": 0.864444,
-          "known_games": 2,
+          "sub": 1,
+          "minutes": 179.2,
+          "share": 0.663704,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250221031
@@ -544,17 +688,17 @@
           "avg_y": 0.5247
         },
         "observed:uefa:250223119": {
-          "starts": 2,
+          "starts": 3,
           "sub": 0,
-          "minutes": 174.3,
-          "share": 0.968333,
-          "known_games": 2,
+          "minutes": 243.5,
+          "share": 0.901852,
+          "known_games": 3,
           "unknown_games": 0,
           "provider_ids": [
             250223119
           ],
-          "avg_x": 0.4766,
-          "avg_y": 0.325
+          "avg_x": 0.4514,
+          "avg_y": 0.3392
         }
       },
       "most_used_xi": {
@@ -714,7 +858,7 @@
               "name": "Alexej Maroš",
               "minutes": 12.7,
               "starter": false,
-              "player": null
+              "player": "observed:uefa:250193070"
             },
             {
               "source_id": 250210294,
@@ -723,7 +867,7 @@
               "starter": true,
               "avg_x": 0.3942,
               "avg_y": 0.407,
-              "player": null
+              "player": "observed:uefa:250210294"
             },
             {
               "source_id": 250221031,
@@ -760,13 +904,15 @@
             "observed:uefa:250116653",
             "observed:uefa:250131541",
             "observed:uefa:250157134",
+            "observed:uefa:250210294",
             "observed:uefa:250221031",
             "observed:uefa:250223119"
           ],
           "subs": [
             "observed:uefa:250116759",
             "observed:uefa:250139101",
-            "observed:uefa:250183092"
+            "observed:uefa:250183092",
+            "observed:uefa:250193070"
           ],
           "ideal_started": null
         },
@@ -792,7 +938,7 @@
               "name": "Kevin Wimmer",
               "minutes": 20.3,
               "starter": false,
-              "player": null
+              "player": "observed:uefa:250043066"
             },
             {
               "source_id": 250050391,
@@ -892,7 +1038,7 @@
               "name": "Alasana Yirajang",
               "minutes": 14.8,
               "starter": false,
-              "player": null
+              "player": "observed:uefa:250210296"
             },
             {
               "source_id": 250221031,
@@ -927,13 +1073,180 @@
             "observed:uefa:250223119"
           ],
           "subs": [
+            "observed:uefa:250043066",
             "observed:uefa:250139101",
-            "observed:uefa:250183092"
+            "observed:uefa:250183092",
+            "observed:uefa:250210296"
+          ],
+          "ideal_started": null
+        },
+        {
+          "fixture_id": 575364,
+          "kickoff": "2026-10-20T19:00:00+00:00",
+          "opponent_id": 100,
+          "status": "complete",
+          "reason": null,
+          "sheet_sha256": "bf61e87b710d42f83bb2cbce0e5408823bdffbc5f507dac12d46c9cb1e5e0577",
+          "appearances": [
+            {
+              "source_id": 250013022,
+              "name": "Tigran Barseghyan",
+              "minutes": 55.2,
+              "starter": true,
+              "avg_x": 0.427,
+              "avg_y": 0.7423,
+              "player": "observed:uefa:250013022"
+            },
+            {
+              "source_id": 250043066,
+              "name": "Kevin Wimmer",
+              "minutes": 10.7,
+              "starter": false,
+              "player": "observed:uefa:250043066"
+            },
+            {
+              "source_id": 250061721,
+              "name": "Kenan Bajrić",
+              "minutes": 93.1,
+              "starter": true,
+              "avg_x": 0.2655,
+              "avg_y": 0.5832,
+              "player": "observed:uefa:250061721"
+            },
+            {
+              "source_id": 250105502,
+              "name": "Svetozar Marković",
+              "minutes": 93.1,
+              "starter": true,
+              "avg_x": 0.2643,
+              "avg_y": 0.4501,
+              "player": "observed:uefa:250105502"
+            },
+            {
+              "source_id": 250114171,
+              "name": "Peter Pokorný",
+              "minutes": 93.1,
+              "starter": true,
+              "avg_x": 0.3255,
+              "avg_y": 0.5469,
+              "player": "observed:uefa:250114171"
+            },
+            {
+              "source_id": 250116653,
+              "name": "Sandro Cruz",
+              "minutes": 82.4,
+              "starter": true,
+              "avg_x": 0.291,
+              "avg_y": 0.322,
+              "player": "observed:uefa:250116653"
+            },
+            {
+              "source_id": 250116759,
+              "name": "Alen Mustafić",
+              "minutes": 23.9,
+              "starter": false,
+              "player": "observed:uefa:250116759"
+            },
+            {
+              "source_id": 250131541,
+              "name": "César Blackman",
+              "minutes": 93.1,
+              "starter": true,
+              "avg_x": 0.3035,
+              "avg_y": 0.7317,
+              "player": "observed:uefa:250131541"
+            },
+            {
+              "source_id": 250139101,
+              "name": "Artur Gajdoš",
+              "minutes": 69.5,
+              "starter": true,
+              "avg_x": 0.3438,
+              "avg_y": 0.4535,
+              "player": "observed:uefa:250139101"
+            },
+            {
+              "source_id": 250157134,
+              "name": "Dominik Takáč",
+              "minutes": 93.1,
+              "starter": true,
+              "avg_x": 0.0731,
+              "avg_y": 0.5074,
+              "player": "observed:uefa:250157134"
+            },
+            {
+              "source_id": 250183092,
+              "name": "Nino Marcelli",
+              "minutes": 93.1,
+              "starter": true,
+              "avg_x": 0.4675,
+              "avg_y": 0.4788,
+              "player": "observed:uefa:250183092"
+            },
+            {
+              "source_id": 250193070,
+              "name": "Alexej Maroš",
+              "minutes": 23.9,
+              "starter": false,
+              "player": "observed:uefa:250193070"
+            },
+            {
+              "source_id": 250210294,
+              "name": "Rahim Ibrahim",
+              "minutes": 69.2,
+              "starter": true,
+              "avg_x": 0.389,
+              "avg_y": 0.5796,
+              "player": "observed:uefa:250210294"
+            },
+            {
+              "source_id": 250210296,
+              "name": "Alasana Yirajang",
+              "minutes": 37.9,
+              "starter": false,
+              "player": "observed:uefa:250210296"
+            },
+            {
+              "source_id": 250221031,
+              "name": "Cristian Martínez",
+              "minutes": 23.6,
+              "starter": false,
+              "player": "observed:uefa:250221031"
+            },
+            {
+              "source_id": 250223119,
+              "name": "Suleiman Camara",
+              "minutes": 69.2,
+              "starter": true,
+              "avg_x": 0.4009,
+              "avg_y": 0.3677,
+              "player": "observed:uefa:250223119"
+            }
+          ],
+          "starters": [
+            "observed:uefa:250013022",
+            "observed:uefa:250061721",
+            "observed:uefa:250105502",
+            "observed:uefa:250114171",
+            "observed:uefa:250116653",
+            "observed:uefa:250131541",
+            "observed:uefa:250139101",
+            "observed:uefa:250157134",
+            "observed:uefa:250183092",
+            "observed:uefa:250210294",
+            "observed:uefa:250223119"
+          ],
+          "subs": [
+            "observed:uefa:250043066",
+            "observed:uefa:250116759",
+            "observed:uefa:250193070",
+            "observed:uefa:250210296",
+            "observed:uefa:250221031"
           ],
           "ideal_started": null
         }
       ]
     }
   },
-  "usage_generated_at": "2026-10-16T07:03:10.237353+00:00"
+  "usage_generated_at": "2026-10-21T06:07:15.494090+00:00"
 }
