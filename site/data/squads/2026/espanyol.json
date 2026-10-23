@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-15T19:46:39.321664+00:00",
+    "observed_at": "2026-10-23T06:05:09.414892+00:00",
     "url": "https://api.football-data.org/v4/competitions/PD/teams",
-    "sha256": "bf1f579baac7ac64c9991a2282e59215a1f14a3c1e55aeef02b3cf47e17eea79",
-    "snapshot": "data/players/rosters/2026-10-15/PD.json"
+    "sha256": "4896b6489c6e0595cd18fd9c4f911ca932ee58303241aeab1c7ab13ed9fa18b9",
+    "snapshot": "data/players/rosters/2026-10-23/PD.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 26,
+    "players": 25,
     "matched": 24
   },
   "ideal_xi": {
@@ -248,16 +248,6 @@
         "defending": 71,
         "physical": 73
       }
-    },
-    {
-      "id": 191152,
-      "name": "Omar El Hilali",
-      "dob": "2025-06-30",
-      "provider_position": "Defence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
     },
     {
       "id": 276734,
@@ -635,10 +625,46 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:10875",
+      "name": "Omar El Hilali",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 261654,
+        "overall": 75,
+        "positions": [
+          "RB",
+          "CB",
+          "CDM"
+        ],
+        "pace": 82,
+        "shooting": 41,
+        "passing": 65,
+        "dribbling": 67,
+        "defending": 72,
+        "physical": 77
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            10875
+          ],
+          "names": [
+            "Omar El Hilali"
+          ]
+        }
+      },
+      "first_seen": "2026-08-16",
+      "last_seen": "2026-10-17"
     }
   ],
-  "baseline_id": "144f13bac2b2db4f",
-  "generated_at": "2026-10-16T07:26:52.495435+00:00",
+  "baseline_id": "66b7005e9ea9ac99",
+  "generated_at": "2026-10-23T06:05:48.679964+00:00",
   "usage": {
     "la-liga": {
       "source": "understat",
@@ -747,19 +773,6 @@
           ],
           "xg": 0.0,
           "xa": 0.6019
-        },
-        "191152": {
-          "starts": 8,
-          "sub": 0,
-          "minutes": 706,
-          "share": 0.871605,
-          "known_games": 8,
-          "unknown_games": 1,
-          "provider_ids": [
-            10875
-          ],
-          "xg": 0.0,
-          "xa": 0.8931
         },
         "276734": {
           "starts": 8,
@@ -975,6 +988,19 @@
           "provider_ids": [],
           "xg": 0,
           "xa": 0
+        },
+        "observed:understat:10875": {
+          "starts": 8,
+          "sub": 0,
+          "minutes": 706,
+          "share": 0.871605,
+          "known_games": 8,
+          "unknown_games": 1,
+          "provider_ids": [
+            10875
+          ],
+          "xg": 0.0,
+          "xa": 0.8931
         }
       },
       "most_used_xi": {
@@ -991,11 +1017,11 @@
           },
           {
             "role": "CB",
-            "player": 11040
+            "player": 32584
           },
           {
             "role": "CB",
-            "player": 32584
+            "player": 11040
           },
           {
             "role": "RB",
@@ -1003,15 +1029,15 @@
           },
           {
             "role": "CDM",
-            "player": 151031
-          },
-          {
-            "role": "CM",
-            "player": 191403
+            "player": "observed:understat:10875"
           },
           {
             "role": "CM",
             "player": 33652
+          },
+          {
+            "role": "CM",
+            "player": 151031
           },
           {
             "role": "LW",
@@ -1052,7 +1078,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 6149,
@@ -1183,7 +1209,7 @@
           ],
           "starters": [
             3430,
-            191152,
+            "observed:understat:10875",
             32584,
             170833,
             276734,
@@ -1226,7 +1252,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 6149,
@@ -1357,7 +1383,7 @@
           ],
           "starters": [
             3430,
-            191152,
+            "observed:understat:10875",
             32584,
             170833,
             276734,
@@ -1400,7 +1426,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 10449,
@@ -1531,7 +1557,7 @@
           ],
           "starters": [
             3430,
-            191152,
+            "observed:understat:10875",
             79899,
             32584,
             276734,
@@ -1574,7 +1600,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.07849714159965515,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 6168,
@@ -1705,7 +1731,7 @@
           ],
           "starters": [
             3430,
-            191152,
+            "observed:understat:10875",
             11040,
             32584,
             276734,
@@ -1749,7 +1775,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.7909863591194153,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 6168,
@@ -1880,7 +1906,7 @@
           ],
           "starters": [
             3430,
-            191152,
+            "observed:understat:10875",
             11040,
             170833,
             276734,
@@ -1924,7 +1950,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.02358214557170868,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 11924,
@@ -2055,7 +2081,7 @@
           ],
           "starters": [
             3430,
-            191152,
+            "observed:understat:10875",
             170833,
             11040,
             276734,
@@ -2272,7 +2298,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 11924,
@@ -2403,7 +2429,7 @@
           ],
           "starters": [
             150560,
-            191152,
+            "observed:understat:10875",
             170833,
             11040,
             187219,
@@ -2447,7 +2473,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191152
+              "player": "observed:understat:10875"
             },
             {
               "source_id": 10449,
@@ -2578,7 +2604,7 @@
           ],
           "starters": [
             150560,
-            191152,
+            "observed:understat:10875",
             79899,
             11040,
             170833,
@@ -2601,5 +2627,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:13.563259+00:00"
+  "usage_generated_at": "2026-10-23T06:05:58.159008+00:00"
 }

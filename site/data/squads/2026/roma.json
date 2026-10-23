@@ -15,16 +15,16 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-21T06:06:14.726379+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
-    "snapshot": "data/players/rosters/2026-10-21/CL.json"
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "url": "https://api.football-data.org/v4/competitions/SA/teams",
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
   },
   "identity_overrides_sha256": "4d46a369db1a595cbe8ca57910f769d8a0f7ff2a2ac54cbb4cad4a63d395f704",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 25,
-    "matched": 21
+    "players": 26,
+    "matched": 23
   },
   "ideal_xi": {
     "formation": "4-3-3",
@@ -37,7 +37,7 @@
       },
       {
         "role": "LB",
-        "player": 179164
+        "player": 137693
       },
       {
         "role": "CB",
@@ -57,11 +57,11 @@
       },
       {
         "role": "CM",
-        "player": 102395
+        "player": 1848
       },
       {
         "role": "CM",
-        "player": 1848
+        "player": 102395
       },
       {
         "role": "LW",
@@ -73,7 +73,7 @@
       },
       {
         "role": "RW",
-        "player": 149173
+        "player": 179164
       }
     ]
   },
@@ -123,12 +123,23 @@
     {
       "id": 191127,
       "name": "Devis Vásquez",
-      "dob": "2026-06-30",
+      "dob": "1998-05-12",
       "provider_position": "Goalkeeper",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233189,
+        "overall": 72,
+        "positions": [
+          "GK"
+        ],
+        "pace": 72,
+        "shooting": 68,
+        "passing": 71,
+        "dribbling": 75,
+        "defending": 38,
+        "physical": 70
+      }
     },
     {
       "id": 273759,
@@ -253,6 +264,28 @@
         "dribbling": 69,
         "defending": 80,
         "physical": 79
+      }
+    },
+    {
+      "id": 137693,
+      "name": "Anass Salah-Eddine",
+      "dob": "2002-01-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268728,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 78,
+        "shooting": 45,
+        "passing": 71,
+        "dribbling": 77,
+        "defending": 70,
+        "physical": 67
       }
     },
     {
@@ -576,24 +609,24 @@
       }
     },
     {
-      "id": 265218,
-      "name": "Antonio Arena",
-      "dob": null,
-      "provider_position": "Offence",
+      "id": 302405,
+      "name": "Alessandro Di Nunzio",
+      "dob": "2007-04-21",
+      "provider_position": null,
       "status": "unmatched",
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "abf892ba8871651a",
-  "generated_at": "2026-10-21T06:06:22.264979+00:00",
+  "baseline_id": "2052abe260166e94",
+  "generated_at": "2026-10-23T06:05:48.329892+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
       "games": 7,
       "covered": 7,
-      "fully_mapped": 5,
+      "fully_mapped": 6,
       "players": {
         "1829": {
           "starts": 2,
@@ -613,8 +646,8 @@
           "sub": 0,
           "minutes": 450,
           "share": 0.714286,
-          "known_games": 6,
-          "unknown_games": 1,
+          "known_games": 7,
+          "unknown_games": 0,
           "provider_ids": [
             10967
           ],
@@ -626,8 +659,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 2,
+          "known_games": 6,
+          "unknown_games": 1,
           "provider_ids": [],
           "xg": 0,
           "xa": 0
@@ -637,8 +670,8 @@
           "sub": 0,
           "minutes": 0,
           "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 2,
+          "known_games": 6,
+          "unknown_games": 1,
           "provider_ids": [],
           "xg": 0,
           "xa": 0
@@ -661,8 +694,8 @@
           "sub": 0,
           "minutes": 486,
           "share": 0.771429,
-          "known_games": 6,
-          "unknown_games": 1,
+          "known_games": 7,
+          "unknown_games": 0,
           "provider_ids": [
             6159
           ],
@@ -687,8 +720,8 @@
           "sub": 2,
           "minutes": 299,
           "share": 0.474603,
-          "known_games": 5,
-          "unknown_games": 2,
+          "known_games": 6,
+          "unknown_games": 1,
           "provider_ids": [
             8963
           ],
@@ -707,6 +740,17 @@
           ],
           "xg": 0.131,
           "xa": 0.0
+        },
+        "137693": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 6,
+          "unknown_games": 1,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         },
         "149173": {
           "starts": 1,
@@ -791,8 +835,8 @@
           "sub": 0,
           "minutes": 425,
           "share": 0.674603,
-          "known_games": 6,
-          "unknown_games": 1,
+          "known_games": 7,
+          "unknown_games": 0,
           "provider_ids": [
             1168
           ],
@@ -817,8 +861,8 @@
           "sub": 1,
           "minutes": 419,
           "share": 0.665079,
-          "known_games": 6,
-          "unknown_games": 1,
+          "known_games": 7,
+          "unknown_games": 0,
           "provider_ids": [
             7482
           ],
@@ -856,8 +900,8 @@
           "sub": 0,
           "minutes": 503,
           "share": 0.798413,
-          "known_games": 6,
-          "unknown_games": 1,
+          "known_games": 7,
+          "unknown_games": 0,
           "provider_ids": [
             1294
           ],
@@ -869,8 +913,8 @@
           "sub": 0,
           "minutes": 407,
           "share": 0.646032,
-          "known_games": 6,
-          "unknown_games": 1,
+          "known_games": 7,
+          "unknown_games": 0,
           "provider_ids": [
             9749
           ],
@@ -903,16 +947,18 @@
           "xg": 2.2586,
           "xa": 0.8165
         },
-        "265218": {
+        "302405": {
           "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 5,
-          "unknown_games": 2,
-          "provider_ids": [],
-          "xg": 0,
-          "xa": 0
+          "sub": 1,
+          "minutes": 1,
+          "share": 0.001587,
+          "known_games": 6,
+          "unknown_games": 1,
+          "provider_ids": [
+            15133
+          ],
+          "xg": 0.0,
+          "xa": 0.0
         }
       },
       "most_used_xi": {
@@ -2019,8 +2065,8 @@
           "fixture_id": 558572,
           "kickoff": "2026-10-17T18:45:00+00:00",
           "opponent_id": 107,
-          "status": "partial",
-          "reason": "unmapped_appearances",
+          "status": "complete",
+          "reason": null,
           "sheet_sha256": "1882716dc4b17c0adffc9293ad3f8da5acb0e42741c856077c7524a7dcd5be8b",
           "appearances": [
             {
@@ -2165,7 +2211,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": null
+              "player": 302405
             }
           ],
           "starters": [
@@ -2185,9 +2231,10 @@
             1819,
             179164,
             32703,
-            191705
+            191705,
+            302405
           ],
-          "ideal_started": 4
+          "ideal_started": 3
         }
       ]
     },
@@ -2309,6 +2356,17 @@
           ],
           "avg_x": 0.483,
           "avg_y": 0.5185
+        },
+        "137693": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 3,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
         },
         "149173": {
           "starts": 1,
@@ -2503,7 +2561,7 @@
           "avg_x": 0.5842,
           "avg_y": 0.623
         },
-        "265218": {
+        "302405": {
           "starts": 0,
           "sub": 0,
           "minutes": 0,
@@ -2729,7 +2787,7 @@
             261273,
             192382
           ],
-          "ideal_started": 8
+          "ideal_started": 7
         },
         {
           "fixture_id": 575352,
@@ -3064,5 +3122,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-21T06:07:07.794620+00:00"
+  "usage_generated_at": "2026-10-23T06:06:14.747603+00:00"
 }

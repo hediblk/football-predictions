@@ -15,10 +15,10 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-21T06:06:14.726379+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
-    "snapshot": "data/players/rosters/2026-10-21/CL.json"
+    "observed_at": "2026-10-23T06:05:25.396714+00:00",
+    "url": "https://api.football-data.org/v4/competitions/BL1/teams",
+    "sha256": "62814069021113b6f33e8185501ab1b430a5134f68297b5ba6cf0ee690098916",
+    "snapshot": "data/players/rosters/2026-10-23/BL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
@@ -480,30 +480,6 @@
       "reason": "no_name_and_birth_date_match"
     },
     {
-      "id": 246680,
-      "name": "Yanik Spalt",
-      "dob": "2007-09-03",
-      "provider_position": "Midfield",
-      "status": "matched",
-      "method": "name_and_birth_date",
-      "ea": {
-        "id": 81634,
-        "overall": 60,
-        "positions": [
-          "CDM",
-          "LB",
-          "CM",
-          "LM"
-        ],
-        "pace": 65,
-        "shooting": 43,
-        "passing": 56,
-        "dribbling": 58,
-        "defending": 57,
-        "physical": 50
-      }
-    },
-    {
       "id": 263221,
       "name": "Jarzinho Malanga",
       "dob": "2006-07-10",
@@ -687,14 +663,28 @@
       }
     },
     {
-      "id": 191191,
-      "name": "Justin Diehl",
-      "dob": "2024-06-30",
+      "id": 185007,
+      "name": "Badredine Bouanani",
+      "dob": "2004-12-08",
       "provider_position": "Offence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270465,
+        "overall": 74,
+        "positions": [
+          "RM",
+          "RW",
+          "CAM",
+          "ST"
+        ],
+        "pace": 71,
+        "shooting": 68,
+        "passing": 73,
+        "dribbling": 77,
+        "defending": 33,
+        "physical": 58
+      }
     },
     {
       "id": 214587,
@@ -717,10 +707,57 @@
         "defending": 40,
         "physical": 63
       }
+    },
+    {
+      "id": 215510,
+      "name": "Jeremy",
+      "dob": "2005-03-19",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:15035",
+      "name": "Yanik Spalt",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "unique_name",
+      "ea": {
+        "id": 81634,
+        "overall": 60,
+        "positions": [
+          "CDM",
+          "LB",
+          "CM",
+          "LM"
+        ],
+        "pace": 65,
+        "shooting": 43,
+        "passing": 56,
+        "dribbling": 58,
+        "defending": 57,
+        "physical": 50
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            15035
+          ],
+          "names": [
+            "Yanik Spalt"
+          ]
+        }
+      },
+      "first_seen": "2026-09-04",
+      "last_seen": "2026-09-12"
     }
   ],
-  "baseline_id": "5e0d2ef9fbb18ddf",
-  "generated_at": "2026-10-21T06:06:22.252730+00:00",
+  "baseline_id": "082244cc7249021c",
+  "generated_at": "2026-10-23T06:05:48.323248+00:00",
   "usage": {
     "bundesliga": {
       "source": "understat",
@@ -963,19 +1000,6 @@
           "xg": 0.373,
           "xa": 1.5819
         },
-        "246680": {
-          "starts": 0,
-          "sub": 2,
-          "minutes": 57,
-          "share": 0.105556,
-          "known_games": 2,
-          "unknown_games": 4,
-          "provider_ids": [
-            15035
-          ],
-          "xg": 0.0,
-          "xa": 0.0
-        },
         "263221": {
           "starts": null,
           "sub": null,
@@ -1076,7 +1100,7 @@
           "xg": 2.4994,
           "xa": 0.1639
         },
-        "191191": {
+        "185007": {
           "starts": null,
           "sub": null,
           "minutes": null,
@@ -1099,6 +1123,30 @@
           ],
           "xg": 0.2907,
           "xa": 0.4147
+        },
+        "215510": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "observed:understat:15035": {
+          "starts": 0,
+          "sub": 2,
+          "minutes": 57,
+          "share": 0.105556,
+          "known_games": 2,
+          "unknown_games": 4,
+          "provider_ids": [
+            15035
+          ],
+          "xg": 0.0,
+          "xa": 0.0
         }
       },
       "most_used_xi": {
@@ -1448,7 +1496,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 246680
+              "player": "observed:understat:15035"
             },
             {
               "source_id": 12927,
@@ -1492,7 +1540,7 @@
           ],
           "subs": [
             123333,
-            246680,
+            "observed:understat:15035",
             157263,
             33242,
             214587
@@ -1649,7 +1697,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 246680
+              "player": "observed:understat:15035"
             }
           ],
           "starters": [
@@ -1669,7 +1717,7 @@
             6928,
             214587,
             123333,
-            246680
+            "observed:understat:15035"
           ],
           "ideal_started": null
         },
@@ -2426,17 +2474,6 @@
           "avg_x": 0.5923,
           "avg_y": 0.5135
         },
-        "246680": {
-          "starts": null,
-          "sub": null,
-          "minutes": null,
-          "share": null,
-          "known_games": 0,
-          "unknown_games": 3,
-          "provider_ids": [],
-          "avg_x": null,
-          "avg_y": null
-        },
         "263221": {
           "starts": null,
           "sub": null,
@@ -2535,7 +2572,7 @@
           "avg_x": 0.6379,
           "avg_y": 0.5113
         },
-        "191191": {
+        "185007": {
           "starts": null,
           "sub": null,
           "minutes": null,
@@ -2556,6 +2593,28 @@
           "provider_ids": [
             250164450
           ],
+          "avg_x": null,
+          "avg_y": null
+        },
+        "215510": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 3,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
+        },
+        "observed:understat:15035": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 3,
+          "provider_ids": [],
           "avg_x": null,
           "avg_y": null
         }
@@ -3098,5 +3157,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-21T06:07:16.331025+00:00"
+  "usage_generated_at": "2026-10-23T06:06:19.860805+00:00"
 }

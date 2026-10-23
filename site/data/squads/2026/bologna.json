@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:17.417813+00:00",
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
     "url": "https://api.football-data.org/v4/competitions/SA/teams",
-    "sha256": "9a3b4620a927375c1e5a316a5a7ab588adf287213c71b8b3d07e1834f38a147f",
-    "snapshot": "data/players/rosters/2026-10-16/SA.json"
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 27,
+    "players": 26,
     "matched": 24
   },
   "ideal_xi": {
@@ -599,16 +599,6 @@
       "reason": "no_name_and_birth_date_match"
     },
     {
-      "id": 185016,
-      "name": "Nicolò Cambiaghi",
-      "dob": "2024-06-30",
-      "provider_position": "Offence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
-    },
-    {
       "id": 217678,
       "name": "Samuel Mbangula",
       "dob": "2004-01-16",
@@ -654,6 +644,41 @@
       "reason": "no_name_match"
     },
     {
+      "id": "observed:understat:7576",
+      "name": "Nicolò Cambiaghi",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 268703,
+        "overall": 76,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 73,
+        "shooting": 74,
+        "passing": 72,
+        "dribbling": 79,
+        "defending": 43,
+        "physical": 60
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            7576
+          ],
+          "names": [
+            "Nicolò Cambiaghi"
+          ]
+        }
+      },
+      "first_seen": "2026-08-24",
+      "last_seen": "2026-10-17"
+    },
+    {
       "id": "observed:understat:14911",
       "name": "Marco Libra",
       "dob": null,
@@ -677,8 +702,8 @@
       "reason": "no_name_match"
     }
   ],
-  "baseline_id": "9f3b120721b1e762",
-  "generated_at": "2026-10-16T07:26:52.295978+00:00",
+  "baseline_id": "de3ed7d667432cde",
+  "generated_at": "2026-10-23T06:05:48.571717+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -1005,19 +1030,6 @@
           "xg": 1.2898,
           "xa": 0.1219
         },
-        "185016": {
-          "starts": 7,
-          "sub": 0,
-          "minutes": 529,
-          "share": 0.839683,
-          "known_games": 7,
-          "unknown_games": 0,
-          "provider_ids": [
-            7576
-          ],
-          "xg": 0.8313,
-          "xa": 1.0856
-        },
         "217678": {
           "starts": 0,
           "sub": 2,
@@ -1044,6 +1056,19 @@
           "xg": 0.0228,
           "xa": 0.7355
         },
+        "observed:understat:7576": {
+          "starts": 7,
+          "sub": 0,
+          "minutes": 529,
+          "share": 0.839683,
+          "known_games": 7,
+          "unknown_games": 0,
+          "provider_ids": [
+            7576
+          ],
+          "xg": 0.8313,
+          "xa": 1.0856
+        },
         "observed:understat:14911": {
           "starts": 0,
           "sub": 2,
@@ -1068,15 +1093,15 @@
           },
           {
             "role": "LB",
-            "player": 145893
-          },
-          {
-            "role": "CB",
-            "player": 210842
+            "player": 32491
           },
           {
             "role": "CB",
             "player": 16197
+          },
+          {
+            "role": "CB",
+            "player": 145893
           },
           {
             "role": "RB",
@@ -1096,7 +1121,7 @@
           },
           {
             "role": "LW",
-            "player": 32491
+            "player": "observed:understat:7576"
           },
           {
             "role": "ST",
@@ -1205,7 +1230,7 @@
               "starter": true,
               "xg": 0.19702176749706268,
               "xa": 0.0,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 7375,
@@ -1272,7 +1297,7 @@
             171286,
             1886,
             2017,
-            185016,
+            "observed:understat:7576",
             102591
           ],
           "subs": [
@@ -1379,7 +1404,7 @@
               "starter": true,
               "xg": 0.11499551683664322,
               "xa": 0.06002231314778328,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 7375,
@@ -1446,7 +1471,7 @@
             34638,
             2040,
             2017,
-            185016,
+            "observed:understat:7576",
             102591
           ],
           "subs": [
@@ -1554,7 +1579,7 @@
               "starter": true,
               "xg": 0.10504766553640366,
               "xa": 0.15074221789836884,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 7375,
@@ -1621,7 +1646,7 @@
             99013,
             2040,
             2017,
-            185016,
+            "observed:understat:7576",
             102591
           ],
           "subs": [
@@ -1729,7 +1754,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.03229890391230583,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 7375,
@@ -1796,7 +1821,7 @@
             34638,
             2040,
             261839,
-            185016,
+            "observed:understat:7576",
             102591
           ],
           "subs": [
@@ -1913,7 +1938,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.013597377575933933,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 7005,
@@ -1972,7 +1997,7 @@
             34638,
             2040,
             102591,
-            185016
+            "observed:understat:7576"
           ],
           "subs": [
             2017,
@@ -2079,7 +2104,7 @@
               "starter": true,
               "xg": 0.28881320357322693,
               "xa": 0.8289469480514526,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 7375,
@@ -2146,7 +2171,7 @@
             34638,
             99013,
             1886,
-            185016,
+            "observed:understat:7576",
             102591
           ],
           "subs": [
@@ -2245,7 +2270,7 @@
               "starter": true,
               "xg": 0.12540334463119507,
               "xa": 0.0,
-              "player": 185016
+              "player": "observed:understat:7576"
             },
             {
               "source_id": 1424,
@@ -2311,7 +2336,7 @@
             32491,
             34638,
             99013,
-            185016,
+            "observed:understat:7576",
             2040,
             102591
           ],
@@ -2326,5 +2351,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:07.622213+00:00"
+  "usage_generated_at": "2026-10-23T06:05:53.433988+00:00"
 }

@@ -15,16 +15,16 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "observed_at": "2026-10-23T06:05:41.039969+00:00",
     "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
-    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+    "sha256": "2707d065fbbe1b88c54c4bd3f6c29be6476273982e09c446bbf23bf0757d3bee",
+    "snapshot": "data/players/rosters/2026-10-23/FL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
     "players": 23,
-    "matched": 19
+    "matched": 20
   },
   "ideal_xi": {
     "formation": "4-3-3",
@@ -41,11 +41,11 @@
       },
       {
         "role": "CB",
-        "player": 1004
+        "player": 441
       },
       {
         "role": "CB",
-        "player": 441
+        "player": 1004
       },
       {
         "role": "RB",
@@ -57,11 +57,11 @@
       },
       {
         "role": "CM",
-        "player": 175942
+        "player": 8465
       },
       {
         "role": "CM",
-        "player": 8465
+        "player": 175942
       },
       {
         "role": "LW",
@@ -381,6 +381,28 @@
       }
     },
     {
+      "id": 187527,
+      "name": "Axel Camblan",
+      "dob": "2003-08-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 264512,
+        "overall": 64,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 80,
+        "shooting": 57,
+        "passing": 61,
+        "dribbling": 67,
+        "defending": 41,
+        "physical": 39
+      }
+    },
+    {
       "id": 261666,
       "name": "Joseph Nonge",
       "dob": "2005-05-15",
@@ -469,16 +491,6 @@
         "defending": 49,
         "physical": 75
       }
-    },
-    {
-      "id": 191108,
-      "name": "Axel Camblan",
-      "dob": "2025-06-30",
-      "provider_position": "Offence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
     },
     {
       "id": 212975,
@@ -701,8 +713,8 @@
       "reason": "no_name_match"
     }
   ],
-  "baseline_id": "7d8f0bfe892199e2",
-  "generated_at": "2026-10-16T07:26:52.533303+00:00",
+  "baseline_id": "c457f0d2d34a9136",
+  "generated_at": "2026-10-23T06:05:48.699758+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -899,6 +911,19 @@
           "xg": 4.37,
           "xa": 0.5024
         },
+        "187527": {
+          "starts": 0,
+          "sub": 1,
+          "minutes": 16,
+          "share": 0.025397,
+          "known_games": 7,
+          "unknown_games": 0,
+          "provider_ids": [
+            9826
+          ],
+          "xg": 0.0708,
+          "xa": 0.0
+        },
         "261666": {
           "starts": 1,
           "sub": 6,
@@ -948,19 +973,6 @@
           ],
           "xg": 1.0308,
           "xa": 0.7391
-        },
-        "191108": {
-          "starts": 0,
-          "sub": 1,
-          "minutes": 16,
-          "share": 0.025397,
-          "known_games": 7,
-          "unknown_games": 0,
-          "provider_ids": [
-            9826
-          ],
-          "xg": 0.0708,
-          "xa": 0.0
         },
         "212975": {
           "starts": 0,
@@ -1239,7 +1251,7 @@
               "starter": false,
               "xg": 0.07080448418855667,
               "xa": 0.0,
-              "player": 191108
+              "player": 187527
             },
             {
               "source_id": 14824,
@@ -1275,7 +1287,7 @@
           ],
           "subs": [
             160898,
-            191108,
+            187527,
             "observed:understat:14824",
             43707
           ],
@@ -2304,5 +2316,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:09.034224+00:00"
+  "usage_generated_at": "2026-10-23T06:05:54.421963+00:00"
 }

@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:09.822985+00:00",
+    "observed_at": "2026-10-23T06:05:25.396714+00:00",
     "url": "https://api.football-data.org/v4/competitions/BL1/teams",
-    "sha256": "1c95dfdeece4df7077b5d2fbea2456a2b51c2c9f0ced94d4907ddd4a644a20a9",
-    "snapshot": "data/players/rosters/2026-10-16/BL1.json"
+    "sha256": "62814069021113b6f33e8185501ab1b430a5134f68297b5ba6cf0ee690098916",
+    "snapshot": "data/players/rosters/2026-10-23/BL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 32,
+    "players": 31,
     "matched": 29
   },
   "ideal_xi": {
@@ -119,16 +119,6 @@
         "defending": 45,
         "physical": 69
       }
-    },
-    {
-      "id": 171669,
-      "name": "Karl Hein",
-      "dob": null,
-      "provider_position": "Goalkeeper",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
     },
     {
       "id": 256018,
@@ -748,10 +738,44 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:9692",
+      "name": "Karl Hein",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 248732,
+        "overall": 73,
+        "positions": [
+          "GK"
+        ],
+        "pace": 72,
+        "shooting": 71,
+        "passing": 69,
+        "dribbling": 76,
+        "defending": 35,
+        "physical": 73
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            9692
+          ],
+          "names": [
+            "Karl Hein"
+          ]
+        }
+      },
+      "first_seen": "2026-08-30",
+      "last_seen": "2026-10-17"
     }
   ],
-  "baseline_id": "3737d5942583c783",
-  "generated_at": "2026-10-16T07:26:52.543881+00:00",
+  "baseline_id": "ed5ca290a33e9b64",
+  "generated_at": "2026-10-23T06:05:48.685817+00:00",
   "usage": {
     "bundesliga": {
       "source": "understat",
@@ -780,19 +804,6 @@
           "provider_ids": [],
           "xg": 0,
           "xa": 0
-        },
-        "171669": {
-          "starts": 6,
-          "sub": 0,
-          "minutes": 540,
-          "share": 1.0,
-          "known_games": 6,
-          "unknown_games": 0,
-          "provider_ids": [
-            9692
-          ],
-          "xg": 0.0,
-          "xa": 0.2462
         },
         "256018": {
           "starts": 0,
@@ -1150,15 +1161,28 @@
           ],
           "xg": 0.115,
           "xa": 0.0832
+        },
+        "observed:understat:9692": {
+          "starts": 6,
+          "sub": 0,
+          "minutes": 540,
+          "share": 1.0,
+          "known_games": 6,
+          "unknown_games": 0,
+          "provider_ids": [
+            9692
+          ],
+          "xg": 0.0,
+          "xa": 0.2462
         }
       },
       "most_used_xi": {
         "formation": "4-3-3",
-        "status": "insufficient_coverage",
+        "status": "provisional",
         "slots": [
           {
             "role": "GK",
-            "player": null
+            "player": "observed:understat:9692"
           },
           {
             "role": "LB",
@@ -1182,7 +1206,7 @@
           },
           {
             "role": "CM",
-            "player": 150733
+            "player": 218448
           },
           {
             "role": "CM",
@@ -1190,7 +1214,7 @@
           },
           {
             "role": "LW",
-            "player": 61630
+            "player": 150733
           },
           {
             "role": "ST",
@@ -1198,7 +1222,7 @@
           },
           {
             "role": "RW",
-            "player": 218448
+            "player": 61630
           }
         ]
       },
@@ -1218,7 +1242,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 171669
+              "player": "observed:understat:9692"
             },
             {
               "source_id": 13422,
@@ -1357,7 +1381,7 @@
             }
           ],
           "starters": [
-            171669,
+            "observed:understat:9692",
             275165,
             9447,
             66095,
@@ -1392,7 +1416,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.05015970766544342,
-              "player": 171669
+              "player": "observed:understat:9692"
             },
             {
               "source_id": 11868,
@@ -1531,7 +1555,7 @@
             }
           ],
           "starters": [
-            171669,
+            "observed:understat:9692",
             178860,
             66095,
             9447,
@@ -1567,7 +1591,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 171669
+              "player": "observed:understat:9692"
             },
             {
               "source_id": 11868,
@@ -1706,7 +1730,7 @@
             }
           ],
           "starters": [
-            171669,
+            "observed:understat:9692",
             178860,
             9447,
             66095,
@@ -1742,7 +1766,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 171669
+              "player": "observed:understat:9692"
             },
             {
               "source_id": 7320,
@@ -1872,7 +1896,7 @@
             }
           ],
           "starters": [
-            171669,
+            "observed:understat:9692",
             66095,
             9447,
             93320,
@@ -1907,7 +1931,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.1960027813911438,
-              "player": 171669
+              "player": "observed:understat:9692"
             },
             {
               "source_id": 11868,
@@ -2046,7 +2070,7 @@
             }
           ],
           "starters": [
-            171669,
+            "observed:understat:9692",
             178860,
             9447,
             66095,
@@ -2082,7 +2106,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 171669
+              "player": "observed:understat:9692"
             },
             {
               "source_id": 11868,
@@ -2212,7 +2236,7 @@
             }
           ],
           "starters": [
-            171669,
+            "observed:understat:9692",
             178860,
             66095,
             9447,
@@ -2235,5 +2259,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:48.249469+00:00"
+  "usage_generated_at": "2026-10-23T06:06:23.628493+00:00"
 }

@@ -1,0 +1,550 @@
+{
+  "slug": "everton",
+  "club_id": 62,
+  "name": "Everton FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-23T06:05:17.425474+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PL/teams",
+    "sha256": "8ca2ded2c22606a9c78e0cc53f2401f2bc6dcbaf7851cd75efd7b2115fa4e2d3",
+    "snapshot": "data/players/rosters/2026-10-23/PL.json"
+  },
+  "identity_overrides_sha256": "583f1bf699388a7f0bcaa8d01337753a4f4b8c899564eb8351d877b5e5e23343",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 22,
+    "matched": 19
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 79.3,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 3309
+      },
+      {
+        "role": "LB",
+        "player": 16165
+      },
+      {
+        "role": "CB",
+        "player": 114120
+      },
+      {
+        "role": "CB",
+        "player": 3316
+      },
+      {
+        "role": "RB",
+        "player": 7792
+      },
+      {
+        "role": "CDM",
+        "player": 24102
+      },
+      {
+        "role": "CM",
+        "player": 140194
+      },
+      {
+        "role": "CM",
+        "player": 101076
+      },
+      {
+        "role": "LW",
+        "player": 3895
+      },
+      {
+        "role": "ST",
+        "player": 250436
+      },
+      {
+        "role": "RW",
+        "player": 124694
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 3309,
+      "name": "Jordan Pickford",
+      "dob": "1994-03-07",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 204935,
+        "overall": 85,
+        "positions": [
+          "GK"
+        ],
+        "pace": 84,
+        "shooting": 80,
+        "passing": 89,
+        "dribbling": 87,
+        "defending": 57,
+        "physical": 82
+      }
+    },
+    {
+      "id": 6180,
+      "name": "Thomas King",
+      "dob": "1995-03-09",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 82135,
+      "name": "Mark Travers",
+      "dob": "1999-05-18",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 232284,
+        "overall": 72,
+        "positions": [
+          "GK"
+        ],
+        "pace": 73,
+        "shooting": 69,
+        "passing": 69,
+        "dribbling": 74,
+        "defending": 40,
+        "physical": 72
+      }
+    },
+    {
+      "id": 3316,
+      "name": "James Tarkowski",
+      "dob": "1992-11-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 202695,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 41,
+        "shooting": 47,
+        "passing": 64,
+        "dribbling": 59,
+        "defending": 81,
+        "physical": 84
+      }
+    },
+    {
+      "id": 7792,
+      "name": "Ainsley Maitland-Niles",
+      "dob": "1997-08-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 225782,
+        "overall": 77,
+        "positions": [
+          "RB",
+          "RM",
+          "CM",
+          "RW"
+        ],
+        "pace": 79,
+        "shooting": 65,
+        "passing": 74,
+        "dribbling": 76,
+        "defending": 72,
+        "physical": 74
+      }
+    },
+    {
+      "id": 7829,
+      "name": "Michael Keane",
+      "dob": "1993-01-11",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 207599,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 42,
+        "shooting": 58,
+        "passing": 62,
+        "dribbling": 59,
+        "defending": 77,
+        "physical": 76
+      }
+    },
+    {
+      "id": 16165,
+      "name": "Vitalii Mykolenko",
+      "dob": "1999-05-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 244380,
+        "overall": 77,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 73,
+        "shooting": 55,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 75,
+        "physical": 72
+      },
+      "identity_override": {
+        "provider_name": "Vitalii Mykolenko",
+        "provider_dob": "1999-05-29",
+        "verified_dob": "1999-05-29",
+        "ea_id": 244380,
+        "source": "https://www.premierleague.com/players/24983/Vitaliy-Mykolenko/overview",
+        "observed_at": "2026-10-15",
+        "note": "The Premier League profile confirms the birth date and uses both Vitalii and Vitaliy in its profile title and URL."
+      }
+    },
+    {
+      "id": 114120,
+      "name": "Jarrad Branthwaite",
+      "dob": "2002-06-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247649,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 71,
+        "shooting": 40,
+        "passing": 62,
+        "dribbling": 59,
+        "defending": 80,
+        "physical": 76
+      }
+    },
+    {
+      "id": 131569,
+      "name": "Jake O'Brien",
+      "dob": "2001-05-15",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253510,
+        "overall": 76,
+        "positions": [
+          "RB",
+          "CB",
+          "RM"
+        ],
+        "pace": 75,
+        "shooting": 50,
+        "passing": 67,
+        "dribbling": 62,
+        "defending": 76,
+        "physical": 80
+      }
+    },
+    {
+      "id": 24102,
+      "name": "Christian Nørgaard",
+      "dob": "1994-03-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 210697,
+        "overall": 79,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 44,
+        "shooting": 65,
+        "passing": 75,
+        "dribbling": 71,
+        "defending": 77,
+        "physical": 76
+      }
+    },
+    {
+      "id": 101076,
+      "name": "James Garner",
+      "dob": "2001-03-13",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243657,
+        "overall": 82,
+        "positions": [
+          "CDM",
+          "RB",
+          "CM"
+        ],
+        "pace": 64,
+        "shooting": 71,
+        "passing": 82,
+        "dribbling": 77,
+        "defending": 80,
+        "physical": 77
+      }
+    },
+    {
+      "id": 136284,
+      "name": "Hayden Hackney",
+      "dob": "2002-06-26",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253054,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 67,
+        "shooting": 68,
+        "passing": 74,
+        "dribbling": 77,
+        "defending": 70,
+        "physical": 74
+      }
+    },
+    {
+      "id": 140194,
+      "name": "Kiernan Dewsbury Hall",
+      "dob": "1998-09-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237386,
+        "overall": 81,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 68,
+        "shooting": 77,
+        "passing": 82,
+        "dribbling": 81,
+        "defending": 70,
+        "physical": 71
+      }
+    },
+    {
+      "id": 140269,
+      "name": "Carlos Alcaraz",
+      "dob": "2002-11-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256402,
+        "overall": 75,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 71,
+        "shooting": 71,
+        "passing": 73,
+        "dribbling": 78,
+        "defending": 46,
+        "physical": 63
+      }
+    },
+    {
+      "id": 156552,
+      "name": "Merlin Röhl",
+      "dob": "2002-07-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259714,
+        "overall": 74,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 76,
+        "shooting": 65,
+        "passing": 71,
+        "dribbling": 75,
+        "defending": 63,
+        "physical": 66
+      }
+    },
+    {
+      "id": 264281,
+      "name": "Harrison Armstrong",
+      "dob": "2007-01-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74413,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 67,
+        "shooting": 64,
+        "passing": 72,
+        "dribbling": 72,
+        "defending": 69,
+        "physical": 71
+      }
+    },
+    {
+      "id": 3895,
+      "name": "Jack Grealish",
+      "dob": "1995-09-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 206517,
+        "overall": 82,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 69,
+        "shooting": 76,
+        "passing": 82,
+        "dribbling": 86,
+        "defending": 53,
+        "physical": 67
+      }
+    },
+    {
+      "id": 124694,
+      "name": "Brennan Johnson",
+      "dob": "2001-05-23",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 251421,
+        "overall": 78,
+        "positions": [
+          "RW",
+          "RM",
+          "LW",
+          "LM"
+        ],
+        "pace": 85,
+        "shooting": 76,
+        "passing": 73,
+        "dribbling": 77,
+        "defending": 43,
+        "physical": 58
+      }
+    },
+    {
+      "id": 171995,
+      "name": "Thierno Barry",
+      "dob": "2000-01-12",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 218525,
+      "name": "Tyler Dibling",
+      "dob": "2006-02-17",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279497,
+        "overall": 74,
+        "positions": [
+          "RM",
+          "CAM",
+          "RW"
+        ],
+        "pace": 76,
+        "shooting": 67,
+        "passing": 71,
+        "dribbling": 77,
+        "defending": 38,
+        "physical": 64
+      }
+    },
+    {
+      "id": 244747,
+      "name": "Briaden Graham",
+      "dob": "2007-11-07",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 250436,
+      "name": "Tyrique George",
+      "dob": "2006-02-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 71998,
+        "overall": 72,
+        "positions": [
+          "LM",
+          "RM",
+          "ST",
+          "LW"
+        ],
+        "pace": 78,
+        "shooting": 67,
+        "passing": 67,
+        "dribbling": 74,
+        "defending": 37,
+        "physical": 55
+      }
+    }
+  ],
+  "baseline_id": "f683dd7166fbf557",
+  "generated_at": "2026-10-23T06:05:48.392032+00:00"
+}

@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-15T19:46:39.321664+00:00",
+    "observed_at": "2026-10-23T06:05:09.414892+00:00",
     "url": "https://api.football-data.org/v4/competitions/PD/teams",
-    "sha256": "bf1f579baac7ac64c9991a2282e59215a1f14a3c1e55aeef02b3cf47e17eea79",
-    "snapshot": "data/players/rosters/2026-10-15/PD.json"
+    "sha256": "4896b6489c6e0595cd18fd9c4f911ca932ee58303241aeab1c7ab13ed9fa18b9",
+    "snapshot": "data/players/rosters/2026-10-23/PD.json"
   },
   "identity_overrides_sha256": "de81a2ba7a3ebce65df28c0fc55ee669a90583b5c9df47e45d83ac6fd35f58b6",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 26,
+    "players": 27,
     "matched": 25
   },
   "ideal_xi": {
@@ -666,6 +666,16 @@
       }
     },
     {
+      "id": 302465,
+      "name": "Jesús Morales",
+      "dob": "2007-06-24",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
       "id": "observed:understat:13615",
       "name": "Oso",
       "dob": null,
@@ -702,8 +712,8 @@
       "last_seen": "2026-08-22"
     }
   ],
-  "baseline_id": "2d1f5e558850b461",
-  "generated_at": "2026-10-16T07:26:52.501897+00:00",
+  "baseline_id": "7d22f326511f1e09",
+  "generated_at": "2026-10-23T06:05:48.667194+00:00",
   "usage": {
     "la-liga": {
       "source": "understat",
@@ -1042,6 +1052,17 @@
           ],
           "xg": 0.6025,
           "xa": 0.2845
+        },
+        "302465": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 9,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         },
         "observed:understat:13615": {
           "starts": 2,
@@ -2656,5 +2677,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:37.599535+00:00"
+  "usage_generated_at": "2026-10-23T06:06:15.981112+00:00"
 }

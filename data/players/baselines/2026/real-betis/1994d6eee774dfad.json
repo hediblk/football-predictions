@@ -1,0 +1,648 @@
+{
+  "slug": "real-betis",
+  "club_id": 90,
+  "name": "Real Betis Balompié",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-23T06:05:09.414892+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "4896b6489c6e0595cd18fd9c4f911ca932ee58303241aeab1c7ab13ed9fa18b9",
+    "snapshot": "data/players/rosters/2026-10-23/PD.json"
+  },
+  "identity_overrides_sha256": "0ddf2c61519c143c15bf8df6b9b03655147387603c31bea75f9a49216831ec38",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 25,
+    "matched": 24
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 79.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 100130
+      },
+      {
+        "role": "LB",
+        "player": 99993
+      },
+      {
+        "role": "CB",
+        "player": 9
+      },
+      {
+        "role": "CB",
+        "player": 33038
+      },
+      {
+        "role": "RB",
+        "player": 33045
+      },
+      {
+        "role": "CDM",
+        "player": 66
+      },
+      {
+        "role": "CM",
+        "player": 33117
+      },
+      {
+        "role": "CM",
+        "player": 3216
+      },
+      {
+        "role": "LW",
+        "player": 175941
+      },
+      {
+        "role": "ST",
+        "player": 32415
+      },
+      {
+        "role": "RW",
+        "player": 97085
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 100130,
+      "name": "Álvaro Vallés Rosa",
+      "dob": "1997-07-25",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246657,
+        "overall": 77,
+        "positions": [
+          "GK"
+        ],
+        "pace": 77,
+        "shooting": 76,
+        "passing": 77,
+        "dribbling": 79,
+        "defending": 41,
+        "physical": 77
+      }
+    },
+    {
+      "id": 150546,
+      "name": "Diego Conde",
+      "dob": "1998-10-28",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258534,
+        "overall": 76,
+        "positions": [
+          "GK"
+        ],
+        "pace": 74,
+        "shooting": 74,
+        "passing": 68,
+        "dribbling": 77,
+        "defending": 43,
+        "physical": 75
+      }
+    },
+    {
+      "id": 9,
+      "name": "Diego Llorente",
+      "dob": "1993-08-16",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 212602,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 59,
+        "shooting": 41,
+        "passing": 63,
+        "dribbling": 68,
+        "defending": 81,
+        "physical": 76
+      }
+    },
+    {
+      "id": 7783,
+      "name": "Héctor Bellerín",
+      "dob": "1995-03-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 203747,
+        "overall": 76,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 78,
+        "shooting": 54,
+        "passing": 70,
+        "dribbling": 74,
+        "defending": 72,
+        "physical": 65
+      }
+    },
+    {
+      "id": 33037,
+      "name": "Júnior Firpo",
+      "dob": "1996-05-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 241184,
+        "overall": 74,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 76,
+        "shooting": 61,
+        "passing": 70,
+        "dribbling": 70,
+        "defending": 72,
+        "physical": 73
+      },
+      "identity_override": {
+        "provider_name": "Júnior Firpo",
+        "provider_dob": "1996-05-10",
+        "verified_dob": "1996-08-22",
+        "ea_id": 241184,
+        "source": "https://www.realbetisbalompie.es/primer-equipo/jugador/junior-250738",
+        "observed_at": "2026-10-15",
+        "note": "The squad API gives an incorrect birth date; the club confirms 22 August 1996."
+      }
+    },
+    {
+      "id": 33038,
+      "name": "Bartra",
+      "dob": "1991-01-15",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 198141,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 67,
+        "shooting": 59,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 80,
+        "physical": 76
+      }
+    },
+    {
+      "id": 99993,
+      "name": "Francisco Garcia",
+      "dob": "1999-08-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246606,
+        "overall": 77,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 87,
+        "shooting": 50,
+        "passing": 69,
+        "dribbling": 75,
+        "defending": 71,
+        "physical": 74
+      }
+    },
+    {
+      "id": 138031,
+      "name": "Natan",
+      "dob": "2001-02-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277537,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 33,
+        "passing": 59,
+        "dribbling": 66,
+        "defending": 79,
+        "physical": 80
+      }
+    },
+    {
+      "id": 179155,
+      "name": "Valentín Gómez",
+      "dob": "2003-06-26",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267860,
+        "overall": 76,
+        "positions": [
+          "CB",
+          "LB"
+        ],
+        "pace": 78,
+        "shooting": 33,
+        "passing": 64,
+        "dribbling": 71,
+        "defending": 76,
+        "physical": 76
+      }
+    },
+    {
+      "id": 272694,
+      "name": "Ángel Ortiz",
+      "dob": "2004-07-25",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76740,
+        "overall": 70,
+        "positions": [
+          "RB"
+        ],
+        "pace": 81,
+        "shooting": 49,
+        "passing": 64,
+        "dribbling": 68,
+        "defending": 64,
+        "physical": 64
+      }
+    },
+    {
+      "id": 66,
+      "name": "Isco",
+      "dob": "1992-04-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 197781,
+        "overall": 83,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 57,
+        "shooting": 78,
+        "passing": 85,
+        "dribbling": 86,
+        "defending": 59,
+        "physical": 60
+      }
+    },
+    {
+      "id": 68,
+      "name": "Dani Ceballos",
+      "dob": "1996-08-07",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 3216,
+      "name": "Giovani Lo Celso",
+      "dob": "1996-04-09",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 226226,
+        "overall": 80,
+        "positions": [
+          "CAM",
+          "CM",
+          "CDM"
+        ],
+        "pace": 74,
+        "shooting": 77,
+        "passing": 82,
+        "dribbling": 81,
+        "defending": 67,
+        "physical": 68
+      }
+    },
+    {
+      "id": 32710,
+      "name": "Marc Roca",
+      "dob": "1996-11-26",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235945,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 55,
+        "shooting": 66,
+        "passing": 75,
+        "dribbling": 74,
+        "defending": 76,
+        "physical": 73
+      }
+    },
+    {
+      "id": 33117,
+      "name": "Pablo Fornals",
+      "dob": "1996-02-22",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 226456,
+        "overall": 81,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 66,
+        "shooting": 75,
+        "passing": 83,
+        "dribbling": 80,
+        "defending": 74,
+        "physical": 72
+      }
+    },
+    {
+      "id": 99992,
+      "name": "Álvaro Fidalgo",
+      "dob": "1997-04-09",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246608,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 77,
+        "shooting": 67,
+        "passing": 77,
+        "dribbling": 80,
+        "defending": 60,
+        "physical": 65
+      }
+    },
+    {
+      "id": 126913,
+      "name": "Iker Losada",
+      "dob": "2001-08-01",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252865,
+        "overall": 72,
+        "positions": [
+          "CAM",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 69,
+        "shooting": 71,
+        "passing": 70,
+        "dribbling": 73,
+        "defending": 40,
+        "physical": 58
+      }
+    },
+    {
+      "id": 179141,
+      "name": "Nelson Deossa",
+      "dob": "2000-02-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267430,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM",
+          "CAM"
+        ],
+        "pace": 77,
+        "shooting": 76,
+        "passing": 72,
+        "dribbling": 74,
+        "defending": 73,
+        "physical": 78
+      }
+    },
+    {
+      "id": 245200,
+      "name": "Facundo Bernal",
+      "dob": "2003-08-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 273849,
+        "overall": 74,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 70,
+        "shooting": 59,
+        "passing": 69,
+        "dribbling": 70,
+        "defending": 70,
+        "physical": 76
+      }
+    },
+    {
+      "id": 32415,
+      "name": "Cucho Hernández",
+      "dob": "1999-04-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237034,
+        "overall": 79,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 81,
+        "shooting": 78,
+        "passing": 75,
+        "dribbling": 81,
+        "defending": 45,
+        "physical": 78
+      }
+    },
+    {
+      "id": 33045,
+      "name": "Aitor Ruibal",
+      "dob": "1996-03-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241867,
+        "overall": 77,
+        "positions": [
+          "RM",
+          "RB",
+          "LM",
+          "LB"
+        ],
+        "pace": 80,
+        "shooting": 76,
+        "passing": 73,
+        "dribbling": 75,
+        "defending": 69,
+        "physical": 70
+      }
+    },
+    {
+      "id": 97085,
+      "name": "Antony",
+      "dob": "2000-02-24",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255475,
+        "overall": 81,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 85,
+        "shooting": 81,
+        "passing": 79,
+        "dribbling": 82,
+        "defending": 48,
+        "physical": 71
+      }
+    },
+    {
+      "id": 128731,
+      "name": "Rodrigo Riquelme",
+      "dob": "2000-04-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252324,
+        "overall": 76,
+        "positions": [
+          "LM",
+          "CAM",
+          "RM",
+          "LW"
+        ],
+        "pace": 80,
+        "shooting": 72,
+        "passing": 73,
+        "dribbling": 76,
+        "defending": 50,
+        "physical": 58
+      }
+    },
+    {
+      "id": 131041,
+      "name": "Troy Parrott",
+      "dob": "2002-02-04",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 245902,
+        "overall": 78,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 74,
+        "shooting": 78,
+        "passing": 66,
+        "dribbling": 77,
+        "defending": 45,
+        "physical": 74
+      }
+    },
+    {
+      "id": 175941,
+      "name": "Abdessamad Ezzalzouli",
+      "dob": "2001-12-17",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 264432,
+        "overall": 81,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 89,
+        "shooting": 75,
+        "passing": 73,
+        "dribbling": 84,
+        "defending": 37,
+        "physical": 70
+      },
+      "identity_override": {
+        "provider_name": "Abdessamad Ezzalzouli",
+        "provider_dob": "2001-12-17",
+        "verified_dob": "2001-12-17",
+        "ea_id": 264432,
+        "aliases": [
+          "Abde Ezzalzouli"
+        ],
+        "source": "https://players.fcbarcelona.com/es/jugador/2867-ez-abde-abdessamad-ezzalzouli",
+        "observed_at": "2026-10-15",
+        "note": "Barcelona's player archive identifies Abde Ezzalzouli as Abdessamad Ezzalzouli. UEFA uses the short given name."
+      }
+    }
+  ],
+  "baseline_id": "1994d6eee774dfad",
+  "generated_at": "2026-10-23T06:05:48.403187+00:00"
+}

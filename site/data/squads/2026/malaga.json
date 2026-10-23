@@ -15,16 +15,16 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-15T19:46:39.321664+00:00",
+    "observed_at": "2026-10-23T06:05:09.414892+00:00",
     "url": "https://api.football-data.org/v4/competitions/PD/teams",
-    "sha256": "bf1f579baac7ac64c9991a2282e59215a1f14a3c1e55aeef02b3cf47e17eea79",
-    "snapshot": "data/players/rosters/2026-10-15/PD.json"
+    "sha256": "4896b6489c6e0595cd18fd9c4f911ca932ee58303241aeab1c7ab13ed9fa18b9",
+    "snapshot": "data/players/rosters/2026-10-23/PD.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
     "players": 28,
-    "matched": 25
+    "matched": 26
   },
   "ideal_xi": {
     "formation": "4-3-3",
@@ -41,11 +41,11 @@
       },
       {
         "role": "CB",
-        "player": 32362
+        "player": 188780
       },
       {
         "role": "CB",
-        "player": 188780
+        "player": 32362
       },
       {
         "role": "RB",
@@ -57,11 +57,11 @@
       },
       {
         "role": "CM",
-        "player": 32830
+        "player": 176605
       },
       {
         "role": "CM",
-        "player": 176605
+        "player": 32830
       },
       {
         "role": "LW",
@@ -208,13 +208,24 @@
     },
     {
       "id": 169393,
-      "name": "Angel Recio",
-      "dob": null,
+      "name": "Ángel Recio",
+      "dob": "2003-01-05",
       "provider_position": "Defence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80217,
+        "overall": 65,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 27,
+        "passing": 46,
+        "dribbling": 49,
+        "defending": 65,
+        "physical": 70
+      }
     },
     {
       "id": 188780,
@@ -703,8 +714,8 @@
       "last_seen": "2026-10-18"
     }
   ],
-  "baseline_id": "21cb4e89097721f4",
-  "generated_at": "2026-10-16T07:26:52.658133+00:00",
+  "baseline_id": "f6229311762bc26e",
+  "generated_at": "2026-10-23T06:05:48.844735+00:00",
   "usage": {
     "la-liga": {
       "source": "understat",
@@ -1092,11 +1103,11 @@
           },
           {
             "role": "CB",
-            "player": 32362
+            "player": 227677
           },
           {
             "role": "CB",
-            "player": 227677
+            "player": 169393
           },
           {
             "role": "RB",
@@ -2698,5 +2709,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:26.126439+00:00"
+  "usage_generated_at": "2026-10-23T06:06:07.312669+00:00"
 }

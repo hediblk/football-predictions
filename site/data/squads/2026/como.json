@@ -15,16 +15,16 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-21T06:06:14.726379+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
-    "snapshot": "data/players/rosters/2026-10-21/CL.json"
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "url": "https://api.football-data.org/v4/competitions/SA/teams",
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 27,
-    "matched": 24
+    "players": 30,
+    "matched": 26
   },
   "ideal_xi": {
     "formation": "4-3-3",
@@ -41,11 +41,11 @@
       },
       {
         "role": "CB",
-        "player": 7810
+        "player": 9471
       },
       {
         "role": "CB",
-        "player": 9471
+        "player": 7810
       },
       {
         "role": "RB",
@@ -57,11 +57,11 @@
       },
       {
         "role": "CM",
-        "player": 115245
+        "player": 32449
       },
       {
         "role": "CM",
-        "player": 32449
+        "player": 115245
       },
       {
         "role": "LW",
@@ -334,6 +334,29 @@
       "reason": "no_name_and_birth_date_match"
     },
     {
+      "id": 2196,
+      "name": "Luca Mazzitelli",
+      "dob": "1995-11-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 221331,
+        "overall": 72,
+        "positions": [
+          "CM",
+          "CDM",
+          "CB"
+        ],
+        "pace": 42,
+        "shooting": 70,
+        "passing": 73,
+        "dribbling": 72,
+        "defending": 67,
+        "physical": 63
+      }
+    },
+    {
       "id": 32449,
       "name": "Luis Milla",
       "dob": "1994-10-07",
@@ -566,6 +589,27 @@
       "reason": "no_name_and_birth_date_match"
     },
     {
+      "id": 151271,
+      "name": "Suliman Mustapha",
+      "dob": "2001-05-24",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257080,
+        "overall": 63,
+        "positions": [
+          "ST"
+        ],
+        "pace": 80,
+        "shooting": 64,
+        "passing": 54,
+        "dribbling": 62,
+        "defending": 24,
+        "physical": 76
+      }
+    },
+    {
       "id": 178165,
       "name": "Jayden Addai",
       "dob": "2005-08-26",
@@ -632,10 +676,20 @@
         "defending": 35,
         "physical": 52
       }
+    },
+    {
+      "id": 300833,
+      "name": "Lorenzo Ginelli",
+      "dob": "2009-07-24",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "4c14dc4b5e8d3242",
-  "generated_at": "2026-10-21T06:06:22.231200+00:00",
+  "baseline_id": "839e16221916b2a5",
+  "generated_at": "2026-10-23T06:05:48.292760+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -806,6 +860,17 @@
           "xg": 1.6862,
           "xa": 0.8273
         },
+        "2196": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
         "32449": {
           "starts": 4,
           "sub": 3,
@@ -945,6 +1010,17 @@
           "xg": null,
           "xa": null
         },
+        "151271": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
         "178165": {
           "starts": 0,
           "sub": 1,
@@ -983,6 +1059,17 @@
           ],
           "xg": 0.867,
           "xa": 0.3142
+        },
+        "300833": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
         }
       },
       "most_used_xi": {
@@ -2423,6 +2510,17 @@
           "avg_x": 0.3669,
           "avg_y": 0.6168
         },
+        "2196": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 3,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
+        },
         "32449": {
           "starts": 3,
           "sub": 0,
@@ -2562,6 +2660,17 @@
           "avg_x": null,
           "avg_y": null
         },
+        "151271": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 3,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
+        },
         "178165": {
           "starts": null,
           "sub": null,
@@ -2596,6 +2705,17 @@
           "provider_ids": [
             250197195
           ],
+          "avg_x": null,
+          "avg_y": null
+        },
+        "300833": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 3,
+          "provider_ids": [],
           "avg_x": null,
           "avg_y": null
         }
@@ -3144,5 +3264,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-22T06:11:58.568615+00:00"
+  "usage_generated_at": "2026-10-23T06:05:56.082876+00:00"
 }

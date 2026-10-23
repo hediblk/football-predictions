@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "observed_at": "2026-10-23T06:05:41.039969+00:00",
     "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
-    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+    "sha256": "2707d065fbbe1b88c54c4bd3f6c29be6476273982e09c446bbf23bf0757d3bee",
+    "snapshot": "data/players/rosters/2026-10-23/FL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 28,
+    "players": 29,
     "matched": 27
   },
   "ideal_xi": {
@@ -687,6 +687,16 @@
       }
     },
     {
+      "id": 302584,
+      "name": "Ángel García",
+      "dob": "2008-02-03",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
       "id": "observed:understat:11755",
       "name": "Keito Nakamura",
       "dob": null,
@@ -759,8 +769,8 @@
       "last_seen": "2026-08-29"
     }
   ],
-  "baseline_id": "abfe716a901e2bae",
-  "generated_at": "2026-10-16T07:26:52.192739+00:00",
+  "baseline_id": "826bc33c5519cb9e",
+  "generated_at": "2026-10-23T06:05:48.445425+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -1121,6 +1131,17 @@
           ],
           "xg": 0.0,
           "xa": 0.0993
+        },
+        "302584": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 7,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         },
         "observed:understat:11755": {
           "starts": 0,
@@ -2398,5 +2419,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:25.425610+00:00"
+  "usage_generated_at": "2026-10-23T06:06:06.809093+00:00"
 }

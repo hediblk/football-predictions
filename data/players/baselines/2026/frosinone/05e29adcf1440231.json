@@ -1,0 +1,738 @@
+{
+  "slug": "frosinone",
+  "club_id": 470,
+  "name": "Frosinone Calcio",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "url": "https://api.football-data.org/v4/competitions/SA/teams",
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 32,
+    "matched": 28
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 72.6,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 171130
+      },
+      {
+        "role": "LB",
+        "player": 2107
+      },
+      {
+        "role": "CB",
+        "player": 136640
+      },
+      {
+        "role": "CB",
+        "player": 315
+      },
+      {
+        "role": "RB",
+        "player": 148672
+      },
+      {
+        "role": "CDM",
+        "player": 40786
+      },
+      {
+        "role": "CM",
+        "player": 150824
+      },
+      {
+        "role": "CM",
+        "player": 404
+      },
+      {
+        "role": "LW",
+        "player": 16346
+      },
+      {
+        "role": "ST",
+        "player": 129635
+      },
+      {
+        "role": "RW",
+        "player": 245324
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 40309,
+      "name": "Matteo Pisseri",
+      "dob": "1991-11-21",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 225037,
+        "overall": 65,
+        "positions": [
+          "GK"
+        ],
+        "pace": 64,
+        "shooting": 66,
+        "passing": 67,
+        "dribbling": 63,
+        "defending": 49,
+        "physical": 65
+      }
+    },
+    {
+      "id": 171130,
+      "name": "Sebastiano Desplanches",
+      "dob": "2003-03-11",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276839,
+        "overall": 72,
+        "positions": [
+          "GK"
+        ],
+        "pace": 74,
+        "shooting": 69,
+        "passing": 70,
+        "dribbling": 74,
+        "defending": 26,
+        "physical": 70
+      }
+    },
+    {
+      "id": 172293,
+      "name": "Lorenzo Palmisani",
+      "dob": "2004-01-01",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 177072,
+      "name": "Eldin Lolic",
+      "dob": "2004-05-15",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 315,
+      "name": "Kevin Akpoguma",
+      "dob": "1995-04-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 211856,
+        "overall": 73,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 74,
+        "shooting": 48,
+        "passing": 59,
+        "dribbling": 69,
+        "defending": 73,
+        "physical": 74
+      }
+    },
+    {
+      "id": 73064,
+      "name": "Aleksa Terzić",
+      "dob": "1999-08-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252573,
+        "overall": 68,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 78,
+        "shooting": 46,
+        "passing": 62,
+        "dribbling": 67,
+        "defending": 64,
+        "physical": 64
+      }
+    },
+    {
+      "id": 136640,
+      "name": "Ilario Monterisi",
+      "dob": "2001-12-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270064,
+        "overall": 70,
+        "positions": [
+          "CB"
+        ],
+        "pace": 49,
+        "shooting": 33,
+        "passing": 50,
+        "dribbling": 51,
+        "defending": 69,
+        "physical": 78
+      }
+    },
+    {
+      "id": 148672,
+      "name": "Anthony Oyono",
+      "dob": "2001-04-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270502,
+        "overall": 70,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 73,
+        "shooting": 38,
+        "passing": 59,
+        "dribbling": 65,
+        "defending": 66,
+        "physical": 68
+      }
+    },
+    {
+      "id": 167734,
+      "name": "Wisdom Amey",
+      "dob": "2005-08-11",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269183,
+        "overall": 61,
+        "positions": [
+          "CB"
+        ],
+        "pace": 57,
+        "shooting": 35,
+        "passing": 43,
+        "dribbling": 48,
+        "defending": 59,
+        "physical": 69
+      }
+    },
+    {
+      "id": 176891,
+      "name": "Giorgio Cittadini",
+      "dob": "2002-04-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 266304,
+        "overall": 69,
+        "positions": [
+          "CB"
+        ],
+        "pace": 40,
+        "shooting": 30,
+        "passing": 44,
+        "dribbling": 50,
+        "defending": 70,
+        "physical": 67
+      }
+    },
+    {
+      "id": 177393,
+      "name": "Enzo Tchato",
+      "dob": "2002-11-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270518,
+        "overall": 70,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 90,
+        "shooting": 45,
+        "passing": 60,
+        "dribbling": 64,
+        "defending": 65,
+        "physical": 71
+      }
+    },
+    {
+      "id": 186575,
+      "name": "Gabriele Bracaglia",
+      "dob": "2003-07-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74536,
+        "overall": 70,
+        "positions": [
+          "LB",
+          "CB",
+          "LM"
+        ],
+        "pace": 69,
+        "shooting": 41,
+        "passing": 54,
+        "dribbling": 57,
+        "defending": 70,
+        "physical": 73
+      }
+    },
+    {
+      "id": 189227,
+      "name": "Gabriele Calvani",
+      "dob": "2004-01-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74520,
+        "overall": 69,
+        "positions": [
+          "CB"
+        ],
+        "pace": 58,
+        "shooting": 34,
+        "passing": 49,
+        "dribbling": 53,
+        "defending": 70,
+        "physical": 74
+      }
+    },
+    {
+      "id": 216483,
+      "name": "Omar Fayed",
+      "dob": "2003-07-04",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277944,
+        "overall": 65,
+        "positions": [
+          "CB"
+        ],
+        "pace": 52,
+        "shooting": 34,
+        "passing": 50,
+        "dribbling": 57,
+        "defending": 65,
+        "physical": 70
+      }
+    },
+    {
+      "id": 404,
+      "name": "Florian Grillitsch",
+      "dob": "1995-08-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228336,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CB",
+          "CDM"
+        ],
+        "pace": 59,
+        "shooting": 61,
+        "passing": 75,
+        "dribbling": 74,
+        "defending": 73,
+        "physical": 72
+      }
+    },
+    {
+      "id": 2107,
+      "name": "Alessio Zerbin",
+      "dob": "1999-03-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237669,
+        "overall": 72,
+        "positions": [
+          "RM",
+          "LM",
+          "RB",
+          "LB"
+        ],
+        "pace": 72,
+        "shooting": 67,
+        "passing": 70,
+        "dribbling": 73,
+        "defending": 69,
+        "physical": 64
+      }
+    },
+    {
+      "id": 2296,
+      "name": "Ben Lhassine Kone",
+      "dob": "2000-03-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253120,
+        "overall": 67,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 80,
+        "shooting": 62,
+        "passing": 65,
+        "dribbling": 72,
+        "defending": 60,
+        "physical": 62
+      }
+    },
+    {
+      "id": 16346,
+      "name": "Romano Schmid",
+      "dob": "2000-01-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239701,
+        "overall": 78,
+        "positions": [
+          "CAM",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 81,
+        "shooting": 66,
+        "passing": 78,
+        "dribbling": 83,
+        "defending": 56,
+        "physical": 58
+      }
+    },
+    {
+      "id": 40471,
+      "name": "Francesco Gelli",
+      "dob": "1996-10-15",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 274197,
+        "overall": 68,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 60,
+        "shooting": 60,
+        "passing": 66,
+        "dribbling": 73,
+        "defending": 54,
+        "physical": 48
+      }
+    },
+    {
+      "id": 40786,
+      "name": "Giacomo Calò",
+      "dob": "1997-02-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 251769,
+        "overall": 73,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 70,
+        "shooting": 56,
+        "passing": 72,
+        "dribbling": 73,
+        "defending": 66,
+        "physical": 77
+      }
+    },
+    {
+      "id": 150824,
+      "name": "Ilias Koutsoupias",
+      "dob": "2001-05-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268751,
+        "overall": 70,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 64,
+        "shooting": 62,
+        "passing": 66,
+        "dribbling": 69,
+        "defending": 63,
+        "physical": 73
+      }
+    },
+    {
+      "id": 153097,
+      "name": "Patrizio Masini",
+      "dob": "2001-01-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276485,
+        "overall": 68,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 62,
+        "shooting": 56,
+        "passing": 62,
+        "dribbling": 67,
+        "defending": 67,
+        "physical": 54
+      }
+    },
+    {
+      "id": 171274,
+      "name": "Anouar El Azzouzi",
+      "dob": "2001-05-29",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276632,
+        "overall": 69,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 63,
+        "shooting": 45,
+        "passing": 61,
+        "dribbling": 64,
+        "defending": 64,
+        "physical": 77
+      }
+    },
+    {
+      "id": 217676,
+      "name": "Luis Hasa",
+      "dob": "2004-01-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70163,
+        "overall": 69,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 75,
+        "shooting": 63,
+        "passing": 65,
+        "dribbling": 74,
+        "defending": 56,
+        "physical": 55
+      }
+    },
+    {
+      "id": 263933,
+      "name": "Matteo Cichella",
+      "dob": "2005-10-04",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74533,
+        "overall": 68,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 57,
+        "shooting": 59,
+        "passing": 65,
+        "dribbling": 69,
+        "defending": 61,
+        "physical": 54
+      }
+    },
+    {
+      "id": 120722,
+      "name": "Tomáš Bobček",
+      "dob": "2001-09-08",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 129635,
+      "name": "Daniel Birligea",
+      "dob": "2000-04-19",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 266728,
+        "overall": 72,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 87,
+        "shooting": 70,
+        "passing": 61,
+        "dribbling": 71,
+        "defending": 36,
+        "physical": 77
+      }
+    },
+    {
+      "id": 169216,
+      "name": "Antonio Raimondo",
+      "dob": "2004-03-18",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 269182,
+        "overall": 70,
+        "positions": [
+          "ST"
+        ],
+        "pace": 68,
+        "shooting": 70,
+        "passing": 60,
+        "dribbling": 71,
+        "defending": 32,
+        "physical": 69
+      }
+    },
+    {
+      "id": 192114,
+      "name": "Seydou Fini",
+      "dob": "2006-06-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278350,
+        "overall": 65,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 80,
+        "shooting": 57,
+        "passing": 56,
+        "dribbling": 68,
+        "defending": 31,
+        "physical": 64
+      }
+    },
+    {
+      "id": 211564,
+      "name": "Giorgi Kvernadze",
+      "dob": "2003-02-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276422,
+        "overall": 69,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 80,
+        "shooting": 65,
+        "passing": 64,
+        "dribbling": 70,
+        "defending": 35,
+        "physical": 67
+      }
+    },
+    {
+      "id": 245324,
+      "name": "Farés Ghedjemis",
+      "dob": "2002-09-06",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279877,
+        "overall": 72,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 77,
+        "shooting": 70,
+        "passing": 66,
+        "dribbling": 73,
+        "defending": 33,
+        "physical": 53
+      }
+    },
+    {
+      "id": 263932,
+      "name": "Alejandro Cichero",
+      "dob": "2006-07-11",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "05e29adcf1440231",
+  "generated_at": "2026-10-23T06:05:48.660281+00:00"
+}

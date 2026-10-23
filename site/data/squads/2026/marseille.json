@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "observed_at": "2026-10-23T06:05:41.039969+00:00",
     "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
-    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+    "sha256": "2707d065fbbe1b88c54c4bd3f6c29be6476273982e09c446bbf23bf0757d3bee",
+    "snapshot": "data/players/rosters/2026-10-23/FL1.json"
   },
   "identity_overrides_sha256": "f19342e31d8bde13db3e3fddabfd888229dc1b1d95cdd05d727a2ca4f454ad97",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 22,
+    "players": 23,
     "matched": 19
   },
   "ideal_xi": {
@@ -534,6 +534,16 @@
       "reason": "no_name_and_birth_date_match"
     },
     {
+      "id": 302585,
+      "name": "Ibrahim Gomis",
+      "dob": "2005-03-20",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
       "id": "observed:understat:14577",
       "name": "Nouhoum Kamissoko",
       "dob": null,
@@ -592,8 +602,8 @@
       "reason": "no_name_match"
     }
   ],
-  "baseline_id": "155ac392e3192758",
-  "generated_at": "2026-10-16T07:26:52.242394+00:00",
+  "baseline_id": "c134f9954edbcf38",
+  "generated_at": "2026-10-23T06:05:48.451796+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -865,6 +875,17 @@
           "xa": 0.7096
         },
         "288624": {
+          "starts": null,
+          "sub": null,
+          "minutes": null,
+          "share": null,
+          "known_games": 0,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": null,
+          "xa": null
+        },
+        "302585": {
           "starts": null,
           "sub": null,
           "minutes": null,
@@ -2167,5 +2188,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:27.538409+00:00"
+  "usage_generated_at": "2026-10-23T06:06:08.610689+00:00"
 }

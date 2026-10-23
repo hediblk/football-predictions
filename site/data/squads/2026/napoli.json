@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-21T06:06:14.726379+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
-    "snapshot": "data/players/rosters/2026-10-21/CL.json"
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "url": "https://api.football-data.org/v4/competitions/SA/teams",
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 27,
+    "players": 28,
     "matched": 24
   },
   "ideal_xi": {
@@ -628,10 +628,20 @@
         "defending": 39,
         "physical": 52
       }
+    },
+    {
+      "id": 262653,
+      "name": "Dinis Rodrigues",
+      "dob": "2005-01-12",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "c8a2a645d50d226d",
-  "generated_at": "2026-10-21T06:06:22.433278+00:00",
+  "baseline_id": "b076de735a1c3917",
+  "generated_at": "2026-10-23T06:05:48.420145+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -981,6 +991,17 @@
           ],
           "xg": 0.434,
           "xa": 0.2598
+        },
+        "262653": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 7,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         }
       },
       "most_used_xi": {
@@ -2587,6 +2608,17 @@
           ],
           "avg_x": 0.4263,
           "avg_y": 0.2388
+        },
+        "262653": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 1,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
         }
       },
       "most_used_xi": {
@@ -3129,5 +3161,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-21T06:06:58.933897+00:00"
+  "usage_generated_at": "2026-10-23T06:06:10.002535+00:00"
 }

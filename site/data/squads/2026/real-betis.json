@@ -15,10 +15,10 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-21T06:06:14.726379+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
-    "snapshot": "data/players/rosters/2026-10-21/CL.json"
+    "observed_at": "2026-10-23T06:05:09.414892+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "4896b6489c6e0595cd18fd9c4f911ca932ee58303241aeab1c7ab13ed9fa18b9",
+    "snapshot": "data/players/rosters/2026-10-23/PD.json"
   },
   "identity_overrides_sha256": "0ddf2c61519c143c15bf8df6b9b03655147387603c31bea75f9a49216831ec38",
   "method": "ea-position-assignment-v1",
@@ -643,8 +643,8 @@
       }
     }
   ],
-  "baseline_id": "40ad0eb43e4ba24e",
-  "generated_at": "2026-10-21T06:06:22.355225+00:00",
+  "baseline_id": "1994d6eee774dfad",
+  "generated_at": "2026-10-23T06:05:48.403187+00:00",
   "usage": {
     "la-liga": {
       "source": "understat",
@@ -3449,5 +3449,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-22T06:12:30.758942+00:00"
+  "usage_generated_at": "2026-10-23T06:06:13.780274+00:00"
 }

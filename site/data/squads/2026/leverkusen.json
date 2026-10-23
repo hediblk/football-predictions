@@ -15,16 +15,16 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:09.822985+00:00",
+    "observed_at": "2026-10-23T06:05:25.396714+00:00",
     "url": "https://api.football-data.org/v4/competitions/BL1/teams",
-    "sha256": "1c95dfdeece4df7077b5d2fbea2456a2b51c2c9f0ced94d4907ddd4a644a20a9",
-    "snapshot": "data/players/rosters/2026-10-16/BL1.json"
+    "sha256": "62814069021113b6f33e8185501ab1b430a5134f68297b5ba6cf0ee690098916",
+    "snapshot": "data/players/rosters/2026-10-23/BL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 29,
-    "matched": 24
+    "players": 28,
+    "matched": 25
   },
   "ideal_xi": {
     "formation": "4-3-3",
@@ -41,11 +41,11 @@
       },
       {
         "role": "CB",
-        "player": 64713
+        "player": 46125
       },
       {
         "role": "CB",
-        "player": 46125
+        "player": 64713
       },
       {
         "role": "RB",
@@ -293,16 +293,6 @@
         "defending": 72,
         "physical": 76
       }
-    },
-    {
-      "id": 191179,
-      "name": "Guéla Doué",
-      "dob": "2025-06-30",
-      "provider_position": "Defence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
     },
     {
       "id": 6681,
@@ -579,12 +569,26 @@
     {
       "id": 191157,
       "name": "Eliesse Ben Seghir",
-      "dob": "2025-06-30",
+      "dob": "2005-02-16",
       "provider_position": "Offence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272781,
+        "overall": 74,
+        "positions": [
+          "CAM",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 73,
+        "shooting": 72,
+        "passing": 71,
+        "dribbling": 78,
+        "defending": 28,
+        "physical": 61
+      }
     },
     {
       "id": 204136,
@@ -663,8 +667,8 @@
       "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "9a333d71e9ef0c61",
-  "generated_at": "2026-10-16T07:26:52.022618+00:00",
+  "baseline_id": "bf9a08f667ba56ed",
+  "generated_at": "2026-10-23T06:05:48.266368+00:00",
   "usage": {
     "bundesliga": {
       "source": "understat",
@@ -795,19 +799,6 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
-        },
-        "191179": {
-          "starts": 0,
-          "sub": 1,
-          "minutes": 25,
-          "share": 0.046296,
-          "known_games": 1,
-          "unknown_games": 5,
-          "provider_ids": [
-            10868
-          ],
-          "xg": 0.0,
-          "xa": 0.0
         },
         "6681": {
           "starts": 0,
@@ -1581,7 +1572,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191179
+              "player": null
             }
           ],
           "starters": [
@@ -1600,8 +1591,7 @@
             8797,
             45,
             144470,
-            1826,
-            191179
+            1826
           ],
           "ideal_started": null
         },
@@ -2090,5 +2080,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:23.339199+00:00"
+  "usage_generated_at": "2026-10-23T06:06:05.337298+00:00"
 }

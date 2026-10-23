@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:24.954517+00:00",
+    "observed_at": "2026-10-23T06:05:41.039969+00:00",
     "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "50aef2fba39beb439a93615cc73766d7f5b99536e853b73e749b82a22c72a186",
-    "snapshot": "data/players/rosters/2026-10-16/FL1.json"
+    "sha256": "2707d065fbbe1b88c54c4bd3f6c29be6476273982e09c446bbf23bf0757d3bee",
+    "snapshot": "data/players/rosters/2026-10-23/FL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 26,
+    "players": 25,
     "matched": 22
   },
   "ideal_xi": {
@@ -566,16 +566,6 @@
       }
     },
     {
-      "id": 177648,
-      "name": "Issa Soumaré",
-      "dob": "2022-06-30",
-      "provider_position": "Offence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
-    },
-    {
       "id": 178644,
       "name": "Eliezer Mayenda",
       "dob": "2005-05-08",
@@ -607,10 +597,46 @@
       "method": null,
       "ea": null,
       "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": "observed:understat:11792",
+      "name": "Issa Soumaré",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 253121,
+        "overall": 75,
+        "positions": [
+          "LM",
+          "ST",
+          "LW"
+        ],
+        "pace": 83,
+        "shooting": 68,
+        "passing": 68,
+        "dribbling": 75,
+        "defending": 37,
+        "physical": 62
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            11792
+          ],
+          "names": [
+            "Issa Soumaré"
+          ]
+        }
+      },
+      "first_seen": "2026-08-30",
+      "last_seen": "2026-10-18"
     }
   ],
-  "baseline_id": "85ccce79e02bb406",
-  "generated_at": "2026-10-16T07:26:52.374600+00:00",
+  "baseline_id": "8e8d6ab9cced790a",
+  "generated_at": "2026-10-23T06:05:48.640027+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -907,19 +933,6 @@
           "xg": 5.897,
           "xa": 0.8448
         },
-        "177648": {
-          "starts": 4,
-          "sub": 1,
-          "minutes": 289,
-          "share": 0.535185,
-          "known_games": 5,
-          "unknown_games": 2,
-          "provider_ids": [
-            11792
-          ],
-          "xg": 0.8355,
-          "xa": 0.0231
-        },
         "178644": {
           "starts": 1,
           "sub": 4,
@@ -943,6 +956,19 @@
           "provider_ids": [],
           "xg": null,
           "xa": null
+        },
+        "observed:understat:11792": {
+          "starts": 4,
+          "sub": 1,
+          "minutes": 289,
+          "share": 0.535185,
+          "known_games": 5,
+          "unknown_games": 2,
+          "provider_ids": [
+            11792
+          ],
+          "xg": 0.8355,
+          "xa": 0.0231
         }
       },
       "most_used_xi": {
@@ -959,11 +985,11 @@
           },
           {
             "role": "CB",
-            "player": 150797
+            "player": 150751
           },
           {
             "role": "CB",
-            "player": 150751
+            "player": 150797
           },
           {
             "role": "RB",
@@ -983,7 +1009,7 @@
           },
           {
             "role": "LW",
-            "player": 160410
+            "player": "observed:understat:11792"
           },
           {
             "role": "ST",
@@ -1113,7 +1139,7 @@
               "starter": true,
               "xg": 0.09378892928361893,
               "xa": 0.023122187703847885,
-              "player": 177648
+              "player": "observed:understat:11792"
             },
             {
               "source_id": 5684,
@@ -1171,7 +1197,7 @@
             10201,
             8706,
             149850,
-            177648
+            "observed:understat:11792"
           ],
           "subs": [
             575,
@@ -1296,7 +1322,7 @@
               "starter": false,
               "xg": 0.024881446734070778,
               "xa": 0.0,
-              "player": 177648
+              "player": "observed:understat:11792"
             },
             {
               "source_id": 12159,
@@ -1348,7 +1374,7 @@
             149850
           ],
           "subs": [
-            177648,
+            "observed:understat:11792",
             227004,
             98299,
             8706,
@@ -1452,7 +1478,7 @@
               "starter": true,
               "xg": 0.38777440786361694,
               "xa": 0.0,
-              "player": 177648
+              "player": "observed:understat:11792"
             },
             {
               "source_id": 12850,
@@ -1519,7 +1545,7 @@
             96869,
             8706,
             8542,
-            177648,
+            "observed:understat:11792",
             149850
           ],
           "subs": [
@@ -1809,7 +1835,7 @@
               "starter": true,
               "xg": 0.3290897309780121,
               "xa": 0.0,
-              "player": 177648
+              "player": "observed:understat:11792"
             },
             {
               "source_id": 3475,
@@ -1867,7 +1893,7 @@
             8542,
             8706,
             149850,
-            177648
+            "observed:understat:11792"
           ],
           "subs": [
             96869,
@@ -1983,7 +2009,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 177648
+              "player": "observed:understat:11792"
             },
             {
               "source_id": 7224,
@@ -2042,7 +2068,7 @@
             10201,
             96869,
             149850,
-            177648
+            "observed:understat:11792"
           ],
           "subs": [
             98299,
@@ -2055,5 +2081,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:35.617837+00:00"
+  "usage_generated_at": "2026-10-23T06:06:14.530491+00:00"
 }

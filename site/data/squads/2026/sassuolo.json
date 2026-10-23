@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:17.417813+00:00",
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
     "url": "https://api.football-data.org/v4/competitions/SA/teams",
-    "sha256": "9a3b4620a927375c1e5a316a5a7ab588adf287213c71b8b3d07e1834f38a147f",
-    "snapshot": "data/players/rosters/2026-10-16/SA.json"
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 34,
+    "players": 33,
     "matched": 27
   },
   "ideal_xi": {
@@ -540,16 +540,6 @@
       }
     },
     {
-      "id": 191190,
-      "name": "Cristian Volpato",
-      "dob": "2026-06-30",
-      "provider_position": "Midfield",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
-    },
-    {
       "id": 250948,
       "name": "Darryl Bakola",
       "dob": "2007-11-30",
@@ -734,10 +724,45 @@
         "defending": 35,
         "physical": 71
       }
+    },
+    {
+      "id": "observed:understat:10084",
+      "name": "Cristian Volpato",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
+      "method": "name_and_club",
+      "ea": {
+        "id": 265761,
+        "overall": 72,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 69,
+        "shooting": 70,
+        "passing": 68,
+        "dribbling": 73,
+        "defending": 39,
+        "physical": 59
+      },
+      "providers": {
+        "understat": {
+          "ids": [
+            10084
+          ],
+          "names": [
+            "Cristian Volpato"
+          ]
+        }
+      },
+      "first_seen": "2026-08-23",
+      "last_seen": "2026-10-16"
     }
   ],
-  "baseline_id": "c26503f3c41a19b2",
-  "generated_at": "2026-10-16T07:26:52.521515+00:00",
+  "baseline_id": "100728267c80e43c",
+  "generated_at": "2026-10-23T06:05:48.692779+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -1035,19 +1060,6 @@
           "xg": 0.1292,
           "xa": 0.0
         },
-        "191190": {
-          "starts": 3,
-          "sub": 1,
-          "minutes": 195,
-          "share": 0.309524,
-          "known_games": 7,
-          "unknown_games": 0,
-          "provider_ids": [
-            10084
-          ],
-          "xg": 0.2465,
-          "xa": 0.9094
-        },
         "250948": {
           "starts": 5,
           "sub": 1,
@@ -1162,6 +1174,19 @@
           ],
           "xg": 0.0,
           "xa": 0.0
+        },
+        "observed:understat:10084": {
+          "starts": 3,
+          "sub": 1,
+          "minutes": 195,
+          "share": 0.309524,
+          "known_games": 7,
+          "unknown_games": 0,
+          "provider_ids": [
+            10084
+          ],
+          "xg": 0.2465,
+          "xa": 0.9094
         }
       },
       "most_used_xi": {
@@ -1178,11 +1203,11 @@
           },
           {
             "role": "CB",
-            "player": 10206
+            "player": 128331
           },
           {
             "role": "CB",
-            "player": 128331
+            "player": 10206
           },
           {
             "role": "RB",
@@ -1302,7 +1327,7 @@
               "starter": true,
               "xg": 0.11908138543367386,
               "xa": 0.6558278799057007,
-              "player": 191190
+              "player": "observed:understat:10084"
             },
             {
               "source_id": 14417,
@@ -1376,7 +1401,7 @@
             250948,
             3438,
             183018,
-            191190,
+            "observed:understat:10084",
             105081,
             8822
           ],
@@ -1474,7 +1499,7 @@
               "starter": true,
               "xg": 0.12741678953170776,
               "xa": 0.17936882376670837,
-              "player": 191190
+              "player": "observed:understat:10084"
             },
             {
               "source_id": 14417,
@@ -1549,7 +1574,7 @@
             183018,
             3438,
             250948,
-            191190,
+            "observed:understat:10084",
             105081,
             8822
           ],
@@ -1648,7 +1673,7 @@
               "starter": true,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 191190
+              "player": "observed:understat:10084"
             },
             {
               "source_id": 14417,
@@ -1723,7 +1748,7 @@
             3438,
             189844,
             183018,
-            191190,
+            "observed:understat:10084",
             105081,
             8822
           ],
@@ -2401,7 +2426,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.07417606562376022,
-              "player": 191190
+              "player": "observed:understat:10084"
             },
             {
               "source_id": 11929,
@@ -2429,7 +2454,7 @@
           "subs": [
             191379,
             105081,
-            191190,
+            "observed:understat:10084",
             189844
           ],
           "ideal_started": 6
@@ -2437,5 +2462,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:37.181100+00:00"
+  "usage_generated_at": "2026-10-23T06:06:15.686880+00:00"
 }

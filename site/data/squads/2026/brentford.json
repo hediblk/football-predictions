@@ -15,21 +15,21 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-16T00:33:02.162730+00:00",
+    "observed_at": "2026-10-23T06:05:17.425474+00:00",
     "url": "https://api.football-data.org/v4/competitions/PL/teams",
-    "sha256": "65de11ca9362ae8e4c97c758ab4d2e4f1c7e3170b160cb9dddce5893aaf877b8",
-    "snapshot": "data/players/rosters/2026-10-16/PL.json"
+    "sha256": "8ca2ded2c22606a9c78e0cc53f2401f2bc6dcbaf7851cd75efd7b2115fa4e2d3",
+    "snapshot": "data/players/rosters/2026-10-23/PL.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
     "players": 29,
-    "matched": 25
+    "matched": 26
   },
   "ideal_xi": {
     "formation": "4-3-3",
     "status": "provisional",
-    "mean_overall": 79.6,
+    "mean_overall": 79.7,
     "slots": [
       {
         "role": "GK",
@@ -37,7 +37,7 @@
       },
       {
         "role": "LB",
-        "player": 101910
+        "player": 193633
       },
       {
         "role": "CB",
@@ -53,15 +53,15 @@
       },
       {
         "role": "CDM",
-        "player": 150964
-      },
-      {
-        "role": "CM",
         "player": 10194
       },
       {
         "role": "CM",
         "player": 24238
+      },
+      {
+        "role": "CM",
+        "player": 150964
       },
       {
         "role": "LW",
@@ -254,12 +254,23 @@
     {
       "id": 193633,
       "name": "El Hadji Malick Diouf",
-      "dob": "2023-02-21",
+      "dob": "2004-12-29",
       "provider_position": "Defence",
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 274915,
+        "overall": 78,
+        "positions": [
+          "LB"
+        ],
+        "pace": 79,
+        "shooting": 67,
+        "passing": 73,
+        "dribbling": 75,
+        "defending": 74,
+        "physical": 75
+      }
     },
     {
       "id": 204348,
@@ -673,8 +684,8 @@
       }
     }
   ],
-  "baseline_id": "fc9915ab271c3ad2",
-  "generated_at": "2026-10-16T07:26:52.034023+00:00",
+  "baseline_id": "b2fcf8f296d8b05f",
+  "generated_at": "2026-10-23T06:05:48.272854+00:00",
   "usage": {
     "premier-league": {
       "source": "understat",
@@ -1265,7 +1276,7 @@
             24238,
             101111
           ],
-          "ideal_started": 9
+          "ideal_started": 8
         },
         {
           "fixture_id": 560559,
@@ -1439,7 +1450,7 @@
             101111,
             8251
           ],
-          "ideal_started": 8
+          "ideal_started": 7
         },
         {
           "fixture_id": 560565,
@@ -1613,7 +1624,7 @@
             227064,
             101111
           ],
-          "ideal_started": 9
+          "ideal_started": 8
         },
         {
           "fixture_id": 560576,
@@ -2304,5 +2315,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-19T06:16:07.790823+00:00"
+  "usage_generated_at": "2026-10-23T06:05:53.557693+00:00"
 }

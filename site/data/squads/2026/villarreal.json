@@ -15,20 +15,20 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-21T06:06:14.726379+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "a9420d6d144cc8557f915011ee9090ffa31b6d8bb4e428954348204bce739588",
-    "snapshot": "data/players/rosters/2026-10-21/CL.json"
+    "observed_at": "2026-10-23T06:05:09.414892+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "4896b6489c6e0595cd18fd9c4f911ca932ee58303241aeab1c7ab13ed9fa18b9",
+    "snapshot": "data/players/rosters/2026-10-23/PD.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 25,
+    "players": 24,
     "matched": 24
   },
   "ideal_xi": {
     "formation": "4-3-3",
-    "status": "provisional",
+    "status": "complete",
     "mean_overall": 80.0,
     "slots": [
       {
@@ -610,18 +610,31 @@
       }
     },
     {
-      "id": 302219,
-      "name": "Nízar El Jmili",
-      "dob": "2004-11-30",
-      "provider_position": "Offence",
-      "status": "unmatched",
+      "id": "observed:understat:14864",
+      "name": "Nizar El Jmili",
+      "dob": null,
+      "provider_position": null,
+      "status": "observed",
+      "source": "match_sheet",
       "method": null,
       "ea": null,
-      "reason": "no_name_and_birth_date_match"
+      "providers": {
+        "understat": {
+          "ids": [
+            14864
+          ],
+          "names": [
+            "Nizar El Jmili"
+          ]
+        }
+      },
+      "first_seen": "2026-10-10",
+      "last_seen": "2026-10-17",
+      "reason": "no_name_match"
     }
   ],
-  "baseline_id": "8e287e838a4df133",
-  "generated_at": "2026-10-21T06:06:22.275250+00:00",
+  "baseline_id": "ad3e18a7188b331c",
+  "generated_at": "2026-10-23T06:05:48.342072+00:00",
   "usage": {
     "la-liga": {
       "source": "understat",
@@ -935,7 +948,7 @@
           "xg": 0.5608,
           "xa": 0.1456
         },
-        "302219": {
+        "observed:understat:14864": {
           "starts": 0,
           "sub": 2,
           "minutes": 9,
@@ -2198,7 +2211,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.0,
-              "player": 302219
+              "player": "observed:understat:14864"
             },
             {
               "source_id": 11402,
@@ -2226,7 +2239,7 @@
             171216,
             32719,
             136646,
-            302219,
+            "observed:understat:14864",
             186564
           ],
           "ideal_started": null
@@ -2354,7 +2367,7 @@
               "starter": false,
               "xg": 0.0,
               "xa": 0.052761197090148926,
-              "player": 302219
+              "player": "observed:understat:14864"
             },
             {
               "source_id": 8696,
@@ -2398,7 +2411,7 @@
           ],
           "subs": [
             136646,
-            302219,
+            "observed:understat:14864",
             633,
             32719,
             171216
@@ -2717,7 +2730,7 @@
           "avg_x": 0.4946,
           "avg_y": 0.3577
         },
-        "302219": {
+        "observed:understat:14864": {
           "starts": 0,
           "sub": 0,
           "minutes": 0,
@@ -3278,5 +3291,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-21T06:07:22.163802+00:00"
+  "usage_generated_at": "2026-10-23T06:06:23.229282+00:00"
 }

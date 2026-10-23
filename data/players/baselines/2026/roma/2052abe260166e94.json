@@ -1,0 +1,624 @@
+{
+  "slug": "roma",
+  "club_id": 100,
+  "name": "AS Roma",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "url": "https://api.football-data.org/v4/competitions/SA/teams",
+    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
+    "snapshot": "data/players/rosters/2026-10-23/SA.json"
+  },
+  "identity_overrides_sha256": "4d46a369db1a595cbe8ca57910f769d8a0f7ff2a2ac54cbb4cad4a63d395f704",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 26,
+    "matched": 23
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 80.7,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 16735
+      },
+      {
+        "role": "LB",
+        "player": 137693
+      },
+      {
+        "role": "CB",
+        "player": 1837
+      },
+      {
+        "role": "CB",
+        "player": 526
+      },
+      {
+        "role": "RB",
+        "player": 46452
+      },
+      {
+        "role": "CDM",
+        "player": 1844
+      },
+      {
+        "role": "CM",
+        "player": 1848
+      },
+      {
+        "role": "CM",
+        "player": 102395
+      },
+      {
+        "role": "LW",
+        "player": 261273
+      },
+      {
+        "role": "ST",
+        "player": 2046
+      },
+      {
+        "role": "RW",
+        "player": 179164
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 1829,
+      "name": "Pierluigi Gollini",
+      "dob": "1995-03-18",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 211515,
+        "overall": 74,
+        "positions": [
+          "GK"
+        ],
+        "pace": 74,
+        "shooting": 72,
+        "passing": 71,
+        "dribbling": 76,
+        "defending": 47,
+        "physical": 74
+      }
+    },
+    {
+      "id": 16735,
+      "name": "Mile Svilar",
+      "dob": "1999-08-27",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 230872,
+        "overall": 85,
+        "positions": [
+          "GK"
+        ],
+        "pace": 79,
+        "shooting": 81,
+        "passing": 78,
+        "dribbling": 86,
+        "defending": 58,
+        "physical": 85
+      }
+    },
+    {
+      "id": 191127,
+      "name": "Devis Vásquez",
+      "dob": "1998-05-12",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233189,
+        "overall": 72,
+        "positions": [
+          "GK"
+        ],
+        "pace": 72,
+        "shooting": 68,
+        "passing": 71,
+        "dribbling": 75,
+        "defending": 38,
+        "physical": 70
+      }
+    },
+    {
+      "id": 273759,
+      "name": "Giorgio De Marzi",
+      "dob": "2007-04-18",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 526,
+      "name": "Evan N'Dicka",
+      "dob": "1999-08-20",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 236403,
+        "overall": 83,
+        "positions": [
+          "CB"
+        ],
+        "pace": 74,
+        "shooting": 53,
+        "passing": 69,
+        "dribbling": 70,
+        "defending": 83,
+        "physical": 84
+      },
+      "identity_override": {
+        "provider_name": "Evan N'Dicka",
+        "provider_dob": "1999-08-20",
+        "verified_dob": "1999-08-20",
+        "ea_id": 236403,
+        "source": "https://www.asroma.com/en/news/68792/get-to-know-romas-second-summer-signing-evan-ndicka",
+        "observed_at": "2026-10-15",
+        "note": "Roma confirms Evan Ndicka and 20 August 1999; the provider inserts an apostrophe."
+      }
+    },
+    {
+      "id": 1837,
+      "name": "Gianluca Mancini",
+      "dob": "1996-04-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229582,
+        "overall": 84,
+        "positions": [
+          "CB"
+        ],
+        "pace": 69,
+        "shooting": 50,
+        "passing": 61,
+        "dribbling": 66,
+        "defending": 85,
+        "physical": 82
+      }
+    },
+    {
+      "id": 32703,
+      "name": "Mario Hermoso",
+      "dob": "1995-06-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229668,
+        "overall": 81,
+        "positions": [
+          "CB"
+        ],
+        "pace": 71,
+        "shooting": 49,
+        "passing": 72,
+        "dribbling": 69,
+        "defending": 82,
+        "physical": 80
+      }
+    },
+    {
+      "id": 46452,
+      "name": "Nahuel Molina",
+      "dob": "1998-04-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233084,
+        "overall": 77,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 80,
+        "shooting": 72,
+        "passing": 73,
+        "dribbling": 74,
+        "defending": 73,
+        "physical": 70
+      }
+    },
+    {
+      "id": 82020,
+      "name": "Leonardo Balerdi",
+      "dob": "1999-01-26",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242835,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 74,
+        "shooting": 46,
+        "passing": 65,
+        "dribbling": 69,
+        "defending": 80,
+        "physical": 79
+      }
+    },
+    {
+      "id": 137693,
+      "name": "Anass Salah-Eddine",
+      "dob": "2002-01-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268728,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 78,
+        "shooting": 45,
+        "passing": 71,
+        "dribbling": 77,
+        "defending": 70,
+        "physical": 67
+      }
+    },
+    {
+      "id": 149173,
+      "name": "Devyne Rensch",
+      "dob": "2003-01-18",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258826,
+        "overall": 75,
+        "positions": [
+          "RM",
+          "LM",
+          "CB",
+          "RB"
+        ],
+        "pace": 79,
+        "shooting": 59,
+        "passing": 70,
+        "dribbling": 73,
+        "defending": 74,
+        "physical": 66
+      }
+    },
+    {
+      "id": 177590,
+      "name": "Konstantinos Koulierakis",
+      "dob": "2003-11-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270077,
+        "overall": 76,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 44,
+        "passing": 57,
+        "dribbling": 65,
+        "defending": 76,
+        "physical": 78
+      }
+    },
+    {
+      "id": 179164,
+      "name": "Wesley",
+      "dob": "2003-09-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80170,
+        "overall": 80,
+        "positions": [
+          "LB",
+          "RB",
+          "LM",
+          "RM"
+        ],
+        "pace": 90,
+        "shooting": 63,
+        "passing": 75,
+        "dribbling": 81,
+        "defending": 75,
+        "physical": 77
+      }
+    },
+    {
+      "id": 191705,
+      "name": "Daniele Ghilardi",
+      "dob": "2003-01-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277695,
+        "overall": 74,
+        "positions": [
+          "CB"
+        ],
+        "pace": 61,
+        "shooting": 42,
+        "passing": 49,
+        "dribbling": 54,
+        "defending": 76,
+        "physical": 73
+      }
+    },
+    {
+      "id": 290391,
+      "name": "Emanuele Lulli",
+      "dob": "2007-08-17",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 1819,
+      "name": "Lorenzo Pellegrini",
+      "dob": "1996-06-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 228251,
+        "overall": 78,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 72,
+        "shooting": 77,
+        "passing": 79,
+        "dribbling": 78,
+        "defending": 71,
+        "physical": 71
+      }
+    },
+    {
+      "id": 1844,
+      "name": "Bryan Cristante",
+      "dob": "1995-03-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 208268,
+        "overall": 81,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 54,
+        "shooting": 74,
+        "passing": 79,
+        "dribbling": 76,
+        "defending": 79,
+        "physical": 82
+      }
+    },
+    {
+      "id": 1848,
+      "name": "Marten de Roon",
+      "dob": "1991-03-29",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 208461,
+        "overall": 80,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 52,
+        "shooting": 73,
+        "passing": 78,
+        "dribbling": 76,
+        "defending": 83,
+        "physical": 78
+      }
+    },
+    {
+      "id": 102395,
+      "name": "Manu Koné",
+      "dob": "2001-05-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 250723,
+        "overall": 81,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 74,
+        "shooting": 74,
+        "passing": 77,
+        "dribbling": 83,
+        "defending": 77,
+        "physical": 83
+      }
+    },
+    {
+      "id": 192382,
+      "name": "Niccolo Pisilli",
+      "dob": "2004-09-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 275291,
+        "overall": 74,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 69,
+        "shooting": 67,
+        "passing": 70,
+        "dribbling": 75,
+        "defending": 72,
+        "physical": 67
+      }
+    },
+    {
+      "id": 261273,
+      "name": "Rodrigo Mora",
+      "dob": "2007-05-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72997,
+        "overall": 77,
+        "positions": [
+          "CAM",
+          "CM",
+          "LW",
+          "ST"
+        ],
+        "pace": 76,
+        "shooting": 66,
+        "passing": 75,
+        "dribbling": 80,
+        "defending": 40,
+        "physical": 41
+      }
+    },
+    {
+      "id": 2046,
+      "name": "Paulo Dybala",
+      "dob": "1993-11-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 211110,
+        "overall": 85,
+        "positions": [
+          "CAM",
+          "ST"
+        ],
+        "pace": 77,
+        "shooting": 84,
+        "passing": 85,
+        "dribbling": 86,
+        "defending": 42,
+        "physical": 62
+      }
+    },
+    {
+      "id": 7457,
+      "name": "Donyell Malen",
+      "dob": "1999-01-19",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231447,
+        "overall": 83,
+        "positions": [
+          "ST"
+        ],
+        "pace": 86,
+        "shooting": 83,
+        "passing": 73,
+        "dribbling": 85,
+        "defending": 38,
+        "physical": 68
+      }
+    },
+    {
+      "id": 170891,
+      "name": "Santiago Castro",
+      "dob": "2004-09-18",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 267861,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 78,
+        "shooting": 77,
+        "passing": 64,
+        "dribbling": 77,
+        "defending": 43,
+        "physical": 74
+      }
+    },
+    {
+      "id": 171121,
+      "name": "Matias Soule",
+      "dob": "2003-04-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 265695,
+        "overall": 80,
+        "positions": [
+          "CAM",
+          "ST"
+        ],
+        "pace": 82,
+        "shooting": 76,
+        "passing": 79,
+        "dribbling": 81,
+        "defending": 48,
+        "physical": 66
+      }
+    },
+    {
+      "id": 302405,
+      "name": "Alessandro Di Nunzio",
+      "dob": "2007-04-21",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "2052abe260166e94",
+  "generated_at": "2026-10-23T06:05:48.329892+00:00"
+}
