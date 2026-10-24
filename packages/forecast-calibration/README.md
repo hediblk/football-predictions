@@ -29,6 +29,8 @@ Use `--help` for a smaller run or custom output location. A calibration artifact
 
 `python -m forecast_calibration.npxg all` runs the same protocol for non-penalty xG and a team penalty rate ([report](../../docs/npxg-penalty-rate.md)). It writes to `out/npxg-penalty-rate` and does not touch the artifact.
 
+`python -m forecast_calibration.market_blend` compares free log-linear market pools and five margin-removal methods on the saved calibration and robustness datasets, re-reading raw prices from the football-data.co.uk cache ([report](../../docs/market-blend-and-margins.md)). It writes to `out/market-blend` and does not touch the artifact.
+
 ## Offline expected-XI evaluation
 
 Task 8 reuses this package's historical origins and loaders, without writing calibration settings or forecasts:

@@ -335,6 +335,10 @@ PSG's fall is league-level: without the Manchester City–PSG quote, PSG's ratin
 
 `--european-history both` adds covered 90-minute ESPN results for 2025/26 onward beside the existing openfootball 2024/25 supplement, with explicit aliases, exclusion counts and approximated kickoff-plus-three-hour availability. The [three-variant replay](docs/el-ecl-history-evaluation.md) leaves 2024/25 unchanged and improves 2025/26 EL/ECL log loss by 0.00606, but worsens Champions League log loss by 0.00056 (paired clustered SE 0.00352). It fails the strict no-worse-in-both-seasons gate, so openfootball remains the default. No calibration settings or published data changed; EL/ECL prices remain for the 10 December recheck.
 
+### Market pool and margin removal (24 October 2026)
+
+Tested and not adopted; see the [report](docs/market-blend-and-margins.md). Freeing the market blend's weights (a log-linear pool that need not sum to one) and power or Shin margin removal each improve the market-informed forecast. The two overlap: on the top five, expanding 2017/18–2025/26, −0.0003 for power removal alone and −0.0006 (SE 0.0004) for a free pool on power prices; on six outside leagues, −0.0017 and −0.0019. Published forecasts do not blend odds, and the no-odds pool is already at its free optimum (+0.00014, SE 0.00011), so `calibrated_weights.json` stays. The free pool puts −0.07 to −0.21 on our model and 1.12–1.26 on the market: what the model knows is already priced. The model–market gap is 0.0088 in January–March but 0.0176 in July–September and 0.0163 in April–June, and larger with promoted clubs.
+
 ## Other existing priorities
 
 Upcoming work is listed in [ROADMAP.md](ROADMAP.md). Dated odds are now archived daily in [data/odds](data/odds/README.md). Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. The global weights stay fixed unless explicitly recalibrated; UCL is the separate-package plan above, while larger model experiments remain outside the league package.
