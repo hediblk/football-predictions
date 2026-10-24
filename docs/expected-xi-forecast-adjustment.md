@@ -285,9 +285,11 @@ The rates are the existing goal/xG blended Dixon–Coles model's rates. Rebuild 
 
 ## Reproduce and inspect
 
+**Code removed from `main` (24 October 2026).** The experiment was not adopted, so only this report stays. The code is at commit `bb6a1b7`: [`expected_xi.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/packages/forecast-calibration/src/forecast_calibration/expected_xi.py), [`player_impact.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/src/standing_prediction/player_impact.py) and [`player_prior.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/src/standing_prediction/player_prior.py). Check out that commit to run the commands below.
+
 The original numbers use revision `2b0bdd5`, before the Task 7b adapter and shared warm-up player basis. Use that revision in a separate checkout to reproduce them exactly. For the updated flat/EA comparison, use the [follow-up commands](expected-xi-ea-prior-comparison.md#reproduce-and-verify). Install the existing locked environment and the calibration package, then run from the repository root. The cache directory must contain saved `football-data-uk/` and `understat/` inputs; cache misses fail locally without HTTP requests.
 
-Implementation: [offline evaluation runner](../packages/forecast-calibration/src/forecast_calibration/expected_xi.py).
+Implementation: [offline evaluation runner](https://github.com/hediblk/football-predictions/blob/bb6a1b7/packages/forecast-calibration/src/forecast_calibration/expected_xi.py).
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \

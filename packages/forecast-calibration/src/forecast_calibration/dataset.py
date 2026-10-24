@@ -35,7 +35,7 @@ def collection_time(dates):
     return day - pd.to_timedelta(days_back, unit="D")
 
 
-def load_season(league, season, *, cache=True, npxg=False):
+def load_season(league, season, *, cache=True):
     raw = _football_data_csv(league, season, 30, ".cache/football-data-uk", cache)
     matches = raw[["HomeTeam", "AwayTeam", "FTHG", "FTAG"]].rename(columns={
         "HomeTeam": "homeTeam", "AwayTeam": "awayTeam", "FTHG": "homeGoals", "FTAG": "awayGoals",
@@ -71,10 +71,8 @@ def load_season(league, season, *, cache=True, npxg=False):
     if matches[["utcDate", "homeTeam", "awayTeam"]].duplicated().any():
         raise ValueError(f"Duplicate fixtures in {league}/{season}.")
     if league in XG_COMPETITIONS:
-        xg = fetch_understat_matches(competition=XG_COMPETITIONS[league], season=season, use_cache=cache, npxg=npxg)
+        xg = fetch_understat_matches(competition=XG_COMPETITIONS[league], season=season, use_cache=cache)
         matches = attach_xg(matches, xg)
-        if npxg:
-            matches.attrs["npxg_join"] = xg.attrs["npxg_join"]
     matches["season"] = season
     matches["league"] = league
     return matches

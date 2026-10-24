@@ -27,30 +27,7 @@ football-calibrate --dataset out/global-calibration/features/dataset.csv \
 
 Use `--help` for a smaller run or custom output location. A calibration artifact summarizes match-level performance; it cannot make the model permanently optimal or establish that standings probabilities are calibrated.
 
-`python -m forecast_calibration.npxg all` runs the same protocol for non-penalty xG and a team penalty rate ([report](../../docs/npxg-penalty-rate.md)). It writes to `out/npxg-penalty-rate` and does not touch the artifact.
-
-## Offline expected-XI evaluation
-
-Task 8 reuses this package's historical origins and loaders, without writing calibration settings or forecasts:
-
-```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
-  python -m forecast_calibration.expected_xi \
-  --cache-dir /Users/hedibelkahia/codes/football/.cache --out-dir out/expected-xi
-```
-
-This requires the saved provider caches and committed Understat player archive; it makes no HTTP requests. It compares latest XI, decayed start share, missed-game decay and an actual-starters oracle, selects weights before 2024/25, and checks the last two seasons unchanged. All CSVs and input/code hashes stay under `out/`. See the [protocol, results and limits](../../docs/expected-xi-forecast-adjustment.md). The default prior is flat; `--prior module:function` still accepts plain `(players, before_season)` callables.
-
-Task 7b's EA prior also fits slopes on earlier seasons. Use its explicit adapter, with compact rating vintages in the player cache:
-
-```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
-  python -m forecast_calibration.expected_xi \
-  --cache-dir /Users/hedibelkahia/codes/football/.cache --prior ea \
-  --out-dir out/expected-xi-ea
-```
-
-`--ea-cache` overrides the default `CACHE_DIR/players`. Each season's selected ridge is refitted after its candidate search so its saved effects use the selected slopes. EA columns cover the fixed matched identity catalogue plus past appearances; future evaluation sheets do not set the prior's position-group means. The manifest hashes the identity table, vintage metadata and compact rating files.
+Code for experiments that were not adopted (npxG with a penalty rate, expected XI and the EA prior) was removed from `main` on 24 October 2026; their reports in `docs/` link to commit `bb6a1b7`.
 
 ## Eleven-season miss report
 

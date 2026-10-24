@@ -107,10 +107,12 @@ Title and top-four log loss move by less than their standard errors, in opposite
 
 ## Reproduce
 
+**Code removed from `main` (24 October 2026).** The experiment was not adopted, so only this report stays. The code is at commit `bb6a1b7`: [`npxg.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/packages/forecast-calibration/src/forecast_calibration/npxg.py) and the opt-in npxG join in [`xg.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/src/standing_prediction/xg.py). Check out that commit to run the commands below.
+
 From the repository root, with the shared `.cache` (features and replays each take several minutes on 7 workers):
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m forecast_calibration.npxg all --workers 7
 ```
 
-This writes `out/npxg-penalty-rate/`: the feature files (`features/*.parquet`, one per league-season), `join_checks.csv`, `selection.json`, `holdout_metrics.csv`, `expanding_*.csv`, `penalty_rate_check.csv` and `replay_*.csv`. Code: [`npxg.py`](../packages/forecast-calibration/src/forecast_calibration/npxg.py); the join is in [`xg.py`](../src/standing_prediction/xg.py).
+This writes `out/npxg-penalty-rate/`: the feature files (`features/*.parquet`, one per league-season), `join_checks.csv`, `selection.json`, `holdout_metrics.csv`, `expanding_*.csv`, `penalty_rate_check.csv` and `replay_*.csv`.

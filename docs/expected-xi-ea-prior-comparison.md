@@ -175,6 +175,8 @@ EA slightly worsens title/champion loss and barely changes top-four loss. These 
 
 ## Reproduce and verify
 
+**Code removed from `main` (24 October 2026).** The experiment was not adopted, so only this report stays. The code is at commit `bb6a1b7`: [`expected_xi.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/packages/forecast-calibration/src/forecast_calibration/expected_xi.py) and [`player_prior.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/src/standing_prediction/player_prior.py). Check out that commit to run the commands below.
+
 Use the locked environment at base `7b6618d` plus this PR. Both runs make no provider requests:
 
 ```bash

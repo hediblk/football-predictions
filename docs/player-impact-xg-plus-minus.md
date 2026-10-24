@@ -218,7 +218,7 @@ These are ever-present players at promoted or short-lived top-flight sides. Thei
 ### What changed
 
 - **Unseen players.** Fold columns now include every evaluation-season player. A player without training rows has only his prior mean, so his minutes count once the prior is informative. With the flat prior that mean is zero, and Task 7's numbers reproduce exactly. "Unseen" means no nonzero entry in the training design: 11–15% of evaluation minutes.
-- **EA prior** (`src/standing_prediction/player_prior.py`, `EaPrior`). The prior mean is slope × (EA overall − position-group mean), with one slope for attack and one for defence. Groups are GK, DEF, MID and ATT, from the first listed EA position. The group mean is taken over the fold's rated players. Ratings use `matched` rows of `data/players/understat_ea_links.csv`. Each player gets the latest vintage in `data/players/ea/vintages.json` with `available_from` before the season's first kickoff (across the five leagues) that lists him, looking back at most 365 days. Unlinked and unrated players get 0. The callable keeps Task 7's signature, `prior(players, before_season) -> (attack, defence)`, once its slopes are fitted, so Task 8 can import it.
+- **EA prior** (`player_prior.py` at commit `bb6a1b7`, `EaPrior`). The prior mean is slope × (EA overall − position-group mean), with one slope for attack and one for defence. Groups are GK, DEF, MID and ATT, from the first listed EA position. The group mean is taken over the fold's rated players. Ratings use `matched` rows of `data/players/understat_ea_links.csv`. Each player gets the latest vintage in `data/players/ea/vintages.json` with `available_from` before the season's first kickoff (across the five leagues) that lists him, looking back at most 365 days. Unlinked and unrated players get 0. The callable keeps Task 7's signature, `prior(players, before_season) -> (attack, defence)`, once its slopes are fitted, so Task 8 can import it.
 - **Slopes from earlier seasons only.** The slopes are fitted on the training seasons, jointly with the ridge: unpenalised on the two prior directions, by profiling out the ridge (Frisch–Waugh). Regressing already-shrunk effects on ratings would attenuate them. Each training row uses the ratings available before **its own** season, which is how evaluation uses them. The fitted model is therefore effect = slope × rating(season) + a constant per-player deviation. The deviation is shrunk to zero, and the rating part moves with each new vintage.
 - **Ridge re-chosen** on earlier folds for each prior. The EA prior chose 300 every season for centred; for starters it chose 300, except 1,000 for 2021/22. The flat prior chose 300 except 100 for centred 2017/18, as before.
 
@@ -320,6 +320,8 @@ The first version gave every training row the ratings dated before the **evaluat
 - Positions are taken from the first EA listed position of the vintage used, not from match sheets.
 
 ## Reproduce
+
+**Code removed from `main` (24 October 2026).** The experiment was not adopted, so only this report stays. The code is at commit `bb6a1b7`: [`player_impact.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/src/standing_prediction/player_impact.py) and [`player_prior.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/src/standing_prediction/player_prior.py). Check out that commit to run the commands below.
 
 ```bash
 PYTHONDONTWRITEBYTECODE=1 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m standing_prediction.player_impact --out-dir out/player-impact
