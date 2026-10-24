@@ -24,6 +24,7 @@ export const BIG_STAKE = { title: 8, ucl: 15, releg: 15, top8: 30, top24: 30 };
 export const stakeNow = (t, key) => (key === "top8" ? t.r16 : key === "top24" ? t.r16 + t.playoff : t[key]);
 let data = null;
 let comp = "all";
+let lens = "score"; // judge played games by the score, or by which side had the better chances (xG)
 let day = null;
 let slide = null;
 let dragOffset = 0;
@@ -85,7 +86,7 @@ function render() {
   renderDays();
   renderChips();
   renderDay();
-  renderScorecardTable();
+  renderScorecardTable(lens);
 }
 
 /* ---------- day strip ---------- */
@@ -185,6 +186,21 @@ $("m-chips").addEventListener("click", (e) => {
   render();
 });
 
+$("m-lens").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-lens]");
+  if (!b || b.dataset.lens === lens) return;
+  lens = b.dataset.lens;
+  $("m-lens").querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  render();
+});
+
+/* the call judged on chances: did the model's favourite out-xG its opponent? From the exported `miss.xg`, where a
+   margin of 0.5 xG or less is level (see the site data contract); null before full time or without a forecast */
+function xgVerdict(m) {
+  if (!m.score || !m.p) return null;
+  return { won: "hit", lost: "miss", level: "level" }[m.miss && m.miss.xg] || "none";
+}
+
 /* ---------- the day's fixtures ---------- */
 function renderDay() {
   const list = visible(day);
@@ -193,7 +209,7 @@ function renderDay() {
   const calls = list.map((x) => verdict(x.m)).filter(Boolean);
   const hits = calls.filter((v) => v.hit).length;
   const summary = list.length
-    ? `${list.length} match${list.length > 1 ? "es" : ""}${calls.length ? ` · ${calls.length} played · model called <b>${hits} of ${calls.length}</b>` : ""}`
+    ? `${list.length} match${list.length > 1 ? "es" : ""}${calls.length ? ` · ${calls.length} played · ${lens === "xg" ? xgSummary(list) : `model called <b>${hits} of ${calls.length}</b>`}` : ""}`
     : "No matches in the competitions we cover.";
   // "How we did": the round card of the day's finished games with a forecast, for the competitions on show
   const played = list.filter((x) => x.m.score && x.m.p);
@@ -207,7 +223,7 @@ function renderDay() {
     const rows = list.filter((x) => x.comp === c.slug);
     if (!rows.length) continue;
     html += `<fieldset class="frame comp-day"><legend>${esc(stageLabel(c, rows))}</legend>
-      <div class="mlist">${rows.map((x) => matchRow(x.m, x.comp)).join("")}</div></fieldset>`;
+      <div class="mlist">${rows.map((x) => matchRow(x.m, x.comp, null, "", lens)).join("")}</div></fieldset>`;
   }
   if (data.missing.length) html += `<p class="note">No fixture data yet for ${esc(data.missing.join(", "))}.</p>`;
   $("m-day").innerHTML = html;
@@ -215,6 +231,15 @@ function renderDay() {
     const x = `${Math.sign(slide.days) * 28}px`;
     $("m-day").animate([{ opacity: 0, transform: `translateX(${x})` }, { opacity: 1, transform: "none" }], SLIDE);
   }
+}
+
+/* "favourite had the better chances in 5 of 6 · 2 level · 1 without xG": level games are left out of the rate */
+function xgSummary(list) {
+  const n = { hit: 0, miss: 0, level: 0, none: 0 };
+  list.map((x) => xgVerdict(x.m)).filter(Boolean).forEach((k) => n[k]++);
+  const clear = n.hit + n.miss;
+  return [clear ? `favourite had the better chances in <b>${n.hit} of ${clear}</b>` : "no clear xG winner",
+    n.level && `${n.level} level`, n.none && `${n.none} without xG`].filter(Boolean).join(" · ");
 }
 
 export function stageLabel(c, rows) {
@@ -242,8 +267,17 @@ export function probCells(m, labels = ["H", "D", "A"]) {
       <i style="background:${bulb(p, top)}"></i><b>${labels[i]}</b>${Math.round(p * 100)}</span>`).join("")}</span>`;
 }
 
-function verdictBadge(m) {
+const XG_BADGE = { hit: "Called", miss: "Missed", level: "Level" };
+function verdictBadge(m, lens = "score") {
   const v = verdict(m);
+  if (v && lens === "xg") {
+    const k = xgVerdict(m);
+    const [h, a] = m.xg || [];
+    const tip = k === "none" ? "No xG for this game" : `xG ${dec(h, 2)}–${dec(a, 2)}: ${k === "level" ? "within 0.5, too close to call"
+      : `the model's favourite ${k === "hit" ? "had" : "gave up"} the better chances`}`;
+    return k === "none" ? `<span class="m-verdict wait" title="${tip}">No xG</span>`
+      : `<span class="m-verdict ${k}" title="${esc(tip)}">${XG_BADGE[k]}</span>`;
+  }
   if (v) {
     return `<span class="m-verdict ${v.hit ? "hit" : "miss"}">${v.hit ? "Called" : "Missed"}${v.exact ? `<em>Exact</em>` : ""}</span>`;
   }
@@ -272,8 +306,8 @@ function stakeBadge(m, slug) {
 }
 
 /* `when` replaces the kickoff column, e.g. with the round and date when listing one team's games; `note` is a
-   line under the row */
-export function matchRow(m, slug, when = null, note = "") {
+   line under the row; `lens` "xg" judges a played game's call by the chances instead of the score */
+export function matchRow(m, slug, when = null, note = "", lens = "score") {
   const status = m.score ? "FT" : PENDING[m.reported || m.status] ? "–" : clock(m.kickoff);
   const [hs, as] = m.score || ["", ""];
   const win = m.score ? outcome(m.score) : -1;
@@ -282,7 +316,7 @@ export function matchRow(m, slug, when = null, note = "") {
     <span class="m-home${win === 0 ? " won" : ""}">${clubName(m.home_id, m.home)}${formDots(m.home_id, m.kickoff)}</span>
     <span class="m-hs">${hs}</span><span class="m-sep">${m.score ? "–" : "v"}</span><span class="m-as">${as}</span>
     <span class="m-away${win === 2 ? " won" : ""}">${clubName(m.away_id, m.away)}${formDots(m.away_id, m.kickoff)}</span>
-    <span class="m-foot">${stakeBadge(m, slug)}${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m)}</span>${note}
+    <span class="m-foot">${stakeBadge(m, slug)}${probCells(m)}<span class="m-exp">${m.exp ? `${dec(m.exp[0])}–${dec(m.exp[1])}` : ""}</span>${verdictBadge(m, lens)}</span>${note}
   </div>`;
 }
 

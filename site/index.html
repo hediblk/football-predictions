@@ -74,6 +74,11 @@
       <legend>Matches</legend>
       <div class="days" id="days"></div>
       <div class="chips" id="m-chips" role="group" aria-label="Competition"></div>
+      <div class="chips m-lens" id="m-lens" role="group" aria-labelledby="m-lens-label">
+        <span class="m-lens-label" id="m-lens-label">Judge calls by</span>
+        <button type="button" class="chip" data-lens="score" aria-pressed="true">Score</button>
+        <button type="button" class="chip" data-lens="xg" aria-pressed="false">xG</button>
+      </div>
     </fieldset>
     <fieldset class="frame" id="m-matter" hidden>
       <legend>Games that matter · next 7 days</legend>
@@ -84,7 +89,7 @@
       <legend>Scorecard · this season</legend>
       <div class="scroll"><table class="board record" id="m-record-table"></table></div>
       <p class="sc-line" id="m-misses" hidden></p>
-      <p class="note">Lower is better. A blind one-in-three guess scores 1.099. Combined published and reconstructed forecasts; vs baseline = model minus prior frequency on the same fixtures. Called = hit rate.</p>
+      <p class="note">Lower is better. A blind one-in-three guess scores 1.099. Combined published and reconstructed forecasts; vs baseline = model minus prior frequency on the same fixtures. <span id="m-called-note">Called = hit rate.</span></p>
       <p class="more-link"><a href="#model/scorecard">Calibration and the rolling record →</a></p>
     </fieldset>
   </div>
