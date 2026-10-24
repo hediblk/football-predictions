@@ -29,6 +29,8 @@ Use `--help` for a smaller run or custom output location. A calibration artifact
 
 `python -m forecast_calibration.npxg all` runs the same protocol for non-penalty xG and a team penalty rate ([report](../../docs/npxg-penalty-rate.md)). It writes to `out/npxg-penalty-rate` and does not touch the artifact.
 
+`python -m forecast_calibration.late_stakes --workers 6` reruns the no-odds season simulation at each historical origin after half the season. It tests whether low-stakes fixtures explain the late-season gap to the market ([report](../../docs/late-season-stakes.md)), writes to `out/late-stakes` and does not touch the artifact.
+
 ## Offline expected-XI evaluation
 
 Task 8 reuses this package's historical origins and loaders, without writing calibration settings or forecasts:

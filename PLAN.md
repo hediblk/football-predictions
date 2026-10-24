@@ -335,6 +335,10 @@ PSG's fall is league-level: without the Manchester City–PSG quote, PSG's ratin
 
 `--european-history both` adds covered 90-minute ESPN results for 2025/26 onward beside the existing openfootball 2024/25 supplement, with explicit aliases, exclusion counts and approximated kickoff-plus-three-hour availability. The [three-variant replay](docs/el-ecl-history-evaluation.md) leaves 2024/25 unchanged and improves 2025/26 EL/ECL log loss by 0.00606, but worsens Champions League log loss by 0.00056 (paired clustered SE 0.00352). It fails the strict no-worse-in-both-seasons gate, so openfootball remains the default. No calibration settings or published data changed; EL/ECL prices remain for the 10 December recheck.
 
+### R3: late-season stakes (24 October 2026)
+
+Tested and not adopted; see the [report](docs/late-season-stakes.md). Historical stakes come from rerunning the no-odds season simulation at every origin after half the season, with refits that reproduce the saved dataset. A side with nothing to play for is one whose title, top-4, top-6 and relegation chances all swing by less than 3 points across its results. Its fixtures trail the market by 0.0171, against 0.0091 when both sides play for something. A two-coefficient stakes shift on the published blend gains 0.00010 (SE 0.00031) held out, and the market already prices it.
+
 ## Other existing priorities
 
 Upcoming work is listed in [ROADMAP.md](ROADMAP.md). Dated odds are now archived daily in [data/odds](data/odds/README.md). Add dated disciplinary adjustments and deciding-playoff handling before claiming official-table equivalence. Keep conditional uncertainty and score-derived historical targets explicit. The global weights stay fixed unless explicitly recalibrated; UCL is the separate-package plan above, while larger model experiments remain outside the league package.
