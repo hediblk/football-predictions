@@ -13,17 +13,26 @@ let competition = "all";
 let cohort = "combined";
 const load = async () => data ||= await getJSON("scorecard.json");
 
-export async function renderScorecardTable() {
+/* with the xG lens, Called is the share of games with a clear xG winner (margin over 0.5) where it was the favourite */
+const xgCalled = (row) => {
+  const kinds = Object.values(row.misses.kinds);
+  const won = sum(kinds.map(k => k.xg.won)), clear = won + sum(kinds.map(k => k.xg.lost));
+  return clear ? share(won, clear) : "–";
+};
+
+export async function renderScorecardTable(lens = "score") {
   const frame = $("m-scorecard");
   try {
     const card = await load();
     const rows = COMPS.filter(c => card.competitions[c.slug]?.n).map(c => [c.label, card.competitions[c.slug]]);
     if (!card.all.n) { frame.hidden = true; return; }
     frame.hidden = false;
+    const xg = lens === "xg" && card.all.misses;
+    $("m-called-note").textContent = xg ? "Called on xG = share of games with a clear xG winner (by more than 0.5) where that side was the favourite; level games and games without xG are left out." : "Called = hit rate.";
     const line = (name, row, total = false) => `<tr${total ? ' class="total"' : ""}><td class="club l">${esc(name)}</td><td>${row.n}</td>
       <td class="lit">${dec(row.model.log_loss, 3)}</td><td>${delta(row)}</td><td>${dec(row.model.brier, 3)}</td>
-      <td>${share(row.called, row.n)}</td><td>${share(row.n_published, row.n)}</td></tr>`;
-    $("m-record-table").innerHTML = `<thead><tr><th class="club l">Competition</th><th>Played</th><th>Log loss</th><th>vs baseline</th><th>Brier</th><th>Called</th><th>Published share</th></tr></thead>
+      <td>${xg ? xgCalled(row) : share(row.called, row.n)}</td><td>${share(row.n_published, row.n)}</td></tr>`;
+    $("m-record-table").innerHTML = `<thead><tr><th class="club l">Competition</th><th>Played</th><th>Log loss</th><th>vs baseline</th><th>Brier</th><th>${xg ? "Called on xG" : "Called"}</th><th>Published share</th></tr></thead>
       <tbody>${rows.map(([name, row]) => line(name, row)).join("")}${line("All", card.all, true)}</tbody>`;
     $("m-misses").hidden = !card.all.misses;
     if (card.all.misses) $("m-misses").innerHTML = `${esc(missLine(card.all))} <a href="#model/misses">How we miss →</a>`;

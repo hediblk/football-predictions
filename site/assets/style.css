@@ -318,17 +318,23 @@ tr.detail .det a.more { grid-column: 1 / -1; }
 
 /* the call on a played match: a lamp plus a word, never colour alone */
 .m-verdict { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font: 800 13px/1 var(--sign); letter-spacing: .14em; text-transform: uppercase; }
-.m-verdict.hit, .m-verdict.miss { min-width: 92px; }
-.m-verdict.hit::before, .m-verdict.miss::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.m-verdict.hit, .m-verdict.miss, .m-verdict.level { min-width: 92px; }
+.m-verdict.hit::before, .m-verdict.miss::before, .m-verdict.level::before { content: ""; width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .m-verdict.hit { color: var(--green-t); }
 .m-verdict.hit::before { background: var(--green); box-shadow: 0 0 6px var(--green); }
 .m-verdict.miss { color: var(--red); }
 .m-verdict.miss::before { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.m-verdict.level { color: var(--ink-2); }
+.m-verdict.level::before { background: var(--draw); }
 .m-verdict em { font: 800 10px/1 var(--sign); font-style: normal; letter-spacing: .12em; color: var(--bg); background: var(--amber); padding: 3px 5px 2px; }
 .m-verdict.wait, .m-verdict.pick { font: 500 11px/1.2 var(--mono); letter-spacing: .02em; text-transform: none; color: var(--dim); }
 
 /* ---------- matches ---------- */
 .m-top { padding-bottom: 14px; }
+/* how played games are judged: by the score or by the chances */
+.m-lens { align-items: center; margin-top: 10px; }
+.m-lens-label { font: 500 11px/1 var(--mono); letter-spacing: .02em; color: var(--dim); margin-right: 4px; }
+@media (max-width: 699px) { .m-lens-label { flex: none; } }
 .days { display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px; align-items: stretch; margin: 0 -8px; }
 /* The track carries spare days on both sides so a drag or slide never shows a gap; --n days are in view. */
 .day-row { --n: 9; position: relative; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab; }
