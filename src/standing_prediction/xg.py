@@ -14,7 +14,6 @@ from standing_prediction.utils import cache_max_age, cached_get, normalize_team
 UNDERSTAT_BASE = "https://understat.com"
 XG_PROVIDER = "understat"
 XG_COLUMNS = ["home_xg", "away_xg"]
-NPXG_COLUMNS = ["home_npxg", "away_npxg"]
 # Understat covers these leagues from 2014/15 with post-match, penalty-inclusive shot xG.
 COMPETITION_TO_UNDERSTAT_LEAGUE = {
     "PD": "La_liga", "PL": "EPL", "BL1": "Bundesliga", "SA": "Serie_A", "FL1": "Ligue_1",
@@ -22,7 +21,7 @@ COMPETITION_TO_UNDERSTAT_LEAGUE = {
 UNDERSTAT_FIRST_SEASON = 2014
 
 
-def fetch_understat_matches(*, competition, season, timeout=30, cache_dir=".cache/understat", use_cache=True, npxg=False):
+def fetch_understat_matches(*, competition, season, timeout=30, cache_dir=".cache/understat", use_cache=True):
     """Completed league matches with Understat xG; kickoff times are UTC."""
     league = COMPETITION_TO_UNDERSTAT_LEAGUE.get(competition)
     if league is None:
@@ -33,9 +32,8 @@ def fetch_understat_matches(*, competition, season, timeout=30, cache_dir=".cach
     session.headers.update({"User-Agent": "Mozilla/5.0", "X-Requested-With": "XMLHttpRequest"})
     content = cached_get(f"{UNDERSTAT_BASE}/getLeagueData/{league}/{season}", session=session, timeout=timeout,
                          cache_dir=cache_dir if use_cache else None, max_age=cache_max_age(season))
-    payload = json.loads(content)
     rows = []
-    for match in payload.get("dates", []):
+    for match in json.loads(content).get("dates", []):
         if not match.get("isResult"):
             continue
         rows.append({
@@ -46,48 +44,10 @@ def fetch_understat_matches(*, competition, season, timeout=30, cache_dir=".cach
         })
     columns = ["understat_id", "utcDate", "homeTeam", "awayTeam", "homeGoals", "awayGoals", *XG_COLUMNS]
     out = pd.DataFrame(rows, columns=columns)
-    if npxg:
-        # Opt-in non-penalty xG from the same response's team histories; join checks go in attrs["npxg_join"].
-        out = _join_npxg(out, payload)
     out["utcDate"] = pd.to_datetime(out["utcDate"], utc=True, errors="coerce")
     for column in ["homeGoals", "awayGoals", *XG_COLUMNS]:
         out[column] = pd.to_numeric(out[column], errors="coerce")
     return out.sort_values("utcDate").reset_index(drop=True)
-
-
-def _join_npxg(out, payload, tolerance=1e-6):
-    # Each team-match appears once in `teams[*].history`, keyed here by team, venue and kickoff.
-    history = {}
-    duplicates = 0
-    for team in payload.get("teams", {}).values():
-        for game in team.get("history", []):
-            key = (team["title"], game["h_a"], game["date"])
-            duplicates += key in history
-            history[key] = game
-    checks = {"matches": len(out), "history_rows": sum(len(t.get("history", [])) for t in payload.get("teams", {}).values()),
-              "duplicate_history_keys": duplicates, "joined": 0, "missing_side": 0, "xg_mismatch": 0,
-              "against_mismatch": 0, "negative_penalty_xg": 0}
-    values, used = [], set()
-    for row in out.itertuples(index=False):
-        home, away = (row.homeTeam, "h", row.utcDate), (row.awayTeam, "a", row.utcDate)
-        if home not in history or away not in history:
-            checks["missing_side"] += 1
-            values.append((np.nan, np.nan))
-            continue
-        used.update([home, away])
-        h, a = history[home], history[away]
-        xg = (float(row.home_xg), float(row.away_xg))
-        if abs(h["xG"] - xg[0]) > tolerance or abs(a["xG"] - xg[1]) > tolerance:
-            checks["xg_mismatch"] += 1
-        if abs(h["npxGA"] - a["npxG"]) > tolerance or abs(a["npxGA"] - h["npxG"]) > tolerance:
-            checks["against_mismatch"] += 1
-        checks["negative_penalty_xg"] += (xg[0] - h["npxG"] < -tolerance) + (xg[1] - a["npxG"] < -tolerance)
-        checks["joined"] += 1
-        values.append((h["npxG"], a["npxG"]))
-    checks["unused_history_rows"] = checks["history_rows"] - len(used)
-    out[NPXG_COLUMNS] = pd.DataFrame(values, columns=NPXG_COLUMNS, index=out.index, dtype=float)
-    out.attrs["npxg_join"] = checks
-    return out
 
 
 def attach_xg(matches, xg, *, max_kickoff_gap=pd.Timedelta(days=2)):
@@ -97,8 +57,7 @@ def attach_xg(matches, xg, *, max_kickoff_gap=pd.Timedelta(days=2)):
     """
     out = matches.copy()
     out["understat_id"] = None
-    columns = [*XG_COLUMNS, *(c for c in NPXG_COLUMNS if xg is not None and c in xg.columns)]
-    for column in columns:
+    for column in XG_COLUMNS:
         out[column] = np.nan
     coverage = {"provider": XG_PROVIDER, "finished": 0, "matched": 0, "unmatched": 0,
                 "kickoff_mismatch": 0, "score_mismatch": 0}
@@ -124,7 +83,7 @@ def attach_xg(matches, xg, *, max_kickoff_gap=pd.Timedelta(days=2)):
         if (row["homeGoals"], row["awayGoals"]) != (out.at[index, "homeGoals"], out.at[index, "awayGoals"]):
             coverage["score_mismatch"] += 1
             continue
-        out.loc[index, columns] = row[columns].to_numpy(dtype=float)
+        out.loc[index, XG_COLUMNS] = row[XG_COLUMNS].to_numpy(dtype=float)
         out.at[index, "understat_id"] = row.get("understat_id")
         coverage["matched"] += 1
     out.attrs["xg_coverage"] = coverage

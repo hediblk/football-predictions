@@ -42,6 +42,8 @@ The supplied research copies were inspected. `fc26_sofifa.csv` agrees with the d
 
 ## Reproduce
 
+**Builders removed from `main` (24 October 2026).** These files fed only the EA prior experiment, which was not adopted, so the archived data and this README stay. The scripts are at commit `bb6a1b7`: [`build_ea_vintages.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/scripts/build_ea_vintages.py) and [`link_understat_ea.py`](https://github.com/hediblk/football-predictions/blob/bb6a1b7/scripts/link_understat_ea.py). Check out that commit to run the commands below.
+
 Run from the repository root with the existing environment. The default cache is this checkout's `.cache/players`; use the main checkout's cache in a worktree:
 
 ```bash
