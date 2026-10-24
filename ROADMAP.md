@@ -30,6 +30,10 @@ Every club page has a **Squad** subtab built from EA SPORTS FC ratings and match
 
 Player data does not improve forecasts. A pooled xG plus-minus model finds a small, real xG gain from lineups measured against each team's usual lineup ([Task 7 and 7b](docs/player-impact-xg-plus-minus.md)). In match probabilities, an expected-XI adjustment fails on held-out seasons with either prior, and even the actual starters leave log loss unchanged within noise ([Task 8](docs/expected-xi-forecast-adjustment.md), [EA follow-up](docs/expected-xi-ea-prior-comparison.md)). Forecasts stay team-level. An injuries source (N1) remains a possible display-only addition to the Squad tab.
 
+### 4. Backtest
+
+A Backtest tab where a strategy is a universe (leagues, seasons, teams), a rule on our standalone forecasts (model pick, edge, probability, expected goals, Stakes), a stake rule (flat, fraction, by probability or edge, Kelly) and a price (book, pre-closing or closing). It reports profit, ROI with an interval, drawdowns and closing-line value. football-data.co.uk already has this season's 1X2, over/under and handicap prices, and the calibration replays cover 2015/16–2025/26 (in-sample for calibration; 2026/27 is the holdout). The market's log loss is 0.013 lower than our no-odds blend's, so broad strategies are expected to lose. The [backtest plan (24 October 2026)](docs/backtest-plan-2026-10-24.md) has the data checks, the rule and staking catalogue, the UI, four open decisions (including permission to publish the prices) and eight tasks.
+
 ## Parked
 
 - **Repository rename:** deferred. GitHub redirects remotes but not the Pages address; preserve existing links or set up a custom domain before renaming.
