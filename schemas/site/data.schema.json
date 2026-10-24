@@ -728,6 +728,7 @@
         "away_id": {"$ref":"#/$defs/id"},
         "score": {"$ref":"#/$defs/score"},
         "xg": {"$ref":"#/$defs/goalPair"},
+        "xg_source": {"enum":["espn"]},
         "miss": {"$ref":"#/$defs/miss"},
         "xg_p": {"$ref":"#/$defs/match/properties/p"},
         "p": {

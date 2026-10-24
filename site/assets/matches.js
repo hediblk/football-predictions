@@ -1,7 +1,7 @@
 // Matches view: one day's fixtures across the six competitions, with the model's call on each.
 import {
   COMPS, compBySlug, $, esc, getJSON, setStatus, clock, shortDate, dayKey, parseDay, shiftDay, verdict, pick, pct1, dec,
-  expandable, bulb, outcome, callScore, clubName, num, pct, loadForm, formDots, streak, meetings,
+  expandable, bulb, outcome, callScore, clubName, num, pct, loadForm, formDots, streak, meetings, xgBy,
 } from "./core.js";
 
 import { renderScorecardTable } from "./scorecard.js";
@@ -334,7 +334,7 @@ export function forecastBlocks(m, links = "") {
   }).join("");
   const spread = outcome(m.top[0]) !== fav
     ? `<p class="note">${m.top[0][0]}–${m.top[0][1]} tops the list, but a ${OUTCOMES[fav].toLowerCase()} is likelier overall: its chance is split across more scores.</p>` : "";
-  const xg = m.xg ? `<dt>xG (Understat)</dt><dd>${dec(m.xg[0], 2)}–${dec(m.xg[1], 2)}</dd>` : "";
+  const xg = m.xg ? `<dt>xG (${xgBy(m)})</dt><dd>${dec(m.xg[0], 2)}–${dec(m.xg[1], 2)}</dd>` : "";
   const origin = new Date(m.at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
   let call;
   if (v) {

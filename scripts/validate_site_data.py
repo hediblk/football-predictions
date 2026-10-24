@@ -149,6 +149,8 @@ def validate_matches(data):
         require(match["home_id"] is None or match["home_id"] != match["away_id"],
                 f"match {match['id']}: club plays itself")
         validate_forecast(match, f"match {match['id']}")
+        if "xg_source" in match:
+            require("xg" in match, f"match {match['id']}: xG source without xG")
         if "xg_p" in match:
             require(match["status"] == "FINISHED" and "xg" in match, "on-chances probabilities require finished xG")
             close(sum(match["xg_p"]), 1, 1e-9, f"match {match['id']}: xG probability sum")

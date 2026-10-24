@@ -387,7 +387,7 @@ function renderGoals(league, label, clubName) {
   $("p-goals").innerHTML = `<div class="scroll"><table class="board stats">
     <thead><tr><th class="l">Per game</th><th>Goals</th><th>xG</th><th>Model, next ${left}</th></tr></thead>
     <tbody>${line("Scored at home", true, 0)}${line("Scored away", false, 0)}${line("Conceded at home", true, 1)}${line("Conceded away", false, 1)}</tbody></table></div>
-    <p class="note">${label}. xG is Understat's chance quality; the last column is the model's expected goals over the games left.</p>
+    <p class="note">${label}. xG is ${league.some((m) => m.xg_source === "espn") ? "ESPN's" : "Understat's"} chance quality; the last column is the model's expected goals over the games left.</p>
     ${rollingXg({ name: clubName }, league)}`;
 }
 
