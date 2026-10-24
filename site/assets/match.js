@@ -1,7 +1,7 @@
 // Match page: everything known about one fixture before kickoff, and after full time the forecast against the result.
 import {
   COMPS, compBySlug, $, esc, getJSON, setStatus, ordinal, dec, dayKey, pick, sidePair, clubName, clubCrest, loadForm, played,
-  verdict, pct, pct1, num,
+  verdict, pct, pct1, num, xgBy,
 } from "./core.js";
 import { forecastBlocks, stakesTable, stageLabel, probCells, PENDING, stakeKinds, stakeLines } from "./matches.js";
 import { rankTag } from "./clubs.js";
@@ -111,7 +111,7 @@ function hero(m, comp, slugs) {
     const v = verdict(m), tag = missVerdict(m);
     said = `<p class="mp-said">The model gave ${esc(happened(m, v))} ${pct1(v.given)}. ${m.published ? "Published before kickoff." : "Reconstructed from results before match day."}</p>`;
     // the pre-match forecast beside the on-chances shares from the observed xG, then the verdict from `miss`
-    const noXg = comp.slug === "champions-league" ? "No xG for the Champions League" : "No xG for this game";
+    const noXg = "No xG for this game";
     probs = `<div class="mp-rows"><span class="mp-rlbl">Forecast</span>${probs}
       <span class="mp-rlbl">On chances</span>${m.xg_p ? probCells({ p: m.xg_p, score: m.score }) : `<span class="m-probs none">${noXg}</span>`}</div>
       ${m.xg_p ? `<p class="mp-said mp-xgp">On chances: two independent Poissons with each side's observed xG as means. Not a forecast.</p>` : ""}
@@ -204,12 +204,12 @@ function against(m, comp, file) {
   const season = `${n === 1 ? `The ${word}` : `The ${ordinal(n)} ${word}`} expected result of ${done.length} in ${comp.slug === "champions-league" ? "the " : ""}${esc(comp.label)} this season, by the chance the model gave what happened (${esc(happened(m, v))}, ${pct1(v.given)}).`
     + ` ${published ? `${published} of those forecasts ${published === 1 ? "was" : "were"} published before kickoff; the rest are reconstructed.` : "Those forecasts are all reconstructed."}`;
   const row = (label, pair, d) => `<tr><td class="h"><b>${dec(pair[0], d)}</b></td><th scope="row">${label}</th><td class="a"><b>${dec(pair[1], d)}</b></td></tr>`;
-  const xgNote = m.xg ? "Shot xG is Understat's, from the chances each side had." : comp.slug === "champions-league" ? "Understat has no shot xG for the Champions League." : "No shot xG from Understat for this game.";
+  const xgNote = m.xg ? `Shot xG is ${xgBy(m)}'s, from the chances each side had.` : "No shot xG for this game.";
   return `<fieldset class="frame"><legend>Forecast against result</legend>
     <p class="mp-line">${chance}</p><p class="mp-line">${season}</p>
     <div class="scroll"><table class="board mp-sides mp-vs">
       <thead><tr><th class="h">${clubName(m.home_id, m.home, "inline")}</th><th></th><th class="a">${clubName(m.away_id, m.away, "inline")}</th></tr></thead>
-      <tbody>${row("Expected before kickoff (model)", m.exp, 1)}${row("Goals", m.score, 0)}${m.xg ? row("Shot xG (Understat)", m.xg, 2) : ""}</tbody></table></div>
+      <tbody>${row("Expected before kickoff (model)", m.exp, 1)}${row("Goals", m.score, 0)}${m.xg ? row(`Shot xG (${xgBy(m)})`, m.xg, 2) : ""}</tbody></table></div>
     <p class="note">${m.published ? "The forecast was published before kickoff." : "The forecast is reconstructed: as of 00:00 UTC on match day, from results before then."} Expected goals are the model's, before kickoff. ${xgNote}</p>
   </fieldset>`;
 }
@@ -342,7 +342,7 @@ function matchStats(m) {
   // the side with the better figure (more, or fewer for fouls, offsides and cards) is lit; a tie lights neither
   const leader = (pair, fewer) => (pair[0] === pair[1] ? -1 : (pair[0] > pair[1]) !== Boolean(fewer) ? 0 : 1);
   const rows = BOX_ROWS.filter(([key]) => box[key]).map(([key, label, percent, fewer]) => statRow(box[key], label, percent, leader(box[key], fewer))).join("")
-    + (m.xg ? statRow(m.xg, "xG <small>Understat</small>", false, leader(m.xg), 2) : "");
+    + (m.xg ? statRow(m.xg, `xG <small>${xgBy(m)}</small>`, false, leader(m.xg), 2) : "");
   const physical = page.comp.slug === "champions-league" ? data.physical : null;
   const running = physical ? [["distance", "Distance", " km", 1], ["sprints", "Sprints", "", 0], ["top_speed", "Top speed", " km/h", 1]]
     .map(([key, label, unit, digits]) => statRow([physical.h[key], physical.a[key]], label, false, -1, digits, unit)).join("") : "";
@@ -359,7 +359,7 @@ function matchStats(m) {
   return `<fieldset class="frame mp-after mp-stats${physical ? " mp-running" : ""}"><legend>Match stats</legend>
     ${head}${poss}${rows || running ? `<div class="mp-stat-rows">${rows}${running}</div>` : ""}
     ${!page.shots && events.length ? minuteRuler(m, events) : ""}${events.length ? feed(m, events) : ""}
-    <p class="note">${data.sources.espn ? "Match statistics and timeline from ESPN" : "Match data"}${physical ? "; running data from UEFA" : ""}${m.xg ? ", xG from Understat" : ""}. The better figure in each row is lit; fewer is better for fouls, offsides and cards.${physical ? " Running rows compare activity; neither side is marked better." : ""}</p>
+    <p class="note">${data.sources.espn ? "Match statistics and timeline from ESPN" : "Match data"}${physical ? "; running data from UEFA" : ""}${m.xg ? `, xG from ${xgBy(m)}` : ""}. The better figure in each row is lit; fewer is better for fouls, offsides and cards.${physical ? " Running rows compare activity; neither side is marked better." : ""}</p>
   </fieldset>`;
 }
 

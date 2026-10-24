@@ -97,6 +97,8 @@ document.addEventListener("error", (event) => {
 /* ---------- match helpers (probabilities are home, draw, away) ---------- */
 export const outcome = (score) => (score[0] > score[1] ? 0 : score[0] === score[1] ? 1 : 2);
 export const pick = (p) => p.indexOf(Math.max(...p));
+/* who measured a match's observed xG: Understat for the leagues, ESPN for the Champions League */
+export const xgBy = (m) => (m.xg_source === "espn" ? "ESPN" : "Understat");
 /* the predicted score: the likeliest scoreline within the picked outcome, so it never contradicts the pick
    (older data has no `call`; its top four always hold one) */
 export function callScore(m) {

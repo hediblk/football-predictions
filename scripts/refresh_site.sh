@@ -15,7 +15,7 @@ warn() {
 
 clear_outputs() {
   rm -f "$OUT/$1"_{summary,position_probs,standings_snapshot,matches_snapshot,club_ratings}.csv \
-    "$OUT/$1"_{forecast,metadata,match_forecasts,stakes}.json
+    "$OUT/$1"_{forecast,metadata,match_forecasts,stakes,espn_xg}.json
 }
 
 failed=()
@@ -47,6 +47,7 @@ if ((${#failed[@]} == 6)); then exit 1; fi
 candidate=$(mktemp -d) || exit 1
 trap 'rm -rf "$candidate"' EXIT
 cp -R site/data "$candidate/data" || exit 1
+python scripts/fetch_ucl_xg.py --src "$OUT" || warn "ESPN Champions League xG failed; forecasts are still published."
 python scripts/build_site_data.py --src "$OUT" --dest "$candidate/data" || exit 1
 python scripts/fetch_match_events.py --src "$OUT" --data "$candidate/data" || warn "Match event ingestion failed; forecasts are still published."
 python scripts/build_club_profiles.py --data "$candidate/data" || warn "Club profiles failed; keeping the previous profiles."

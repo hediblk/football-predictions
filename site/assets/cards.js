@@ -1,6 +1,6 @@
 // Download cards: PNGs drawn client-side on a canvas from data the page already shows (a match before kickoff or at
 // full time, a day's calls, the race so far), at 1080×1350 portrait and 1200×675 landscape. Nothing is posted.
-import { crestPath, pct, pct1, dec } from "./core.js";
+import { crestPath, pct, pct1, dec, xgBy } from "./core.js";
 
 const SIZES = { portrait: [1080, 1350], landscape: [1200, 675] };
 const SITE = "hediblk.github.io/football-predictions";
@@ -88,12 +88,12 @@ export function matchCard(m, o) {
       lamp(hit, hit ? "Called" : "Missed", `${labels[actual]} had ${pct1(m.p[actual])}`),
       o.verdict ? text(o.verdict, { color: "ink" }) : null,
       heading("On chances · from xG, not a forecast"),
-      m.xg ? bulbs(m.xg_p || onChances(m.xg), labels, -1, true) : note(ucl ? "No shot xG for the Champions League, so no on-chances line." : "No shot xG for this game, so no on-chances line."),
-      rows([["Expected goals before kickoff", pair(m.exp, 1)], ...(m.xg ? [["Shot xG (Understat)", pair(m.xg, 2)]] : [])]),
+      m.xg ? bulbs(m.xg_p || onChances(m.xg), labels, -1, true) : note("No xG for this game, so no on-chances line."),
+      rows([["Expected goals before kickoff", pair(m.exp, 1)], ...(m.xg ? [[`Shot xG (${xgBy(m)})`, pair(m.xg, 2)]] : [])]),
       note((m.published ? `Published before kickoff, from the model run of ${new Date(m.at).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })}, ${kickoffTime(m.at)}.`
         : "Reconstructed: forecast as of 00:00 UTC on match day, from results before then.") + (m.xg ? " On-chances shares treat each side's xG as the mean of a Poisson." : "")),
     ],
-    sources: `Results: football-data.org${m.xg ? " · xG: Understat" : ""} · Forecast: Floodlight model`,
+    sources: `Results: football-data.org${m.xg ? ` · xG: ${xgBy(m)}` : ""} · Forecast: Floodlight model`,
   };
 }
 

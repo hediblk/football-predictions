@@ -96,10 +96,9 @@ function misses(row) {
   if (!x || !row.n) return "";
   const n = row.n, called = kindN(x, "called"), missed = n - called;
   const unknown = sum(Object.values(x.kinds).map(k => k.xg.unknown));
-  const ucl = competition === "champions-league";
   const coverage = unknown === n
-    ? (ucl ? "Understat has no xG for the Champions League, so misses can't be split by chances here." : "None of these games has xG, so misses can't be split by chances.")
-    : `Observed xG covers ${n - unknown} of ${n} games${unknown ? `; the other ${unknown}${competition === "all" ? ", including every Champions League game," : ""} show as no xG` : ""}.`;
+    ? "None of these games has xG, so misses can't be split by chances."
+    : `Observed xG covers ${n - unknown} of ${n} games${unknown ? `; the other ${unknown} show as no xG` : ""}.`;
   const calls = x.confusion.map(sum);
   const board = `<div class="scroll"><table class="board sc-confusion"><thead><tr><th class="l">Called ↓</th>${OUTCOMES.map(o => `<th>${o}</th>`).join("")}<th>Calls</th></tr></thead>
     <tbody>${x.confusion.map((r, i) => `<tr><td class="l">${OUTCOMES[i]}</td>${r.map((v, j) => `<td class="${i === j && v ? "lit" : ""}">${calls[i] ? `${v} <small>${share(v, calls[i])}</small>` : "–"}</td>`).join("")}<td class="b">${calls[i]}</td></tr>`).join("")}</tbody></table></div>
@@ -114,13 +113,13 @@ function misses(row) {
   };
   const split = `<div class="key"><span><i class="sc-k won"></i>Favourite won on chances</span><span><i class="sc-k level"></i>Level, within 0.5 xG</span><span><i class="sc-k lost"></i>Favourite lost on chances</span><span><i class="sc-k unknown"></i>No xG</span></div>
     ${KINDS.filter(([k]) => k !== "missed_draw_call" || kindN(x, k)).map(meter).join("")}
-    <p class="note">Bars share one scale, all ${missed} misses. The favourite is the likelier winner of the two sides; chances compare whole-game observed xG. ${esc(coverage)}</p>`;
+    <p class="note">Bars share one scale, all ${missed} misses. The favourite is the likelier winner of the two sides; chances compare whole-game observed xG, Understat's for the leagues and ESPN's for the Champions League. ${esc(coverage)}</p>`;
   const counts = named(["Outcome", "Called", "Expected", "Actual", "Actual − expected"], OUTCOMES.map((o, i) =>
     [o, calls[i], dec(x.outcomes.expected[i], 1), x.outcomes.actual[i], oneDec(x.outcomes.actual[i] - x.outcomes.expected[i])]));
   const g = x.goals;
   const goals = g.team_games
     ? `<p class="sc-line">Goals per team-game, over the ${g.team_games / 2} games with xG: <b>${dec(g.predicted, 2)}</b> expected before kickoff, <b>${dec(g.goals, 2)}</b> scored, <b>${dec(g.xg, 2)}</b> xG. Mean absolute error <b>${dec(g.mae_goals, 2)}</b> against goals and <b>${dec(g.mae_xg, 2)}</b> against xG.</p>`
-    : `<p class="note">${ucl ? "Understat has no xG for the Champions League" : "No games with xG here"}, so no goals line.</p>`;
+    : `<p class="note">No games with xG here, so no goals line.</p>`;
   const scored = Object.entries(x.xg_scored).filter(([, s]) => s.n);
   const names = { model: "Floodlight", elo: "Elo", frequency: "Prior frequency" };
   const diagnostic = scored.length ? `<h4>Diagnostic · xG-scored log loss</h4>

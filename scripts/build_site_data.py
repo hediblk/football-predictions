@@ -205,6 +205,8 @@ def export_matches(src, slug, prefix, receipts=None):
     display = data.get("display_names", {})
     name = lambda team: short_name(display.get(team, team))
     stakes = match_stakes(src, prefix, name)
+    # Understat has no Champions League; fetch_ucl_xg.py adds ESPN's team xG for display, marked by source.
+    espn_xg = read_json(src / f"{prefix}_espn_xg.json") or {"matches": {}}
     matches = []
     for match in data["matches"]:
         row = {
@@ -223,6 +225,8 @@ def export_matches(src, slug, prefix, receipts=None):
             row["score"] = [int(match["homeGoals"]), int(match["awayGoals"])]
         if match.get("home_xg") is not None and match.get("away_xg") is not None:
             row["xg"] = [num(match["home_xg"]), num(match["away_xg"])]
+        elif match["status"] == "FINISHED" and str(match["id"]) in espn_xg["matches"]:
+            row.update(xg=espn_xg["matches"][str(match["id"])]["xg"], xg_source="espn")
         if "p_home" in match:
             row.update({
                 "p": [num(match[key], 4) for key in ("p_home", "p_draw", "p_away")],

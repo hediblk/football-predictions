@@ -238,10 +238,9 @@ def routes(data):
     if scorecard and scorecard["all"]["n"]:
         selectors, choices = ["#sc-summary tbody tr", "#sc-charts svg", "#sc-cohorts button"], []
         if missed:
-            # "How we miss" for each competition; the Champions League has no xG and must say so.
+            # "How we miss" for each competition
             selectors += ["#misses .sc-confusion tbody tr", "#misses .sc-split-row"]
-            choices = [(("#sc-competition", slug), f'#sc-competition option[value="{slug}"]:checked',
-                        "#misses:has-text('no xG for the Champions League')" if slug == "champions-league" else "#misses .sc-confusion tbody tr")
+            choices = [(("#sc-competition", slug), f'#sc-competition option[value="{slug}"]:checked', "#misses .sc-confusion tbody tr")
                        for slug in COMPETITIONS if scorecard["competitions"].get(slug, {}).get("n")]
         found.append(("#model/scorecard", selectors, ["#sc-cohorts [data-cohort=published]"], "#sc-summary tbody tr", choices))
     return origin, found
