@@ -17,7 +17,7 @@ def cache_max_age(season):
     return None if season is not None and int(season) < current_season else 3600
 
 
-def cached_get(url, *, params=None, session=None, timeout=30, cache_dir=None, max_age=3600):
+def cached_get(url, *, params=None, session=None, timeout=30, cache_dir=None, max_age=3600, on_response_headers=None):
     cache_path = None
     if cache_dir is not None:
         public_params = {k: v for k, v in (params or {}).items() if k.lower() not in {"apikey", "api_key", "token"}}
@@ -48,6 +48,11 @@ def cached_get(url, *, params=None, session=None, timeout=30, cache_dir=None, ma
             continue
         if not 200 <= response.status_code < 300:
             raise RuntimeError(f"Data request failed (HTTP {response.status_code}).") from None
+        if on_response_headers is not None:
+            quota_headers = {name: response.headers.get(name) for name in (
+                "x-requests-last", "x-requests-used", "x-requests-remaining",
+            ) if response.headers.get(name) is not None}
+            on_response_headers(quota_headers)
         content = response.content.decode("utf-8-sig", errors="replace")
         if cache_path is not None:
             cache_path.parent.mkdir(parents=True, exist_ok=True)

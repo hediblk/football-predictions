@@ -61,6 +61,54 @@ def fetch_the_odds_api_h2h_probs(
 ARCHIVE_COLUMNS = ["fetched_at", "competition", "match_id", "commence_time", "observed_at", "home_team", "away_team",
                    "books", "last_update", *PROB_COLUMNS, "pinnacle_home", "pinnacle_draw", "pinnacle_away"]
 
+PRICE_COLUMNS = [
+    "fetched_at", "competition", "match_id", "commence_time", "observed_at", "home_team", "away_team",
+    "average_home", "average_draw", "average_away", "best_home", "best_draw", "best_away",
+    "pinnacle_home", "pinnacle_draw", "pinnacle_away", "average_over_2_5", "average_under_2_5",
+    "best_over_2_5", "best_under_2_5", "pinnacle_over_2_5", "pinnacle_under_2_5",
+]
+
+
+def _api_decimal(value):
+    try:
+        value = float(value)
+    except (TypeError, ValueError):
+        return None
+    return value if np.isfinite(value) and value > 1 else None
+
+
+def the_odds_api_archive_snapshots(
+    *, sport_key, competition, api_key=None, regions="eu", timeout=30, fetched_at=None, markets="h2h",
+    on_response_headers=None,
+):
+    api_key = api_key or os.getenv("ODDS_API_KEY") or os.getenv("ODDS_DATA_API_KEY")
+    if not api_key:
+        raise ValueError("Missing ODDS_API_KEY / ODDS_DATA_API_KEY for The Odds API.")
+    fetched_at = pd.Timestamp.now(tz="UTC") if fetched_at is None else pd.to_datetime(fetched_at, utc=True)
+    params = {"apiKey": api_key, "regions": regions, "markets": markets,
+              "oddsFormat": "decimal", "dateFormat": "iso"}
+    request = {"params": params, "timeout": timeout}
+    if on_response_headers is not None:
+        request["on_response_headers"] = on_response_headers
+    events = json.loads(cached_get(f"{THE_ODDS_API_BASE}/sports/{sport_key}/odds", **request))
+    quotes = pd.DataFrame(_h2h_quotes(events))
+    if quotes.empty:
+        archive = pd.DataFrame(columns=ARCHIVE_COLUMNS)
+    else:
+        keys = ["match_id", "commence_time", "home_team", "away_team"]
+        out = quotes.groupby(keys, as_index=False).agg(
+            books=("bookmaker", "nunique"), last_update=("observed_at", "max"),
+            **{column: (column, "mean") for column in PROB_COLUMNS})
+        out[PROB_COLUMNS] = out[PROB_COLUMNS].div(out[PROB_COLUMNS].sum(axis=1), axis=0)
+        pinnacle = quotes[quotes["bookmaker"].eq("pinnacle")].drop_duplicates("match_id").set_index("match_id")[PROB_COLUMNS]
+        pinnacle.columns = ["pinnacle_home", "pinnacle_draw", "pinnacle_away"]
+        out = out.join(pinnacle, on="match_id")
+        out["fetched_at"] = out["observed_at"] = fetched_at.isoformat()
+        out["competition"] = competition
+        archive = out[ARCHIVE_COLUMNS].sort_values(["commence_time", "home_team"]).reset_index(drop=True)
+    prices = _raw_price_snapshot(events, competition, fetched_at)
+    return archive, prices
+
 
 def the_odds_api_snapshot(*, sport_key, competition, api_key=None, regions="eu", timeout=30, fetched_at=None):
     """Current 1X2 prices for one competition, one row per fixture, for the dated odds archive.
@@ -69,26 +117,59 @@ def the_odds_api_snapshot(*, sport_key, competition, api_key=None, regions="eu",
     de-margined probabilities when it quotes. `observed_at` is the fetch time, so the archive can be
     passed as an odds snapshot for forecasts made after it. Costs one API credit per region.
     """
-    api_key = api_key or os.getenv("ODDS_API_KEY") or os.getenv("ODDS_DATA_API_KEY")
-    if not api_key:
-        raise ValueError("Missing ODDS_API_KEY / ODDS_DATA_API_KEY for The Odds API.")
-    fetched_at = pd.Timestamp.now(tz="UTC") if fetched_at is None else pd.to_datetime(fetched_at, utc=True)
-    params = {"apiKey": api_key, "regions": regions, "markets": "h2h", "oddsFormat": "decimal", "dateFormat": "iso"}
-    quotes = pd.DataFrame(_h2h_quotes(json.loads(cached_get(f"{THE_ODDS_API_BASE}/sports/{sport_key}/odds",
-                                                           params=params, timeout=timeout))))
-    if quotes.empty:
-        return pd.DataFrame(columns=ARCHIVE_COLUMNS)
-    keys = ["match_id", "commence_time", "home_team", "away_team"]
-    out = quotes.groupby(keys, as_index=False).agg(
-        books=("bookmaker", "nunique"), last_update=("observed_at", "max"),
-        **{column: (column, "mean") for column in PROB_COLUMNS})
-    out[PROB_COLUMNS] = out[PROB_COLUMNS].div(out[PROB_COLUMNS].sum(axis=1), axis=0)
-    pinnacle = quotes[quotes["bookmaker"].eq("pinnacle")].drop_duplicates("match_id").set_index("match_id")[PROB_COLUMNS]
-    pinnacle.columns = ["pinnacle_home", "pinnacle_draw", "pinnacle_away"]
-    out = out.join(pinnacle, on="match_id")
-    out["fetched_at"] = out["observed_at"] = fetched_at.isoformat()
-    out["competition"] = competition
-    return out[ARCHIVE_COLUMNS].sort_values(["commence_time", "home_team"]).reset_index(drop=True)
+    return the_odds_api_archive_snapshots(
+        sport_key=sport_key, competition=competition, api_key=api_key, regions=regions,
+        timeout=timeout, fetched_at=fetched_at,
+    )[0]
+
+
+def _raw_price_snapshot(events, competition, fetched_at):
+    rows = []
+    for event in events:
+        row = {"fetched_at": fetched_at.isoformat(), "observed_at": fetched_at.isoformat(),
+               "competition": competition, "match_id": event.get("id"),
+               "commence_time": event.get("commence_time"), "home_team": event.get("home_team"),
+               "away_team": event.get("away_team")}
+        if not row["home_team"] or not row["away_team"]:
+            continue
+        h2h = {key: [] for key in ("home", "draw", "away")}
+        totals = {"over": [], "under": []}
+        pinnacle_h2h = {key: None for key in h2h}
+        pinnacle_totals = {key: None for key in totals}
+        for bookmaker in event.get("bookmakers", []) or []:
+            for market in bookmaker.get("markets", []) or []:
+                if market.get("key") == "h2h":
+                    outcomes = {item.get("name"): _api_decimal(item.get("price"))
+                                for item in market.get("outcomes", []) or []}
+                    values = {"home": outcomes.get(row["home_team"]), "draw": outcomes.get("Draw"),
+                              "away": outcomes.get(row["away_team"])}
+                    if all(value is not None for value in values.values()):
+                        for side, value in values.items():
+                            h2h[side].append(value)
+                            if bookmaker.get("key") == "pinnacle":
+                                pinnacle_h2h[side] = value
+                elif market.get("key") == "totals":
+                    outcomes = {item.get("name"): _api_decimal(item.get("price"))
+                                for item in market.get("outcomes", []) or []
+                                if pd.to_numeric(item.get("point"), errors="coerce") == 2.5}
+                    values = {side: outcomes.get(label) for side, label in (("over", "Over"), ("under", "Under"))}
+                    if all(value is not None for value in values.values()):
+                        for side, value in values.items():
+                            totals[side].append(value)
+                            if bookmaker.get("key") == "pinnacle":
+                                pinnacle_totals[side] = value
+        for side, values in h2h.items():
+            row[f"average_{side}"] = float(np.mean(values)) if values else np.nan
+            row[f"best_{side}"] = max(values) if values else np.nan
+            row[f"pinnacle_{side}"] = pinnacle_h2h[side] if pinnacle_h2h[side] is not None else np.nan
+        for side, values in totals.items():
+            row[f"average_{side}_2_5"] = float(np.mean(values)) if values else np.nan
+            row[f"best_{side}_2_5"] = max(values) if values else np.nan
+            row[f"pinnacle_{side}_2_5"] = pinnacle_totals[side] if pinnacle_totals[side] is not None else np.nan
+        rows.append(row)
+    if not rows:
+        return pd.DataFrame(columns=PRICE_COLUMNS)
+    return pd.DataFrame(rows, columns=PRICE_COLUMNS).sort_values(["commence_time", "home_team"]).reset_index(drop=True)
 
 
 def _h2h_quotes(events):
