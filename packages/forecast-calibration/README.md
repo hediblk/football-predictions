@@ -41,3 +41,14 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
 ```
 
 This is offline: missing caches fail. The frequency baseline requires result caches for 2010/11 onward; model replay needs the original 2014/15+ results and Understat league listings, and the pre-goal diagnostic uses raw `understat/matches/` responses. It checks the exact dataset hash, replays goal expectations at the saved origins, verifies saved probabilities and writes coverage, per-match diagnostics, full contract tables, clustered SEs and input/output hashes under `out/`. `--workers` defaults to four and `--replay-only` prepares resumable replays. No calibration artifact or site data is written.
+
+## Betting backtest feasibility
+
+The [Task 1 report](../../docs/backtest-feasibility.md) joins the saved no-odds forecasts to cached raw prices, without refitting. It compares six fixed selection rules, flat and quarter-Kelly stakes, three price sources and pre-closing/closing prices:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python -m forecast_calibration.backtest_feasibility --out-dir out/backtest-feasibility
+```
+
+This command is offline and hash-checks the dataset. Outputs stay under `out/` while the plan's historical-price publishing decision is unresolved. It writes coverage, bets, all 72 summaries, season/league/price-band breakdowns, seeded match-date bootstrap intervals and preset parity numbers for Task 3. The eleven seasons are calibration in-sample; their walk-forward strengths do not make them an independent betting holdout. `select_bets`, `stake_bets`, `summarize` and `bootstrap_indices` provide the Python reference for the later browser engine.
