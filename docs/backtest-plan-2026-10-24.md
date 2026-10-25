@@ -18,8 +18,6 @@ Nothing here changes forecasts, `calibrated_weights.json` or the published model
 
 **In-sample caveat.** The saved calibration (`global-4c0170be18f1`) was fitted on 2015/16–2025/26. Team strengths in those replays are walk-forward, but about six global settings were chosen on those same seasons. Results for those seasons are labelled "replayed, in-sample for calibration". Only 2026/27 is an independent holdout.
 
-**Task 1 findings (25 October).** The [feasibility report](backtest-feasibility.md) evaluates all 19,763 matches and 72 strategy/staking/price/timing combinations. All six flat strategies lose at average pre-closing prices; the report recommends Bet365/pre-closing/flat as the named-book reference and no winning preset. Closing prices are absent before 2019/20, so the closing sample is only 12,459 matches at average/maximum prices. Historical quote timing remains approximate. Task 2 adds sibling raw-price files without rewriting the existing archive; one live domestic combined-market request confirmed a two-credit charge.
-
 ## Odds sources
 
 | Source | What it has | Cost and terms | Use |
