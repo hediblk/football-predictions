@@ -186,7 +186,7 @@ Read `AGENTS.md`, `DESIGN.md`, the [site data contract](site-data-contract.md), 
 | 2. Raw prices in the odds archive | A | none | S | Claude | [PR #75](https://github.com/hediblk/football-predictions/pull/75) |
 | 3. Backtest data, 1X2 | A | 1 for parity summaries; publishing waits for D1 | L | Codex | [PR #77](https://github.com/hediblk/football-predictions/pull/77) |
 | 4. Backtest engine | A | this plan's strategy shape | L | Claude | [PR #78](https://github.com/hediblk/football-predictions/pull/78) |
-| 5. Backtest view | B | 3, 4 | L | Claude | Pending |
+| 5. Backtest view | B | 3, 4 | L | Codex | Implemented; draft review pending |
 | 6. Over/under and Asian handicap | C | 3, 4, 5 | M | Codex | Pending |
 | 7. Robustness and comparison | C | 5 | M | Claude | Pending |
 | 8. Paper trading | D | 2, 5, D3 | M | Codex | Pending |
@@ -240,3 +240,11 @@ Extend the replay (the miss report already recovers the blended scoreline distri
 ### 8. Paper trading (if D3 is yes)
 
 Each refresh applies saved public presets to the next round's fixtures, at prices just archived with raw prices (Task 2). It freezes the bets as receipts, like forecast receipts: never edited, settled after the result. The record builds a true out-of-sample track record from the day it starts.
+
+### Task 5 delivery
+
+The Backtest route implements the six engine stake methods, example presets, AND conditions, universe filters, URL restoration, result interval, season-reset charts with daily tables, breakdowns, paginated bet ledger and coverage/provenance. A small worker keeps the form responsive: a measured all-season 20,103-bet engine run took about 1.3 seconds before the reference. Updates debounce by 300 ms and cancel obsolete work.
+
+Public availability is an empty `site/data/backtest/index.json` manifest. It contains no prices and prevents speculative season requests. D1 is unchanged. Local preview: copy `site/` to `out/backtest-preview/`, copy `out/backtest/*.json` to its `data/backtest/`, and set that copy's manifest to `{ "version": 1, "seasons": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026] }` for the available files. Serve with `python -m http.server 8765 --bind 127.0.0.1 --directory out/backtest-preview`. Never copy the preview prices or screenshots into published source.
+
+The browser check intercepts the manifest with the existing synthetic fixture, exercises all six staking methods, valid/invalid/empty states, keyboard controls and URL restoration, and checks 375 px layout. The reference is market favourite with flat base-unit stakes, the same universe and execution, without outcome conditions or bet-on-team restriction; its own count and interval remain visible. Match links require an ID present in the site's current match index. Tasks 6–8 remain pending.

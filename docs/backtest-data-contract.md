@@ -1,6 +1,6 @@
 # Backtest data and engine contract
 
-Tasks 3 and 4 of the [Backtest plan](backtest-plan-2026-10-24.md). Version 1 covers domestic 90-minute 1X2 bets. Historical price exports remain in `out/backtest/` until D1 permits publication.
+Tasks 3–5 of the [Backtest plan](backtest-plan-2026-10-24.md). Version 1 covers domestic 90-minute 1X2 bets. Historical price exports remain in `out/backtest/` until D1 permits publication.
 
 ## Season files
 
@@ -48,4 +48,10 @@ ROI intervals resample UTC match dates with all competitions together, condition
 
 `parity` contains `{strategy, options, summary}` entries computed by Python for the six fixed selectors under flat and quarter-Kelly stakes at average pre-closing prices. The browser check compares every summary key (nulls/counts exactly, floats within `1e-8`). Committed parity fixtures are synthetic and contain no third-party historical prices. Optional locally built season files can be checked explicitly without publishing them.
 
-URL state is `#backtest/<encodeURIComponent(JSON.stringify(normalizedStrategy))>`. Decode validates the version, values and supported fields; malformed or unsupported state throws an error. This engine adds no route or view until Task 5.
+URL state is `#backtest/<encodeURIComponent(JSON.stringify(normalizedStrategy))>`. Decode validates the version, values and supported fields; malformed or unsupported state throws an error. Task 5 restores this state in the Backtest view.
+
+## Availability and page
+
+`backtest/index.json` is `{ "version": 1, "seasons": [] }`, with unique integer season start years when files are available. The shipped manifest is empty while D1 remains unresolved. The validator checks listed files exist and their seasons match; the page fetches only listed files, caches availability once per page load, and shows an unavailable state on failure without substituting partial results. The optional manifest remains compatible with older datasets. A separate local preview may list local season files; this does not authorize publication or alter refresh flags.
+
+The page calls the engine in a module worker (whose URL inherits the stamped entry-module version). It uses 2,000 bootstrap draws and seed 7 for results and the labelled flat-stake market-favourite reference. Probability and gap controls convert display percentages/points to engine fractions; bankroll fractions remain explicitly 0–1. Daily chart values and ledger balances come from the engine's season-reset bankroll paths.

@@ -689,6 +689,8 @@ def validate_payload(data, family):
 
 def file_family(path):
     parts = path.parts
+    if len(parts) == 2 and parts == ("backtest", "index.json"):
+        return "backtest_index"
     if len(parts) == 1:
         if path.stem in ("index", "clubs", "crests", "scorecard", "profiles"):
             return path.stem
@@ -752,8 +754,15 @@ def validate_site_data(data_dir, *, site_dir=None):
             files[relative.as_posix()] = data
         except (OSError, ValueError) as exc:
             errors.append(f"{relative}: {exc}")
-    required = {"index.json", "clubs.json", *(f"{slug}.json" for slug in COMPETITIONS)}
+    required = {"index.json", "clubs.json",
+                *(f"{slug}.json" for slug in COMPETITIONS)}
     errors.extend(f"{name}: required valid file missing" for name in sorted(required - files.keys()))
+    backtest_index = files.get("backtest/index.json")
+    if backtest_index is not None:
+        for season in backtest_index["seasons"]:
+            name = f"backtest/{season}.json"
+            if name not in files:
+                errors.append(f"backtest/index.json: listed season file missing ({season})")
     for entry in files.get("index.json", []):
         table = files.get(f"{entry['slug']}.json")
         if table is not None and any(entry[key] != table[key] for key in INDEX_FIELDS):

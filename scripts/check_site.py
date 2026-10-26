@@ -326,7 +326,7 @@ def check_backtest(context, base, site, extra_data=None):
         return []
     paths = [ROOT / "tests/fixtures/backtest.json"]
     directory = Path(extra_data) if extra_data else site / "data/backtest"
-    paths += sorted(directory.glob("*.json")) if directory.is_dir() else [directory] if extra_data else []
+    paths += sorted(path for path in directory.glob("*.json") if path.stem.isdigit()) if directory.is_dir() else [directory] if extra_data else []
     files = [{"name": str(path), "file": json.loads(path.read_text())} for path in paths]
     page = context.new_page()
     page.goto(base, wait_until="domcontentloaded")
@@ -354,6 +354,112 @@ def check_backtest(context, base, site, extra_data=None):
     return failures
 
 
+def check_backtest_ui(context, base, fixture_path):
+    fixture = json.loads(fixture_path.read_text())
+    failures = []
+    page = context.new_page()
+    page.route("**/data/backtest/index.json", lambda route: route.fulfill(
+        status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": []})))
+    page.on("pageerror", lambda exc: failures.append(f"backtest exception: {exc}"))
+    page.on("console", lambda msg: msg.type == "error" and failures.append(f"backtest console: {msg.text}"))
+    page.on("requestfailed", lambda req: failures.append(f"backtest request failed: {req.url}"))
+    page.on("response", lambda res: res.status >= 400 and failures.append(f"backtest HTTP {res.status}: {res.url}"))
+    page.goto(base + "#backtest", wait_until="networkidle")
+    page.locator("#bt-status[data-state=unavailable]").wait_for(timeout=10000)
+    page.close()
+
+    page = context.new_page()
+    page.route("**/data/backtest/index.json", lambda route: route.fulfill(
+        status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": [fixture["season"]]})))
+    page.route(f"**/data/backtest/{fixture['season']}.json", lambda route: route.fulfill(
+        status=200, content_type="application/json", body=json.dumps(fixture)))
+    page.on("pageerror", lambda exc: failures.append(f"backtest exception: {exc}"))
+    page.on("console", lambda msg: msg.type == "error" and failures.append(f"backtest console: {msg.text}"))
+    page.on("requestfailed", lambda req: failures.append(f"backtest request failed: {req.url}"))
+    page.on("response", lambda res: res.status >= 400 and failures.append(f"backtest HTTP {res.status}: {res.url}"))
+    page.clock.set_fixed_time(datetime(2026, 10, 25))
+    page.goto(base + "#backtest", wait_until="networkidle")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    for selector in ("#bt-form", "#bt-run", "#bt-summary", "#bt-bets tbody tr", "#bt-season", "#bt-comp",
+                     "#bt-book", "#bt-timing", "#bt-pick", "#bt-method", "#bt-forecast"):
+        if not page.locator(selector).count():
+            failures.append(f"backtest synthetic view is missing {selector}")
+    if page.locator("#bt-bets tbody tr").count() == 0:
+        failures.append("backtest synthetic results have no bet rows")
+    if page.evaluate("document.documentElement.scrollWidth > innerWidth"):
+        failures.append("backtest page scrolls horizontally at desktop width")
+
+    page.locator("#bt-advanced").evaluate("element => element.open = true")
+
+    # A keyboard user can reach the form and trigger a run from the button.
+    page.locator("#bt-season").focus()
+    page.keyboard.press("Tab")
+    if not page.evaluate("document.activeElement && document.activeElement.matches('#bt-comp, #bt-book, #bt-timing, #bt-pick, #bt-method, #bt-forecast, #bt-run')"):
+        failures.append("backtest form cannot be traversed by keyboard")
+    page.locator("#bt-run").focus()
+    page.keyboard.press("Enter")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+
+    # A competition without fixture coverage yields the explicit empty state.
+    page.locator("#bt-comp").select_option("FL1")
+    page.locator("#bt-status[data-state=empty]").wait_for(timeout=30000)
+    page.locator("#bt-comp").select_option("PL")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+
+    page.locator("#bt-timing").select_option("close")
+    page.locator("#bt-forecast").select_option("published")
+    if not page.locator('#bt-timing option[value="pre"]:disabled').count():
+        failures.append("published forecasts do not disable pre-closing execution")
+    page.locator("#bt-forecast").select_option("replayed")
+    page.locator("#bt-timing").select_option("pre")
+    if page.locator("#bt-forecast").input_value() == "published":
+        failures.append("switching to pre-closing execution retained published forecasts")
+
+    # All supported stake methods remain selectable; changing them together debounces to one calculation.
+    for method in ("flat", "fraction", "probability", "edge", "kelly", "to_win"):
+        page.locator("#bt-method").select_option(method)
+        page.wait_for_function("""method => {
+            if (document.querySelector('#bt-status').dataset.state !== 'results' || !location.hash.startsWith('#backtest/')) return false;
+            return JSON.parse(decodeURIComponent(location.hash.slice('#backtest/'.length))).stake.method === method;
+        }""", arg=method, timeout=30000)
+        if page.locator("#bt-method").input_value() != method:
+            failures.append(f"backtest could not select {method} staking")
+
+    # Invalid numeric bounds are reported inline as an invalid strategy.
+    page.locator("#bt-unit").fill("0")
+    page.locator("#bt-status[data-state=invalid]").wait_for(timeout=10000)
+    page.locator("#bt-unit").fill("1")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+
+    # Strategy changes are serialized into the URL and restored on reload.
+    page.locator("#bt-pick").select_option("home")
+    page.locator("#bt-comp").select_option(["PL"])
+    page.locator("#bt-season").select_option([str(fixture["season"])])
+    page.locator("#bt-rounds").fill("1, 38")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    saved_hash = page.evaluate("location.hash")
+    if not saved_hash.startswith("#backtest/"):
+        failures.append("backtest strategy was not serialized into the URL")
+    page.reload(wait_until="networkidle")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if page.locator("#bt-pick").input_value() != "home":
+        failures.append("backtest URL state did not restore the selected pick")
+    if page.locator("#bt-comp").input_value() != "PL" or page.locator("#bt-season").input_value() != str(fixture["season"]):
+        failures.append("backtest URL state did not restore competition and season filters")
+    if page.locator("#bt-rounds").input_value() != "1, 38":
+        failures.append("backtest URL state did not restore round constraints")
+    if page.evaluate("location.hash") != saved_hash:
+        failures.append("backtest URL changed while restoring saved state")
+
+    # Malformed and unsupported strategy URLs are surfaced as an invalid state.
+    page.goto(base + "#backtest/not-json", wait_until="networkidle")
+    page.locator("#bt-status[data-state=invalid]").wait_for(timeout=10000)
+    if page.evaluate("document.documentElement.scrollWidth > innerWidth"):
+        failures.append("backtest page scrolls horizontally at desktop width")
+    page.close()
+    return failures
+
+
 def check(site, backtest_data=None):
     site = Path(site).resolve()
     origin, pages = routes(site / "data")
@@ -370,6 +476,23 @@ def check(site, backtest_data=None):
         for width, viewport in VIEWPORTS.items():
             context = browser.new_context(viewport=viewport, timezone_id="UTC", locale="en-GB")
             context.route(lambda url: not url.startswith(base), lambda route: route.fulfill(status=200, body=""))
+            if width == "desktop":
+                failures += [f"{width} #backtest: {problem}" for problem in check_backtest_ui(
+                    context, base, ROOT / "tests/fixtures/backtest.json")]
+            else:
+                page = context.new_page()
+                fixture = json.loads((ROOT / "tests/fixtures/backtest.json").read_text())
+                page.route("**/data/backtest/index.json", lambda route: route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": [fixture["season"]]})))
+                page.route(f"**/data/backtest/{fixture['season']}.json", lambda route: route.fulfill(
+                    status=200, content_type="application/json", body=json.dumps(fixture)))
+                page.goto(base + "#backtest", wait_until="networkidle")
+                page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+                if page.evaluate("document.documentElement.scrollWidth > innerWidth"):
+                    failures.append(f"{width} #backtest: page scrolls horizontally")
+                if page.locator("#bt-bets tbody tr").count() == 0:
+                    failures.append(f"{width} #backtest: synthetic results have no bet rows")
+                page.close()
             for route, *checks in pages:
                 failures += [f"{width} {route}: {problem}" for problem in visit(context, base + route, origin, *checks)]
             context.close()
