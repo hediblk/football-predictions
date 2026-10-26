@@ -589,6 +589,67 @@ def validate_squad(data):
         require(player["first_seen"] == min(dates) and player["last_seen"] == max(dates), "observed appearance dates differ")
 
 
+def validate_backtest(data):
+    columns = data["columns"]
+    lengths = {key: len(values) for key, values in columns.items()}
+    require(len(set(lengths.values())) == 1, "backtest columns have different lengths")
+    rows = next(iter(lengths.values()), 0)
+    coverage = data["coverage"]
+    require(coverage["rows"] == rows, "backtest coverage rows differ from columns")
+    require(coverage["replayed"] + coverage["published"] == rows,
+            "backtest replayed and published coverage differ from rows")
+
+    by_comp, seen, price_counts = {}, set(), {}
+    missing_fields = {
+        "missing_ids": lambda row: row["id"] is None or row["home_id"] is None or row["away_id"] is None,
+        "missing_xg": lambda row: row["xg"] is None,
+        "missing_exp": lambda row: row["exp"] is None,
+        "missing_stakes": lambda row: row["stakes"] is None,
+        "missing_matchday": lambda row: row["matchday"] is None,
+        "missing_rating": lambda row: row["rating_gap"] is None,
+    }
+    for index in range(rows):
+        row = {key: values[index] for key, values in columns.items()}
+        kickoff = datetime.fromisoformat(row["kickoff"].replace("Z", "+00:00"))
+        origin = datetime.fromisoformat(row["at"].replace("Z", "+00:00"))
+        require(kickoff.utcoffset() == timezone.utc.utcoffset(kickoff),
+                f"backtest row {index}: kickoff must be UTC")
+        require(origin.utcoffset() == timezone.utc.utcoffset(origin),
+                f"backtest row {index}: forecast origin must be UTC")
+        require(origin < kickoff, f"backtest row {index}: forecast origin must precede kickoff")
+        close(sum(row["p"]), 1, 1e-3, f"backtest row {index}: probability sum")
+        if row["elo"] is not None:
+            close(sum(row["elo"]), 1, 1e-3, f"backtest row {index}: Elo probability sum")
+        fixture = (row["comp"], data["season"], row["home_key"], row["away_key"], row["forecast"])
+        require(fixture not in seen, "duplicate backtest fixture and forecast")
+        seen.add(fixture)
+        counts = by_comp.setdefault(row["comp"], {"replayed": 0, "published": 0,
+            **{key: 0 for key in missing_fields}})
+        counts[row["forecast"]] += 1
+        for key, missing in missing_fields.items():
+            counts[key] += missing(row)
+        if row["forecast"] == "published":
+            require(all(book["pre"] is None for book in row["prices"].values()),
+                    f"backtest row {index}: published rows cannot have pre-closing prices")
+        for book, quotes in row["prices"].items():
+            totals = price_counts.setdefault(book, {"pre": 0, "close": 0})
+            for timing in ("pre", "close"):
+                totals[timing] += quotes[timing] is not None
+
+    require(coverage["replayed"] == columns["forecast"].count("replayed"),
+            "backtest replayed coverage differs from rows")
+    require(coverage["published"] == columns["forecast"].count("published"),
+            "backtest published coverage differs from rows")
+    require(set(coverage["by_comp"]) == set(by_comp), "backtest competition coverage keys differ from rows")
+    for comp, actual in by_comp.items():
+        declared = coverage["by_comp"][comp]
+        for key, value in actual.items():
+            require(declared.get(key) == value, f"backtest {comp} coverage {key} differs from rows")
+    require(set(coverage["prices"]) == set(price_counts), "backtest price coverage books differ from rows")
+    for book, actual in price_counts.items():
+        require(coverage["prices"][book] == actual, f"backtest price coverage differs for {book}")
+
+
 def validate_payload(data, family):
     finite(data)
     errors = list(validator(family).iter_errors(data))
@@ -622,6 +683,8 @@ def validate_payload(data, family):
         validate_notes(data)
     elif family == "squad":
         validate_squad(data)
+    elif family == "backtest":
+        validate_backtest(data)
 
 
 def file_family(path):
@@ -631,6 +694,8 @@ def file_family(path):
             return path.stem
         if path.stem in COMPETITIONS:
             return "ucl" if path.stem == "champions-league" else "league"
+    if len(parts) == 2 and parts[0] == "backtest" and path.stem.isdigit():
+        return "backtest"
     if len(parts) == 2 and parts[0] == "matches" and path.stem in COMPETITIONS:
         return "matches"
     if len(parts) == 2 and parts[0] == "notes" and path.stem in COMPETITIONS:
@@ -678,6 +743,8 @@ def validate_site_data(data_dir, *, site_dir=None):
                 require(data["season"] == relative.parts[1], "squad season differs from directory")
             if family == "rating_runs":
                 require(data["month"] == path.stem, "rating month differs from filename")
+            if family == "backtest":
+                require(data["season"] == int(path.stem), "backtest season differs from filename")
             if family == "match_events":
                 require(path.stat().st_size < 60_000, "match file must be under 60 KB")
                 require(data["id"] == int(path.stem), "match event id differs from filename")

@@ -38,7 +38,7 @@ jobs:
       - name: Install pinned dependencies and local packages
         run: |
           python -m pip install -r requirements-lock.txt
-          python -m pip install -c requirements-lock.txt -e . -e packages/champions-league
+          python -m pip install -c requirements-lock.txt -e . -e packages/champions-league -e packages/forecast-calibration
       # Past-season downloads never change; current-season entries expire after an hour.
       - uses: actions/cache@v4
         with:
@@ -58,6 +58,7 @@ jobs:
       - name: Run forecasts
         env:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+          PUBLISH_BACKTEST_PRICES: ${{ vars.PUBLISH_BACKTEST_PRICES }}
         run: scripts/refresh_site.sh
       - name: Commit refreshed data
         run: |
