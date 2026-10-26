@@ -138,7 +138,7 @@
       universe: { comps, seasons, include, exclude, venue, team_side: teamSide, matchdays: Array.isArray(matchdays) ? matchdays.slice() : [], months, weekdays, forecast },
       market: "1x2", rule: { pick, conditions: cleanConditions },
       stake: { method, unit, fraction, cap, daily_cap: dailyCap, trust, base, bands: bands ? bands.map((b) => ({ min: b.min, max: b.max, stake: b.stake })) : null },
-      execution: { book, timing, commission: input.execution?.commission ?? (book === "betfair" || book === "betfair_exchange" ? 0.02 : 0) }, bankroll
+      execution: { book, timing, commission: input.execution?.commission ?? (book === "betfair_exchange" ? 0.02 : 0) }, bankroll
     };
   }
   function list(value, clean) { if (value == null) return []; if (!Array.isArray(value)) fail("Expected a list"); return [...new Set(value.map(clean))]; }
