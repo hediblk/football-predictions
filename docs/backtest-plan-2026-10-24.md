@@ -190,7 +190,7 @@ Read `AGENTS.md`, `DESIGN.md`, the [site data contract](site-data-contract.md), 
 | 4. Backtest engine | A | this plan's strategy shape | L | Claude | [PR #78](https://github.com/hediblk/football-predictions/pull/78) |
 | 5. Backtest view | B | 3, 4 | L | Codex | [PR #79](https://github.com/hediblk/football-predictions/pull/79) |
 | 6. Over/under and Asian handicap | C | 3, 4, 5 | M | Codex | Pending |
-| 7. Robustness and comparison | C | 5 | M | Claude | Implemented in `codex/backtest-robustness`; draft PR pending |
+| 7. Robustness and comparison | C | 5 | M | Claude | Implemented in `codex/backtest-robustness`; [draft PR #80](https://github.com/hediblk/football-predictions/pull/80) |
 | 8. Paper trading | D | 2, 5, D3 | M | Codex | Pending |
 
 Wave A's four tasks touch separate files and can run at once. Task 4 codes against a small fixture in the documented shape until Task 3 lands.
