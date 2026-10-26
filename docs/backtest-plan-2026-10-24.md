@@ -4,6 +4,8 @@ A betting backtester on the site: pick a universe of matches, write a rule on to
 
 Nothing here changes forecasts, `calibrated_weights.json` or the published model. The backtester reads the standalone (no-odds) forecasts the site already publishes; bookmaker prices enter only as the price a bet is struck at and, when a rule asks for it, as a betting condition.
 
+**Deployment update, 26 October.** The user confirmed historical-price publication permission, resolving D1. `ENABLE_BACKTEST=1` is the single GitHub Actions repository variable enabling the tab and its scheduled current-season export; it defaults off. [ADR 0004](adr/0004-backtest-deployment-switch.md) replaces the separate publication safeguards. Local exports default to `out/backtest/`; `--dest` selects a site or preview destination and the exporter writes its availability manifest.
+
 ## Verdict
 
 **Feasible, and the data is better than expected.** Five findings, checked on 24 October 2026:
@@ -24,7 +26,7 @@ Nothing here changes forecasts, `calibrated_weights.json` or the published model
 
 | Source | What it has | Cost and terms | Use |
 | --- | --- | --- | --- |
-| [football-data.co.uk](https://www.football-data.co.uk/data.php) | 1X2 from 6+ books, market average and maximum, Betfair exchange; pre-closing and closing; O/U 2.5; Asian handicap; five leagues back to the 1990s, Pinnacle in older seasons | Free, "intended for private individuals only", not commercial or automated AI products | Primary source, subject to D1 |
+| [football-data.co.uk](https://www.football-data.co.uk/data.php) | 1X2 from 6+ books, market average and maximum, Betfair exchange; pre-closing and closing; O/U 2.5; Asian handicap; five leagues back to the 1990s, Pinnacle in older seasons | Free; user confirmed publication permission on 26 October 2026 | Primary source; D1 resolved |
 | Our archive (The Odds API, `eu`) | Daily 1X2 since 13 Oct 2026 with true observation timestamps, plus the Champions League, Europa League and Conference League | 1 credit per competition per day; 500 a month free | Add raw prices (Task 2); later the paper-trading record (Task 8) |
 | The Odds API historical endpoint | Snapshots back to 2020 | Paid plans only | No |
 | [Betfair historical data](https://historicdata.betfair.com/) (Basic) | Exchange prices by minute with true timestamps | Free with a Betfair account, personal use | Later, if price timing becomes the question; the user would need to create the account |
@@ -162,7 +164,7 @@ The engine runs in the browser over 20,000 rows at most, so results update as co
 
 | | Decision | Options | Recommendation |
 | --- | --- | --- | --- |
-| D1 | Publishing football-data.co.uk prices on the public site | (a) Ask the owner for permission, with credit; (b) keep historical-price backtests local (`out/`, CLI) and publish only our own archive's prices; (c) publish without asking | (a). Build in `out/` until there's an answer. Mention that our refresh downloads the CSVs automatically, since the terms single out automated use. |
+| D1 | Publishing football-data.co.uk prices on the public site | Resolved: user confirmed publication permission on 26 October 2026 | Publish through the normal checked export; no separate publication flag |
 | D2 | Where it lives | New Backtest tab; a frame inside Model | New tab |
 | D3 | Paper trading upcoming fixtures (Task 8) | Yes; no | Decide after Task 1. It is the only true forward test, but it publishes picks, which reads as tipping. |
 | D4 | Seasons offered | 2026/27 only; plus 2025/26; all eleven | All eleven, labelled in-sample, with 2026/27 marked as the holdout |
@@ -184,9 +186,9 @@ Read `AGENTS.md`, `DESIGN.md`, the [site data contract](site-data-contract.md), 
 | --- | --- | --- | --- | --- | --- |
 | 1. Feasibility study | A | none | M | Codex | [PR #76](https://github.com/hediblk/football-predictions/pull/76) |
 | 2. Raw prices in the odds archive | A | none | S | Claude | [PR #75](https://github.com/hediblk/football-predictions/pull/75) |
-| 3. Backtest data, 1X2 | A | 1 for parity summaries; publishing waits for D1 | L | Codex | [PR #77](https://github.com/hediblk/football-predictions/pull/77) |
+| 3. Backtest data, 1X2 | A | 1 for parity summaries | L | Codex | [PR #77](https://github.com/hediblk/football-predictions/pull/77) |
 | 4. Backtest engine | A | this plan's strategy shape | L | Claude | [PR #78](https://github.com/hediblk/football-predictions/pull/78) |
-| 5. Backtest view | B | 3, 4 | L | Claude | Pending |
+| 5. Backtest view | B | 3, 4 | L | Codex | [PR #79](https://github.com/hediblk/football-predictions/pull/79) |
 | 6. Over/under and Asian handicap | C | 3, 4, 5 | M | Codex | Pending |
 | 7. Robustness and comparison | C | 5 | M | Claude | Pending |
 | 8. Paper trading | D | 2, 5, D3 | M | Codex | Pending |
@@ -216,7 +218,7 @@ Offline, before any UI. Join the calibration dataset's 2015/16–2025/26 forecas
 - **Contract:** schema mapping, validator checks and a contract row.
 - **Refresh:** a non-blocking step in `scripts/refresh_site.sh`; a failure keeps the previous file and its timestamp.
 - **Docs:** ADR 0003 for in-browser backtests over a published per-match price file, recording D1.
-- **Until D1 is settled:** it writes to `out/backtest/`, with a flag to publish.
+- **Destination:** defaults to `out/backtest/`; `--dest site/data/backtest` publishes checked files and their manifest. Scheduled export runs only when `ENABLE_BACKTEST=1`.
 
 ### 4. Backtest engine
 
@@ -240,3 +242,11 @@ Extend the replay (the miss report already recovers the blended scoreline distri
 ### 8. Paper trading (if D3 is yes)
 
 Each refresh applies saved public presets to the next round's fixtures, at prices just archived with raw prices (Task 2). It freezes the bets as receipts, like forecast receipts: never edited, settled after the result. The record builds a true out-of-sample track record from the day it starts.
+
+### Task 5 delivery
+
+The Backtest route implements the six engine stake methods, example presets, AND conditions, universe filters, URL restoration, result interval, season-reset charts with daily tables, breakdowns, paginated bet ledger and coverage/provenance. A small worker keeps the form responsive: a measured all-season 20,103-bet engine run took about 1.3 seconds before the reference. Updates debounce by 300 ms and cancel obsolete work.
+
+Availability is listed in `site/data/backtest/index.json`; the page requests only listed seasons. The exporter maintains this manifest. D1 is resolved, and the deployment switch defaults off. Local preview: copy `site/` to `out/backtest-preview/`, build with `--site-data out/backtest-preview/data --dest out/backtest-preview/data/backtest --offline`, and set the preview's `assets/features.js` to `export const BACKTEST_ENABLED = true;`. Serve with `python -m http.server 8765 --bind 127.0.0.1 --directory out/backtest-preview`. Keep experiment screenshots under `out/`.
+
+The browser check intercepts the manifest with the existing synthetic fixture, exercises all six staking methods, valid/invalid/empty states, keyboard controls and URL restoration, and checks 375 px layout. The reference is market favourite with flat base-unit stakes, the same universe and execution, without outcome conditions or bet-on-team restriction; its own count and interval remain visible. Match links require an ID present in the site's current match index. Tasks 6–8 remain pending.

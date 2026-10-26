@@ -2057,6 +2057,19 @@
       },
       "required": ["version", "season", "generated_at", "calibration_version", "columns", "coverage", "provenance", "parity"]
     },
+    "backtest_index": {
+      "type": "object",
+      "properties": {
+        "version": {"const": 1},
+        "seasons": {
+          "type": "array",
+          "items": {"type": "integer", "minimum": 1900, "maximum": 2200},
+          "uniqueItems": true
+        }
+      },
+      "required": ["version", "seasons"],
+      "additionalProperties": false
+    },
     "squad": {
       "type": "object",
       "properties": {

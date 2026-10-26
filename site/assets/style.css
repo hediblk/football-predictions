@@ -1216,3 +1216,82 @@ table.mp-stand { min-width: 460px; }
 .pf-every { margin-top: 16px; }
 .pf-every summary { cursor: pointer; width: fit-content; font: 800 12px/1 var(--sign); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
 .pf-table td.l { white-space: normal; min-width: 180px; }
+
+/* ---------- Backtest: ruled strategy form, season paths and bet ledger ---------- */
+#view-backtest { min-width: 0; }
+.bt-strategy summary, .bt-details summary, #bt-advanced > summary { cursor: pointer; color: var(--amber-t); padding: 12px 0; }
+#bt-editor > summary { font: 700 18px/1.4 var(--sign); letter-spacing: .035em; }
+.bt-strategy h2, .bt-season-chart h2, #bt-chart-table h2 { font: 800 19px/1.3 var(--sign); text-transform: uppercase; letter-spacing: .05em; margin: 20px 0 10px; }
+.bt-controls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 12px 0; }
+#view-backtest label { display: flex; flex-direction: column; gap: 6px; min-width: 0; color: var(--ink-2); font-size: 12px; }
+#view-backtest select, #view-backtest input, #view-backtest textarea { width: 100%; min-width: 0; min-height: 42px; border: 1px solid var(--rule); border-radius: 0; background: var(--bg); color: var(--ink); font: 400 12px/1.5 var(--mono); padding: 8px; }
+#view-backtest select[multiple] { min-height: 90px; }
+#view-backtest input[type="checkbox"] { width: 18px; min-height: 18px; accent-color: var(--amber); }
+#view-backtest .bt-check { flex-direction: row; align-items: center; }
+#view-backtest :disabled { opacity: .5; cursor: not-allowed; }
+.bt-presets { padding: 4px 0; }
+.bt-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 16px 0 4px; }
+.bt-actions a { text-decoration: none; }
+#bt-run { color: var(--amber); border-color: var(--amber); }
+#bt-status { padding-top: 10px; border-top: 1px solid var(--rule-2); }
+#bt-status[data-state="invalid"] { color: var(--red); }
+.bt-condition { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto; align-items: end; gap: 10px; margin-bottom: 12px; }
+.bt-condition .chip { min-height: 42px; }
+#bt-advanced { border-top: 1px solid var(--rule-2); margin-top: 16px; }
+.bt-hero .numeral { font-size: clamp(76px, 12vw, 165px); white-space: nowrap; }
+.bt-hero .numeral.bt-negative { color: var(--red); }
+.bt-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 6px 0 18px; }
+.bt-metrics > div { border-bottom: 1px solid var(--rule-2); padding: 14px 12px 14px 0; }
+.bt-metrics dt { text-transform: uppercase; color: var(--dim); font: 700 14px/1.4 var(--sign); letter-spacing: .07em; }
+.bt-metrics dd { margin: 5px 0 0; font-size: 16px; overflow-wrap: anywhere; }
+#view-backtest small { display: block; color: var(--dim); font: 400 11px/1.5 var(--mono); margin-top: 4px; }
+.bt-season-chart { border-bottom: 1px solid var(--rule-2); }
+.bt-season-chart h2 span { color: var(--dim); font: 400 11px/1.5 var(--mono); text-transform: none; letter-spacing: 0; margin-left: 12px; }
+.bt-season-chart svg { width: 100%; display: block; max-height: 280px; }
+.bt-season-chart svg text { fill: var(--dim); font: 12px var(--mono); }
+.bt-grid { stroke: var(--rule-2); }
+.bt-start { stroke: var(--rule); stroke-dasharray: 2 5; }
+.bt-line { fill: none; stroke: var(--amber); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.bt-line.bt-reference { stroke: var(--ink-2); stroke-dasharray: 6 4; stroke-width: 1.5; }
+.bt-table { width: 100%; table-layout: fixed; }
+.bt-table td, .bt-table th { white-space: normal; overflow-wrap: anywhere; padding: 10px 8px; font-size: 12px; }
+#view-backtest .bt-table th:first-child, #view-backtest .bt-table td:first-child { text-align: left; }
+.bt-breakdown-label { max-width: 250px; margin-bottom: 14px; }
+.bt-log-scroll { max-height: 560px; overflow: auto; overscroll-behavior: contain; }
+.bt-log { min-width: 1050px; width: 100%; }
+.bt-log td { padding: 12px 10px; font-size: 12px; }
+.bt-log th { position: sticky; top: 0; background: var(--panel); z-index: 1; }
+.bt-log td:nth-child(2) { min-width: 240px; text-align: left; white-space: normal; }
+.bt-outcome::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--red); margin-right: 6px; }
+.bt-won::before { background: var(--green); }
+.bt-won { color: var(--green-t); }
+.bt-lost { color: var(--red); }
+.bt-provenance { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; }
+.bt-details { border-top: 1px solid var(--rule-2); }
+@media (max-width: 699px) {
+  .bt-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .bt-strategy > .note { font-size: 11px; }
+  .bt-condition { grid-template-columns: 1fr 1fr; padding-bottom: 12px; border-bottom: 1px solid var(--rule-2); }
+  .bt-condition label:first-child { grid-column: 1 / -1; }
+  .bt-condition button { justify-self: start; }
+  .bt-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bt-metrics dd { font-size: 14px; }
+  .bt-hero .hero-in { display: flex; flex-direction: column; align-items: start; }
+  .bt-hero .numeral { align-self: flex-end; font-size: 92px; line-height: 1; }
+  #view-backtest .bt-table th, #view-backtest .bt-table td { font-size: 10px; padding: 9px 4px; }
+  #view-backtest .bt-table small { font-size: 10px; }
+  .bt-actions .chip, .bt-presets .chip { min-height: 44px; }
+  .bt-season-chart h2 span { display: block; margin-left: 0; }
+}
+/* Keep the result and its denominator together even with wider fallback fonts. */
+.bt-hero h1 { font-size: clamp(38px, 5vw, 64px); }
+.bt-hero .hero-in { min-height: 180px; }
+@media (max-width: 699px) {
+  #view-backtest .bt-hero .numeral { order: 0; margin: 12px 0 0; }
+  .bt-hero h1 { font-size: 40px; }
+}
+@media (max-width: 420px) {
+  .tabs { gap: 12px; }
+  .tabs a { font-size: 14px; letter-spacing: .06em; }
+  .bt-season-chart svg text { font-size: 24px; }
+}

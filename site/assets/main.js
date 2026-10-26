@@ -1,18 +1,26 @@
-// Router: #<competition> (tables), #matches[/YYYY-MM-DD], #match/<competition>/<fixture id>, #clubs[/<club>[/squad | /vs/<club>]], #model[/<section>].
+// Router: #<competition> (tables), #matches[/YYYY-MM-DD], #match/<competition>/<fixture id>, #clubs[/<club>[/squad | /vs/<club>]], #model[/<section>], #backtest[/<encoded strategy>].
 import { COMPS, $, loadCrests, loadRun } from "./core.js";
+import { BACKTEST_ENABLED } from "./features.js";
 import { showTables } from "./tables.js";
 import { showMatches } from "./matches.js";
 import { showClubs } from "./clubs.js";
 import { showModel } from "./model.js";
 import { showMatch } from "./match.js";
 
-const VIEWS = ["tables", "matches", "clubs", "model", "match"];
+const VIEWS = ["tables", "matches", "clubs", "model", "match", "backtest"];
 let lastComp = COMPS[0].slug;
 let lastView = null;
 let lastArg = null;
 
+$("tabs").querySelector('[data-view="backtest"]').hidden = !BACKTEST_ENABLED;
+
 function route() {
   const [head = "", arg = "", sub = "", extra = ""] = location.hash.slice(1).split("/");
+  if (head === "backtest" && !BACKTEST_ENABLED) {
+    history.replaceState(null, "", `#${lastComp}`);
+    route();
+    return;
+  }
   const view = VIEWS.includes(head) && head !== "tables" ? head : "tables";
   if (view === "tables") lastComp = COMPS.some((c) => c.slug === head) ? head : COMPS[0].slug;
   for (const v of VIEWS) $(`view-${v}`).hidden = v !== view;
@@ -24,13 +32,16 @@ function route() {
   if (view === "tables") renderSubnav();
   // A new view, club or fixture starts at the top; stepping through match days or changing a club comparison keeps the place.
   const key = view === "clubs" ? arg : `${arg}/${sub}/${extra}`;
-  if (view !== lastView || (["clubs", "model", "match"].includes(view) && key !== lastArg)) window.scrollTo(0, 0);
+  if (view !== lastView || (["clubs", "model", "match", "backtest"].includes(view) && key !== lastArg)) window.scrollTo(0, 0);
   lastView = view;
   lastArg = key;
   if (view === "tables") showTables(lastComp);
   else if (view === "matches") showMatches(arg);
   else if (view === "match") showMatch(arg, sub);
   else if (view === "clubs") showClubs(arg, sub === "vs" ? extra : "", sub === "squad");
+  else if (view === "backtest") import("./backtest.js").then(({ showBacktest }) => {
+    if (location.hash.split("/")[0] === "#backtest") showBacktest();
+  });
   else showModel(arg);
 }
 

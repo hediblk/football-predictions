@@ -1,0 +1,1239 @@
+{
+  "version": 1,
+  "season": 2025,
+  "generated_at": "2026-10-25T00:00:00Z",
+  "calibration_version": "synthetic-v1",
+  "columns": {
+    "id": [
+      900001,
+      900002,
+      900003,
+      900004,
+      900005,
+      900006
+    ],
+    "comp": [
+      "PL",
+      "PD",
+      "PL",
+      "PD",
+      "PL",
+      "PD"
+    ],
+    "kickoff": [
+      "2025-08-08T19:00:00Z",
+      "2025-08-09T12:00:00Z",
+      "2025-08-10T16:00:00Z",
+      "2025-08-12T19:00:00Z",
+      "2025-08-13T19:00:00Z",
+      "2025-08-15T19:00:00Z"
+    ],
+    "home": [
+      "Home 0",
+      "Home 1",
+      "Home 2",
+      "Home 3",
+      "Home 4",
+      "Home 5"
+    ],
+    "away": [
+      "Away 0",
+      "Away 1",
+      "Away 2",
+      "Away 3",
+      "Away 4",
+      "Away 5"
+    ],
+    "home_key": [
+      "home 0",
+      "home 1",
+      "home 2",
+      "home 3",
+      "home 4",
+      "home 5"
+    ],
+    "away_key": [
+      "away 0",
+      "away 1",
+      "away 2",
+      "away 3",
+      "away 4",
+      "away 5"
+    ],
+    "home_id": [
+      101,
+      103,
+      105,
+      107,
+      109,
+      111
+    ],
+    "away_id": [
+      102,
+      104,
+      106,
+      108,
+      110,
+      112
+    ],
+    "matchday": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "forecast": [
+      "replayed",
+      "replayed",
+      "replayed",
+      "replayed",
+      "replayed",
+      "replayed"
+    ],
+    "at": [
+      "2025-08-08T00:00:00Z",
+      "2025-08-08T00:00:00Z",
+      "2025-08-08T00:00:00Z",
+      "2025-08-12T00:00:00Z",
+      "2025-08-12T00:00:00Z",
+      "2025-08-15T00:00:00Z"
+    ],
+    "score": [
+      [
+        2,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ]
+    ],
+    "xg": [
+      [
+        1.2,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ],
+      [
+        1.2,
+        0.4
+      ]
+    ],
+    "p": [
+      [
+        0.5,
+        0.3,
+        0.2
+      ],
+      [
+        0.45,
+        0.3,
+        0.25
+      ],
+      [
+        0.35,
+        0.3,
+        0.35
+      ],
+      [
+        0.3,
+        0.4,
+        0.3
+      ],
+      [
+        0.4,
+        0.2,
+        0.4
+      ],
+      [
+        0.2,
+        0.3,
+        0.5
+      ]
+    ],
+    "elo": [
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ],
+      [
+        0.4,
+        0.3,
+        0.3
+      ]
+    ],
+    "exp": [
+      [
+        1.7,
+        1.1
+      ],
+      [
+        1.7,
+        1.1
+      ],
+      [
+        1.7,
+        1.1
+      ],
+      [
+        1.7,
+        1.1
+      ],
+      [
+        1.7,
+        1.1
+      ],
+      [
+        1.7,
+        1.1
+      ]
+    ],
+    "stakes": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "rating_gap": [
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1,
+      0.1
+    ],
+    "prices": [
+      {
+        "avg": {
+          "pre": [
+            3,
+            3.5,
+            4
+          ],
+          "close": [
+            2.8,
+            3.6,
+            4.2
+          ]
+        },
+        "max": {
+          "pre": [
+            3,
+            3.5,
+            4
+          ],
+          "close": [
+            2.8,
+            3.6,
+            4.2
+          ]
+        },
+        "bet365": {
+          "pre": [
+            3,
+            3.5,
+            4
+          ],
+          "close": [
+            2.8,
+            3.6,
+            4.2
+          ]
+        }
+      },
+      {
+        "avg": {
+          "pre": [
+            2.1,
+            3.4,
+            3.1
+          ],
+          "close": [
+            2.2,
+            3.3,
+            3.2
+          ]
+        },
+        "max": {
+          "pre": [
+            2.1,
+            3.4,
+            3.1
+          ],
+          "close": [
+            2.2,
+            3.3,
+            3.2
+          ]
+        },
+        "bet365": {
+          "pre": [
+            2.1,
+            3.4,
+            3.1
+          ],
+          "close": [
+            2.2,
+            3.3,
+            3.2
+          ]
+        }
+      },
+      {
+        "avg": {
+          "pre": [
+            3.4,
+            3.6,
+            2.2
+          ],
+          "close": [
+            3,
+            3.4,
+            2.5
+          ]
+        },
+        "max": {
+          "pre": [
+            3.4,
+            3.6,
+            2.2
+          ],
+          "close": [
+            3,
+            3.4,
+            2.5
+          ]
+        },
+        "bet365": {
+          "pre": [
+            3.4,
+            3.6,
+            2.2
+          ],
+          "close": [
+            3,
+            3.4,
+            2.5
+          ]
+        }
+      },
+      {
+        "avg": {
+          "pre": [
+            3,
+            3.2,
+            2.6
+          ],
+          "close": [
+            3.2,
+            3.1,
+            2.5
+          ]
+        },
+        "max": {
+          "pre": [
+            3,
+            3.2,
+            2.6
+          ],
+          "close": [
+            3.2,
+            3.1,
+            2.5
+          ]
+        },
+        "bet365": {
+          "pre": [
+            3,
+            3.2,
+            2.6
+          ],
+          "close": [
+            3.2,
+            3.1,
+            2.5
+          ]
+        }
+      },
+      {
+        "avg": {
+          "pre": null,
+          "close": [
+            2.5,
+            4,
+            3
+          ]
+        },
+        "max": {
+          "pre": null,
+          "close": [
+            2.5,
+            4,
+            3
+          ]
+        },
+        "bet365": {
+          "pre": null,
+          "close": [
+            2.5,
+            4,
+            3
+          ]
+        }
+      },
+      {
+        "avg": {
+          "pre": [
+            5,
+            4,
+            1.9
+          ],
+          "close": [
+            5.2,
+            3.6,
+            2
+          ]
+        },
+        "max": {
+          "pre": [
+            5,
+            4,
+            1.9
+          ],
+          "close": [
+            5.2,
+            3.6,
+            2
+          ]
+        },
+        "bet365": {
+          "pre": [
+            5,
+            4,
+            1.9
+          ],
+          "close": [
+            5.2,
+            3.6,
+            2
+          ]
+        }
+      }
+    ]
+  },
+  "coverage": {
+    "rows": 6,
+    "replayed": 6,
+    "published": 0,
+    "by_comp": {
+      "PL": {
+        "replayed": 3,
+        "published": 0,
+        "missing_ids": 0,
+        "missing_xg": 0,
+        "missing_exp": 0,
+        "missing_stakes": 0,
+        "missing_matchday": 0,
+        "missing_rating": 0
+      },
+      "PD": {
+        "replayed": 3,
+        "published": 0,
+        "missing_ids": 0,
+        "missing_xg": 0,
+        "missing_exp": 0,
+        "missing_stakes": 0,
+        "missing_matchday": 0,
+        "missing_rating": 0
+      }
+    },
+    "prices": {
+      "avg": {
+        "pre": 5,
+        "close": 6
+      },
+      "max": {
+        "pre": 5,
+        "close": 6
+      },
+      "bet365": {
+        "pre": 5,
+        "close": 6
+      }
+    }
+  },
+  "provenance": {
+    "synthetic": true,
+    "input_sha256": {},
+    "calibration_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "model_code_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "timing": "Artificial fixture; no third-party historical prices",
+    "publication": "synthetic"
+  },
+  "parity": [
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "market_favourite",
+          "conditions": []
+        },
+        "stake": {
+          "method": "flat",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 5,
+        "staked": 5.0,
+        "profit": -0.10000000000000009,
+        "roi": -0.020000000000000018,
+        "roi_low": -1.0,
+        "roi_high": 1.1800000000000002,
+        "clusters": 5,
+        "strike_rate": 0.4,
+        "implied_strike_rate": 0.4350000876316666,
+        "average_price": 2.3600000000000003,
+        "mean_edge": -0.010999999999999987,
+        "clv_bets": 5,
+        "clv": -0.020805194805194806,
+        "max_drawdown_units": 3.0,
+        "longest_losing_run": 3
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "market_favourite",
+          "conditions": []
+        },
+        "stake": {
+          "method": "kelly",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 1,
+        "staked": 3.0,
+        "profit": 6.0,
+        "roi": 2.0,
+        "roi_low": null,
+        "roi_high": null,
+        "clusters": 1,
+        "strike_rate": 1.0,
+        "implied_strike_rate": 0.3333333333333333,
+        "average_price": 3.0,
+        "mean_edge": 0.5,
+        "clv_bets": 1,
+        "clv": 0.0714285714285714,
+        "max_drawdown_units": 0.0,
+        "longest_losing_run": 0
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "model_favourite",
+          "conditions": []
+        },
+        "stake": {
+          "method": "flat",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 5,
+        "staked": 5.0,
+        "profit": 3.1,
+        "roi": 0.62,
+        "roi_low": -0.62,
+        "roi_high": 1.86,
+        "clusters": 5,
+        "strike_rate": 0.6,
+        "implied_strike_rate": 0.38849144921126344,
+        "average_price": 2.7199999999999998,
+        "mean_edge": 0.17300000000000004,
+        "clv_bets": 5,
+        "clv": 0.028313084764697627,
+        "max_drawdown_units": 2.0,
+        "longest_losing_run": 2
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "model_favourite",
+          "conditions": []
+        },
+        "stake": {
+          "method": "kelly",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 3,
+        "staked": 8.099791666666665,
+        "profit": 10.886208333333332,
+        "roi": 1.3440109056302891,
+        "roi_low": -1.0,
+        "roi_high": 2.135073718382254,
+        "clusters": 3,
+        "strike_rate": 0.6666666666666666,
+        "implied_strike_rate": 0.3133169934640523,
+        "average_price": 3.2000000000000006,
+        "mean_edge": 0.3233333333333334,
+        "clv_bets": 3,
+        "clv": 0.07900665642601123,
+        "max_drawdown_units": 1.979166666666666,
+        "longest_losing_run": 1
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "edge",
+          "conditions": [
+            {
+              "field": "edge",
+              "op": ">=",
+              "value": 0.0
+            }
+          ]
+        },
+        "stake": {
+          "method": "flat",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 5,
+        "staked": 5.0,
+        "profit": 1.2000000000000002,
+        "roi": 0.24000000000000005,
+        "roi_low": -1.0,
+        "roi_high": 1.52,
+        "clusters": 5,
+        "strike_rate": 0.4,
+        "implied_strike_rate": 0.2968137254901961,
+        "average_price": 3.4,
+        "mean_edge": 0.23800000000000004,
+        "clv_bets": 5,
+        "clv": 0.07568682213843503,
+        "max_drawdown_units": 2.0,
+        "longest_losing_run": 2
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "edge",
+          "conditions": [
+            {
+              "field": "edge",
+              "op": ">=",
+              "value": 0.0
+            }
+          ]
+        },
+        "stake": {
+          "method": "kelly",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 5,
+        "staked": 10.146277083333333,
+        "profit": 8.819722916666667,
+        "roi": 0.8692570530282763,
+        "roi_low": -1.0,
+        "roi_high": 2.0499112198063587,
+        "clusters": 5,
+        "strike_rate": 0.4,
+        "implied_strike_rate": 0.2968137254901961,
+        "average_price": 3.4,
+        "mean_edge": 0.23800000000000004,
+        "clv_bets": 5,
+        "clv": 0.07568682213843503,
+        "max_drawdown_units": 2.1875,
+        "longest_losing_run": 2
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "edge",
+          "conditions": [
+            {
+              "field": "edge",
+              "op": ">=",
+              "value": 0.05
+            }
+          ]
+        },
+        "stake": {
+          "method": "flat",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 4,
+        "staked": 4.0,
+        "profit": 2.2,
+        "roi": 0.55,
+        "roi_low": -1.0,
+        "roi_high": 2.1,
+        "clusters": 4,
+        "strike_rate": 0.5,
+        "implied_strike_rate": 0.2974877450980392,
+        "average_price": 3.4000000000000004,
+        "mean_edge": 0.29250000000000004,
+        "clv_bets": 4,
+        "clv": 0.08703277009728622,
+        "max_drawdown_units": 1.0,
+        "longest_losing_run": 1
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "edge",
+          "conditions": [
+            {
+              "field": "edge",
+              "op": ">=",
+              "value": 0.05
+            }
+          ]
+        },
+        "stake": {
+          "method": "kelly",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 4,
+        "staked": 9.947895138888887,
+        "profit": 9.03810486111111,
+        "roi": 0.9085444443195655,
+        "roi_low": -1.0,
+        "roi_high": 2.1019707954661495,
+        "clusters": 4,
+        "strike_rate": 0.5,
+        "implied_strike_rate": 0.2974877450980392,
+        "average_price": 3.4000000000000004,
+        "mean_edge": 0.29250000000000004,
+        "clv_bets": 4,
+        "clv": 0.08703277009728622,
+        "max_drawdown_units": 1.979166666666666,
+        "longest_losing_run": 1
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "edge",
+          "conditions": [
+            {
+              "field": "edge",
+              "op": ">=",
+              "value": 0.1
+            }
+          ]
+        },
+        "stake": {
+          "method": "flat",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 4,
+        "staked": 4.0,
+        "profit": 2.2,
+        "roi": 0.55,
+        "roi_low": -1.0,
+        "roi_high": 2.1,
+        "clusters": 4,
+        "strike_rate": 0.5,
+        "implied_strike_rate": 0.2974877450980392,
+        "average_price": 3.4000000000000004,
+        "mean_edge": 0.29250000000000004,
+        "clv_bets": 4,
+        "clv": 0.08703277009728622,
+        "max_drawdown_units": 1.0,
+        "longest_losing_run": 1
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "edge",
+          "conditions": [
+            {
+              "field": "edge",
+              "op": ">=",
+              "value": 0.1
+            }
+          ]
+        },
+        "stake": {
+          "method": "kelly",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 4,
+        "staked": 9.947895138888887,
+        "profit": 9.03810486111111,
+        "roi": 0.9085444443195655,
+        "roi_low": -1.0,
+        "roi_high": 2.1019707954661495,
+        "clusters": 4,
+        "strike_rate": 0.5,
+        "implied_strike_rate": 0.2974877450980392,
+        "average_price": 3.4000000000000004,
+        "mean_edge": 0.29250000000000004,
+        "clv_bets": 4,
+        "clv": 0.08703277009728622,
+        "max_drawdown_units": 1.979166666666666,
+        "longest_losing_run": 1
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "disagreement",
+          "conditions": []
+        },
+        "stake": {
+          "method": "flat",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 2,
+        "staked": 2.0,
+        "profit": 1.2000000000000002,
+        "roi": 0.6000000000000001,
+        "roi_low": -1.0,
+        "roi_high": 2.2,
+        "clusters": 2,
+        "strike_rate": 0.5,
+        "implied_strike_rate": 0.3033088235294118,
+        "average_price": 3.3,
+        "mean_edge": 0.2350000000000001,
+        "clv_bets": 2,
+        "clv": 0.08279569892473115,
+        "max_drawdown_units": 1.0,
+        "longest_losing_run": 1
+      }
+    },
+    {
+      "strategy": {
+        "v": 1,
+        "universe": {
+          "comps": [],
+          "seasons": [
+            2025
+          ],
+          "include": [],
+          "exclude": [],
+          "venue": "any",
+          "forecast": "replayed"
+        },
+        "market": "1x2",
+        "rule": {
+          "pick": "disagreement",
+          "conditions": []
+        },
+        "stake": {
+          "method": "kelly",
+          "fraction": 0.25,
+          "cap": 0.03,
+          "unit": 1,
+          "daily_cap": 1,
+          "trust": 1,
+          "base": "start_of_day"
+        },
+        "execution": {
+          "book": "avg",
+          "timing": "pre",
+          "commission": 0
+        },
+        "bankroll": 100
+      },
+      "options": {
+        "bootstrap": 2000,
+        "seed": 7
+      },
+      "summary": {
+        "bets": 2,
+        "staked": 4.919791666666666,
+        "profit": 4.490208333333334,
+        "roi": 0.9126826169807329,
+        "roi_low": -1.0,
+        "roi_high": 2.2,
+        "clusters": 2,
+        "strike_rate": 0.5,
+        "implied_strike_rate": 0.3033088235294118,
+        "average_price": 3.3,
+        "mean_edge": 0.2350000000000001,
+        "clv_bets": 2,
+        "clv": 0.08279569892473115,
+        "max_drawdown_units": 1.9791666666666663,
+        "longest_losing_run": 1
+      }
+    }
+  ]
+}

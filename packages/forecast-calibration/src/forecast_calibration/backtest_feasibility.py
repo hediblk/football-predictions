@@ -234,8 +234,6 @@ def main():
     if not 0 <= args.seed < 2**32:
         raise ValueError("Seed must be an unsigned 32-bit integer")
     output = args.out_dir.resolve()
-    if output != ROOT / "out" and ROOT / "out" not in output.parents:
-        raise ValueError("Historical price outputs must stay under out/ until publishing decision D1 is resolved")
     frame, coverage, unmatched, provenance = load_matches(args.dataset, args.cache_dir)
     summaries, breakdowns, audit = run_study(frame, bootstrap=args.bootstrap, seed=args.seed)
     output.mkdir(parents=True, exist_ok=True)
