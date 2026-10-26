@@ -5,6 +5,8 @@ date: 2026-10-25
 
 # Run betting backtests in the browser over checked Python exports
 
+The D1 publication safeguards below were superseded by [ADR 0004](0004-backtest-deployment-switch.md) on 26 October 2026 after the user confirmed publication permission.
+
 The [Backtest plan](../backtest-plan-2026-10-24.md) adds a strategy tool over the existing standalone forecasts. Python still owns forecasting and historical replay, as required by [ADR 0001](0001-site-model-boundary.md). Browser code filters exported matches and settles hypothetical 90-minute bets; it does not fit strengths, simulate football results or change forecast probabilities.
 
 ## Decision

@@ -116,7 +116,7 @@ A positive CLV in a small or selected slice is not a replacement for realized re
 - **Default:** Bet365, pre-closing, flat stake, model favourite. This uses a named bookmaker and makes the simplest strategy visible; it is not selected for a profitable result.
 - **Presets:** model favourite; market favourite as the comparison baseline; best edge ≥5%; and quarter-Kelly on the same ≥5% selection as a staking demonstration. Keep the other evaluated rules available as explicit choices, without calling any a winning strategy.
 - **Opening copy:** “The model does not beat the market in these historical baseline strategies.” Show count, interval and calibration in-sample label beside the result.
-- **Publishing:** historical per-match prices and derived backtest files remain under `out/` while D1 is unresolved. No UI, public price export, paper trading or automatic betting is implemented by this task.
+- **Publishing:** D1 was resolved on 26 October 2026 when the user confirmed publication permission; [ADR 0004](adr/0004-backtest-deployment-switch.md) removes the original output restrictions. No UI, paper trading or automatic betting was implemented by this study.
 
 ## Reproduce and reuse
 
@@ -128,7 +128,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
   --out-dir out/backtest-feasibility --bootstrap 2000 --seed 7
 ```
 
-The command is offline and fails on a missing source cache or a changed dataset hash. It refuses output outside this repository's `out/` directory while D1 is unresolved. No provider key or model refit is needed.
+The command is offline and fails on a missing source cache or a changed dataset hash. Outputs default to this repository's `out/` directory; `--out-dir` can select another destination. No provider key or model refit is needed.
 
 - `matches.csv`: matched no-odds forecasts, results and raw 1X2 prices, for Task 3.
 - `coverage.csv`, `unmatched.csv`: every league-season/price/timing denominator and identity exclusion.

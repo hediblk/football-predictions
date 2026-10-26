@@ -173,7 +173,7 @@ function run(explicit) {
   current = strategy;
   const hash = encodeStrategy(strategy); history.replaceState(null, "", hash); $("bt-share").href = hash;
   $("bt-strategy-summary").textContent = `${picks[strategy.rule.pick]} · ${methods[strategy.stake.method]} · ${books[strategy.execution.book]} · ${strategy.execution.timing === "pre" ? "pre-closing" : "closing"}`;
-  if (!files.length) { status("unavailable", "Historical prices are not publicly available. Publication permission is unresolved; no backtest results are shown. Your strategy link can still be shared."); return; }
+  if (!files.length) { status("unavailable", "No backtest seasons are available in this deployment. Your strategy link can still be shared."); return; }
   if (strategy.universe.seasons.some((year) => !files.some((file) => file.season === year))) { status("unavailable", "A season in this strategy is unavailable. Choose only loaded seasons; no partial result is substituted."); return; }
   const ticket = generation;
   status("loading", "Calculating strategy and 2,000 match-date bootstrap samples…");

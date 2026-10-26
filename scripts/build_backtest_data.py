@@ -224,12 +224,12 @@ def parity(rows, season, bootstrap):
     return results
 
 
-def write_season(path, payload):
+def write_json(path, payload, family):
     if path.exists():
         previous = json.loads(path.read_text())
         if {k: v for k, v in previous.items() if k != "generated_at"} == {k: v for k, v in payload.items() if k != "generated_at"}:
             return False
-    validate_payload(payload, "backtest")
+    validate_payload(payload, family)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".json.tmp")
     temporary.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":"), allow_nan=False) + "\n")
@@ -237,8 +237,13 @@ def write_season(path, payload):
     return True
 
 
+def write_index(destination):
+    seasons = sorted(int(path.stem) for path in destination.glob("*.json") if path.stem.isdigit())
+    write_json(destination / "index.json", {"version": 1, "seasons": seasons}, "backtest_index")
+
+
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Build domestic 1X2 backtest season files; historical prices stay local pending D1")
+    parser = argparse.ArgumentParser(description="Build domestic 1X2 backtest season files and their availability manifest")
     parser.add_argument("--dataset", type=Path, default=ROOT / "out/global-calibration/features/dataset.csv")
     parser.add_argument("--cache-dir", type=Path, default=ROOT / ".cache")
     parser.add_argument("--work-dir", type=Path, default=ROOT / "out/backtest-build")
@@ -247,7 +252,6 @@ def main(argv=None):
     parser.add_argument("--seasons", type=int, nargs="+")
     parser.add_argument("--current-only", action="store_true")
     parser.add_argument("--offline", action="store_true")
-    parser.add_argument("--publish", action="store_true", help="Publish prices to the candidate site; requires D1 authorization")
     parser.add_argument("--rebuild", action="store_true", help="Rebuild frozen past-season files even when calibration is unchanged")
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--bootstrap", type=int, default=2000)
@@ -257,9 +261,7 @@ def main(argv=None):
     artifact = json.loads(ARTIFACT.read_text())
     current = datetime.now(timezone.utc).year - (datetime.now(timezone.utc).month < 7)
     seasons = sorted(set(args.seasons or ([current] if args.current_only else [*artifact["dataset"]["seasons"], current])))
-    destination = (args.dest or (args.site_data / "backtest" if args.publish else ROOT / "out/backtest")).resolve()
-    if not args.publish and ROOT / "out" not in destination.parents:
-        parser.error("Historical price outputs must remain under out/ until D1 permits publication")
+    destination = (args.dest or ROOT / "out/backtest").resolve()
     pending = []
     for season in seasons:
         path = destination / f"{season}.json"
@@ -272,6 +274,7 @@ def main(argv=None):
         pending.append(season)
     seasons = pending
     if not seasons:
+        write_index(destination)
         return
     features = None
     if any(season in artifact["dataset"]["seasons"] for season in seasons):
@@ -325,10 +328,11 @@ def main(argv=None):
                                   "results_cutoff_by_comp": {COMP[league]: pd.to_datetime(parts[(league, season)].utcDate, utc=True).max().isoformat()
                                                              for league in LEAGUES},
                                   "offline": args.offline,
-                                  "publication": "D1 explicitly authorized" if args.publish else "local_pending_D1"},
+                                  "publication": "authorized"},
                    "parity": parity(rows, season, args.bootstrap)}
-        changed = write_season(destination / f"{season}.json", payload)
+        changed = write_json(destination / f"{season}.json", payload, "backtest")
         print(f"{'Wrote' if changed else 'Retained unchanged'} {destination / f'{season}.json'} ({len(rows)} forecast rows)", flush=True)
+    write_index(destination)
 
 
 if __name__ == "__main__":

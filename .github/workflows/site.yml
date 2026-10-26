@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  ENABLE_BACKTEST: ${{ vars.ENABLE_BACKTEST }}
   PYTHONDONTWRITEBYTECODE: "1"
   PYTHONHASHSEED: "0"
   OPENBLAS_NUM_THREADS: "1"
@@ -58,7 +59,6 @@ jobs:
       - name: Run forecasts
         env:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
-          PUBLISH_BACKTEST_PRICES: ${{ vars.PUBLISH_BACKTEST_PRICES }}
         run: scripts/refresh_site.sh
       - name: Commit refreshed data
         run: |
@@ -99,6 +99,13 @@ jobs:
       - run: python -m pip install -c requirements-lock.txt jsonschema rfc3339-validator rfc3986-validator playwright
       - name: Validate the exact site revision being deployed
         run: python scripts/validate_site_data.py --data site/data
+      - name: Configure Backtest availability
+        run: |
+          backtest_enabled=false
+          if [ "$ENABLE_BACKTEST" = 1 ]; then
+            backtest_enabled=true
+          fi
+          printf 'export const BACKTEST_ENABLED = %s;\n' "$backtest_enabled" > site/assets/features.js
       # Versioned script and style URLs, so browsers never run cached code against the new files.
       - run: python scripts/stamp_assets.py site
       - name: Load every view of the build in headless Chromium

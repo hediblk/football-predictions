@@ -1,6 +1,6 @@
 # Backtest data and engine contract
 
-Tasks 3–5 of the [Backtest plan](backtest-plan-2026-10-24.md). Version 1 covers domestic 90-minute 1X2 bets. Historical price exports remain in `out/backtest/` until D1 permits publication.
+Tasks 3–5 of the [Backtest plan](backtest-plan-2026-10-24.md). Version 1 covers domestic 90-minute 1X2 bets. Historical-price publication was authorized on 26 October 2026; [ADR 0004](adr/0004-backtest-deployment-switch.md) replaces the original D1 safeguards.
 
 ## Season files
 
@@ -52,6 +52,8 @@ URL state is `#backtest/<encodeURIComponent(JSON.stringify(normalizedStrategy))>
 
 ## Availability and page
 
-`backtest/index.json` is `{ "version": 1, "seasons": [] }`, with unique integer season start years when files are available. The shipped manifest is empty while D1 remains unresolved. The validator checks listed files exist and their seasons match; the page fetches only listed files, caches availability once per page load, and shows an unavailable state on failure without substituting partial results. The optional manifest remains compatible with older datasets. A separate local preview may list local season files; this does not authorize publication or alter refresh flags.
+`backtest/index.json` is `{ "version": 1, "seasons": [] }`, with unique integer season start years when files are available. After successful builds, the exporter atomically writes the manifest from the season files in its destination, preserving unchanged bytes and timestamps. The validator checks listed files exist and their seasons match; the page fetches only listed files, caches availability once per page load, and shows an unavailable state on failure without substituting partial results. The optional manifest remains compatible with older datasets.
+
+`ENABLE_BACKTEST=1` is the only deployment switch. Deployment writes `site/assets/features.js` before asset stamping and browser checks; the committed module defaults off. Disabled Backtest links return to Tables, its navigation link stays hidden, and its code, data and worker are not loaded. Scheduled refresh runs the current-season exporter only when enabled, using `--dest` to write into the staged site. Local exports default to `out/backtest/`; initial historical publication uses `--dest site/data/backtest`. Enabling the feature does not require a separate price-publication flag.
 
 The page calls the engine in a module worker (whose URL inherits the stamped entry-module version). It uses 2,000 bootstrap draws and seed 7 for results and the labelled flat-stake market-favourite reference. Probability and gap controls convert display percentages/points to engine fractions; bankroll fractions remain explicitly 0–1. Daily chart values and ledger balances come from the engine's season-reset bankroll paths.

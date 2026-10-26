@@ -51,7 +51,7 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
   python -m forecast_calibration.backtest_feasibility --out-dir out/backtest-feasibility
 ```
 
-This command is offline and hash-checks the dataset. Outputs stay under `out/` while the plan's historical-price publishing decision is unresolved. It writes coverage, bets, all 72 summaries, season/league/price-band breakdowns, seeded match-date bootstrap intervals and preset parity numbers for Task 3. The eleven seasons are calibration in-sample; their walk-forward strengths do not make them an independent betting holdout. `select_bets`, `stake_bets`, `summarize` and `bootstrap_indices` provide the Python reference for the later browser engine.
+This command is offline and hash-checks the dataset. Outputs default to `out/`. It writes coverage, bets, all 72 summaries, season/league/price-band breakdowns, seeded match-date bootstrap intervals and preset parity numbers for Task 3. The eleven seasons are calibration in-sample; their walk-forward strengths do not make them an independent betting holdout. `select_bets`, `stake_bets`, `summarize` and `bootstrap_indices` provide the Python reference for the later browser engine.
 
 ## Backtest season exports
 
@@ -66,4 +66,4 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
 
 Use `--current-only` for the optional daily step. Published receipts are copied without changing them, with closing execution only. Receipts lacking a historical-price join remain visible with null prices; the engine counts them as missing-price voids. Official historical rounds, Stakes and European ratings remain null without dated evidence. Provider IDs are retrospective display/link metadata, never forecast inputs. The [contract](../../docs/backtest-data-contract.md) and [ADR 0003](../../docs/adr/0003-browser-betting-backtests.md) define the boundary.
 
-D1 is still unresolved. Local output is the default; deliberate `--publish` and the scheduled `PUBLISH_BACKTEST_PRICES=1` setting are reserved for a later authorized publication. No Backtest view or paper trading is enabled by the exporter.
+Historical-price publication is authorized. Local output remains the default; pass `--dest site/data/backtest` to build published files and their availability manifest. `ENABLE_BACKTEST=1` is the single deployment switch for the tab and scheduled current-season export; it defaults off. For local previews, set `BACKTEST_ENABLED` to `true` in the preview's `assets/features.js`. See [ADR 0004](../../docs/adr/0004-backtest-deployment-switch.md).

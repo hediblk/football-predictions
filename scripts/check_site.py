@@ -358,6 +358,24 @@ def check_backtest_ui(context, base, fixture_path):
     fixture = json.loads(fixture_path.read_text())
     failures = []
     page = context.new_page()
+    page.route("**/assets/features.js*", lambda route: route.fulfill(
+        status=200, content_type="text/javascript", body="export const BACKTEST_ENABLED = false;"))
+    requests = []
+    page.on("request", lambda request: requests.append(request.url))
+    for hash_value in ("#backtest", "#backtest/not-json"):
+        page.goto(base + hash_value, wait_until="networkidle")
+        page.locator("#view-tables").wait_for(state="visible")
+        if page.locator('[data-view="backtest"]').is_visible() or page.locator("#bt-form").count():
+            failures.append("disabled Backtest still exposes its tab or form")
+        if page.evaluate("location.hash.startsWith('#backtest')"):
+            failures.append("disabled Backtest does not redirect saved links to Tables")
+    if any("/assets/backtest" in url or "/data/backtest/" in url for url in requests):
+        failures.append("disabled Backtest loads its code or data")
+    page.close()
+
+    page = context.new_page()
+    page.route("**/assets/features.js*", lambda route: route.fulfill(
+        status=200, content_type="text/javascript", body="export const BACKTEST_ENABLED = true;"))
     page.route("**/data/backtest/index.json", lambda route: route.fulfill(
         status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": []})))
     page.on("pageerror", lambda exc: failures.append(f"backtest exception: {exc}"))
@@ -369,6 +387,8 @@ def check_backtest_ui(context, base, fixture_path):
     page.close()
 
     page = context.new_page()
+    page.route("**/assets/features.js*", lambda route: route.fulfill(
+        status=200, content_type="text/javascript", body="export const BACKTEST_ENABLED = true;"))
     page.route("**/data/backtest/index.json", lambda route: route.fulfill(
         status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": [fixture["season"]]})))
     page.route(f"**/data/backtest/{fixture['season']}.json", lambda route: route.fulfill(
@@ -380,6 +400,8 @@ def check_backtest_ui(context, base, fixture_path):
     page.clock.set_fixed_time(datetime(2026, 10, 25))
     page.goto(base + "#backtest", wait_until="networkidle")
     page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if not page.locator('[data-view="backtest"]').is_visible():
+        failures.append("enabled Backtest hides its tab")
     for selector in ("#bt-form", "#bt-run", "#bt-summary", "#bt-bets tbody tr", "#bt-season", "#bt-comp",
                      "#bt-book", "#bt-timing", "#bt-pick", "#bt-method", "#bt-forecast"):
         if not page.locator(selector).count():
@@ -481,6 +503,8 @@ def check(site, backtest_data=None):
                     context, base, ROOT / "tests/fixtures/backtest.json")]
             else:
                 page = context.new_page()
+                page.route("**/assets/features.js*", lambda route: route.fulfill(
+                    status=200, content_type="text/javascript", body="export const BACKTEST_ENABLED = true;"))
                 fixture = json.loads((ROOT / "tests/fixtures/backtest.json").read_text())
                 page.route("**/data/backtest/index.json", lambda route: route.fulfill(
                     status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": [fixture["season"]]})))
