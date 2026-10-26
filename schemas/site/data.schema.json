@@ -1934,6 +1934,129 @@
       ],
       "additionalProperties": false
     },
+    "backtestProbabilityTriple": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/probability"},
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "backtestGoalPair": {
+      "type": "array",
+      "prefixItems": [{"type": "number", "minimum": 0}, {"type": "number", "minimum": 0}],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "backtestPriceTriple": {
+      "type": "array",
+      "prefixItems": [
+        {"type": "number", "exclusiveMinimum": 1},
+        {"type": "number", "exclusiveMinimum": 1},
+        {"type": "number", "exclusiveMinimum": 1}
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "backtestPrices": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "pre": {"anyOf": [{"$ref": "#/$defs/backtestPriceTriple"}, {"type": "null"}]},
+          "close": {"anyOf": [{"$ref": "#/$defs/backtestPriceTriple"}, {"type": "null"}]}
+        },
+        "required": ["pre", "close"]
+      }
+    },
+    "backtestColumns": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "comp": {"type": "array", "items": {"enum": ["PL", "PD", "BL1", "SA", "FL1"]}},
+        "kickoff": {"type": "array", "items": {"$ref": "#/$defs/timestamp"}},
+        "home": {"type": "array", "items": {"$ref": "#/$defs/string"}},
+        "away": {"type": "array", "items": {"$ref": "#/$defs/string"}},
+        "home_key": {"type": "array", "items": {"$ref": "#/$defs/string"}},
+        "away_key": {"type": "array", "items": {"$ref": "#/$defs/string"}},
+        "home_id": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "away_id": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "matchday": {"type": "array", "items": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]}},
+        "forecast": {"type": "array", "items": {"enum": ["replayed", "published"]}},
+        "at": {"type": "array", "items": {"$ref": "#/$defs/timestamp"}},
+        "score": {"type": "array", "items": {"$ref": "#/$defs/score"}},
+        "xg": {"type": "array", "items": {"anyOf": [{"$ref": "#/$defs/backtestGoalPair"}, {"type": "null"}]}},
+        "p": {"type": "array", "items": {"$ref": "#/$defs/backtestProbabilityTriple"}},
+        "elo": {"type": "array", "items": {"anyOf": [{"$ref": "#/$defs/backtestProbabilityTriple"}, {"type": "null"}]}},
+        "exp": {"type": "array", "items": {"anyOf": [{"$ref": "#/$defs/backtestGoalPair"}, {"type": "null"}]}},
+        "stakes": {"type": "array", "items": {"type": ["boolean", "null"]}},
+        "rating_gap": {"type": "array", "items": {"type": ["number", "null"]}},
+        "prices": {"type": "array", "items": {"$ref": "#/$defs/backtestPrices"}}
+      },
+      "required": ["id", "comp", "kickoff", "home", "away", "home_key", "away_key", "home_id", "away_id", "matchday", "forecast", "at", "score", "xg", "p", "elo", "exp", "stakes", "rating_gap", "prices"]
+    },
+    "backtestCoverageCount": {"type": "integer", "minimum": 0},
+    "backtestCoverage": {
+      "type": "object",
+      "properties": {
+        "rows": {"$ref": "#/$defs/backtestCoverageCount"},
+        "replayed": {"$ref": "#/$defs/backtestCoverageCount"},
+        "published": {"$ref": "#/$defs/backtestCoverageCount"},
+        "by_comp": {
+          "type": "object",
+          "propertyNames": {"enum": ["PL", "PD", "BL1", "SA", "FL1"]},
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "replayed": {"$ref": "#/$defs/backtestCoverageCount"},
+              "published": {"$ref": "#/$defs/backtestCoverageCount"},
+              "missing_ids": {"$ref": "#/$defs/backtestCoverageCount"},
+              "missing_xg": {"$ref": "#/$defs/backtestCoverageCount"},
+              "missing_exp": {"$ref": "#/$defs/backtestCoverageCount"},
+              "missing_stakes": {"$ref": "#/$defs/backtestCoverageCount"},
+              "missing_matchday": {"$ref": "#/$defs/backtestCoverageCount"},
+              "missing_rating": {"$ref": "#/$defs/backtestCoverageCount"}
+            },
+            "required": ["replayed", "published", "missing_ids", "missing_xg", "missing_exp", "missing_stakes", "missing_matchday", "missing_rating"]
+          }
+        },
+        "prices": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "pre": {"$ref": "#/$defs/backtestCoverageCount"},
+              "close": {"$ref": "#/$defs/backtestCoverageCount"}
+            },
+            "required": ["pre", "close"]
+          }
+        }
+      },
+      "required": ["rows", "replayed", "published", "by_comp", "prices"]
+    },
+    "backtest": {
+      "type": "object",
+      "properties": {
+        "version": {"const": 1},
+        "season": {"type": "integer", "minimum": 1900, "maximum": 2200},
+        "generated_at": {"$ref": "#/$defs/timestamp"},
+        "calibration_version": {"$ref": "#/$defs/string"},
+        "columns": {"$ref": "#/$defs/backtestColumns"},
+        "coverage": {"$ref": "#/$defs/backtestCoverage"},
+        "provenance": {"type": "object"},
+        "parity": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "strategy": {"type": "object"},
+              "options": {"type": "object"},
+              "summary": {"anyOf": [{"type": "object"}, {"type": "null"}]}
+            },
+            "required": ["strategy", "options", "summary"]
+          }
+        }
+      },
+      "required": ["version", "season", "generated_at", "calibration_version", "columns", "coverage", "provenance", "parity"]
+    },
     "squad": {
       "type": "object",
       "properties": {
