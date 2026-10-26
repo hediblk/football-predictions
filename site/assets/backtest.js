@@ -14,7 +14,9 @@ const seasonName = (year) => `${year}/${String(Number(year) + 1).slice(-2)}`;
 const options = (map) => Object.entries(map).map(([key, label]) => `<option value="${esc(key)}">${esc(label)}</option>`).join("");
 const select = (id, label, map, multi = false) => `<label>${label}<select id="bt-${id}" ${multi ? 'multiple size="3"' : ""}>${options(map)}</select></label>`;
 const input = (id, label, value, min = 0, max = "", step = "any") => `<label>${label}<input id="bt-${id}" type="number" value="${value}" min="${min}" ${max !== "" ? `max="${max}"` : ""} step="${step}" required></label>`;
+const SAVED_KEY = "floodlight.backtest.saved-strategies.v1";
 let files = [], rows = [], manifest, loadPromise, worker, timer, generation = 0, current, output, page = 0;
+let savedStrategies = [], evaluatedStrategies = new Set(), savedStorageIssue = "";
 let matchLinks = new Set();
 
 function shell() {
@@ -59,9 +61,29 @@ function shell() {
         </details>
         <div class="bt-actions"><button class="chip" id="bt-run" type="submit">Run backtest</button><button class="chip" id="bt-reset" type="button">Reset strategy</button><a id="bt-share" class="chip" href="#backtest">Strategy link</a></div>
       </form></details>
+      <section class="bt-saved-tools" aria-labelledby="bt-saved-heading">
+        <h2 id="bt-saved-heading">Saved strategies</h2>
+        <p class="note">Saved in this browser. URL strategy links continue to work independently.</p>
+        <div class="bt-controls bt-saved-controls">
+          <label>Name current strategy<input id="bt-save-name" maxlength="60" value="My strategy"></label>
+          <button id="bt-save" class="chip" type="button">Save current</button>
+          <label>Load or delete<select id="bt-saved"></select></label>
+          <button id="bt-load-saved" class="chip" type="button">Load saved</button>
+          <button id="bt-delete-saved" class="chip" type="button">Delete saved</button>
+        </div>
+        <p id="bt-saved-status" class="note" role="status" aria-live="polite"></p>
+        <h2>Compare two saved strategies</h2>
+        <div class="bt-controls bt-compare-controls">
+          <label>Strategy A<select id="bt-compare-a"></select></label>
+          <label>Strategy B<select id="bt-compare-b"></select></label>
+          <button id="bt-compare" class="chip" type="button">Compare strategies</button>
+        </div>
+        <p class="note">Save two configurations, then compare them on the same season-reset bankroll chart with their own intervals and coverage.</p>
+      </section>
+      <p id="bt-session-count" class="note" aria-live="polite">Distinct strategies evaluated this session: 0.</p>
       <p id="bt-status" class="note" role="status" aria-live="polite" data-state="loading">Loading available seasons…</p>
     </fieldset>
-    <div id="bt-results" hidden></div>`;
+    <div id="bt-results" hidden></div><div id="bt-comparison" hidden></div>`;
   $("bt-form").addEventListener("submit", (event) => { event.preventDefault(); schedule(true); });
   $("bt-form").addEventListener("input", () => schedule());
   $("bt-form").addEventListener("change", (event) => {
@@ -71,6 +93,10 @@ function shell() {
   });
   $("bt-add-condition").onclick = () => { addCondition(); schedule(); };
   $("bt-reset").onclick = () => { fill(normalizeStrategy({})); schedule(); };
+  $("bt-save").onclick = saveCurrentStrategy;
+  $("bt-load-saved").onclick = loadSavedStrategy;
+  $("bt-delete-saved").onclick = deleteSavedStrategy;
+  $("bt-compare").onclick = compareSavedStrategies;
   document.querySelectorAll("[data-preset]").forEach((button) => {
     button.onclick = () => {
       const key = button.dataset.preset;
@@ -78,6 +104,126 @@ function shell() {
       schedule();
     };
   });
+  refreshSavedControls();
+}
+
+function readSavedStorage() {
+  savedStorageIssue = "";
+  try {
+    const raw = localStorage.getItem(SAVED_KEY);
+    if (!raw) savedStrategies = [];
+    else {
+      const stored = JSON.parse(raw);
+      if (stored?.version !== 1 || !Array.isArray(stored.strategies)) throw new Error("Saved strategy data has an unsupported shape.");
+      const names = new Set();
+      let skipped = 0;
+      savedStrategies = stored.strategies.flatMap((entry) => {
+        try {
+          const name = typeof entry?.name === "string" ? entry.name.trim() : "";
+          if (!name || name.length > 60 || names.has(name.toLocaleLowerCase())) throw new Error("Invalid saved strategy name");
+          const strategy = normalizeStrategy(entry.strategy);
+          names.add(name.toLocaleLowerCase());
+          return [{ name, strategy }];
+        } catch {
+          skipped += 1;
+          return [];
+        }
+      });
+      if (skipped) savedStorageIssue = `${skipped} malformed saved ${skipped === 1 ? "strategy was" : "strategies were"} skipped.`;
+    }
+  } catch {
+    savedStrategies = [];
+    savedStorageIssue = "Saved strategies could not be read. URL sharing and backtests still work.";
+  }
+  refreshSavedControls();
+}
+
+function refreshSavedControls(selectedName = null) {
+  if (!$('bt-saved')) return;
+  const entries = savedStrategies.map((entry, index) => `<option value="${index}">${esc(entry.name)}</option>`).join("");
+  const empty = '<option value="">No saved strategies</option>';
+  ["bt-saved", "bt-compare-a", "bt-compare-b"].forEach((id) => {
+    const el = $(id), previous = el.value;
+    el.innerHTML = savedStrategies.length ? entries : empty;
+    const wanted = selectedName == null ? previous : String(savedStrategies.findIndex((entry) => entry.name === selectedName));
+    if (savedStrategies.length) el.value = Number(wanted) >= 0 && Number(wanted) < savedStrategies.length ? wanted : "0";
+  });
+  if (savedStrategies.length > 1 && $("bt-compare-a").value === $("bt-compare-b").value) {
+    $("bt-compare-a").value = "0"; $("bt-compare-b").value = "1";
+  }
+  $("bt-load-saved").disabled = !savedStrategies.length;
+  $("bt-delete-saved").disabled = !savedStrategies.length;
+  $("bt-compare").disabled = savedStrategies.length < 2;
+  if (savedStorageIssue) $("bt-saved-status").textContent = savedStorageIssue;
+  else if (!$("bt-saved-status").textContent) $("bt-saved-status").textContent = `${savedStrategies.length} saved ${savedStrategies.length === 1 ? "strategy" : "strategies"}.`;
+}
+
+function persistSavedStrategies() {
+  try {
+    localStorage.setItem(SAVED_KEY, JSON.stringify({ version: 1, strategies: savedStrategies }));
+    savedStorageIssue = "";
+    return true;
+  } catch {
+    savedStorageIssue = "This browser could not save strategies. URL sharing and backtests still work.";
+    $("bt-saved-status").textContent = savedStorageIssue;
+    return false;
+  }
+}
+
+function saveCurrentStrategy() {
+  const name = $("bt-save-name").value.trim();
+  if (!name || name.length > 60) { $("bt-saved-status").textContent = "Enter a name of 1–60 characters."; return; }
+  try {
+    const strategy = normalizeStrategy(read());
+    const index = savedStrategies.findIndex((entry) => entry.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+    if (index < 0) savedStrategies.push({ name, strategy });
+    else savedStrategies[index] = { name, strategy };
+    if (persistSavedStrategies()) {
+      refreshSavedControls(name);
+      $("bt-saved-status").textContent = name + " saved.";
+    }
+  } catch (error) { $("bt-saved-status").textContent = error.message; }
+}
+
+function selectedSaved(id) {
+  const index = Number($(id).value);
+  return Number.isInteger(index) ? savedStrategies[index] : null;
+}
+
+function loadSavedStrategy() {
+  const entry = selectedSaved("bt-saved");
+  if (!entry) return;
+  try {
+    const strategy = normalizeStrategy(entry.strategy);
+    fill(strategy); $("bt-save-name").value = entry.name;
+    $("bt-saved-status").textContent = entry.name + " loaded into the editor.";
+    schedule(true);
+  } catch (error) { $("bt-saved-status").textContent = `Saved strategy is invalid: ${error.message}`; }
+}
+
+function deleteSavedStrategy() {
+  const entry = selectedSaved("bt-saved");
+  if (!entry) return;
+  savedStrategies = savedStrategies.filter((item) => item !== entry);
+  if (persistSavedStrategies()) {
+    refreshSavedControls();
+    $("bt-saved-status").textContent = entry.name + " deleted.";
+  }
+}
+
+function compareSavedStrategies() {
+  const entries = [selectedSaved("bt-compare-a"), selectedSaved("bt-compare-b")];
+  if (entries.some((entry) => !entry)) { $("bt-saved-status").textContent = "Save two strategies before comparing."; return; }
+  try {
+    const comparisons = entries.map(({ name, strategy }) => ({ name, strategy: normalizeStrategy(strategy) }));
+    if (JSON.stringify(comparisons[0].strategy) === JSON.stringify(comparisons[1].strategy)) {
+      $("bt-saved-status").textContent = "Choose two different strategy configurations to compare."; return;
+    }
+    const unavailable = comparisons.flatMap(({ name, strategy }) => strategy.universe.seasons.filter((year) => !files.some((file) => file.season === year)).map((year) => `${name}: ${seasonName(year)} is unavailable`));
+    if (unavailable.length) { $("bt-saved-status").textContent = `${unavailable.join("; ")}.`; return; }
+    $("bt-saved-status").textContent = `Comparing ${comparisons[0].name} with ${comparisons[1].name}.`;
+    schedule(true, comparisons);
+  } catch (error) { $("bt-saved-status").textContent = `Saved strategy is invalid: ${error.message}`; }
 }
 
 function addCondition(condition = { field: "edge", op: ">=", value: .05 }) {
@@ -164,13 +310,14 @@ function syncControls() {
   $("bt-stake-note").textContent = relative ? "Bankroll resets each season. Pre-closing bets share their forecast-date starting balance; closing bets use their UTC match-day balance. Caps scale the whole batch. Kelly trust blends model and market only for sizing." : "Unit-return reference: no finite-bankroll constraint. Probability = base × p / 0.5; edge = base × positive edge / 0.05; to win = target / net decimal profit. Probability alone cannot establish value.";
 }
 function status(state, message) { $("bt-status").dataset.state = state; $("bt-status").textContent = message; $("bt-results").setAttribute("aria-busy", String(state === "loading")); }
-function schedule(explicit = false) {
+function schedule(explicit = false, comparisons = []) {
   clearTimeout(timer); worker?.terminate(); generation += 1;
   $("bt-results").hidden = true;
+  $("bt-comparison").hidden = true;
   status("loading", "Updating strategy…");
-  timer = setTimeout(() => run(explicit), explicit ? 0 : 300);
+  timer = setTimeout(() => run(explicit, comparisons), explicit ? 0 : 300);
 }
-function run(explicit) {
+function run(explicit, comparisons = []) {
   let strategy;
   try { strategy = read(); } catch (error) { status("invalid", error.message); return; }
   current = strategy;
@@ -188,11 +335,14 @@ function run(explicit) {
     worker.terminate();
     if (data.error) { status("invalid", data.error); return; }
     output = data; page = 0; renderResults();
-    status(data.result.summary.bets ? "results" : "empty", data.result.summary.bets ? `Complete · ${data.result.summary.bets.toLocaleString()} bets. Strategy link reflects these settings.` : "No bets match this strategy. Review the universe, conditions and price coverage below.");
+    [strategy, ...comparisons.map((entry) => entry.strategy)].forEach((item) => evaluatedStrategies.add(JSON.stringify(normalizeStrategy(item))));
+    $("bt-session-count").textContent = `Distinct strategies evaluated this session: ${evaluatedStrategies.size}.`;
+    const comparisonText = comparisons.length ? ` Compared ${comparisons.map((entry) => entry.name).join(" and ")}.` : "";
+    status(data.result.summary.bets ? "results" : "empty", data.result.summary.bets ? `Complete · ${data.result.summary.bets.toLocaleString()} bets.${comparisonText} Strategy link reflects the editor settings.` : `No bets match this strategy. Review the universe, conditions and price coverage below.${comparisonText}`);
     if (explicit && matchMedia("(max-width: 699px)").matches) { $("bt-editor").open = false; $("bt-strategy-summary").focus(); }
   };
   worker.onerror = () => { worker.terminate(); status("invalid", "The calculation could not finish. Reset the strategy and try again."); };
-  worker.postMessage({ files, strategy });
+  worker.postMessage({ files, strategy, comparisons });
 }
 
 async function load() {
@@ -228,8 +378,9 @@ export async function showBacktest() {
     if (location.hash.startsWith("#backtest")) setStatus(index.map((row) => row.generated_at).sort().at(-1));
   }).catch(() => { $("status-text").textContent = "Historical simulation"; });
   if (!$("bt-form")) { shell(); fill(normalizeStrategy({})); }
+  readSavedStorage();
   clearTimeout(timer); worker?.terminate(); generation += 1;
-  const ticket = generation; $("bt-results").hidden = true;
+  const ticket = generation; $("bt-results").hidden = true; $("bt-comparison").hidden = true;
   status("loading", "Loading available seasons…");
   try {
     loadPromise ||= load(); await loadPromise;
@@ -249,7 +400,8 @@ function renderResults() {
     <fieldset class="frame hero bt-hero"><legend>Result · historical simulation</legend><div class="hero-in">
       <div class="who"><h1>Return on stake</h1><p class="caption">${s.bets.toLocaleString()} bets · ${units(s.staked)} staked<br>95% interval: ${interval(s)}</p><p class="caption">${sampleLabel}</p></div>
       <div id="bt-roi" class="numeral ${s.roi < 0 ? "bt-negative" : ""}">${s.roi == null ? "—" : pct(s.roi)}</div>
-    </div><p class="note">${chosenFiles.some((f) => f.season <= 2025) ? "2015/16–2025/26: replayed, in-sample for calibration. " : ""}${chosenFiles.some((f) => f.season >= 2026) ? "2026/27: unseen by calibration; later strategy choices may use these results. " : ""}Historical simulation, not betting advice.</p></fieldset>
+    </div><p class="note">Calibration used 2015/16–2025/26. 2026/27 was unseen by calibration, but these results are available to strategy exploration and are not an untouched strategy holdout. Replayed forecasts and published receipts are separate. Historical simulation, not betting advice.</p></fieldset>
+    <fieldset class="frame"><legend>Calibration and 2026/27 results</legend><p class="note">Calibration seasons use replayed forecasts. Current-season replay and published receipts stay separate; a missing result is shown explicitly.</p><div id="bt-period-table"></div><p id="bt-overfit" class="note"></p></fieldset>
     <fieldset class="frame"><legend>Bankroll · units</legend><p class="note">Solid amber: strategy. Dashed ink: market favourite, flat ${units(current.stake.unit)} per bet, same universe and prices, no conditions or bet-on-team restriction. Each season starts at ${units(current.bankroll)}; seasons are never joined.</p>
       <div id="bt-chart"></div><p class="note">${["kelly", "fraction"].includes(current.stake.method) ? "Strategy sizes from a finite bankroll." : "Strategy is a unit-return reference and can fall below zero; it has no finite-bankroll constraint."} Reference ROI ${pct(reference.summary.roi)} · ${reference.summary.bets.toLocaleString()} bets · ${units(reference.summary.staked)} staked · 95% interval ${interval(reference.summary)}.</p>
       <details class="bt-details"><summary>Daily bankroll values · text equivalent</summary><div id="bt-chart-table"></div></details></fieldset>
@@ -261,13 +413,95 @@ function renderResults() {
     <fieldset class="frame"><legend>Bet log</legend><p class="note">90-minute results. Links appear only for known fixtures available on this site. Balance is the season’s settled day-end balance, not an intra-day sizing balance.</p><div id="bt-bets" class="bt-log-scroll" tabindex="0" role="region" aria-label="Scrollable bet log"></div><div class="bt-actions"><button id="bt-prev" class="chip" type="button">Previous 100</button><span id="bt-page"></span><button id="bt-next" class="chip" type="button">Next 100</button></div></fieldset>
     <fieldset class="frame"><legend>Coverage & provenance</legend><div id="bt-coverage"></div></fieldset>`;
   $("bt-results").hidden = false;
-  renderChart(); renderBreakdown(); renderBets(); renderCoverage(chosenFiles);
+  renderPeriodSummary(chosenFiles); renderChart(); renderBreakdown(); renderBets(); renderCoverage(chosenFiles); renderComparison();
   $("bt-breakdown").onchange = renderBreakdown;
   $("bt-prev").onclick = () => { page--; renderBets(); };
   $("bt-next").onclick = () => { page++; renderBets(); };
 }
 function table(headers, body, className = "bt-table") { return `<table class="board ${className}"><thead><tr>${headers.map((h) => `<th scope="col">${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`; }
 function cells(values) { return `<tr>${values.map((v) => `<td>${v}</td>`).join("")}</tr>`; }
+function renderPeriodSummary(chosenFiles) {
+  const periods = output.result.periods;
+  const sourceName = current.universe.forecast === "published" ? "published receipts" : "replayed forecasts";
+  const definitions = [
+    { key: "calibration", label: "2015/16–2025/26 · replayed", files: chosenFiles.some((file) => file.season >= 2015 && file.season <= 2025), kind: "replayed", selected: current.universe.seasons.length === 0 || current.universe.seasons.some((year) => year >= 2015 && year <= 2025) },
+    { key: "current_replayed", label: "2026/27 · replayed", files: chosenFiles.some((file) => file.season === 2026), kind: "replayed", selected: current.universe.seasons.length === 0 || current.universe.seasons.includes(2026) },
+    { key: "current_published", label: "2026/27 · published receipts", files: chosenFiles.some((file) => file.season === 2026), kind: "published", selected: current.universe.seasons.length === 0 || current.universe.seasons.includes(2026) },
+  ];
+  const body = definitions.map((definition) => {
+    const period = periods[definition.key], s = period.summary;
+    let availability;
+    if (current.universe.forecast !== definition.kind) availability = "Not selected; this strategy uses " + sourceName + ".";
+    else if (!definition.selected) availability = "Season range not selected in this strategy.";
+    else if (!definition.files) availability = "Season data is not available.";
+    else if (period.universe_matches === 0) availability = definition.key === "current_published"
+      ? "No published receipts match this universe; replayed rows are separate."
+      : "No matches match the selected leagues and filters.";
+    else if (s.bets === 0) availability = period.universe_matches.toLocaleString() + " matches in the universe; no bets passed the rule and price checks.";
+    else availability = period.universe_matches.toLocaleString() + " matches in the selected universe.";
+    return cells([
+      definition.label + "<small>" + esc(availability) + "</small>",
+      fmt(s.bets, 0) + " bets<small>" + units(s.staked) + " staked</small>",
+      pct(s.roi) + "<small>95% interval: " + interval(s) + "</small>",
+    ]);
+  }).join("");
+  $("bt-period-table").innerHTML = table(["Forecast source / period · coverage", "Bets / staked", "ROI · 95% interval"], body);
+  const calibration = periods.calibration.summary;
+  const currentPeriod = current.universe.forecast === "published" ? periods.current_published.summary : periods.current_replayed.summary;
+  let warning = "No positive calibration-season result to flag for this strategy.";
+  if (calibration.roi > 0) {
+    if (currentPeriod.bets && currentPeriod.roi <= 0) warning = "Edge found in-sample: calibration-season ROI is positive, while 2026/27 " + current.universe.forecast + " ROI is not. The current season was unseen by calibration, but strategy choices can use these results.";
+    else if (!currentPeriod.bets) warning = "Edge found in-sample: calibration-season ROI is positive, and no matching 2026/27 bet result is available for comparison.";
+  }
+  $("bt-overfit").textContent = warning;
+}
+function renderComparison() {
+  const comparisons = output.comparisons || [];
+  if (comparisons.length !== 2) { $("bt-comparison").hidden = true; return; }
+  $("bt-comparison").hidden = false;
+  const labels = comparisons.map(({ name, strategy }) =>
+    name + " · " + strategy.universe.forecast + ", " + picks[strategy.rule.pick] + ", " + methods[strategy.stake.method] + ", " + books[strategy.execution.book] + " " + (strategy.execution.timing === "pre" ? "pre-closing" : "closing"));
+  $("bt-comparison").innerHTML = '<fieldset class="frame"><legend>Strategy comparison</legend>' +
+    '<p class="note">Amber solid: ' + esc(labels[0]) + '. Ink dashed: ' + esc(labels[1]) + '. Each path resets to its own starting bankroll for every season.</p>' +
+    '<div id="bt-compare-summary"></div><div id="bt-compare-chart"></div>' +
+    '<details class="bt-details"><summary>Daily bankroll values · text equivalent</summary><div id="bt-compare-table"></div></details>' +
+    '<p class="note">Intervals use the same fixed 2,000 match-date bootstrap samples (seed 7). Coverage remains strategy-specific; the chart does not combine seasons.</p></fieldset>';
+  $("bt-compare-summary").innerHTML = table(["Saved strategy · coverage", "Bets / staked · ROI · 95% interval"], comparisons.map((entry, i) => {
+    const r = entry.result, s = r.summary, c = r.coverage;
+    const coverage = fmt(c.input_rows, 0) + " input rows; " + fmt(c.universe_matches, 0) + " in universe; " + fmt(c.fully_priced_matches, 0) + " priced; " + fmt(c.missing_price_voids, 0) + " missing-price voids; " + fmt(c.selection_exclusions, 0) + " selection exclusions; " + fmt(c.condition_exclusions, 0) + " condition exclusions; " + fmt(c.zero_stakes, 0) + " zero stakes.";
+    const details = picks[entry.strategy.rule.pick] + " · " + methods[entry.strategy.stake.method] + " · " + entry.strategy.execution.book + " " + entry.strategy.execution.timing + " · " + entry.strategy.universe.forecast;
+    return cells([esc(entry.name) + "<small>" + esc(details) + "</small><small>" + esc(coverage) + "</small>",
+      fmt(s.bets, 0) + " bets; " + units(s.staked) + " staked<small>ROI " + pct(s.roi) + " · 95% interval: " + interval(s) + "</small>"]);
+  }).join(""));
+  renderComparisonChart(comparisons);
+}
+function renderComparisonChart(comparisons) {
+  const seasons = [...new Set(comparisons.flatMap(({ result }) => result.bankroll.map((point) => point.season)))].sort();
+  let html = "", text = "";
+  for (const season of seasons) {
+    const paths = comparisons.map(({ result }) => result.bankroll.filter((point) => point.season === season));
+    const dates = [...new Set(paths.flat().map((point) => point.day).filter(Boolean))].sort();
+    const starts = comparisons.map(({ strategy }) => strategy.bankroll);
+    const values = [0, ...starts, ...paths.flat().map((point) => point.bankroll)];
+    const low = Math.min(...values), high = Math.max(...values), span = high - low || 1;
+    const start = Date.parse(dates[0]) - 86400000, end = Date.parse(dates.at(-1));
+    const x = (day) => 52 + ((day ? Date.parse(day) : start) - start) / (end - start || 1) * 622;
+    const y = (value) => 160 - (value - low) / span * 135;
+    html += '<div class="bt-season-chart"><h2>' + seasonName(season) + ' <span>Each strategy resets to its own bankroll</span></h2>' +
+      '<svg viewBox="0 0 700 195" role="img" aria-label="' + seasonName(season) + ' bankroll comparison: ' + esc(comparisons[0].name) + ' in solid amber and ' + esc(comparisons[1].name) + ' in dashed ink. Daily values follow in the table.">' +
+      [low, (low + high) / 2, high].map((value) => '<line x1="52" x2="674" y1="' + y(value) + '" y2="' + y(value) + '" class="bt-grid"/><text x="46" y="' + (y(value) + 4) + '" text-anchor="end">' + fmt(value, 0) + '</text>').join("") +
+      paths.map((path, i) => path.length ? '<path d="' + path.map((point, j) => (j ? "L" : "M") + x(point.day).toFixed(2) + "," + y(point.bankroll).toFixed(2)).join(" ") + '" class="bt-line ' + (i ? "bt-comparison-b" : "bt-comparison-a") + '"/>' : "").join("") +
+      '<text x="52" y="185">Start</text><text x="674" y="185" text-anchor="end">' + esc(dates.at(-1) || "") + '</text></svg></div>';
+    const maps = paths.map((path) => new Map(path.map((point) => [point.day, point.bankroll])));
+    let balances = starts.slice();
+    text += '<h2>' + seasonName(season) + '</h2>' + table(["UTC date", esc(comparisons[0].name) + " (u)", esc(comparisons[1].name) + " (u)"], [null, ...dates].map((day) => {
+      balances = balances.map((value, i) => maps[i].get(day) ?? value);
+      return cells([day || "Season reset", ...balances.map((value, i) => paths[i].length ? fmt(value) : "No bets")]);
+    }).join(""));
+  }
+  $("bt-compare-chart").innerHTML = html || '<p class="note">Neither saved strategy has settled bets to plot.</p>';
+  $("bt-compare-table").innerHTML = text || '<p class="note">No daily values.</p>';
+}
 function renderBreakdown() {
   const dimension = $("bt-breakdown").value;
   const groups = output.result.breakdowns.filter((g) => g.dimension === dimension);

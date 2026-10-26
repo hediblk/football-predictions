@@ -18,7 +18,7 @@ Nothing here changes forecasts, `calibrated_weights.json` or the published model
 
 **Noise.** One flat-stake bet at odds of 2.5 has a return standard deviation of about 1.2 stakes. Over 300 bets, ROI carries a standard error of about 7 points, so a +10% season is well within luck. Over 19,763 bets it is under 1 point. Every result shows its bet count and an interval, and this season's numbers are shown as what they are: the only season the calibration never saw, but a small one.
 
-**In-sample caveat.** The saved calibration (`global-4c0170be18f1`) was fitted on 2015/16–2025/26. Team strengths in those replays are walk-forward, but about six global settings were chosen on those same seasons. Results for those seasons are labelled "replayed, in-sample for calibration". Only 2026/27 is an independent holdout.
+**In-sample caveat.** The saved calibration (`global-4c0170be18f1`) was fitted on 2015/16–2025/26. Team strengths in those replays are walk-forward, but about six global settings were chosen on those same seasons. Results for those seasons are labelled "replayed, in-sample for calibration". The 2026/27 data was unseen by calibration, but users can explore strategies against it, so it is not an untouched strategy holdout.
 
 **Task 1 findings (25 October).** The [feasibility report](backtest-feasibility.md) evaluates all 19,763 matches and 72 strategy/staking/price/timing combinations. All six flat strategies lose at average pre-closing prices; the report recommends Bet365/pre-closing/flat as the named-book reference and no winning preset. Closing prices are absent before 2019/20, so the closing sample is only 12,459 matches at average/maximum prices. Historical quote timing remains approximate. Task 2 adds sibling raw-price files without rewriting the existing archive; one live domestic combined-market request confirmed a two-credit charge.
 
@@ -167,7 +167,7 @@ The engine runs in the browser over 20,000 rows at most, so results update as co
 | D1 | Publishing football-data.co.uk prices on the public site | Resolved: user confirmed publication permission on 26 October 2026 | Publish through the normal checked export; no separate publication flag |
 | D2 | Where it lives | New Backtest tab; a frame inside Model | New tab |
 | D3 | Paper trading upcoming fixtures (Task 8) | Yes; no | Decide after Task 1. It is the only true forward test, but it publishes picks, which reads as tipping. |
-| D4 | Seasons offered | 2026/27 only; plus 2025/26; all eleven | All eleven, labelled in-sample, with 2026/27 marked as the holdout |
+| D4 | Seasons offered | 2026/27 only; plus 2025/26; all eleven | All eleven, labelled in-sample for calibration, with 2026/27 marked as unseen by calibration and open to strategy exploration |
 
 ## Rules for every task
 
@@ -190,7 +190,7 @@ Read `AGENTS.md`, `DESIGN.md`, the [site data contract](site-data-contract.md), 
 | 4. Backtest engine | A | this plan's strategy shape | L | Claude | [PR #78](https://github.com/hediblk/football-predictions/pull/78) |
 | 5. Backtest view | B | 3, 4 | L | Codex | [PR #79](https://github.com/hediblk/football-predictions/pull/79) |
 | 6. Over/under and Asian handicap | C | 3, 4, 5 | M | Codex | Pending |
-| 7. Robustness and comparison | C | 5 | M | Claude | Pending |
+| 7. Robustness and comparison | C | 5 | M | Claude | Implemented in `codex/backtest-robustness`; draft PR pending |
 | 8. Paper trading | D | 2, 5, D3 | M | Codex | Pending |
 
 Wave A's four tasks touch separate files and can run at once. Task 4 codes against a small fixture in the documented shape until Task 3 lands.
@@ -234,7 +234,7 @@ Extend the replay (the miss report already recovers the blended scoreline distri
 
 ### 7. Robustness and comparison
 
-- **Per-season and holdout:** results per season, with 2026/27 shown apart as the holdout.
+- **Per-season and current season:** results per season, with 2026/27 shown apart as unseen by calibration and open to strategy exploration.
 - **Overfitting warning:** an "edge found in-sample" note when a strategy is positive only in calibration seasons; a count of the strategies tried this session.
 - **Comparison:** two strategies on one chart.
 - **Saved strategies:** in `localStorage`, as a per-viewer convenience.
@@ -249,4 +249,10 @@ The Backtest route implements the six engine stake methods, example presets, AND
 
 Availability is listed in `site/data/backtest/index.json`; the page requests only listed seasons. The exporter maintains this manifest. D1 is resolved, and the deployment switch defaults off. Local preview: copy `site/` to `out/backtest-preview/`, build with `--site-data out/backtest-preview/data --dest out/backtest-preview/data/backtest --offline`, and set the preview's `assets/features.js` to `export const BACKTEST_ENABLED = true;`. Serve with `python -m http.server 8765 --bind 127.0.0.1 --directory out/backtest-preview`. Keep experiment screenshots under `out/`.
 
-The browser check intercepts the manifest with the existing synthetic fixture, exercises all six staking methods, valid/invalid/empty states, keyboard controls and URL restoration, and checks 375 px layout. The reference is market favourite with flat base-unit stakes, the same universe and execution, without outcome conditions or bet-on-team restriction; its own count and interval remain visible. Match links require an ID present in the site's current match index. Tasks 6–8 remain pending.
+The browser check intercepts the manifest with synthetic replay and receipt rows, exercises all six staking methods, valid/invalid/empty states, keyboard controls and URL restoration, and checks 375 px layout. The reference is market favourite with flat base-unit stakes, the same universe and execution, without outcome conditions or bet-on-team restriction; its own count and interval remain visible. Match links require an ID present in the site's current match index. Tasks 6 and 8 remain pending.
+
+### Task 7 delivery
+
+Results aggregate replayed 2015/16–2025/26 calibration seasons separately from 2026/27 replayed forecasts and published receipts. Every period shows bets, staked units, ROI and its match-date interval; missing or unselected 2026/27 results are explicit. Copy says the current season was unseen by calibration and remains open to strategy exploration, so it is not described as an untouched strategy holdout. Positive calibration-only ROI is flagged as “Edge found in-sample,” and the session count includes distinct completed normalized strategies only.
+
+Two named strategies saved in browser `localStorage` can be compared on a season-reset bankroll chart and daily-value table. The comparison keeps each strategy's ROI interval and coverage counts. Saved values pass through the engine's strategy normalization and validation; malformed entries are skipped without affecting URL sharing. The worker remains cancellable and uses the existing fixed bootstrap seed.

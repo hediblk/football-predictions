@@ -356,6 +356,20 @@ def check_backtest(context, base, site, extra_data=None):
 
 def check_backtest_ui(context, base, fixture_path):
     fixture = json.loads(fixture_path.read_text())
+    current_fixture = json.loads(json.dumps(fixture))
+    current_fixture["season"] = 2026
+    current_fixture["generated_at"] = "2026-10-25T00:00:00Z"
+    current_fixture["columns"]["kickoff"] = [value.replace("2025-", "2026-") for value in current_fixture["columns"]["kickoff"]]
+    current_fixture["columns"]["at"] = [value.replace("2025-", "2026-") for value in current_fixture["columns"]["at"]]
+    for index, probabilities in enumerate(current_fixture["columns"]["p"]):
+        favourite = max(range(3), key=probabilities.__getitem__)
+        losing_outcome = (favourite + 1) % 3
+        current_fixture["columns"]["score"][index] = [(2, 0), (0, 0), (0, 2)][losing_outcome]
+    published = json.loads(json.dumps(current_fixture["columns"]))
+    published["forecast"] = ["published"] * len(published["forecast"])
+    for key in current_fixture["columns"]:
+        current_fixture["columns"][key] += published[key]
+    current_fixture["provenance"] = {"forecast_label": "Synthetic replayed forecasts and published receipts"}
     failures = []
     page = context.new_page()
     page.route("**/assets/features.js*", lambda route: route.fulfill(
@@ -390,9 +404,11 @@ def check_backtest_ui(context, base, fixture_path):
     page.route("**/assets/features.js*", lambda route: route.fulfill(
         status=200, content_type="text/javascript", body="export const BACKTEST_ENABLED = true;"))
     page.route("**/data/backtest/index.json", lambda route: route.fulfill(
-        status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": [fixture["season"]]})))
+        status=200, content_type="application/json", body=json.dumps({"version": 1, "seasons": [fixture["season"], 2026]})))
     page.route(f"**/data/backtest/{fixture['season']}.json", lambda route: route.fulfill(
         status=200, content_type="application/json", body=json.dumps(fixture)))
+    page.route("**/data/backtest/2026.json", lambda route: route.fulfill(
+        status=200, content_type="application/json", body=json.dumps(current_fixture)))
     page.on("pageerror", lambda exc: failures.append(f"backtest exception: {exc}"))
     page.on("console", lambda msg: msg.type == "error" and failures.append(f"backtest console: {msg.text}"))
     page.on("requestfailed", lambda req: failures.append(f"backtest request failed: {req.url}"))
@@ -400,6 +416,18 @@ def check_backtest_ui(context, base, fixture_path):
     page.clock.set_fixed_time(datetime(2026, 10, 25))
     page.goto(base + "#backtest", wait_until="networkidle")
     page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if "2015/16–2025/26 · replayed" not in page.locator("#bt-period-table").inner_text():
+        failures.append("backtest does not report calibration-season results separately")
+    if "2026/27 · replayed" not in page.locator("#bt-period-table").inner_text():
+        failures.append("backtest does not report 2026/27 replayed results")
+    if "2026/27 · published receipts" not in page.locator("#bt-period-table").inner_text():
+        failures.append("backtest does not keep published receipts separate")
+    if "Edge found in-sample" not in page.locator("#bt-overfit").inner_text():
+        failures.append("backtest does not flag calibration-only profitability")
+    if "not an untouched strategy holdout" not in page.locator("#bt-results").inner_text():
+        failures.append("backtest describes 2026/27 as an untouched strategy holdout")
+    if page.locator("#bt-session-count").inner_text() != "Distinct strategies evaluated this session: 1.":
+        failures.append("backtest session count does not start with its one completed strategy")
     if not page.locator('[data-view="backtest"]').is_visible():
         failures.append("enabled Backtest hides its tab")
     for selector in ("#bt-form", "#bt-run", "#bt-summary", "#bt-bets tbody tr", "#bt-season", "#bt-comp",
@@ -421,6 +449,15 @@ def check_backtest_ui(context, base, fixture_path):
     page.locator("#bt-run").focus()
     page.keyboard.press("Enter")
     page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if page.locator("#bt-session-count").inner_text() != "Distinct strategies evaluated this session: 1.":
+        failures.append("repeating an evaluated strategy increments the distinct-strategy count")
+
+    page.locator("#bt-season").select_option([str(fixture["season"])])
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if "Season range not selected in this strategy." not in page.locator("#bt-period-table").inner_text():
+        failures.append("backtest does not explain when 2026/27 is absent from the selected universe")
+    page.locator("#bt-season").select_option([str(fixture["season"]), "2026"])
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
 
     # A competition without fixture coverage yields the explicit empty state.
     page.locator("#bt-comp").select_option("FL1")
@@ -432,10 +469,54 @@ def check_backtest_ui(context, base, fixture_path):
     page.locator("#bt-forecast").select_option("published")
     if not page.locator('#bt-timing option[value="pre"]:disabled').count():
         failures.append("published forecasts do not disable pre-closing execution")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if "No published receipts match this universe" in page.locator("#bt-period-table").inner_text():
+        failures.append("published receipt rows were not kept separate and evaluated for 2026/27")
     page.locator("#bt-forecast").select_option("replayed")
     page.locator("#bt-timing").select_option("pre")
     if page.locator("#bt-forecast").input_value() == "published":
         failures.append("switching to pre-closing execution retained published forecasts")
+
+    page.locator("#bt-save-name").fill("Model baseline")
+    page.locator("#bt-save").click()
+    if page.locator("#bt-saved option").count() != 1:
+        failures.append("backtest did not save the current strategy")
+    page.locator("#bt-pick").select_option("home")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    page.locator("#bt-save-name").fill("Home picks")
+    page.locator("#bt-save").click()
+    if page.locator("#bt-saved option").count() != 2:
+        failures.append("backtest did not keep both named strategies")
+    page.reload(wait_until="networkidle")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if page.locator("#bt-saved option").count() != 2 or page.locator("#bt-pick").input_value() != "home":
+        failures.append("saved strategies or URL state did not survive a reload")
+    page.locator("#bt-compare-a").select_option("0")
+    page.locator("#bt-compare-b").select_option("1")
+    page.locator("#bt-compare").click()
+    page.locator("#bt-comparison").wait_for(state="visible", timeout=30000)
+    if page.locator("#bt-compare-summary tbody tr").count() != 2 or page.locator("#bt-compare-chart path.bt-line").count() != 4:
+        failures.append("comparison does not render two labeled strategies across both season resets")
+    if not page.locator("#bt-compare-table table").count():
+        failures.append("comparison chart has no text-equivalent daily table")
+    if "95% interval" not in page.locator("#bt-compare-summary").inner_text():
+        failures.append("comparison does not report strategy-specific ROI intervals")
+    page.locator("#bt-saved").select_option("1")
+    page.locator("#bt-delete-saved").click()
+    if page.locator("#bt-saved option").count() != 1:
+        failures.append("backtest did not delete a saved strategy")
+    page.evaluate("""() => localStorage.setItem(
+        'floodlight.backtest.saved-strategies.v1',
+        JSON.stringify({version: 1, strategies: [{name: 'Broken', strategy: {v: 999}}]})
+    )""")
+    saved_hash = page.evaluate("location.hash")
+    page.reload(wait_until="networkidle")
+    page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if "malformed saved strategy was skipped" not in page.locator("#bt-saved-status").inner_text():
+        failures.append("malformed localStorage strategy is not handled gracefully")
+    if page.evaluate("location.hash") != saved_hash or page.locator("#bt-pick").input_value() != "home":
+        failures.append("malformed saved data broke URL strategy sharing")
+    page.locator("#bt-advanced").evaluate("element => element.open = true")
 
     # All supported stake methods remain selectable; changing them together debounces to one calculation.
     for method in ("flat", "fraction", "probability", "edge", "kelly", "to_win"):
@@ -448,10 +529,15 @@ def check_backtest_ui(context, base, fixture_path):
             failures.append(f"backtest could not select {method} staking")
 
     # Invalid numeric bounds are reported inline as an invalid strategy.
+    count_before_invalid = page.locator("#bt-session-count").inner_text()
     page.locator("#bt-unit").fill("0")
     page.locator("#bt-status[data-state=invalid]").wait_for(timeout=10000)
+    if page.locator("#bt-session-count").inner_text() != count_before_invalid:
+        failures.append("an invalid form state was counted as an evaluated strategy")
     page.locator("#bt-unit").fill("1")
     page.locator("#bt-status[data-state=results]").wait_for(timeout=30000)
+    if page.locator("#bt-session-count").inner_text() != count_before_invalid:
+        failures.append("re-evaluating the same normalized strategy increments the distinct-strategy count")
 
     # Strategy changes are serialized into the URL and restored on reload.
     page.locator("#bt-pick").select_option("home")

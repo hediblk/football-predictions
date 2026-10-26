@@ -7,7 +7,7 @@ Floodlight is a website with forecasts for the Premier League, La Liga, Bundesli
 - **Tables:** each club's chance of finishing in every place, with title, top-four and relegation odds and a chart of how they have moved this season. The Champions League page covers the league phase and the knockout bracket.
 - **Matches:** each day's fixtures with home, draw and away probabilities and likeliest scores, what's at stake in each game (title, top four and relegation; in the Champions League, the top eight, the top 24 and the trophy), and whether the model called past results.
 - **Clubs:** a strength ranking of every club in the five leagues and the Champions League on one European scale, with weekly movement and a profile per club.
-- **Backtest:** optionally configure historical 1X2 strategies, with bankroll paths, uncertainty and coverage; enabled by the deployment switch below.
+- **Backtest:** optionally configure and compare named historical 1X2 strategies, with calibration and current-season reporting, bankroll paths, uncertainty and coverage; enabled by the deployment switch below.
 - **Model:** how the forecasts and ratings are made.
 
 This repository holds both the site (`site/`, see [Website](#website)) and the model behind it (`src/standing_prediction` and `packages/`). The rest of this README describes the model.
