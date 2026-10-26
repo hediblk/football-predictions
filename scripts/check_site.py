@@ -1,6 +1,7 @@
 # Open every view of the static site in headless Chromium and fail on a script error or an empty view.
 #
-# Usage: python scripts/check_site.py [--site site]
+# Usage: python scripts/check_site.py [--site site] [--backtest-data out/backtest]
+# Backtest preset summaries are checked against a synthetic Python fixture and optional local season files.
 #
 # Serves the directory on a local port with the data it ships, stops the browser clock at the newest forecast so
 # "today" is the forecast day, and loads each competition table, two match days, the clubs ranking, two club pages,
@@ -23,6 +24,7 @@ from pathlib import Path
 from playwright.sync_api import TimeoutError as PlaywrightTimeout, sync_playwright
 
 COMPETITIONS = ["la-liga", "premier-league", "bundesliga", "ligue-1", "serie-a", "champions-league"]
+ROOT = Path(__file__).resolve().parents[1]
 TABLE = ["#hero-in h1", "#table tbody tr.row", "#table th.vsm", "#table tbody tr.row td.vsm",
          # Race movers: a mover or the "no change" line; hidden without a frozen Monday before this week to compare with.
          "#race-moves li, #race-moves[hidden]", "#race-card [data-card=race], #race-frame[hidden]"]
@@ -319,7 +321,40 @@ def visit(context, url, origin, selectors, rows, opened, interactions=()):
     return problems
 
 
-def check(site):
+def check_backtest(context, base, site, extra_data=None):
+    if not (site / "assets/backtest-engine.js").exists():
+        return []
+    paths = [ROOT / "tests/fixtures/backtest.json"]
+    directory = Path(extra_data) if extra_data else site / "data/backtest"
+    paths += sorted(directory.glob("*.json")) if directory.is_dir() else [directory] if extra_data else []
+    files = [{"name": str(path), "file": json.loads(path.read_text())} for path in paths]
+    page = context.new_page()
+    page.goto(base, wait_until="domcontentloaded")
+    failures = page.evaluate("""async ({files, base}) => {
+        const {runBacktest} = await import(base + 'assets/backtest-engine.js');
+        const failures = [];
+        const counts = new Set(['bets', 'clusters', 'clv_bets', 'longest_losing_run']);
+        for (const {name, file} of files) {
+            for (const [index, entry] of file.parity.entries()) {
+                try {
+                    const {summary} = runBacktest(file, entry.strategy, {...entry.options, breakdowns: false});
+                    for (const [key, expected] of Object.entries(entry.summary)) {
+                        const actual = summary[key];
+                        const equal = expected === null ? actual === null : counts.has(key) ? actual === expected
+                            : typeof actual === 'number' && Number.isFinite(actual) && Math.abs(actual - expected) <= 1e-8;
+                        if (!equal) failures.push(`${name} preset ${index} ${key}: ${actual} != ${expected}`);
+                    }
+                } catch (error) { failures.push(`${name} preset ${index}: ${error.message}`); }
+            }
+        }
+        return failures;
+    }""", {"files": files, "base": base})
+    page.close()
+    print(f"Checked {sum(len(item['file']['parity']) for item in files)} browser backtest parity cases")
+    return failures
+
+
+def check(site, backtest_data=None):
     site = Path(site).resolve()
     origin, pages = routes(site / "data")
     server = Server(("127.0.0.1", 0), partial(Quiet, directory=str(site)))
@@ -328,6 +363,10 @@ def check(site):
     failures = []
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
+        context = browser.new_context(timezone_id="UTC")
+        context.route(lambda url: not url.startswith(base), lambda route: route.fulfill(status=200, body=""))
+        failures += check_backtest(context, base, site, backtest_data)
+        context.close()
         for width, viewport in VIEWPORTS.items():
             context = browser.new_context(viewport=viewport, timezone_id="UTC", locale="en-GB")
             context.route(lambda url: not url.startswith(base), lambda route: route.fulfill(status=200, body=""))
@@ -342,8 +381,9 @@ def check(site):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Load every view of the static site in headless Chromium.")
     parser.add_argument("--site", type=Path, default=Path("site"))
+    parser.add_argument("--backtest-data", type=Path, help="Also compare Python summaries in local backtest files without publishing them")
     args = parser.parse_args(argv)
-    count, failures = check(args.site)
+    count, failures = check(args.site, args.backtest_data)
     if failures:
         parser.exit(1, "\n".join(failures) + "\n")
     print(f"Checked {count} page loads without errors")
