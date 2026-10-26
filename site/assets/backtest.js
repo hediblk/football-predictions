@@ -154,6 +154,9 @@ function syncControls() {
   $("bt-timing-note").textContent = pre ? "Published forecasts require closing execution: choose Closing first. Missing prices never fall back to another book or timing." : "Closing execution supports replayed or published forecasts. No later price exists for closing-line value.";
   const included = selected("bt-include").length > 0;
   $("bt-venue").disabled = !included; $("bt-team-side").disabled = !included;
+  if (!included) {
+    $("bt-venue").value = "any"; $("bt-team-side").checked = false;
+  }
   const method = $("bt-method").value, relative = ["kelly", "fraction"].includes(method);
   ["fraction", "cap", "daily-cap"].forEach((key) => { $(`bt-${key}`).disabled = !relative; });
   $("bt-trust").disabled = method !== "kelly";
