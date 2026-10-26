@@ -52,3 +52,18 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREAD
 ```
 
 This command is offline and hash-checks the dataset. Outputs stay under `out/` while the plan's historical-price publishing decision is unresolved. It writes coverage, bets, all 72 summaries, season/league/price-band breakdowns, seeded match-date bootstrap intervals and preset parity numbers for Task 3. The eleven seasons are calibration in-sample; their walk-forward strengths do not make them an independent betting holdout. `select_bets`, `stake_bets`, `summarize` and `bootstrap_indices` provide the Python reference for the later browser engine.
+
+## Backtest season exports
+
+Task 3 replays the saved historical features to recover expected goals, and reconstructs the current season at the same Tuesday/Friday origins. Global calibration stays fixed. Build the twelve season files locally:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
+  python scripts/build_backtest_data.py --offline --workers 4
+```
+
+`out/backtest/<season>.json` contains compact columns, all covered raw 1X2 bookmakers, source/identity hashes, separate replayed/published cohorts, missing-data coverage and twelve Python parity summaries. `out/backtest-build/parts` caches each league-season replay against its actual inputs. Historical files freeze while calibration is unchanged; `--rebuild` explicitly regenerates them. A second identical current-season build retains the file and its timestamp. Missing source caches fail offline; omit `--offline` to refresh expired current inputs. A failed refresh leaves the previous backtest file in place.
+
+Use `--current-only` for the optional daily step. Published receipts are copied without changing them, with closing execution only. Receipts lacking a historical-price join remain visible with null prices; the engine counts them as missing-price voids. Official historical rounds, Stakes and European ratings remain null without dated evidence. Provider IDs are retrospective display/link metadata, never forecast inputs. The [contract](../../docs/backtest-data-contract.md) and [ADR 0003](../../docs/adr/0003-browser-betting-backtests.md) define the boundary.
+
+D1 is still unresolved. Local output is the default; deliberate `--publish` and the scheduled `PUBLISH_BACKTEST_PRICES=1` setting are reserved for a later authorized publication. No Backtest view or paper trading is enabled by the exporter.

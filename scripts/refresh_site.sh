@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Rerun every forecast shown on the website, then rebuild site/data.
 # Requires FOOTBALL_DATA_API_KEY in .env (or the environment) and both packages installed:
-#   pip install -e . -e packages/champions-league
+#   pip install -e . -e packages/champions-league -e packages/forecast-calibration
 # A failed competition keeps its last published data; all-fail or invalid exports fail the refresh.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -51,6 +51,10 @@ python scripts/fetch_ucl_xg.py --src "$OUT" || warn "ESPN Champions League xG fa
 python scripts/build_site_data.py --src "$OUT" --dest "$candidate/data" || exit 1
 python scripts/fetch_match_events.py --src "$OUT" --data "$candidate/data" || warn "Match event ingestion failed; forecasts are still published."
 python scripts/build_club_profiles.py --data "$candidate/data" || warn "Club profiles failed; keeping the previous profiles."
+# Backtest prices remain local until D1 is resolved; an optional failure retains the previous file.
+backtest_args=(--current-only --site-data "$candidate/data")
+if [[ "${PUBLISH_BACKTEST_PRICES:-0}" == 1 ]]; then backtest_args+=(--publish); fi
+python scripts/build_backtest_data.py "${backtest_args[@]}" || warn "Backtest refresh failed; keeping the previous backtest file and timestamp."
 # Squad publication is optional: build in isolation so any failure retains every old file and timestamp.
 squad_candidate=$(mktemp -d) || exit 1
 cp -R "$candidate/data" "$squad_candidate/data" || exit 1
