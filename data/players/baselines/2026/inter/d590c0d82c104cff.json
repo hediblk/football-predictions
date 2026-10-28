@@ -1,0 +1,601 @@
+{
+  "slug": "inter",
+  "club_id": 108,
+  "name": "FC Internazionale Milano",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-28T06:54:51.282107+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "9276f7cea345444c065f7034fd16589772b4f3d76a78cb527a7d6595530cae61",
+    "snapshot": "data/players/rosters/2026-10-28/CL.json"
+  },
+  "identity_overrides_sha256": "a5931bfd3d1402d39072055527b95153edf8b5693feafded486ba72f655e58af",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 24,
+    "matched": 23
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 83.3,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 2475
+      },
+      {
+        "role": "LB",
+        "player": 30821
+      },
+      {
+        "role": "CB",
+        "player": 1834
+      },
+      {
+        "role": "CB",
+        "player": 143
+      },
+      {
+        "role": "RB",
+        "player": 80775
+      },
+      {
+        "role": "CDM",
+        "player": 1754
+      },
+      {
+        "role": "CM",
+        "player": 2097
+      },
+      {
+        "role": "CM",
+        "player": 1911
+      },
+      {
+        "role": "LW",
+        "player": 11224
+      },
+      {
+        "role": "ST",
+        "player": 3220
+      },
+      {
+        "role": "RW",
+        "player": 115074
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 2475,
+      "name": "Ivan Provedel",
+      "dob": "1994-03-17",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224987,
+        "overall": 83,
+        "positions": [
+          "GK"
+        ],
+        "pace": 81,
+        "shooting": 80,
+        "passing": 82,
+        "dribbling": 86,
+        "defending": 42,
+        "physical": 83
+      }
+    },
+    {
+      "id": 2819,
+      "name": "Raffaele Di Gennaro",
+      "dob": "1993-10-03",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 219715,
+        "overall": 68,
+        "positions": [
+          "GK"
+        ],
+        "pace": 71,
+        "shooting": 67,
+        "passing": 62,
+        "dribbling": 69,
+        "defending": 43,
+        "physical": 65
+      }
+    },
+    {
+      "id": 101415,
+      "name": "Josep Martinez",
+      "dob": "1998-05-27",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243311,
+        "overall": 76,
+        "positions": [
+          "GK"
+        ],
+        "pace": 78,
+        "shooting": 72,
+        "passing": 69,
+        "dribbling": 77,
+        "defending": 26,
+        "physical": 75
+      }
+    },
+    {
+      "id": 143,
+      "name": "Manuel Akanji",
+      "dob": "1995-07-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229237,
+        "overall": 83,
+        "positions": [
+          "CB"
+        ],
+        "pace": 75,
+        "shooting": 48,
+        "passing": 70,
+        "dribbling": 74,
+        "defending": 84,
+        "physical": 81
+      }
+    },
+    {
+      "id": 193,
+      "name": "Yann Aurel Bisseck",
+      "dob": "2000-11-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 241736,
+        "overall": 78,
+        "positions": [
+          "CB"
+        ],
+        "pace": 78,
+        "shooting": 57,
+        "passing": 64,
+        "dribbling": 72,
+        "defending": 77,
+        "physical": 80
+      }
+    },
+    {
+      "id": 1834,
+      "name": "Alessandro Bastoni",
+      "dob": "1999-04-13",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 237383,
+        "overall": 86,
+        "positions": [
+          "CB"
+        ],
+        "pace": 74,
+        "shooting": 47,
+        "passing": 76,
+        "dribbling": 78,
+        "defending": 86,
+        "physical": 82
+      }
+    },
+    {
+      "id": 3313,
+      "name": "John Stones",
+      "dob": "1994-05-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 203574,
+        "overall": 82,
+        "positions": [
+          "CB"
+        ],
+        "pace": 54,
+        "shooting": 58,
+        "passing": 74,
+        "dribbling": 74,
+        "defending": 83,
+        "physical": 71
+      }
+    },
+    {
+      "id": 3364,
+      "name": "Benjamin Pavard",
+      "dob": "1996-03-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 226851,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 75,
+        "shooting": 66,
+        "passing": 75,
+        "dribbling": 70,
+        "defending": 81,
+        "physical": 78
+      }
+    },
+    {
+      "id": 11224,
+      "name": "Carlos",
+      "dob": "1999-01-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258648,
+        "overall": 80,
+        "positions": [
+          "LB",
+          "CB",
+          "LM"
+        ],
+        "pace": 77,
+        "shooting": 72,
+        "passing": 77,
+        "dribbling": 79,
+        "defending": 79,
+        "physical": 74
+      }
+    },
+    {
+      "id": 30821,
+      "name": "Federico Dimarco",
+      "dob": "1997-11-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 226268,
+        "overall": 86,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 81,
+        "shooting": 78,
+        "passing": 85,
+        "dribbling": 81,
+        "defending": 80,
+        "physical": 74
+      }
+    },
+    {
+      "id": 80775,
+      "name": "Djed Spence",
+      "dob": "2000-08-09",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243702,
+        "overall": 80,
+        "positions": [
+          "LB",
+          "RB"
+        ],
+        "pace": 89,
+        "shooting": 54,
+        "passing": 71,
+        "dribbling": 79,
+        "defending": 76,
+        "physical": 75
+      }
+    },
+    {
+      "id": 1754,
+      "name": "Hakan Çalhanoğlu",
+      "dob": "1994-02-08",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 208128,
+        "overall": 85,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 68,
+        "shooting": 81,
+        "passing": 85,
+        "dribbling": 82,
+        "defending": 81,
+        "physical": 68
+      }
+    },
+    {
+      "id": 1911,
+      "name": "Nicolò Barella",
+      "dob": "1997-02-07",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224232,
+        "overall": 87,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 77,
+        "shooting": 78,
+        "passing": 84,
+        "dribbling": 86,
+        "defending": 81,
+        "physical": 72
+      }
+    },
+    {
+      "id": 2097,
+      "name": "Piotr Zieliński",
+      "dob": "1994-05-20",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 210406,
+        "overall": 82,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 77,
+        "shooting": 77,
+        "passing": 81,
+        "dribbling": 83,
+        "defending": 70,
+        "physical": 63
+      }
+    },
+    {
+      "id": 7795,
+      "name": "Henrikh Mkhitaryan",
+      "dob": "1989-01-21",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 192883,
+        "overall": 81,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 69,
+        "shooting": 77,
+        "passing": 81,
+        "dribbling": 82,
+        "defending": 72,
+        "physical": 72
+      }
+    },
+    {
+      "id": 7873,
+      "name": "Curtis Jones",
+      "dob": "2001-01-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242434,
+        "overall": 80,
+        "positions": [
+          "CM",
+          "CDM",
+          "CAM"
+        ],
+        "pace": 71,
+        "shooting": 74,
+        "passing": 79,
+        "dribbling": 81,
+        "defending": 73,
+        "physical": 72
+      }
+    },
+    {
+      "id": 115074,
+      "name": "Luis Henrique",
+      "dob": "2001-12-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256632,
+        "overall": 77,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 90,
+        "shooting": 74,
+        "passing": 72,
+        "dribbling": 78,
+        "defending": 70,
+        "physical": 76
+      }
+    },
+    {
+      "id": 154013,
+      "name": "Petar Sucic",
+      "dob": "2003-10-25",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 276278,
+        "overall": 78,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 73,
+        "shooting": 71,
+        "passing": 77,
+        "dribbling": 81,
+        "defending": 64,
+        "physical": 78
+      }
+    },
+    {
+      "id": 168656,
+      "name": "Andy Diouf",
+      "dob": "2003-05-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268534,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 77,
+        "shooting": 71,
+        "passing": 72,
+        "dribbling": 78,
+        "defending": 67,
+        "physical": 75
+      }
+    },
+    {
+      "id": 188920,
+      "name": "Aleksandar Stankovic",
+      "dob": "2005-08-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278318,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 65,
+        "shooting": 67,
+        "passing": 72,
+        "dribbling": 70,
+        "defending": 74,
+        "physical": 72
+      }
+    },
+    {
+      "id": 3220,
+      "name": "Lautaro Martínez",
+      "dob": "1997-08-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231478,
+        "overall": 87,
+        "positions": [
+          "ST"
+        ],
+        "pace": 80,
+        "shooting": 88,
+        "passing": 76,
+        "dribbling": 85,
+        "defending": 51,
+        "physical": 74
+      }
+    },
+    {
+      "id": 8685,
+      "name": "Marcus Thuram-Ulien",
+      "dob": "1997-08-06",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 228093,
+        "overall": 85,
+        "positions": [
+          "ST"
+        ],
+        "pace": 86,
+        "shooting": 83,
+        "passing": 75,
+        "dribbling": 81,
+        "defending": 50,
+        "physical": 81
+      },
+      "identity_override": {
+        "provider_name": "Marcus Thuram-Ulien",
+        "provider_dob": "1997-08-06",
+        "verified_dob": "1997-08-06",
+        "ea_id": 228093,
+        "source": "https://www.inter.it/en/teams/first-team/player/marcus-thuram",
+        "observed_at": "2026-10-15",
+        "note": "Inter confirms Marcus Thuram and 6 August 1997; the provider includes the second family name."
+      }
+    },
+    {
+      "id": 152738,
+      "name": "Ange-Yoan Bonny",
+      "dob": "2003-10-25",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 215433,
+      "name": "Francesco Esposito",
+      "dob": "2005-06-28",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277327,
+        "overall": 77,
+        "positions": [
+          "ST"
+        ],
+        "pace": 59,
+        "shooting": 78,
+        "passing": 71,
+        "dribbling": 73,
+        "defending": 38,
+        "physical": 75
+      }
+    }
+  ],
+  "baseline_id": "d590c0d82c104cff",
+  "generated_at": "2026-10-28T06:54:58.548824+00:00"
+}

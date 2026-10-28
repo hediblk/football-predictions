@@ -15,20 +15,20 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-23T06:05:41.039969+00:00",
-    "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "2707d065fbbe1b88c54c4bd3f6c29be6476273982e09c446bbf23bf0757d3bee",
-    "snapshot": "data/players/rosters/2026-10-23/FL1.json"
+    "observed_at": "2026-10-28T06:54:51.282107+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "9276f7cea345444c065f7034fd16589772b4f3d76a78cb527a7d6595530cae61",
+    "snapshot": "data/players/rosters/2026-10-28/CL.json"
   },
   "identity_overrides_sha256": "1c7a231eef1c864ea3c34f2ccf309628f42afd9774e23d6afc69f6ee4fd7c5e8",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 24,
+    "players": 23,
     "matched": 23
   },
   "ideal_xi": {
     "formation": "4-3-3",
-    "status": "provisional",
+    "status": "complete",
     "mean_overall": 87.7,
     "slots": [
       {
@@ -615,20 +615,10 @@
         "defending": 43,
         "physical": 56
       }
-    },
-    {
-      "id": 302269,
-      "name": "Adam Mouak",
-      "dob": "2009-06-01",
-      "provider_position": null,
-      "status": "unmatched",
-      "method": null,
-      "ea": null,
-      "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "9806ec2654f8b67e",
-  "generated_at": "2026-10-23T06:05:48.205898+00:00",
+  "baseline_id": "b88971e1cfcc51d3",
+  "generated_at": "2026-10-28T06:54:58.516007+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -932,17 +922,6 @@
           ],
           "xg": 0.0,
           "xa": 0.1186
-        },
-        "302269": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 7,
-          "unknown_games": 1,
-          "provider_ids": [],
-          "xg": 0,
-          "xa": 0
         }
       },
       "most_used_xi": {
@@ -2525,17 +2504,6 @@
           "provider_ids": [],
           "avg_x": null,
           "avg_y": null
-        },
-        "302269": {
-          "starts": 0,
-          "sub": 0,
-          "minutes": 0,
-          "share": 0.0,
-          "known_games": 3,
-          "unknown_games": 0,
-          "provider_ids": [],
-          "avg_x": null,
-          "avg_y": null
         }
       },
       "most_used_xi": {
@@ -3087,5 +3055,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-27T06:20:44.025123+00:00"
+  "usage_generated_at": "2026-10-28T06:55:31.999573+00:00"
 }

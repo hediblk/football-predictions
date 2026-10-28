@@ -1,0 +1,702 @@
+{
+  "slug": "shakhtar",
+  "club_id": 1887,
+  "name": "FK Shakhtar Donetsk",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-28T06:54:51.282107+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "9276f7cea345444c065f7034fd16589772b4f3d76a78cb527a7d6595530cae61",
+    "snapshot": "data/players/rosters/2026-10-28/CL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 32,
+    "matched": 24
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 71.8,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 98993
+      },
+      {
+        "role": "LB",
+        "player": 16475
+      },
+      {
+        "role": "CB",
+        "player": 8440
+      },
+      {
+        "role": "CB",
+        "player": 191042
+      },
+      {
+        "role": "RB",
+        "player": 178049
+      },
+      {
+        "role": "CDM",
+        "player": 245564
+      },
+      {
+        "role": "CM",
+        "player": 170972
+      },
+      {
+        "role": "CM",
+        "player": 181465
+      },
+      {
+        "role": "LW",
+        "player": 1448
+      },
+      {
+        "role": "ST",
+        "player": 206781
+      },
+      {
+        "role": "RW",
+        "player": 263586
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 98993,
+      "name": "Dmytro Riznyk",
+      "dob": "1999-01-30",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 265628,
+        "overall": 74,
+        "positions": [
+          "GK"
+        ],
+        "pace": 75,
+        "shooting": 67,
+        "passing": 78,
+        "dribbling": 76,
+        "defending": 48,
+        "physical": 77
+      }
+    },
+    {
+      "id": 133541,
+      "name": "Kiril Fesiun",
+      "dob": "2002-08-07",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72917,
+        "overall": 68,
+        "positions": [
+          "GK"
+        ],
+        "pace": 69,
+        "shooting": 67,
+        "passing": 68,
+        "dribbling": 70,
+        "defending": 36,
+        "physical": 69
+      }
+    },
+    {
+      "id": 189613,
+      "name": "Tymur Puzankov",
+      "dob": "2003-03-04",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263805,
+        "overall": 60,
+        "positions": [
+          "GK"
+        ],
+        "pace": 60,
+        "shooting": 58,
+        "passing": 62,
+        "dribbling": 62,
+        "defending": 49,
+        "physical": 61
+      }
+    },
+    {
+      "id": 212694,
+      "name": "Denys Tvardovskyi",
+      "dob": "2003-06-13",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 71331,
+        "overall": 61,
+        "positions": [
+          "GK"
+        ],
+        "pace": 60,
+        "shooting": 57,
+        "passing": 61,
+        "dribbling": 61,
+        "defending": 41,
+        "physical": 59
+      }
+    },
+    {
+      "id": 8440,
+      "name": "Marlon",
+      "dob": "1995-09-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 215703,
+        "overall": 72,
+        "positions": [
+          "CB"
+        ],
+        "pace": 68,
+        "shooting": 44,
+        "passing": 58,
+        "dribbling": 63,
+        "defending": 70,
+        "physical": 77
+      }
+    },
+    {
+      "id": 16475,
+      "name": "Mykola Matviienko",
+      "dob": "1996-05-02",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 229528,
+        "overall": 77,
+        "positions": [
+          "CB",
+          "LB",
+          "RB"
+        ],
+        "pace": 77,
+        "shooting": 58,
+        "passing": 71,
+        "dribbling": 69,
+        "defending": 78,
+        "physical": 76
+      }
+    },
+    {
+      "id": 111974,
+      "name": "Valerii Bondar",
+      "dob": "1999-02-27",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 123406,
+      "name": "Viktor Korniienko",
+      "dob": "1999-02-14",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 157679,
+      "name": "Pedrinho",
+      "dob": null,
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 168748,
+      "name": "Oleksandr Karavaev",
+      "dob": "1992-06-02",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 178049,
+      "name": "Vinicius Tobias",
+      "dob": "2004-02-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 268411,
+        "overall": 71,
+        "positions": [
+          "RB",
+          "RM",
+          "LB"
+        ],
+        "pace": 78,
+        "shooting": 49,
+        "passing": 67,
+        "dribbling": 71,
+        "defending": 66,
+        "physical": 66
+      }
+    },
+    {
+      "id": 188125,
+      "name": "Irakli Azarovi",
+      "dob": "2026-06-30",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 191042,
+      "name": "Alan Matturro",
+      "dob": "2004-10-11",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 274082,
+        "overall": 70,
+        "positions": [
+          "CB"
+        ],
+        "pace": 64,
+        "shooting": 30,
+        "passing": 54,
+        "dribbling": 55,
+        "defending": 71,
+        "physical": 71
+      }
+    },
+    {
+      "id": 245564,
+      "name": "Alaa Ghram",
+      "dob": "2001-07-24",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72919,
+        "overall": 67,
+        "positions": [
+          "CB",
+          "CDM",
+          "CM"
+        ],
+        "pace": 72,
+        "shooting": 42,
+        "passing": 57,
+        "dribbling": 63,
+        "defending": 67,
+        "physical": 69
+      }
+    },
+    {
+      "id": 170972,
+      "name": "Dmytro Kryskiv",
+      "dob": "2000-10-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 274732,
+        "overall": 72,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 67,
+        "shooting": 63,
+        "passing": 71,
+        "dribbling": 71,
+        "defending": 62,
+        "physical": 63
+      }
+    },
+    {
+      "id": 181465,
+      "name": "Marlon Gomes",
+      "dob": "2003-12-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70845,
+        "overall": 70,
+        "positions": [
+          "CM",
+          "CAM",
+          "CDM"
+        ],
+        "pace": 74,
+        "shooting": 62,
+        "passing": 69,
+        "dribbling": 73,
+        "defending": 62,
+        "physical": 64
+      }
+    },
+    {
+      "id": 188110,
+      "name": "Oleg Ocheretko",
+      "dob": "2003-03-25",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271548,
+        "overall": 66,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 65,
+        "shooting": 61,
+        "passing": 62,
+        "dribbling": 69,
+        "defending": 43,
+        "physical": 63
+      }
+    },
+    {
+      "id": 205296,
+      "name": "Yegor Nazaryna",
+      "dob": "1997-07-10",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 247308,
+      "name": "Viktor Tsukanov",
+      "dob": "2006-02-04",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70862,
+        "overall": 65,
+        "positions": [
+          "CM",
+          "CAM",
+          "RM",
+          "CDM"
+        ],
+        "pace": 66,
+        "shooting": 60,
+        "passing": 64,
+        "dribbling": 67,
+        "defending": 56,
+        "physical": 61
+      }
+    },
+    {
+      "id": 273196,
+      "name": "Isaque",
+      "dob": "2007-02-24",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80917,
+        "overall": 66,
+        "positions": [
+          "CAM",
+          "CM"
+        ],
+        "pace": 69,
+        "shooting": 48,
+        "passing": 62,
+        "dribbling": 71,
+        "defending": 33,
+        "physical": 52
+      }
+    },
+    {
+      "id": 1448,
+      "name": "Pedrinho",
+      "dob": "1998-04-13",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255472,
+        "overall": 74,
+        "positions": [
+          "RM",
+          "CAM",
+          "LW",
+          "RW"
+        ],
+        "pace": 82,
+        "shooting": 65,
+        "passing": 71,
+        "dribbling": 79,
+        "defending": 42,
+        "physical": 54
+      }
+    },
+    {
+      "id": 29016,
+      "name": "Marian Shved",
+      "dob": "1997-07-16",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 33940,
+      "name": "Lassina Franck Traoré",
+      "dob": "2001-01-12",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 187512,
+      "name": "Eguinaldo",
+      "dob": "2004-08-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277448,
+        "overall": 70,
+        "positions": [
+          "LM",
+          "LW",
+          "ST"
+        ],
+        "pace": 88,
+        "shooting": 63,
+        "passing": 56,
+        "dribbling": 76,
+        "defending": 28,
+        "physical": 56
+      }
+    },
+    {
+      "id": 203300,
+      "name": "Alisson Santana",
+      "dob": "2005-09-21",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 77883,
+        "overall": 70,
+        "positions": [
+          "RW",
+          "CAM",
+          "LW",
+          "RM"
+        ],
+        "pace": 82,
+        "shooting": 66,
+        "passing": 68,
+        "dribbling": 70,
+        "defending": 47,
+        "physical": 60
+      }
+    },
+    {
+      "id": 206781,
+      "name": "Elias Kaua",
+      "dob": "2006-03-28",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 77760,
+        "overall": 71,
+        "positions": [
+          "ST"
+        ],
+        "pace": 80,
+        "shooting": 67,
+        "passing": 63,
+        "dribbling": 74,
+        "defending": 39,
+        "physical": 72
+      }
+    },
+    {
+      "id": 212742,
+      "name": "Newerton",
+      "dob": "2005-06-03",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 277194,
+        "overall": 70,
+        "positions": [
+          "LW",
+          "LM"
+        ],
+        "pace": 83,
+        "shooting": 58,
+        "passing": 61,
+        "dribbling": 79,
+        "defending": 28,
+        "physical": 47
+      }
+    },
+    {
+      "id": 250265,
+      "name": "Gleiker Mendoza",
+      "dob": "2001-12-08",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 69990,
+        "overall": 65,
+        "positions": [
+          "LW",
+          "RW",
+          "LM",
+          "RM"
+        ],
+        "pace": 74,
+        "shooting": 61,
+        "passing": 55,
+        "dribbling": 71,
+        "defending": 27,
+        "physical": 50
+      }
+    },
+    {
+      "id": 263586,
+      "name": "Prosper Obah",
+      "dob": "2003-11-24",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83057,
+        "overall": 72,
+        "positions": [
+          "RW",
+          "ST",
+          "LW",
+          "RM"
+        ],
+        "pace": 91,
+        "shooting": 64,
+        "passing": 64,
+        "dribbling": 72,
+        "defending": 29,
+        "physical": 64
+      }
+    },
+    {
+      "id": 272883,
+      "name": "Luca Meirelles",
+      "dob": "2007-03-15",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80916,
+        "overall": 66,
+        "positions": [
+          "ST",
+          "LW"
+        ],
+        "pace": 70,
+        "shooting": 63,
+        "passing": 63,
+        "dribbling": 68,
+        "defending": 23,
+        "physical": 61
+      }
+    },
+    {
+      "id": 273332,
+      "name": "Lucas Ferreira",
+      "dob": "2006-04-28",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 80882,
+        "overall": 67,
+        "positions": [
+          "RW",
+          "LM",
+          "CAM",
+          "RM"
+        ],
+        "pace": 81,
+        "shooting": 57,
+        "passing": 60,
+        "dribbling": 71,
+        "defending": 27,
+        "physical": 61
+      }
+    },
+    {
+      "id": 290568,
+      "name": "Bruno Ramos",
+      "dob": "2008-08-16",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 88261,
+        "overall": 66,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 89,
+        "shooting": 60,
+        "passing": 57,
+        "dribbling": 66,
+        "defending": 25,
+        "physical": 47
+      }
+    }
+  ],
+  "baseline_id": "570e546c3d50dba3",
+  "generated_at": "2026-10-28T06:54:59.052649+00:00"
+}

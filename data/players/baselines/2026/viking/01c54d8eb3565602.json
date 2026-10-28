@@ -1,0 +1,800 @@
+{
+  "slug": "viking",
+  "club_id": 5720,
+  "name": "Viking FK",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-28T06:54:51.282107+00:00",
+    "url": "https://api.football-data.org/v4/competitions/CL/teams",
+    "sha256": "9276f7cea345444c065f7034fd16589772b4f3d76a78cb527a7d6595530cae61",
+    "snapshot": "data/players/rosters/2026-10-28/CL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 39,
+    "matched": 27
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 71.7,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 147290
+      },
+      {
+        "role": "LB",
+        "player": 38096
+      },
+      {
+        "role": "CB",
+        "player": 113753
+      },
+      {
+        "role": "CB",
+        "player": 135036
+      },
+      {
+        "role": "RB",
+        "player": 144917
+      },
+      {
+        "role": "CDM",
+        "player": 144646
+      },
+      {
+        "role": "CM",
+        "player": 118120
+      },
+      {
+        "role": "CM",
+        "player": 8274
+      },
+      {
+        "role": "LW",
+        "player": 205436
+      },
+      {
+        "role": "ST",
+        "player": 81019
+      },
+      {
+        "role": "RW",
+        "player": 44024
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 38510,
+      "name": "Erlend Jacobsen",
+      "dob": "1999-06-25",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 240490,
+        "overall": 58,
+        "positions": [
+          "GK"
+        ],
+        "pace": 59,
+        "shooting": 58,
+        "passing": 52,
+        "dribbling": 60,
+        "defending": 46,
+        "physical": 58
+      }
+    },
+    {
+      "id": 147290,
+      "name": "Ľubomír Belko",
+      "dob": "2002-02-04",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 83626,
+        "overall": 67,
+        "positions": [
+          "GK"
+        ],
+        "pace": 66,
+        "shooting": 65,
+        "passing": 64,
+        "dribbling": 68,
+        "defending": 32,
+        "physical": 66
+      }
+    },
+    {
+      "id": 184241,
+      "name": "Arild Östbö",
+      "dob": "1991-04-19",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 186508,
+        "overall": 66,
+        "positions": [
+          "GK"
+        ],
+        "pace": 65,
+        "shooting": 63,
+        "passing": 64,
+        "dribbling": 66,
+        "defending": 31,
+        "physical": 64
+      }
+    },
+    {
+      "id": 38096,
+      "name": "Kristoffer Haugen",
+      "dob": "1994-02-21",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 209335,
+        "overall": 73,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 80,
+        "shooting": 60,
+        "passing": 67,
+        "dribbling": 66,
+        "defending": 68,
+        "physical": 74
+      }
+    },
+    {
+      "id": 44028,
+      "name": "Viljar Vevatne",
+      "dob": "1994-12-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 214650,
+        "overall": 63,
+        "positions": [
+          "CB",
+          "LB",
+          "LM"
+        ],
+        "pace": 64,
+        "shooting": 61,
+        "passing": 56,
+        "dribbling": 59,
+        "defending": 61,
+        "physical": 70
+      }
+    },
+    {
+      "id": 44577,
+      "name": "Sondre Bjørshol",
+      "dob": "1994-04-30",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246390,
+        "overall": 68,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 75,
+        "shooting": 45,
+        "passing": 60,
+        "dribbling": 61,
+        "defending": 63,
+        "physical": 70
+      }
+    },
+    {
+      "id": 113753,
+      "name": "Gianni Stensness",
+      "dob": "1999-02-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247754,
+        "overall": 71,
+        "positions": [
+          "CB"
+        ],
+        "pace": 66,
+        "shooting": 42,
+        "passing": 59,
+        "dribbling": 60,
+        "defending": 68,
+        "physical": 81
+      }
+    },
+    {
+      "id": 116125,
+      "name": "Jesper Daland",
+      "dob": "2000-01-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256459,
+        "overall": 69,
+        "positions": [
+          "CB"
+        ],
+        "pace": 58,
+        "shooting": 40,
+        "passing": 50,
+        "dribbling": 56,
+        "defending": 69,
+        "physical": 76
+      }
+    },
+    {
+      "id": 135036,
+      "name": "Henrik Falchener",
+      "dob": "2003-05-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256435,
+        "overall": 71,
+        "positions": [
+          "CB"
+        ],
+        "pace": 68,
+        "shooting": 49,
+        "passing": 57,
+        "dribbling": 60,
+        "defending": 68,
+        "physical": 83
+      }
+    },
+    {
+      "id": 144645,
+      "name": "Herman Haugen",
+      "dob": "2000-04-25",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256040,
+        "overall": 65,
+        "positions": [
+          "RB",
+          "RW",
+          "RM"
+        ],
+        "pace": 72,
+        "shooting": 44,
+        "passing": 54,
+        "dribbling": 59,
+        "defending": 60,
+        "physical": 71
+      }
+    },
+    {
+      "id": 144917,
+      "name": "Henrik Heggheim",
+      "dob": "2001-04-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257072,
+        "overall": 71,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 78,
+        "shooting": 52,
+        "passing": 59,
+        "dribbling": 62,
+        "defending": 68,
+        "physical": 79
+      }
+    },
+    {
+      "id": 250188,
+      "name": "Vetle Auklend",
+      "dob": "2005-03-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279217,
+        "overall": 63,
+        "positions": [
+          "LB"
+        ],
+        "pace": 79,
+        "shooting": 44,
+        "passing": 54,
+        "dribbling": 59,
+        "defending": 57,
+        "physical": 64
+      }
+    },
+    {
+      "id": 273132,
+      "name": "Essiën Bassey",
+      "dob": "2006-11-01",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302213,
+      "name": "Jonathan Debes",
+      "dob": "2009-12-18",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302215,
+      "name": "Mats Sekse Johannesen",
+      "dob": "2008-06-18",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302220,
+      "name": "Anders Fiskum Larsen",
+      "dob": "2010-01-01",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302222,
+      "name": "Elias Dahman",
+      "dob": "2007-07-15",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 8274,
+      "name": "Henrik Bjørdal",
+      "dob": "1997-02-04",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 214877,
+        "overall": 69,
+        "positions": [
+          "CM",
+          "ST",
+          "RM",
+          "CDM"
+        ],
+        "pace": 72,
+        "shooting": 64,
+        "passing": 67,
+        "dribbling": 69,
+        "defending": 64,
+        "physical": 85
+      }
+    },
+    {
+      "id": 118120,
+      "name": "Kristoffer Askildsen",
+      "dob": "2001-01-09",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246100,
+        "overall": 70,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 66,
+        "shooting": 63,
+        "passing": 67,
+        "dribbling": 68,
+        "defending": 65,
+        "physical": 77
+      }
+    },
+    {
+      "id": 144646,
+      "name": "Joe Bell",
+      "dob": "1999-04-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 254142,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 68,
+        "shooting": 65,
+        "passing": 73,
+        "dribbling": 70,
+        "defending": 71,
+        "physical": 81
+      }
+    },
+    {
+      "id": 146606,
+      "name": "Ruben Alte",
+      "dob": "2000-02-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 70948,
+        "overall": 67,
+        "positions": [
+          "LM",
+          "CM",
+          "LW",
+          "CAM"
+        ],
+        "pace": 69,
+        "shooting": 61,
+        "passing": 62,
+        "dribbling": 65,
+        "defending": 58,
+        "physical": 67
+      }
+    },
+    {
+      "id": 180511,
+      "name": "Simen Kvia-Egeskog",
+      "dob": "2003-05-26",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262860,
+        "overall": 68,
+        "positions": [
+          "CM",
+          "ST",
+          "CAM"
+        ],
+        "pace": 79,
+        "shooting": 67,
+        "passing": 64,
+        "dribbling": 71,
+        "defending": 60,
+        "physical": 73
+      }
+    },
+    {
+      "id": 247035,
+      "name": "Jakob Hansen",
+      "dob": "2005-06-16",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 73381,
+        "overall": 64,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 72,
+        "shooting": 59,
+        "passing": 58,
+        "dribbling": 64,
+        "defending": 54,
+        "physical": 70
+      }
+    },
+    {
+      "id": 250749,
+      "name": "Tobias Moi",
+      "dob": "2006-03-03",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 72277,
+        "overall": 63,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 76,
+        "shooting": 51,
+        "passing": 59,
+        "dribbling": 64,
+        "defending": 60,
+        "physical": 66
+      }
+    },
+    {
+      "id": 250758,
+      "name": "Ola Visted",
+      "dob": "2005-03-30",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 77749,
+        "overall": 61,
+        "positions": [
+          "RM",
+          "CM",
+          "RW",
+          "CDM"
+        ],
+        "pace": 70,
+        "shooting": 53,
+        "passing": 57,
+        "dribbling": 62,
+        "defending": 51,
+        "physical": 61
+      }
+    },
+    {
+      "id": 295726,
+      "name": "Jacob Middelthon",
+      "dob": "2007-05-25",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302221,
+      "name": "Henrik Kvelvane",
+      "dob": "2008-07-23",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 16205,
+      "name": "Erik Botheim",
+      "dob": "2000-01-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239125,
+        "overall": 71,
+        "positions": [
+          "ST"
+        ],
+        "pace": 73,
+        "shooting": 69,
+        "passing": 62,
+        "dribbling": 69,
+        "defending": 38,
+        "physical": 75
+      }
+    },
+    {
+      "id": 44024,
+      "name": "Zlatko Tripić",
+      "dob": "1992-12-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 205214,
+        "overall": 78,
+        "positions": [
+          "RM",
+          "LM",
+          "RW",
+          "LW"
+        ],
+        "pace": 84,
+        "shooting": 76,
+        "passing": 74,
+        "dribbling": 76,
+        "defending": 57,
+        "physical": 83
+      }
+    },
+    {
+      "id": 81019,
+      "name": "Peter Christiansen",
+      "dob": "1999-12-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 245384,
+        "overall": 73,
+        "positions": [
+          "ST"
+        ],
+        "pace": 86,
+        "shooting": 71,
+        "passing": 60,
+        "dribbling": 72,
+        "defending": 36,
+        "physical": 76
+      }
+    },
+    {
+      "id": 127032,
+      "name": "Romano Postema",
+      "dob": "2002-02-07",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252910,
+        "overall": 67,
+        "positions": [
+          "ST"
+        ],
+        "pace": 72,
+        "shooting": 68,
+        "passing": 53,
+        "dribbling": 63,
+        "defending": 40,
+        "physical": 70
+      }
+    },
+    {
+      "id": 205436,
+      "name": "Edvin Austbø",
+      "dob": "2005-05-01",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271265,
+        "overall": 70,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 80,
+        "shooting": 64,
+        "passing": 62,
+        "dribbling": 73,
+        "defending": 34,
+        "physical": 61
+      }
+    },
+    {
+      "id": 261513,
+      "name": "Niklas Fuglestad",
+      "dob": "2006-05-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 73262,
+        "overall": 62,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 86,
+        "shooting": 58,
+        "passing": 53,
+        "dribbling": 63,
+        "defending": 29,
+        "physical": 62
+      }
+    },
+    {
+      "id": 293690,
+      "name": "Kelvin Frimpong",
+      "dob": null,
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 297580,
+      "name": "Amin Cosic",
+      "dob": "2005-10-27",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 86858,
+        "overall": 59,
+        "positions": [
+          "LW",
+          "RW",
+          "LM"
+        ],
+        "pace": 75,
+        "shooting": 57,
+        "passing": 51,
+        "dribbling": 62,
+        "defending": 27,
+        "physical": 56
+      }
+    },
+    {
+      "id": 302212,
+      "name": "Rasmus Gjelsvik Steigen",
+      "dob": "2009-02-04",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302214,
+      "name": "Sondre Tveiten",
+      "dob": "2007-10-17",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302216,
+      "name": "Christopher Salvesen-Svenning",
+      "dob": "2009-04-30",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302218,
+      "name": "Sondre Bakken",
+      "dob": "2009-07-29",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "01c54d8eb3565602",
+  "generated_at": "2026-10-28T06:54:59.216172+00:00"
+}
