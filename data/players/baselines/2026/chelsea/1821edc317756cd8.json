@@ -1,0 +1,665 @@
+{
+  "slug": "chelsea",
+  "club_id": 61,
+  "name": "Chelsea FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-30T07:09:22.351703+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PL/teams",
+    "sha256": "34ea3aaa91afd5e8090330c8cfdf92d4f96e8478c94f575a8b7b8fa5e5c6a26d",
+    "snapshot": "data/players/rosters/2026-10-30/PL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 28,
+    "matched": 25
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 82.6,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 3141
+      },
+      {
+        "role": "LB",
+        "player": 151251
+      },
+      {
+        "role": "CB",
+        "player": 82351
+      },
+      {
+        "role": "CB",
+        "player": 170440
+      },
+      {
+        "role": "RB",
+        "player": 56628
+      },
+      {
+        "role": "CDM",
+        "player": 121103
+      },
+      {
+        "role": "CM",
+        "player": 82140
+      },
+      {
+        "role": "CM",
+        "player": 144892
+      },
+      {
+        "role": "LW",
+        "player": 2074
+      },
+      {
+        "role": "ST",
+        "player": 103125
+      },
+      {
+        "role": "RW",
+        "player": 244778
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 3141,
+      "name": "Emiliano Martínez",
+      "dob": "1992-09-02",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 202811,
+        "overall": 85,
+        "positions": [
+          "GK"
+        ],
+        "pace": 83,
+        "shooting": 81,
+        "passing": 82,
+        "dribbling": 85,
+        "defending": 50,
+        "physical": 85
+      }
+    },
+    {
+      "id": 137544,
+      "name": "Gabriel Slonina",
+      "dob": "2004-05-15",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 248158,
+        "overall": 68,
+        "positions": [
+          "GK"
+        ],
+        "pace": 70,
+        "shooting": 64,
+        "passing": 63,
+        "dribbling": 70,
+        "defending": 45,
+        "physical": 65
+      }
+    },
+    {
+      "id": 175910,
+      "name": "Teddy Sharman-Lowe",
+      "dob": "2003-01-19",
+      "provider_position": "Goalkeeper",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 191068,
+      "name": "Mike Penders",
+      "dob": "2005-07-31",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270821,
+        "overall": 78,
+        "positions": [
+          "GK"
+        ],
+        "pace": 80,
+        "shooting": 77,
+        "passing": 80,
+        "dribbling": 78,
+        "defending": 33,
+        "physical": 75
+      }
+    },
+    {
+      "id": 8545,
+      "name": "Wesley Fofana",
+      "dob": "2000-12-17",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 248695,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 77,
+        "shooting": 41,
+        "passing": 62,
+        "dribbling": 71,
+        "defending": 80,
+        "physical": 77
+      }
+    },
+    {
+      "id": 56628,
+      "name": "Reece James",
+      "dob": "1999-12-08",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238074,
+        "overall": 84,
+        "positions": [
+          "RB",
+          "CDM",
+          "CM"
+        ],
+        "pace": 76,
+        "shooting": 71,
+        "passing": 83,
+        "dribbling": 78,
+        "defending": 83,
+        "physical": 82
+      }
+    },
+    {
+      "id": 82351,
+      "name": "Maxence Lacroix",
+      "dob": "2000-04-06",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 244067,
+        "overall": 82,
+        "positions": [
+          "CB"
+        ],
+        "pace": 86,
+        "shooting": 45,
+        "passing": 61,
+        "dribbling": 67,
+        "defending": 83,
+        "physical": 82
+      }
+    },
+    {
+      "id": 151251,
+      "name": "Pep Chavarría",
+      "dob": "1998-04-10",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258371,
+        "overall": 79,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 86,
+        "shooting": 70,
+        "passing": 74,
+        "dribbling": 75,
+        "defending": 74,
+        "physical": 77
+      }
+    },
+    {
+      "id": 152498,
+      "name": "Malo Gusto",
+      "dob": "2003-05-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 259307,
+        "overall": 79,
+        "positions": [
+          "RB",
+          "CM"
+        ],
+        "pace": 82,
+        "shooting": 55,
+        "passing": 75,
+        "dribbling": 79,
+        "defending": 75,
+        "physical": 73
+      }
+    },
+    {
+      "id": 170440,
+      "name": "Levi Colwill",
+      "dob": "2003-02-26",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 262859,
+        "overall": 80,
+        "positions": [
+          "CB"
+        ],
+        "pace": 68,
+        "shooting": 43,
+        "passing": 71,
+        "dribbling": 71,
+        "defending": 81,
+        "physical": 78
+      }
+    },
+    {
+      "id": 189477,
+      "name": "Jorrel Hato",
+      "dob": "2006-03-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272978,
+        "overall": 78,
+        "positions": [
+          "LB",
+          "CB",
+          "CDM"
+        ],
+        "pace": 85,
+        "shooting": 42,
+        "passing": 70,
+        "dribbling": 74,
+        "defending": 76,
+        "physical": 74
+      }
+    },
+    {
+      "id": 206136,
+      "name": "Marco Palestra",
+      "dob": "2005-03-03",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278339,
+        "overall": 78,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 90,
+        "shooting": 65,
+        "passing": 69,
+        "dribbling": 80,
+        "defending": 70,
+        "physical": 81
+      }
+    },
+    {
+      "id": 209148,
+      "name": "Aaron Anselmino",
+      "dob": "2005-04-29",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278455,
+        "overall": 72,
+        "positions": [
+          "CB"
+        ],
+        "pace": 72,
+        "shooting": 45,
+        "passing": 62,
+        "dribbling": 63,
+        "defending": 73,
+        "physical": 70
+      }
+    },
+    {
+      "id": 249320,
+      "name": "Josh Acheampong",
+      "dob": "2006-05-05",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 71651,
+        "overall": 75,
+        "positions": [
+          "CB",
+          "RB"
+        ],
+        "pace": 75,
+        "shooting": 50,
+        "passing": 67,
+        "dribbling": 69,
+        "defending": 75,
+        "physical": 73
+      }
+    },
+    {
+      "id": 3320,
+      "name": "Jordan Henderson",
+      "dob": "1990-06-17",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 183711,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 53,
+        "shooting": 71,
+        "passing": 80,
+        "dribbling": 74,
+        "defending": 75,
+        "physical": 71
+      }
+    },
+    {
+      "id": 82140,
+      "name": "Morgan Rogers",
+      "dob": "2002-07-26",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 260247,
+        "overall": 84,
+        "positions": [
+          "CAM",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 76,
+        "shooting": 82,
+        "passing": 82,
+        "dribbling": 84,
+        "defending": 67,
+        "physical": 78
+      }
+    },
+    {
+      "id": 121103,
+      "name": "Moisés Caicedo",
+      "dob": "2001-11-02",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256079,
+        "overall": 86,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 69,
+        "shooting": 68,
+        "passing": 77,
+        "dribbling": 81,
+        "defending": 84,
+        "physical": 82
+      }
+    },
+    {
+      "id": 144892,
+      "name": "Cole Palmer",
+      "dob": "2002-05-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 257534,
+        "overall": 85,
+        "positions": [
+          "CAM",
+          "RM",
+          "CM",
+          "RW"
+        ],
+        "pace": 75,
+        "shooting": 83,
+        "passing": 85,
+        "dribbling": 85,
+        "defending": 50,
+        "physical": 64
+      }
+    },
+    {
+      "id": 170261,
+      "name": "Valentin Barco",
+      "dob": "2004-07-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263370,
+        "overall": 79,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 77,
+        "shooting": 52,
+        "passing": 81,
+        "dribbling": 80,
+        "defending": 73,
+        "physical": 63
+      }
+    },
+    {
+      "id": 172738,
+      "name": "Romeo Lavia",
+      "dob": "2004-01-06",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263620,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 66,
+        "shooting": 52,
+        "passing": 74,
+        "dribbling": 78,
+        "defending": 77,
+        "physical": 72
+      }
+    },
+    {
+      "id": 301113,
+      "name": "Mahdi Nicoll-Jazuli",
+      "dob": "2010-01-06",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 2074,
+      "name": "Pedro Neto",
+      "dob": "2000-03-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 238616,
+        "overall": 81,
+        "positions": [
+          "RM",
+          "LM",
+          "RW",
+          "LW"
+        ],
+        "pace": 91,
+        "shooting": 76,
+        "passing": 77,
+        "dribbling": 82,
+        "defending": 40,
+        "physical": 70
+      }
+    },
+    {
+      "id": 3328,
+      "name": "Danny Welbeck",
+      "dob": "1990-11-26",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 186146,
+        "overall": 80,
+        "positions": [
+          "ST"
+        ],
+        "pace": 54,
+        "shooting": 82,
+        "passing": 73,
+        "dribbling": 77,
+        "defending": 45,
+        "physical": 77
+      }
+    },
+    {
+      "id": 103125,
+      "name": "João Pedro",
+      "dob": "2001-09-26",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252042,
+        "overall": 83,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 77,
+        "shooting": 83,
+        "passing": 74,
+        "dribbling": 84,
+        "defending": 38,
+        "physical": 74
+      }
+    },
+    {
+      "id": 150599,
+      "name": "Emanuel Emegha",
+      "dob": "2003-02-03",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258437,
+        "overall": 78,
+        "positions": [
+          "ST"
+        ],
+        "pace": 88,
+        "shooting": 76,
+        "passing": 60,
+        "dribbling": 69,
+        "defending": 31,
+        "physical": 78
+      }
+    },
+    {
+      "id": 179460,
+      "name": "Jamie Bynoe-Gittens",
+      "dob": "2004-08-08",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 229421,
+      "name": "Geovany Quenda",
+      "dob": "2007-04-30",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 279044,
+        "overall": 76,
+        "positions": [
+          "RM",
+          "LM",
+          "CAM",
+          "RW"
+        ],
+        "pace": 86,
+        "shooting": 64,
+        "passing": 72,
+        "dribbling": 79,
+        "defending": 41,
+        "physical": 68
+      }
+    },
+    {
+      "id": 244778,
+      "name": "Estevao",
+      "dob": "2007-04-24",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76687,
+        "overall": 80,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 89,
+        "shooting": 76,
+        "passing": 75,
+        "dribbling": 84,
+        "defending": 33,
+        "physical": 57
+      }
+    }
+  ],
+  "baseline_id": "1821edc317756cd8",
+  "generated_at": "2026-10-30T07:09:54.656337+00:00"
+}

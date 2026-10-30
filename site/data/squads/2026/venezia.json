@@ -15,10 +15,10 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "observed_at": "2026-10-30T07:09:39.261140+00:00",
     "url": "https://api.football-data.org/v4/competitions/SA/teams",
-    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
-    "snapshot": "data/players/rosters/2026-10-23/SA.json"
+    "sha256": "4cace726e348df9879647fb1a389aa0fc1bba81255e9c0106281c307f816a5e0",
+    "snapshot": "data/players/rosters/2026-10-30/SA.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
@@ -833,8 +833,8 @@
       "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "3db7a480ad29a45c",
-  "generated_at": "2026-10-23T06:05:48.818796+00:00",
+  "baseline_id": "f93ca7f4be5da050",
+  "generated_at": "2026-10-30T07:09:55.510485+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -2883,5 +2883,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-29T07:08:13.580318+00:00"
+  "usage_generated_at": "2026-10-30T07:10:51.773287+00:00"
 }

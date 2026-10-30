@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-23T06:05:41.039969+00:00",
+    "observed_at": "2026-10-30T07:09:47.287034+00:00",
     "url": "https://api.football-data.org/v4/competitions/FL1/teams",
-    "sha256": "2707d065fbbe1b88c54c4bd3f6c29be6476273982e09c446bbf23bf0757d3bee",
-    "snapshot": "data/players/rosters/2026-10-23/FL1.json"
+    "sha256": "ea1b11fa3ef743bee37cae356c6bf479d91eaf4f40ba98b3dae86dadcb136ea9",
+    "snapshot": "data/players/rosters/2026-10-30/FL1.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 24,
+    "players": 25,
     "matched": 23
   },
   "ideal_xi": {
@@ -603,6 +603,16 @@
       }
     },
     {
+      "id": 302619,
+      "name": "Ibrahim Meïté",
+      "dob": "2004-07-26",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
       "id": "observed:understat:15117",
       "name": "Emmanuel Mbemba",
       "dob": null,
@@ -638,8 +648,8 @@
       "last_seen": "2026-10-24"
     }
   ],
-  "baseline_id": "60cc09daf4275fd3",
-  "generated_at": "2026-10-23T06:05:48.577410+00:00",
+  "baseline_id": "8a8135d6ee2f7347",
+  "generated_at": "2026-10-30T07:09:55.195658+00:00",
   "usage": {
     "ligue-1": {
       "source": "understat",
@@ -950,6 +960,17 @@
           ],
           "xg": 0.0295,
           "xa": 0.0
+        },
+        "302619": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 6,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         },
         "observed:understat:15117": {
           "starts": 0,
@@ -2372,5 +2393,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-25T19:46:46.384946+00:00"
+  "usage_generated_at": "2026-10-30T07:10:33.512117+00:00"
 }

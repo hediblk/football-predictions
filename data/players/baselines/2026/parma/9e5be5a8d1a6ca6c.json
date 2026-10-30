@@ -1,0 +1,553 @@
+{
+  "slug": "parma",
+  "club_id": 112,
+  "name": "Parma Calcio 1913",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-30T07:09:39.261140+00:00",
+    "url": "https://api.football-data.org/v4/competitions/SA/teams",
+    "sha256": "4cace726e348df9879647fb1a389aa0fc1bba81255e9c0106281c307f816a5e0",
+    "snapshot": "data/players/rosters/2026-10-30/SA.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 27,
+    "matched": 17
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 72.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 82003
+      },
+      {
+        "role": "LB",
+        "player": 42613
+      },
+      {
+        "role": "CB",
+        "player": 97151
+      },
+      {
+        "role": "CB",
+        "player": 8698
+      },
+      {
+        "role": "RB",
+        "player": 272754
+      },
+      {
+        "role": "CDM",
+        "player": 97894
+      },
+      {
+        "role": "CM",
+        "player": 165900
+      },
+      {
+        "role": "CM",
+        "player": 92051
+      },
+      {
+        "role": "LW",
+        "player": 140773
+      },
+      {
+        "role": "ST",
+        "player": 184455
+      },
+      {
+        "role": "RW",
+        "player": 31881
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 82003,
+      "name": "Simone Ghidotti",
+      "dob": "2000-03-19",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270756,
+        "overall": 69,
+        "positions": [
+          "GK"
+        ],
+        "pace": 69,
+        "shooting": 68,
+        "passing": 67,
+        "dribbling": 69,
+        "defending": 35,
+        "physical": 68
+      }
+    },
+    {
+      "id": 136714,
+      "name": "Edoardo Corvi",
+      "dob": "2001-03-23",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271385,
+        "overall": 69,
+        "positions": [
+          "GK"
+        ],
+        "pace": 69,
+        "shooting": 66,
+        "passing": 66,
+        "dribbling": 69,
+        "defending": 25,
+        "physical": 67
+      }
+    },
+    {
+      "id": 191638,
+      "name": "Giovanni Daffara",
+      "dob": "2004-12-05",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 278335,
+        "overall": 67,
+        "positions": [
+          "GK"
+        ],
+        "pace": 66,
+        "shooting": 67,
+        "passing": 66,
+        "dribbling": 67,
+        "defending": 29,
+        "physical": 66
+      }
+    },
+    {
+      "id": 1839,
+      "name": "Enrico Del Prato",
+      "dob": "1999-11-10",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 8698,
+      "name": "Diego Carlos",
+      "dob": "1993-03-15",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 219693,
+        "overall": 78,
+        "positions": [
+          "CB"
+        ],
+        "pace": 68,
+        "shooting": 46,
+        "passing": 63,
+        "dribbling": 67,
+        "defending": 79,
+        "physical": 69
+      }
+    },
+    {
+      "id": 42613,
+      "name": "Emanuele Valeri",
+      "dob": "1998-12-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258714,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 77,
+        "shooting": 70,
+        "passing": 73,
+        "dribbling": 74,
+        "defending": 71,
+        "physical": 67
+      }
+    },
+    {
+      "id": 97151,
+      "name": "Lautaro Valenti",
+      "dob": "1999-01-14",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246164,
+        "overall": 69,
+        "positions": [
+          "CB"
+        ],
+        "pace": 64,
+        "shooting": 51,
+        "passing": 55,
+        "dribbling": 59,
+        "defending": 69,
+        "physical": 75
+      }
+    },
+    {
+      "id": 152734,
+      "name": "Franco Carboni",
+      "dob": "2003-04-04",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 270485,
+        "overall": 63,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 54,
+        "shooting": 40,
+        "passing": 55,
+        "dribbling": 58,
+        "defending": 62,
+        "physical": 61
+      }
+    },
+    {
+      "id": 204310,
+      "name": "Abdoulaye N'Diaye",
+      "dob": "2002-04-10",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 212729,
+      "name": "Mariano Troilo",
+      "dob": "2003-06-22",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 272065,
+      "name": "Ousmane Diallo",
+      "dob": "2007-06-12",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 272754,
+      "name": "Sascha Britschgi",
+      "dob": "2006-08-27",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75647,
+        "overall": 65,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 61,
+        "shooting": 30,
+        "passing": 54,
+        "dribbling": 58,
+        "defending": 64,
+        "physical": 58
+      }
+    },
+    {
+      "id": 290728,
+      "name": "Dominik Drobnič",
+      "dob": "2007-04-05",
+      "provider_position": "Defence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 92051,
+      "name": "Adrián Bernabé",
+      "dob": "2001-05-26",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 252794,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 74,
+        "shooting": 70,
+        "passing": 75,
+        "dribbling": 79,
+        "defending": 70,
+        "physical": 57
+      }
+    },
+    {
+      "id": 97894,
+      "name": "Hans Nicolussi Caviglia",
+      "dob": "2000-06-18",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253162,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 59,
+        "shooting": 68,
+        "passing": 77,
+        "dribbling": 75,
+        "defending": 69,
+        "physical": 67
+      }
+    },
+    {
+      "id": 165900,
+      "name": "Mandela Keita",
+      "dob": "2002-05-10",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 261539,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 75,
+        "shooting": 62,
+        "passing": 65,
+        "dribbling": 77,
+        "defending": 73,
+        "physical": 75
+      }
+    },
+    {
+      "id": 171123,
+      "name": "Giovanni Fabbian",
+      "dob": "2003-01-14",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271019,
+        "overall": 73,
+        "positions": [
+          "CM",
+          "CAM"
+        ],
+        "pace": 61,
+        "shooting": 70,
+        "passing": 72,
+        "dribbling": 74,
+        "defending": 67,
+        "physical": 64
+      }
+    },
+    {
+      "id": 191285,
+      "name": "Christian Ordonez",
+      "dob": "2004-07-24",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 273884,
+        "overall": 70,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 79,
+        "shooting": 53,
+        "passing": 64,
+        "dribbling": 73,
+        "defending": 67,
+        "physical": 67
+      }
+    },
+    {
+      "id": 289179,
+      "name": "Abdou-Salam Konate",
+      "dob": "2006-11-25",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 31881,
+      "name": "Pontus Almqvist",
+      "dob": "1999-07-10",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236706,
+        "overall": 71,
+        "positions": [
+          "RW",
+          "RM"
+        ],
+        "pace": 75,
+        "shooting": 67,
+        "passing": 62,
+        "dribbling": 74,
+        "defending": 38,
+        "physical": 44
+      }
+    },
+    {
+      "id": 140773,
+      "name": "El Bilal Touré",
+      "dob": "2001-10-03",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255529,
+        "overall": 72,
+        "positions": [
+          "LM",
+          "ST",
+          "LW"
+        ],
+        "pace": 81,
+        "shooting": 71,
+        "passing": 63,
+        "dribbling": 73,
+        "defending": 23,
+        "physical": 70
+      }
+    },
+    {
+      "id": 165857,
+      "name": "José Romero",
+      "dob": "2003-03-25",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 184455,
+      "name": "Matija Frigan",
+      "dob": "2003-02-11",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 275401,
+        "overall": 73,
+        "positions": [
+          "ST"
+        ],
+        "pace": 78,
+        "shooting": 73,
+        "passing": 60,
+        "dribbling": 72,
+        "defending": 37,
+        "physical": 70
+      }
+    },
+    {
+      "id": 204288,
+      "name": "Nesta Elphege",
+      "dob": "2001-01-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 275130,
+        "overall": 65,
+        "positions": [
+          "ST"
+        ],
+        "pace": 52,
+        "shooting": 64,
+        "passing": 47,
+        "dribbling": 59,
+        "defending": 30,
+        "physical": 73
+      }
+    },
+    {
+      "id": 282455,
+      "name": "Thomas de Martis",
+      "dob": "2008-06-26",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 299423,
+      "name": "Simone Lontani",
+      "dob": "2008-01-18",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302118,
+      "name": "Djibril Diallo",
+      "dob": "2009-03-09",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "9e5be5a8d1a6ca6c",
+  "generated_at": "2026-10-30T07:09:55.663536+00:00"
+}

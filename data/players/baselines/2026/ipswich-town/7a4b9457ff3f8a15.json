@@ -1,0 +1,677 @@
+{
+  "slug": "ipswich-town",
+  "club_id": 349,
+  "name": "Ipswich Town FC",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-30T07:09:22.351703+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PL/teams",
+    "sha256": "34ea3aaa91afd5e8090330c8cfdf92d4f96e8478c94f575a8b7b8fa5e5c6a26d",
+    "snapshot": "data/players/rosters/2026-10-30/PL.json"
+  },
+  "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 28,
+    "matched": 26
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 76.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 9814
+      },
+      {
+        "role": "LB",
+        "player": 99120
+      },
+      {
+        "role": "CB",
+        "player": 8296
+      },
+      {
+        "role": "CB",
+        "player": 25650
+      },
+      {
+        "role": "RB",
+        "player": 4017
+      },
+      {
+        "role": "CDM",
+        "player": 37560
+      },
+      {
+        "role": "CM",
+        "player": 32938
+      },
+      {
+        "role": "CM",
+        "player": 11720
+      },
+      {
+        "role": "LW",
+        "player": 44017
+      },
+      {
+        "role": "ST",
+        "player": 168949
+      },
+      {
+        "role": "RW",
+        "player": 270889
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 3954,
+      "name": "David Button",
+      "dob": "1989-02-27",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 173533,
+        "overall": 62,
+        "positions": [
+          "GK"
+        ],
+        "pace": 62,
+        "shooting": 60,
+        "passing": 59,
+        "dribbling": 61,
+        "defending": 39,
+        "physical": 61
+      }
+    },
+    {
+      "id": 4867,
+      "name": "Christian Walton",
+      "dob": "1995-11-09",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 206561,
+        "overall": 73,
+        "positions": [
+          "GK"
+        ],
+        "pace": 74,
+        "shooting": 72,
+        "passing": 72,
+        "dribbling": 73,
+        "defending": 38,
+        "physical": 72
+      }
+    },
+    {
+      "id": 8011,
+      "name": "Alex Palmer",
+      "dob": "1996-08-10",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 223909,
+        "overall": 71,
+        "positions": [
+          "GK"
+        ],
+        "pace": 72,
+        "shooting": 70,
+        "passing": 70,
+        "dribbling": 71,
+        "defending": 38,
+        "physical": 70
+      }
+    },
+    {
+      "id": 9814,
+      "name": "Kjell Scherpen",
+      "dob": "2000-01-23",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243675,
+        "overall": 76,
+        "positions": [
+          "GK"
+        ],
+        "pace": 78,
+        "shooting": 72,
+        "passing": 71,
+        "dribbling": 78,
+        "defending": 42,
+        "physical": 75
+      }
+    },
+    {
+      "id": 4017,
+      "name": "Darnell Furlong",
+      "dob": "1995-10-31",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 223877,
+        "overall": 73,
+        "positions": [
+          "RB",
+          "RM"
+        ],
+        "pace": 73,
+        "shooting": 45,
+        "passing": 61,
+        "dribbling": 70,
+        "defending": 69,
+        "physical": 78
+      }
+    },
+    {
+      "id": 8296,
+      "name": "Issa Diop",
+      "dob": "1997-01-09",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231633,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 57,
+        "shooting": 37,
+        "passing": 55,
+        "dribbling": 57,
+        "defending": 75,
+        "physical": 78
+      }
+    },
+    {
+      "id": 25650,
+      "name": "Dara O'Shea",
+      "dob": "1999-03-04",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235405,
+        "overall": 75,
+        "positions": [
+          "CB"
+        ],
+        "pace": 69,
+        "shooting": 33,
+        "passing": 56,
+        "dribbling": 58,
+        "defending": 75,
+        "physical": 79
+      }
+    },
+    {
+      "id": 34871,
+      "name": "Cédric Kipré",
+      "dob": "1996-12-09",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 235458,
+        "overall": 74,
+        "positions": [
+          "CB"
+        ],
+        "pace": 68,
+        "shooting": 36,
+        "passing": 50,
+        "dribbling": 55,
+        "defending": 72,
+        "physical": 87
+      }
+    },
+    {
+      "id": 99120,
+      "name": "Leif Davis",
+      "dob": "1999-12-31",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246685,
+        "overall": 75,
+        "positions": [
+          "LB",
+          "LM"
+        ],
+        "pace": 79,
+        "shooting": 54,
+        "passing": 76,
+        "dribbling": 73,
+        "defending": 70,
+        "physical": 72
+      }
+    },
+    {
+      "id": 125651,
+      "name": "Jacob Greaves",
+      "dob": "2000-09-12",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 248602,
+        "overall": 74,
+        "positions": [
+          "CB",
+          "LB"
+        ],
+        "pace": 66,
+        "shooting": 40,
+        "passing": 63,
+        "dribbling": 64,
+        "defending": 74,
+        "physical": 78
+      }
+    },
+    {
+      "id": 270889,
+      "name": "Abdoul Ouattara",
+      "dob": "2005-10-22",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 75318,
+        "overall": 73,
+        "positions": [
+          "RM",
+          "CM",
+          "RB",
+          "CDM"
+        ],
+        "pace": 76,
+        "shooting": 59,
+        "passing": 69,
+        "dribbling": 74,
+        "defending": 47,
+        "physical": 64
+      }
+    },
+    {
+      "id": 5999,
+      "name": "Jack Taylor",
+      "dob": "1998-06-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 233851,
+        "overall": 72,
+        "positions": [
+          "CDM",
+          "CM",
+          "CAM"
+        ],
+        "pace": 69,
+        "shooting": 68,
+        "passing": 68,
+        "dribbling": 70,
+        "defending": 69,
+        "physical": 74
+      }
+    },
+    {
+      "id": 7566,
+      "name": "Azor Matusiwa",
+      "dob": "1998-04-28",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239356,
+        "overall": 75,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 57,
+        "shooting": 53,
+        "passing": 67,
+        "dribbling": 69,
+        "defending": 73,
+        "physical": 79
+      }
+    },
+    {
+      "id": 11720,
+      "name": "Exequiel Palacios",
+      "dob": "1998-10-05",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231521,
+        "overall": 83,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 62,
+        "shooting": 76,
+        "passing": 79,
+        "dribbling": 82,
+        "defending": 81,
+        "physical": 71
+      }
+    },
+    {
+      "id": 32938,
+      "name": "Saša Lukić",
+      "dob": "1996-08-13",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 236699,
+        "overall": 78,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 75,
+        "shooting": 65,
+        "passing": 76,
+        "dribbling": 73,
+        "defending": 75,
+        "physical": 79
+      }
+    },
+    {
+      "id": 37560,
+      "name": "Florentino",
+      "dob": "1999-08-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234569,
+        "overall": 77,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 48,
+        "shooting": 53,
+        "passing": 68,
+        "dribbling": 72,
+        "defending": 78,
+        "physical": 74
+      }
+    },
+    {
+      "id": 140245,
+      "name": "Marcelino Núñez",
+      "dob": "2000-03-01",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 256051,
+        "overall": 73,
+        "positions": [
+          "CAM",
+          "CDM",
+          "CM"
+        ],
+        "pace": 62,
+        "shooting": 71,
+        "passing": 74,
+        "dribbling": 74,
+        "defending": 64,
+        "physical": 70
+      }
+    },
+    {
+      "id": 152437,
+      "name": "Anis Mehmeti",
+      "dob": "2001-01-09",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 250816,
+        "overall": 72,
+        "positions": [
+          "CAM",
+          "LM",
+          "CM",
+          "LW"
+        ],
+        "pace": 76,
+        "shooting": 70,
+        "passing": 68,
+        "dribbling": 74,
+        "defending": 54,
+        "physical": 66
+      }
+    },
+    {
+      "id": 168949,
+      "name": "Julio Enciso",
+      "dob": "2004-01-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 255434,
+        "overall": 78,
+        "positions": [
+          "CAM",
+          "ST"
+        ],
+        "pace": 78,
+        "shooting": 74,
+        "passing": 72,
+        "dribbling": 83,
+        "defending": 33,
+        "physical": 53
+      }
+    },
+    {
+      "id": 4158,
+      "name": "Jack Clarke",
+      "dob": "2000-11-23",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 242908,
+        "overall": 75,
+        "positions": [
+          "LM",
+          "LW"
+        ],
+        "pace": 78,
+        "shooting": 73,
+        "passing": 70,
+        "dribbling": 78,
+        "defending": 42,
+        "physical": 63
+      }
+    },
+    {
+      "id": 9053,
+      "name": "Chuba Akpom",
+      "dob": "1995-10-09",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 213418,
+        "overall": 71,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 74,
+        "shooting": 70,
+        "passing": 59,
+        "dribbling": 70,
+        "defending": 31,
+        "physical": 73
+      }
+    },
+    {
+      "id": 44017,
+      "name": "Daizen Maeda",
+      "dob": "1997-10-20",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 246321,
+        "overall": 78,
+        "positions": [
+          "LM",
+          "LW",
+          "ST",
+          "CAM"
+        ],
+        "pace": 92,
+        "shooting": 77,
+        "passing": 70,
+        "dribbling": 76,
+        "defending": 64,
+        "physical": 77
+      }
+    },
+    {
+      "id": 67893,
+      "name": "Zian Flemming",
+      "dob": "1998-08-01",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 239373,
+        "overall": 76,
+        "positions": [
+          "ST"
+        ],
+        "pace": 66,
+        "shooting": 79,
+        "passing": 71,
+        "dribbling": 72,
+        "defending": 55,
+        "physical": 82
+      }
+    },
+    {
+      "id": 172632,
+      "name": "Jaden Philogene-Bidace",
+      "dob": "2002-02-08",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 176628,
+      "name": "Emersonn",
+      "dob": "2004-07-16",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 76803,
+        "overall": 74,
+        "positions": [
+          "ST"
+        ],
+        "pace": 81,
+        "shooting": 72,
+        "passing": 61,
+        "dribbling": 76,
+        "defending": 30,
+        "physical": 73
+      }
+    },
+    {
+      "id": 176777,
+      "name": "Kasey McAteer",
+      "dob": "2001-11-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 265801,
+        "overall": 71,
+        "positions": [
+          "RM",
+          "RW",
+          "CAM",
+          "CM"
+        ],
+        "pace": 81,
+        "shooting": 67,
+        "passing": 66,
+        "dribbling": 71,
+        "defending": 54,
+        "physical": 64
+      }
+    },
+    {
+      "id": 187162,
+      "name": "Abdul Issahaku",
+      "dob": "2004-03-08",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 230057,
+      "name": "Sindre Egeli",
+      "dob": "2006-06-21",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 71110,
+        "overall": 70,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 84,
+        "shooting": 62,
+        "passing": 62,
+        "dribbling": 71,
+        "defending": 25,
+        "physical": 64
+      }
+    }
+  ],
+  "baseline_id": "7a4b9457ff3f8a15",
+  "generated_at": "2026-10-30T07:09:55.297273+00:00"
+}

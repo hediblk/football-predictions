@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-28T06:54:51.282107+00:00",
-    "url": "https://api.football-data.org/v4/competitions/CL/teams",
-    "sha256": "9276f7cea345444c065f7034fd16589772b4f3d76a78cb527a7d6595530cae61",
-    "snapshot": "data/players/rosters/2026-10-28/CL.json"
+    "observed_at": "2026-10-30T07:09:13.886536+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "fbbf1a2b82fcbbdcb956010f73d669f804dfc38e09930827c20c6b3de4236ee0",
+    "snapshot": "data/players/rosters/2026-10-30/PD.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 27,
+    "players": 28,
     "matched": 26
   },
   "ideal_xi": {
@@ -671,10 +671,20 @@
         "defending": 47,
         "physical": 70
       }
+    },
+    {
+      "id": 302640,
+      "name": "Ilya Voloshyn",
+      "dob": "2007-01-15",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "8fbac669bd03d0d1",
-  "generated_at": "2026-10-28T06:54:58.523954+00:00",
+  "baseline_id": "44cc56736ac450a2",
+  "generated_at": "2026-10-30T07:09:54.575036+00:00",
   "usage": {
     "la-liga": {
       "source": "understat",
@@ -1022,6 +1032,17 @@
           ],
           "xg": 1.215,
           "xa": 0.8138
+        },
+        "302640": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 10,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         }
       },
       "most_used_xi": {
@@ -3109,6 +3130,17 @@
           ],
           "avg_x": 0.5392,
           "avg_y": 0.4921
+        },
+        "302640": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 3,
+          "unknown_games": 0,
+          "provider_ids": [],
+          "avg_x": null,
+          "avg_y": null
         }
       },
       "most_used_xi": {
@@ -3652,5 +3684,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-28T06:55:35.236926+00:00"
+  "usage_generated_at": "2026-10-30T07:10:37.200216+00:00"
 }

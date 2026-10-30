@@ -15,15 +15,15 @@
   "roster": {
     "source": "football-data.org",
     "status": "available",
-    "observed_at": "2026-10-23T06:05:33.276866+00:00",
+    "observed_at": "2026-10-30T07:09:39.261140+00:00",
     "url": "https://api.football-data.org/v4/competitions/SA/teams",
-    "sha256": "3f9b1dac1eefcbab7057531d1f34c55d3f64846addb5b620cb0ce6ff38d92f7f",
-    "snapshot": "data/players/rosters/2026-10-23/SA.json"
+    "sha256": "4cace726e348df9879647fb1a389aa0fc1bba81255e9c0106281c307f816a5e0",
+    "snapshot": "data/players/rosters/2026-10-30/SA.json"
   },
   "identity_overrides_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "method": "ea-position-assignment-v1",
   "coverage": {
-    "players": 27,
+    "players": 31,
     "matched": 26
   },
   "ideal_xi": {
@@ -658,10 +658,50 @@
         "defending": 24,
         "physical": 63
       }
+    },
+    {
+      "id": 302645,
+      "name": "Lorenzo Ossola",
+      "dob": "2007-02-13",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302644,
+      "name": "El Hadji Cissé",
+      "dob": "2008-01-05",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302643,
+      "name": "Luca Menon",
+      "dob": "2009-03-07",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 302642,
+      "name": "Nirash Perera",
+      "dob": "2007-01-02",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
     }
   ],
-  "baseline_id": "b0cd53dca08d60cb",
-  "generated_at": "2026-10-23T06:05:48.380178+00:00",
+  "baseline_id": "cb26c3811883d8d1",
+  "generated_at": "2026-10-30T07:09:54.810149+00:00",
   "usage": {
     "serie-a": {
       "source": "understat",
@@ -1011,6 +1051,50 @@
           ],
           "xg": 0.3687,
           "xa": 0.0278
+        },
+        "302645": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "302644": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "302643": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
+        },
+        "302642": {
+          "starts": 0,
+          "sub": 0,
+          "minutes": 0,
+          "share": 0.0,
+          "known_games": 2,
+          "unknown_games": 7,
+          "provider_ids": [],
+          "xg": 0,
+          "xa": 0
         }
       },
       "most_used_xi": {
@@ -2635,5 +2719,5 @@
       ]
     }
   },
-  "usage_generated_at": "2026-10-29T07:07:45.402986+00:00"
+  "usage_generated_at": "2026-10-30T07:10:28.676200+00:00"
 }

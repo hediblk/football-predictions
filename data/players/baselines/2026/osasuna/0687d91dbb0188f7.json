@@ -1,0 +1,577 @@
+{
+  "slug": "osasuna",
+  "club_id": 79,
+  "name": "CA Osasuna",
+  "season": "2026",
+  "ratings": {
+    "source": "EA SPORTS FC",
+    "file": "fc27-2026-09-12.csv",
+    "sha256": "18ed434e5bb90f9afa72363d14438005c785eb4b8872a64c89c75bb38e14e911",
+    "rows": 17849,
+    "url": "https://raw.githubusercontent.com/LakshmiKanth11/EA_FC_ANALYSIS/c0b2542d9fcae72d2c538a472a30ee57c4e7c75e/EA_FC_PLAYERS_DATASET_AND_%20DASHBOARD/data/players.csv",
+    "edition": "fc27",
+    "snapshot_date": "2026-09-12"
+  },
+  "roster": {
+    "source": "football-data.org",
+    "status": "available",
+    "observed_at": "2026-10-30T07:09:13.886536+00:00",
+    "url": "https://api.football-data.org/v4/competitions/PD/teams",
+    "sha256": "fbbf1a2b82fcbbdcb956010f73d669f804dfc38e09930827c20c6b3de4236ee0",
+    "snapshot": "data/players/rosters/2026-10-30/PD.json"
+  },
+  "identity_overrides_sha256": "d86555fe8537a1de98623d3b5302ba82c18e413ebc7af4a5d180b1dfcc3c6209",
+  "method": "ea-position-assignment-v1",
+  "coverage": {
+    "players": 24,
+    "matched": 20
+  },
+  "ideal_xi": {
+    "formation": "4-3-3",
+    "status": "provisional",
+    "mean_overall": 77.5,
+    "slots": [
+      {
+        "role": "GK",
+        "player": 31968
+      },
+      {
+        "role": "LB",
+        "player": 277
+      },
+      {
+        "role": "CB",
+        "player": 151019
+      },
+      {
+        "role": "CB",
+        "player": 50890
+      },
+      {
+        "role": "RB",
+        "player": 8559
+      },
+      {
+        "role": "CDM",
+        "player": 32002
+      },
+      {
+        "role": "CM",
+        "player": 111674
+      },
+      {
+        "role": "CM",
+        "player": 32217
+      },
+      {
+        "role": "LW",
+        "player": 119093
+      },
+      {
+        "role": "ST",
+        "player": 2237
+      },
+      {
+        "role": "RW",
+        "player": 32212
+      }
+    ]
+  },
+  "players": [
+    {
+      "id": 31968,
+      "name": "Sergio Herrera",
+      "dob": "1993-06-05",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 224003,
+        "overall": 79,
+        "positions": [
+          "GK"
+        ],
+        "pace": 79,
+        "shooting": 79,
+        "passing": 75,
+        "dribbling": 80,
+        "defending": 47,
+        "physical": 77
+      }
+    },
+    {
+      "id": 32391,
+      "name": "Aitor Fernández",
+      "dob": "1991-05-03",
+      "provider_position": "Goalkeeper",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 193314,
+        "overall": 77,
+        "positions": [
+          "GK"
+        ],
+        "pace": 77,
+        "shooting": 74,
+        "passing": 68,
+        "dribbling": 80,
+        "defending": 56,
+        "physical": 76
+      }
+    },
+    {
+      "id": 277,
+      "name": "Diego Rico",
+      "dob": "1993-02-23",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 220414,
+        "overall": 76,
+        "positions": [
+          "LB",
+          "CB"
+        ],
+        "pace": 69,
+        "shooting": 57,
+        "passing": 76,
+        "dribbling": 71,
+        "defending": 75,
+        "physical": 76
+      }
+    },
+    {
+      "id": 8559,
+      "name": "Valentin Rosier",
+      "dob": "1996-08-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 234730,
+        "overall": 78,
+        "positions": [
+          "RB",
+          "RM",
+          "RW"
+        ],
+        "pace": 80,
+        "shooting": 60,
+        "passing": 72,
+        "dribbling": 77,
+        "defending": 75,
+        "physical": 76
+      }
+    },
+    {
+      "id": 50890,
+      "name": "Catena",
+      "dob": "1994-10-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 243976,
+        "overall": 77,
+        "positions": [
+          "CB"
+        ],
+        "pace": 58,
+        "shooting": 39,
+        "passing": 61,
+        "dribbling": 54,
+        "defending": 77,
+        "physical": 78
+      }
+    },
+    {
+      "id": 151019,
+      "name": "Flavien Boyomo",
+      "dob": "2001-10-07",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "verified_override",
+      "ea": {
+        "id": 259066,
+        "overall": 79,
+        "positions": [
+          "CB"
+        ],
+        "pace": 77,
+        "shooting": 38,
+        "passing": 59,
+        "dribbling": 57,
+        "defending": 78,
+        "physical": 86
+      },
+      "identity_override": {
+        "provider_name": "Flavien Boyomo",
+        "provider_dob": "2001-10-07",
+        "verified_dob": "2001-10-07",
+        "ea_id": 259066,
+        "source": "https://www.osasuna.es/enzo-boyomo-2026",
+        "observed_at": "2026-10-15",
+        "note": "The club confirms the full name Flavien Enzo Thiedort Boyomo; EA uses Enzo Boyomo."
+      }
+    },
+    {
+      "id": 159409,
+      "name": "Jorge Herrando",
+      "dob": "2001-02-28",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 272433,
+        "overall": 74,
+        "positions": [
+          "CB"
+        ],
+        "pace": 45,
+        "shooting": 37,
+        "passing": 57,
+        "dribbling": 65,
+        "defending": 75,
+        "physical": 73
+      }
+    },
+    {
+      "id": 186674,
+      "name": "Abel Bretones",
+      "dob": "2000-08-21",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 271145,
+        "overall": 76,
+        "positions": [
+          "LB",
+          "LM",
+          "LW"
+        ],
+        "pace": 77,
+        "shooting": 68,
+        "passing": 71,
+        "dribbling": 71,
+        "defending": 72,
+        "physical": 80
+      }
+    },
+    {
+      "id": 246027,
+      "name": "Rockson Yeboah",
+      "dob": "2004-08-02",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 74426,
+        "overall": 65,
+        "positions": [
+          "CB"
+        ],
+        "pace": 73,
+        "shooting": 36,
+        "passing": 43,
+        "dribbling": 52,
+        "defending": 62,
+        "physical": 72
+      }
+    },
+    {
+      "id": 248752,
+      "name": "Iñigo Arguibide",
+      "dob": "2005-04-19",
+      "provider_position": "Defence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 71277,
+        "overall": 63,
+        "positions": [
+          "RB",
+          "RM",
+          "RW"
+        ],
+        "pace": 70,
+        "shooting": 49,
+        "passing": 58,
+        "dribbling": 63,
+        "defending": 59,
+        "physical": 58
+      }
+    },
+    {
+      "id": 32002,
+      "name": "Lucas Torró",
+      "dob": "1994-07-19",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 208137,
+        "overall": 76,
+        "positions": [
+          "CDM",
+          "CM"
+        ],
+        "pace": 45,
+        "shooting": 64,
+        "passing": 68,
+        "dribbling": 67,
+        "defending": 75,
+        "physical": 76
+      }
+    },
+    {
+      "id": 32217,
+      "name": "Moi Gómez",
+      "dob": "1994-06-23",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 206590,
+        "overall": 76,
+        "positions": [
+          "CM",
+          "CDM"
+        ],
+        "pace": 59,
+        "shooting": 71,
+        "passing": 78,
+        "dribbling": 77,
+        "defending": 66,
+        "physical": 62
+      }
+    },
+    {
+      "id": 111674,
+      "name": "Jon Moncayola",
+      "dob": "1998-05-13",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 247495,
+        "overall": 77,
+        "positions": [
+          "CM",
+          "CDM",
+          "RM",
+          "CAM"
+        ],
+        "pace": 63,
+        "shooting": 70,
+        "passing": 76,
+        "dribbling": 76,
+        "defending": 73,
+        "physical": 76
+      }
+    },
+    {
+      "id": 119093,
+      "name": "Aimar Oroz",
+      "dob": "2001-11-27",
+      "provider_position": "Midfield",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258937,
+        "overall": 76,
+        "positions": [
+          "CAM",
+          "CM",
+          "LM",
+          "LW"
+        ],
+        "pace": 67,
+        "shooting": 73,
+        "passing": 76,
+        "dribbling": 78,
+        "defending": 65,
+        "physical": 67
+      }
+    },
+    {
+      "id": 191925,
+      "name": "Iker Munoz",
+      "dob": "2002-11-05",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 249577,
+      "name": "Asier Osambela",
+      "dob": "2004-02-08",
+      "provider_position": "Midfield",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 856,
+      "name": "Romain Del Castillo",
+      "dob": "1996-03-29",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 231612,
+        "overall": 76,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 82,
+        "shooting": 72,
+        "passing": 75,
+        "dribbling": 79,
+        "defending": 41,
+        "physical": 66
+      }
+    },
+    {
+      "id": 2237,
+      "name": "Ante Budimir",
+      "dob": "1991-07-22",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 188335,
+        "overall": 82,
+        "positions": [
+          "ST"
+        ],
+        "pace": 65,
+        "shooting": 83,
+        "passing": 63,
+        "dribbling": 74,
+        "defending": 36,
+        "physical": 81
+      }
+    },
+    {
+      "id": 32004,
+      "name": "Kike Barja",
+      "dob": "1997-04-04",
+      "provider_position": "Offence",
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    },
+    {
+      "id": 32212,
+      "name": "Rubén García",
+      "dob": "1993-07-14",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 211022,
+        "overall": 77,
+        "positions": [
+          "RM",
+          "RW"
+        ],
+        "pace": 73,
+        "shooting": 75,
+        "passing": 79,
+        "dribbling": 77,
+        "defending": 47,
+        "physical": 53
+      }
+    },
+    {
+      "id": 130324,
+      "name": "Raúl",
+      "dob": "2000-11-03",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 253416,
+        "overall": 75,
+        "positions": [
+          "ST",
+          "CAM"
+        ],
+        "pace": 68,
+        "shooting": 76,
+        "passing": 63,
+        "dribbling": 70,
+        "defending": 29,
+        "physical": 70
+      }
+    },
+    {
+      "id": 146128,
+      "name": "Raúl Moro",
+      "dob": "2002-12-05",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 258139,
+        "overall": 75,
+        "positions": [
+          "LW",
+          "LM",
+          "RM",
+          "RW"
+        ],
+        "pace": 84,
+        "shooting": 66,
+        "passing": 70,
+        "dribbling": 78,
+        "defending": 27,
+        "physical": 51
+      }
+    },
+    {
+      "id": 176600,
+      "name": "Jonathan Dubasin",
+      "dob": "2000-02-02",
+      "provider_position": "Offence",
+      "status": "matched",
+      "method": "name_and_birth_date",
+      "ea": {
+        "id": 263883,
+        "overall": 74,
+        "positions": [
+          "RW",
+          "LW",
+          "ST",
+          "RM"
+        ],
+        "pace": 78,
+        "shooting": 73,
+        "passing": 69,
+        "dribbling": 73,
+        "defending": 36,
+        "physical": 64
+      }
+    },
+    {
+      "id": 302159,
+      "name": "Mikel Bermejo",
+      "dob": "2009-02-16",
+      "provider_position": null,
+      "status": "unmatched",
+      "method": null,
+      "ea": null,
+      "reason": "no_name_and_birth_date_match"
+    }
+  ],
+  "baseline_id": "0687d91dbb0188f7",
+  "generated_at": "2026-10-30T07:09:55.145173+00:00"
+}
