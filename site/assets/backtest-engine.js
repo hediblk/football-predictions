@@ -311,11 +311,19 @@
     const decodedRows = Array.isArray(filesOrRows) && (!filesOrRows.length || filesOrRows[0]?.comp);
     const rows = validateDecodedRows(decodedRows ? filesOrRows : source.flatMap((value) => Array.isArray(value) ? value : value?.columns ? decodeSeason(value) : fail("Expected season files or decoded rows")));
     const coverage = { input_rows: rows.length, universe_matches: 0, fully_priced_matches: 0, condition_exclusions: 0, selection_exclusions: 0, zero_stakes: 0, missing_price_voids: 0, bets: 0 };
+    const periodDefinitions = [
+      { key: "calibration", match: (row) => row.season >= 2015 && row.season <= 2025 && row.forecast === "replayed" },
+      { key: "current_replayed", match: (row) => row.season === 2026 && row.forecast === "replayed" },
+      { key: "current_published", match: (row) => row.season === 2026 && row.forecast === "published" },
+    ];
+    const periodMatches = Object.fromEntries(periodDefinitions.map(({ key }) => [key, 0]));
     const selected = [];
     const u = strategy.universe;
     for (const row of rows) {
       if (!universeMatch(row, u)) continue;
       coverage.universe_matches += 1;
+      const period = periodDefinitions.find(({ match }) => match(row));
+      if (period) periodMatches[period.key] += 1;
       const prices = marketPrices(row, strategy);
       if (!prices) { coverage.missing_price_voids += 1; continue; }
       coverage.fully_priced_matches += 1;
@@ -331,7 +339,7 @@
       if (u.team_side && !u.include.includes(Number(selectedTeam(row, side)))) { coverage.selection_exclusions += 1; continue; }
       const effectiveProbability = trustedProbability(probabilities[side], side);
       const bet = {
-        id: row.id, comp: row.comp, season: row.season, kickoff: row.kickoff, home: row.home, away: row.away,
+        id: row.id, comp: row.comp, season: row.season, forecast: row.forecast, kickoff: row.kickoff, home: row.home, away: row.away,
         home_id: row.home_id, away_id: row.away_id, home_key: row.home_key, away_key: row.away_key, matchday: row.matchday, at: row.at,
         day: utcDay(row.kickoff), bet_day: strategy.execution.timing === "pre" ? utcDay(row.at) : utcDay(row.kickoff),
         selection: SIDES[side], side, price: prices[side], closing_price: strategy.execution.timing === "pre" && finite(row.prices?.[strategy.execution.book]?.close?.[side]) && row.prices[strategy.execution.book].close[side] > 1 ? row.prices[strategy.execution.book].close[side] : null,
@@ -348,8 +356,12 @@
     coverage.bets = stakedBets.length;
     for (const bet of stakedBets) bet.profit = bet.stake * bet.return;
     const summary = summarize(stakedBets, opts);
+    const periods = Object.fromEntries(periodDefinitions.map(({ key, match }) => [key, {
+      universe_matches: periodMatches[key],
+      summary: summarize(stakedBets.filter((bet) => match(bet)), opts),
+    }]));
     return {
-      strategy, coverage, summary, bets: stakedBets, bankroll: bankrollPath(stakedBets, strategy.bankroll),
+      strategy, coverage, summary, periods, bets: stakedBets, bankroll: bankrollPath(stakedBets, strategy.bankroll),
       breakdowns: options.breakdowns === false ? [] : breakdown(stakedBets, opts)
     };
   }

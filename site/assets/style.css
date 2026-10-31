@@ -1295,3 +1295,16 @@ table.mp-stand { min-width: 460px; }
   .tabs a { font-size: 14px; letter-spacing: .06em; }
   .bt-season-chart svg text { font-size: 24px; }
 }
+
+/* ---------- Backtest: saved strategies and comparison ---------- */
+.bt-saved-tools { border-top: 1px solid var(--rule-2); margin-top: 18px; padding-top: 6px; }
+.bt-saved-controls { grid-template-columns: minmax(0, 2fr) auto minmax(0, 2fr) auto auto; align-items: end; }
+.bt-compare-controls { grid-template-columns: repeat(2, minmax(0, 1fr)) auto; align-items: end; }
+.bt-saved-controls > .chip, .bt-compare-controls > .chip { min-height: 42px; }
+.bt-line.bt-comparison-a { stroke: var(--amber); }
+.bt-line.bt-comparison-b { stroke: var(--ink-2); stroke-dasharray: 6 4; stroke-width: 1.5; }
+@media (max-width: 699px) {
+  .bt-saved-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bt-compare-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bt-compare-controls > .chip { justify-self: start; }
+}
